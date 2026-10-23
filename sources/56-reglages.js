@@ -151,6 +151,11 @@ async function equipeSheet(msg = '') {
   let mb = [], inv = [];
   try { [mb, inv] = await Promise.all([EQ.membres(), EQ.invitations()]); }
   catch (e) { toast("Impossible de charger l'équipe : vérifie ta connexion.", { danger: true }); return; }
+  // une invitation dont la personne a déjà créé son compte est terminée : on la retire
+  const inscrits = new Set(mb.map(m => String(m.email || '').toLowerCase()));
+  const faites = inv.filter(i => inscrits.has(String(i.email).toLowerCase()));
+  inv = inv.filter(i => !inscrits.has(String(i.email).toLowerCase()));
+  if (faites.length) Promise.all(faites.map(i => EQ.annulerInvitation(i.email))).catch(() => { /* réessayé à la prochaine ouverture */ });
   const lien = EQ.lien();
   const membres = mb.sort((a, b) => (a.role === 'gerante' ? -1 : 0) - (b.role === 'gerante' ? -1 : 0)).map(m => `<div class="row"><div class="row-main">
       <div class="row-t">${esc(m.nom || m.email)}${m.moi ? ' <span class="pill ok">Toi</span>' : ''}</div><div class="row-s">${esc(m.email)} · ${esc(ROLE_LABEL[m.role] || m.role)}</div>

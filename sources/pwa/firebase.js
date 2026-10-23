@@ -229,7 +229,13 @@ window.EQ = {
   inviter: (email, role) => setDoc(doc(fs, 'invitations', email.trim().toLowerCase()), { role, par: ME ? ME.uid : null, le: Date.now() }),
   annulerInvitation: email => deleteDoc(doc(fs, 'invitations', email)),
   changerRole: (uid, role) => updateDoc(doc(fs, 'membres', uid), { role }),
-  retirerMembre: uid => deleteDoc(doc(fs, 'membres', uid)),
+  // retirer quelqu'un supprime aussi son invitation, pour qu'il ne puisse pas revenir seul
+  retirerMembre: async uid => {
+    const m = await getDoc(doc(fs, 'membres', uid));
+    const mail = m.exists() ? String(m.data().email || '').toLowerCase() : '';
+    await deleteDoc(doc(fs, 'membres', uid));
+    if (mail) await deleteDoc(doc(fs, 'invitations', mail)).catch(() => {});
+  },
   lien: () => location.origin + location.pathname
 };
 
