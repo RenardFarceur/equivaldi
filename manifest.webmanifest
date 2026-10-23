@@ -2,7 +2,7 @@
   "name": "EquiValdi · Carnet d'écurie",
   "short_name": "EquiValdi",
   "lang": "fr",
-  "description": "Chevaux, rations, soins, entraînement, prés, foin, concours et tâches partagées.",
+  "description": "Chevaux, rations, soins, entraînement, prés, foin, concours, tâches partagées, équipe et demi-pensions.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

@@ -80,6 +80,7 @@ function formFoin(id, pre = {}) {
     <div class="grid2">${fld('Nombre', inp('f_nb', m.nb, 'inputmode="numeric" autocomplete="off" required'))}${fld('Date', inp('f_date', m.date, 'type="date" required'))}</div>
     <div id="w_in" style="display:flex;flex-direction:column;gap:16px"${m.sens === 'in' ? '' : ' hidden'}>
       <div class="grid2">${fld('Poids par balle (kg)', inp('f_poids', m.poids, `${numAttr} placeholder="${defW(m.balle)}"`))}${fld('Prix par balle (€)', inp('f_prix', m.prix != null ? String(m.prix).replace('.', ',') : '', numAttr + ' placeholder="vide si récolte"'))}</div>
+      ${payeField(m.payePar, 'f_prix', Number(m.prix) || 0)}
       ${fld('Provenance', inp('f_orig', m.origine, `list="dl-orig" autocomplete="off" placeholder="Récolte d'un pré, fournisseur…"`))}
     </div>
     ${fld('Notes', area('f_notes', m.notes, 'rows="2" placeholder="Qualité, coupe, humidité…"'))}
@@ -108,7 +109,7 @@ function formFoin(id, pre = {}) {
       if (sens === 'in' && val('f_poids') && (poids == null || poids <= 0)) return 'Le poids doit être un nombre positif.';
       const prix = sens === 'in' ? parseNum(val('f_prix')) : null;
       if (sens === 'in' && val('f_prix') && (prix == null || prix < 0)) return 'Le prix doit être un nombre.';
-      const saved = put('foin', Object.assign(m, { sens, balle, nb, date, poids, prix, origine: sens === 'in' ? val('f_orig') : '', notes: val('f_notes') }));
+      const saved = put('foin', Object.assign(m, { sens, balle, nb, date, poids, prix, payePar: sens === 'in' ? lirePaye(prix) : null, origine: sens === 'in' ? val('f_orig') : '', notes: val('f_notes') }));
       toast(ex ? 'Mouvement enregistré' : `${sens === 'in' ? 'Entrée' : 'Sortie'} : ${nb} ${balleNom(balle, nb)}`, ex ? {} : { undo: () => del('foin', saved.id) });
     },
     onDelete: ex ? () => { del('foin', id); toast('Mouvement supprimé'); } : null

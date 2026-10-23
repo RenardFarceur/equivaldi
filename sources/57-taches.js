@@ -2,7 +2,8 @@
 /* ---------- Tâches partagées : chacun coche, tout le monde voit ---------- */
 function tacheSub(tk, e) {
   const pre = tk.preId ? get('pres', tk.preId) : null, h = tk.horseId ? cheval(tk.horseId) : null;
-  const where = [pre ? pre.nom : '', h ? h.nom : ''].filter(Boolean).join(' · ');
+  const qui = tk.resp && pKey(tk.resp) ? (estMoi(tk.resp) ? 'Pour toi' : 'Pour ' + nomCourt(tk.resp)) : '';
+  const where = [qui, pre ? pre.nom : '', h ? h.nom : ''].filter(Boolean).join(' · ');
   let st;
   if (e.done) st = faitTxt(e.last) + (e.n > 1 && e.next ? ` · à refaire ${dRel(e.next)}` : '');
   else if (tk.freq === 'une') st = e.due ? (e.days < 0 ? `En retard de ${nJ(-e.days)}` : `À faire ${dRel(e.due)}`) : 'À faire';
@@ -40,7 +41,7 @@ function tachesSection() {
 
 /* Prénom affiché à côté des coches (demandé une fois par téléphone) */
 function withName(cb) {
-  const n = getMoi();
+  const n = window.EQ_MODE ? moiNom() : getMoi();
   if (n) { cb(n); return; }
   openSheet('Qui coche ?', fld('Ton prénom', inp('f_moi', me.platformName || '', 'autocomplete="given-name" autocapitalize="words" required'),
     "Il s'affiche à côté des tâches que tu coches, pour que les autres sachent qui les a faites. Il reste sur ce téléphone."), {
@@ -95,6 +96,7 @@ function formTache(id, pre = {}) {
     <div id="w_date"${tk.freq === 'une' ? '' : ' hidden'}>${fld('À faire le', inp('f_date', tk.date, 'type="date"'), 'Facultatif.')}</div>
     ${ps.length ? grp('Pré', chips('pre', ps.map(p => ({ v: p.id, l: p.nom })), tk.preId ? [tk.preId] : [], { optional: true }), 'Facultatif.') : ''}
     ${hs.length ? grp('Cheval', chips('h', horseOpts(hs), tk.horseId ? [tk.horseId] : [], { optional: true }), 'Facultatif.') : ''}
+    ${pickPerson('resp', "Qui s'en charge", tk.resp || null, { autre: false, hint: "Facultatif. Vide : toute l'équipe." })}
     ${fld('Consignes', area('f_notes', tk.notes, 'rows="2" placeholder="ex. 2 rounds dans le râtelier, vérifier le niveau d\'eau"'))}
     ${hist}`;
   openSheet(ex ? 'Tâche' : 'Nouvelle tâche', body, {
@@ -115,7 +117,7 @@ function formTache(id, pre = {}) {
         if (!Number.isInteger(n) || n < 1 || n > 365) return 'Indique un nombre de jours entre 1 et 365.';
       }
       const date = freq === 'une' ? val('f_date') : '';
-      Object.assign(tk, { titre, freq, n, date: validISO(date) ? date : null, preId: chipVal(f, 'pre'), horseId: chipVal(f, 'h'), notes: val('f_notes') });
+      Object.assign(tk, { titre, freq, n, date: validISO(date) ? date : null, preId: chipVal(f, 'pre'), horseId: chipVal(f, 'h'), resp: readPerson('resp'), notes: val('f_notes') });
       if (!Array.isArray(tk.fait)) tk.fait = [];
       put('taches', tk);
       toast(ex ? 'Tâche enregistrée' : 'Tâche ajoutée');

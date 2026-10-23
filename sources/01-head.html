@@ -149,6 +149,19 @@ button.row:active{background:var(--surface-2)}
 .avbtn .cam .ic{width:18px;height:18px}
 .avbtn:active .av{filter:brightness(.92)}
 
+/* Personnes : pastilles rondes ; lignes avec bouton d'appel */
+.av.pp{border-radius:50%}
+.crow{display:flex;align-items:stretch;border-top:1px solid var(--line);min-height:62px}
+.crow:first-child{border-top:0}
+.crow-main{flex:1;min-width:0;display:flex;align-items:center;gap:12px;text-align:left;border:0;background:transparent;color:var(--ink);padding:10px 8px 10px 14px}
+.crow-main:active{background:var(--surface-2)}
+.callbtn{width:60px;flex:none;display:grid;place-items:center;text-decoration:none;color:var(--accent-strong)}
+.callbtn .ic{width:42px;height:42px;padding:10px;border-radius:12px;background:var(--accent-soft)}
+.callbtn:active .ic{filter:brightness(.94)}
+.phead{flex-direction:row;align-items:center;gap:16px}
+.phead .btnrow{margin-top:6px}
+a.btn{text-decoration:none}
+
 /* Photo : choix et cadrage */
 .pf{display:flex;gap:16px;align-items:center}
 .pf-frame{position:relative;width:132px;max-width:100%;aspect-ratio:1/1;border-radius:24px;overflow:hidden;background:var(--surface-2);flex:none}
@@ -269,9 +282,10 @@ label.btn{cursor:pointer}
 .menu{display:flex;flex-direction:column;gap:8px}
 
 /* Onglets : pastille Menthe sous l'icône active */
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));padding-bottom:env(safe-area-inset-bottom,0px)}
-.tabs button{height:var(--tab-h);border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--ink-2);font-size:12px;font-weight:500;min-width:0}
-.tab-ic{display:grid;place-items:center;width:54px;height:30px;border-radius:999px;transition:background .15s}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,minmax(0,1fr));padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px));padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabs button{height:var(--tab-h);border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--ink-2);font-size:12px;font-weight:500;min-width:0;padding:0 1px}
+.tabs button>span:last-child{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tab-ic{display:grid;place-items:center;width:50px;height:30px;border-radius:999px;transition:background .15s}
 .tabs button[aria-current="page"]{color:var(--accent-strong);font-weight:600}
 .tabs button[aria-current="page"] .tab-ic{background:var(--accent-soft)}
 .tabs button[aria-current="page"] .ic{stroke-width:2.4}
@@ -338,6 +352,7 @@ label.btn{cursor:pointer}
 .toast button{background:transparent;border:0;color:inherit;text-decoration:underline;font-weight:600;min-height:40px;padding:0 10px;flex:none}
 body.lock .toast{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto}
 
-@media (max-width:350px){.quick,.grid2{grid-template-columns:minmax(0,1fr)}.stat{padding:8px}.stat b{font-size:21px}.top h1{font-size:28px}.tab-ic{width:46px}}
+@media (max-width:370px){.tabs button{font-size:11px}.tab-ic{width:44px}}
+@media (max-width:350px){.quick,.grid2{grid-template-columns:minmax(0,1fr)}.stat{padding:8px}.stat b{font-size:21px}.top h1{font-size:28px}.tab-ic{width:40px}.phead{flex-direction:column;align-items:flex-start}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>

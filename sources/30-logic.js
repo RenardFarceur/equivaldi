@@ -311,3 +311,162 @@ function faitTxt(f) {
   if (f.d === todayISO()) return `Fait${qui}${f.t ? ' à ' + hTxt(f.t) : " aujourd'hui"}`;
   return `Fait${qui} ${dRel(f.d)}`;
 }
+
+/* ---------- Personnes : membres de l'équipe et noms saisis à la main ---------- */
+const normNom = s => String(s || '').trim().replace(/\s+/g, ' ').toLowerCase();
+const prenomDe = s => String(s || '').trim().split(/\s+/)[0] || '';
+const ROLE_ORD = { gerante: 0, equipe: 1, lecture: 2 };
+const mNom = m => (m && (String(m.nom || '').trim() || String(m.email || '').split('@')[0])) || '';
+function membres() {
+  return list('membres').filter(m => m && m.id)
+    .sort((a, b) => ((ROLE_ORD[a.role] ?? 3) - (ROLE_ORD[b.role] ?? 3)) || mNom(a).localeCompare(mNom(b), 'fr', { sensitivity: 'base' }));
+}
+/* Le membre derrière une référence { uid, nom } : par identifiant, sinon par nom, ou par prénom s'il est unique */
+function refMembre(r) {
+  if (!r) return null;
+  if (r.uid) { const m = get('membres', r.uid); if (m) return m; }
+  const n = normNom(r.nom);
+  if (!n) return null;
+  const ms = membres();
+  const full = ms.find(m => normNom(mNom(m)) === n);
+  if (full) return full;
+  const first = ms.filter(m => normNom(prenomDe(mNom(m))) === n);
+  return first.length === 1 ? first[0] : null;
+}
+const NOMS = new Map();   // orthographe affichée des noms saisis librement
+function pKey(r) {
+  if (!r) return null;
+  const m = refMembre(r);
+  if (m) return 'u:' + m.id;
+  const n = normNom(r.nom);
+  if (!n) return null;
+  if (!NOMS.has(n)) NOMS.set(n, String(r.nom).trim().replace(/\s+/g, ' '));
+  return 'n:' + n;
+}
+const nomDe = r => { const m = refMembre(r); return m ? mNom(m) : String((r && r.nom) || '').trim(); };
+/* Prénom seul, sauf si deux membres le partagent */
+function nomCourt(r) {
+  const m = refMembre(r);
+  if (!m) return nomDe(r);
+  const nom = mNom(m), p = normNom(prenomDe(nom));
+  return membres().filter(x => normNom(prenomDe(mNom(x))) === p).length > 1 ? nom : prenomDe(nom);
+}
+function personne(k) {
+  if (!k || k === '_') return null;
+  if (k.startsWith('u:')) {
+    const m = get('membres', k.slice(2));
+    return m ? { k, uid: m.id, nom: mNom(m), m } : null;
+  }
+  const n = k.slice(2);
+  return { k, uid: null, nom: NOMS.get(n) || n, m: null };
+}
+const kMoi = () => (me.uid && get('membres', me.uid)) ? 'u:' + me.uid : pKey({ uid: me.uid, nom: moiNom() });
+const estMoi = r => { const k = typeof r === 'string' ? r : pKey(r); return !!k && k === kMoi(); };
+const hashCol = s => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) | 0; return Math.abs(h) % NB_COULEURS; };
+/* Pastille ronde d'une personne (les chevaux ont des pastilles carrées) */
+function pav(r, size = '') {
+  const m = refMembre(r), nom = m ? mNom(m) : String((r && r.nom) || '?');
+  const c = m && Number.isInteger(m.couleur) ? Math.abs(m.couleur) % NB_COULEURS : hashCol(normNom(nom));
+  return `<span class="av pp ${size} hc${c}" aria-hidden="true">${esc(initials(nom))}</span>`;
+}
+const ROLE_LABEL = { gerante: 'Gérante', equipe: 'Peut modifier', lecture: 'Lecture seule' };
+
+/* ---------- Propriété et demi-pensions ---------- */
+const propRef = h => (h && (h.propUid || String(h.proprietaire || '').trim())) ? { uid: h.propUid || null, nom: String(h.proprietaire || '').trim() } : null;
+const dpsDe = h => (Array.isArray(h && h.dp) ? h.dp : []).filter(x => x && x.id && x.qui);
+const dpActive = (x, d = todayISO()) => (!validISO(x.debut) || x.debut <= d) && (!validISO(x.fin) || x.fin >= d);
+const jourDe = iso => new Date(toUTC(iso)).getUTCDay();
+const joursTxt = js => { const s = new Set((js || []).map(Number)); return JOURS.filter(j => s.has(j.id)).map(j => j.l).join(', '); };
+/* La gérante : ses chevaux n'ont pas besoin d'étiquette de propriétaire dans la liste */
+const proprioGerante = h => { const m = refMembre(propRef(h)); return !!(m && m.role === 'gerante'); };
+function dpAujourdhui() {
+  const t = todayISO(), j = jourDe(t);
+  return chevaux().flatMap(h => dpsDe(h).filter(x => dpActive(x, t) && (x.jours || []).map(Number).includes(j)).map(x => ({ h, x })));
+}
+/* Qui est attendu aujourd'hui : demi-pensions du jour et jours de présence des fiches */
+function presentsAujourdhui() {
+  const j = jourDe(todayISO()), by = new Map();
+  dpAujourdhui().forEach(({ h, x }) => {
+    const k = pKey(x.qui);
+    if (!k) return;
+    if (!by.has(k)) by.set(k, { k, ref: x.qui, chevaux: [] });
+    by.get(k).chevaux.push(h);
+  });
+  membres().forEach(m => {
+    const k = 'u:' + m.id;
+    if (!by.has(k) && (Array.isArray(m.dispo) ? m.dispo : []).map(Number).includes(j)) by.set(k, { k, ref: { uid: m.id, nom: mNom(m) }, chevaux: [] });
+  });
+  return [...by.values()];
+}
+
+/* ---------- Dépenses : soins, cours, engagements, foin, et qui a payé ---------- */
+const CATS = [
+  { id: 'soins', label: 'Soins', icon: 'stetho' }, { id: 'cours', label: 'Cours', icon: 'timer' },
+  { id: 'concours', label: 'Concours', icon: 'rosette' }, { id: 'foin', label: 'Foin', icon: 'bale' }
+];
+const catDe = id => CATS.find(c => c.id === id) || CATS[0];
+const ACT_DEP = { soins: 'edit-soin', seances: 'edit-seance', concours: 'edit-concours', foin: 'edit-foin' };
+function depenses(from = null) {
+  const out = [], ok = d => validISO(d) && (!from || d >= from);
+  const add = (coll, o, cat, v, label, d) => { if (v > 0 && ok(d)) out.push({ coll, id: o.id, cat, d, v, qui: o.payePar || null, hid: o.horseId || null, label }); };
+  list('soins').forEach(s => { if (s.statut !== 'prevu') add('soins', s, 'soins', Number(s.cout) || 0, soinLabel(s), s.date); });
+  list('seances').forEach(s => { if (s.statut !== 'prevu') add('seances', s, 'cours', Number(s.cout) || 0, [s.type || 'Séance', s.coach ? 'avec ' + s.coach : ''].filter(Boolean).join(' '), s.date); });
+  // un engagement compte une fois payé : statut « Engagé » ou résultat saisi
+  list('concours').forEach(c => { if (c.statut === 'engage' || hasResult(c)) add('concours', c, 'concours', Number(c.frais) || 0, c.lieu || 'Concours', c.date); });
+  list('foin').forEach(m => { if (m.sens === 'in') add('foin', m, 'foin', (Number(m.nb) || 0) * (Number(m.prix) || 0), `${m.nb} ${balleNom(m.balle, m.nb)}`, m.date); });
+  return out.sort((a, b) => b.d.localeCompare(a.d));
+}
+function periode(p) {
+  const t = todayISO();
+  if (p === 'annee') return { id: 'annee', from: t.slice(0, 4) + '-01-01', label: 'en ' + t.slice(0, 4) };
+  if (p === 'tout') return { id: 'tout', from: null, label: 'depuis le début' };
+  return { id: 'mois', from: t.slice(0, 7) + '-01', label: 'ce mois-ci' };
+}
+/* Bilan par personne : tâches cochées, séances montées, dépenses (clé « _ » : non attribuées) */
+function bilan(from) {
+  const t = todayISO(), by = new Map();
+  const acc = k => { if (!by.has(k)) by.set(k, { k, taches: 0, seances: 0, minutes: 0, dep: 0, cats: {}, items: [] }); return by.get(k); };
+  taches().forEach(tk => faitsDe(tk).forEach(f => {
+    if (from && f.d < from) return;
+    const k = pKey({ uid: f.uid, nom: f.par });
+    if (k) acc(k).taches++;
+  }));
+  list('seances').forEach(s => {
+    if (s.statut === 'prevu' || !validISO(s.date) || (from && s.date < from) || s.date > t) return;
+    const k = pKey({ uid: s.cavalierUid, nom: s.cavalier });
+    if (k) { const a = acc(k); a.seances++; a.minutes += Number(s.duree) || 0; }
+  });
+  const deps = depenses(from);
+  deps.forEach(e => { const a = acc(pKey(e.qui) || '_'); a.dep += e.v; a.cats[e.cat] = (a.cats[e.cat] || 0) + e.v; a.items.push(e); });
+  const vals = [...by.values()].filter(a => a.k !== '_');
+  return {
+    by, deps, total: deps.reduce((s, e) => s + e.v, 0),
+    taches: vals.reduce((s, a) => s + a.taches, 0), seances: vals.reduce((s, a) => s + a.seances, 0)
+  };
+}
+const nomPre = id => (get('pres', id) || {}).nom || 'un pré';
+/* Fil de l'équipe : qui a fait quoi, du plus récent au plus ancien */
+/* Chaque entrée : ce qui a été fait (quoi) et sur quoi (objet), par qui et quand */
+function filEquipe(fromT = 0, limit = 30, k = null) {
+  const items = [];
+  // une action sans auteur connu (saisie d'avant le prénom) n'apprend rien sur qui fait quoi
+  const push = (t, r, icon, quoi, objet, act) => { const pk = pKey(r); if (t && t >= fromT && pk && (!k || pk === k)) items.push({ t, r, icon, quoi, objet, act }); };
+  taches().forEach(tk => faitsDe(tk).forEach(f => push(f.t, { uid: f.uid, nom: f.par }, 'tasks', 'Tâche cochée', tk.titre, `data-act="edit-tache" data-id="${tk.id}"`)));
+  const crees = (coll, icon, fn, act) => list(coll).forEach(o => {
+    const c = o.creePar;
+    if (!c || !c.t) return;
+    const x = fn(o);
+    if (x) push(c.t, c, icon, x[0], x[1], act ? `data-act="${act}" data-id="${o.id}"` : (x[2] || ''));
+  });
+  crees('soins', 'syringe', s => [s.statut === 'prevu' ? 'Rendez-vous pris' : 'Soin noté', `${soinLabel(s)} · ${hNom(s.horseId)}`], 'edit-soin');
+  crees('seances', 'timer', s => [s.statut === 'prevu' ? 'Séance prévue' : 'Séance notée', `${s.type || 'Séance'} · ${hNom(s.horseId)}`], 'edit-seance');
+  crees('concours', 'rosette', c => ['Concours ajouté', `${c.lieu || 'Lieu à préciser'} · ${hNom(c.horseId)}`], 'edit-concours');
+  crees('foin', 'bale', m => m.sens === 'in' ? ['Foin rentré', `${m.nb} ${balleNom(m.balle, m.nb)}`] : [m.nb > 1 ? 'Balles entamées' : 'Balle entamée', `${m.nb} ${balleNom(m.balle, m.nb)}`], 'edit-foin');
+  crees('places', 'move', p => ['Mise au pré', `${hNom(p.horseId)} → ${nomPre(p.preId)}`], null);
+  crees('entretiens', 'tool', e => ['Entretien noté', `${e.type || 'Travail'} · ${nomPre(e.preId)}`], 'edit-entretien');
+  crees('chevaux', 'horse', h => ['Fiche ajoutée', h.nom, `data-act="open-cheval" data-id="${h.id}"`], null);
+  crees('pres', 'fence', p => ['Pré ajouté', p.nom, `data-act="open-pre" data-id="${p.id}"`], null);
+  crees('taches', 'tasks', tk => ['Tâche créée', tk.titre], 'edit-tache');
+  return items.sort((a, b) => b.t - a.t).slice(0, limit);
+}
+const quandTxt = t => { const d = isoOf(new Date(t)), r = dRel(d); return (d === todayISO() ? '' : r + ' · ') + hTxt(t); };

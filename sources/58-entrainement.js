@@ -3,7 +3,8 @@
 function seanceRow(s, showHorse = false) {
   const t = todayISO(), h = cheval(s.horseId), prevu = s.statut === 'prevu';
   const title = [s.type || 'Séance', durTxt(s.duree)].filter(Boolean).join(' · ');
-  const who = [prevu && s.heure ? heureTxt(s.heure) : '', s.coach ? `Coach : ${s.coach}` : '', s.cavalier ? `Cavalier : ${s.cavalier}` : '', s.lieu].filter(Boolean).join(' · ');
+  const cav = nomDe({ uid: s.cavalierUid, nom: s.cavalier });
+  const who = [prevu && s.heure ? heureTxt(s.heure) : '', s.coach ? `Coach : ${s.coach}` : '', cav ? `Cavalier : ${cav}` : '', s.lieu].filter(Boolean).join(' · ');
   const pills = [
     prevu ? (s.date < t ? '<span class="pill warn">À confirmer</span>' : '<span class="pill info">Prévue</span>') : '',
     s.intensite ? `<span class="pill">${esc(intLabel(s.intensite))}</span>` : '',
@@ -37,13 +38,12 @@ function formSeance(id, pre = {}) {
   const hs = chevaux(), all = chevaux(true);
   if (!all.length) { toast("Ajoute d'abord un cheval."); formCheval(null); return; }
   const t = todayISO();
-  const s = ex ? clone(ex) : { date: t, type: null, cavalier: lastUsed('seances', 'cavalier') };
+  const s = ex ? clone(ex) : { date: t, type: null };
   const selH = ex ? [ex.horseId] : pre.hid ? [pre.hid] : (hs.length === 1 ? [hs[0].id] : []);
   const auto = d => (d > todayISO() ? 'prevu' : 'fait');
   const statut0 = ex ? (ex.statut === 'prevu' ? 'prevu' : 'fait') : auto(s.date);
   const hOpts = horseOpts(ex ? all.filter(h => !h.archive || h.id === ex.horseId) : hs);
   const lieux = Array.from(new Set([...historyValues('seances', 'lieu'), ...LIEUX]));
-  const cavs = Array.from(new Set([...historyValues('seances', 'cavalier'), ...historyValues('concours', 'cavalier')]));
   const body = `
     ${grp(ex ? 'Cheval' : 'Chevaux', chips('h', hOpts, selH, { multi: !ex }))}
     <div class="grid2">${fld('Date', inp('f_date', s.date, 'type="date" required'))}${fld('Heure', inp('f_heure', s.heure, 'type="time"'), 'Facultatif.')}</div>
@@ -54,12 +54,13 @@ function formSeance(id, pre = {}) {
     <div class="wrap">${DUREES.map(m => `<button type="button" class="chip" data-act="fill" data-target="f_duree" data-fill="${m}">${durTxt(m)}</button>`).join('')}</div>
     ${grp('Intensité', chips('int', INTENSITES.map(x => ({ v: x.id, l: x.label })), s.intensite ? [s.intensite] : [], { optional: true }))}
     ${fld('Coach (s\'il y en a un)', inp('f_coach', s.coach, 'list="dl-coach" autocomplete="off" autocapitalize="words"'), 'Laisse vide pour une séance sans coach.')}
-    ${fld('Cavalier', inp('f_cav', s.cavalier, 'list="dl-cavs" autocomplete="off" autocapitalize="words"'))}
+    ${pickPerson('cav', 'Cavalier', ex && (s.cavalier || s.cavalierUid) ? { uid: s.cavalierUid || null, nom: s.cavalier || '' } : null, { moi: !ex, def: lastUsed('seances', 'cavalier') })}
     ${fld('Lieu', inp('f_lieu', s.lieu, 'list="dl-lieux" autocomplete="off" placeholder="Carrière, manège, extérieur…"'))}
     ${fld('Contenu, objectifs', area('f_notes', s.notes, 'rows="3" placeholder="ex. transitions, épaule en dedans, gymnastique à 1 m"'))}
     <div id="w_res"${statut0 === 'fait' ? '' : ' hidden'}>${grp('Ressenti', chips('res', RESSENTIS.map(x => ({ v: x.id, l: x.label })), s.ressenti ? [s.ressenti] : [], { optional: true }))}</div>
     ${fld('Prix du cours (€)', inp('f_cout', s.cout != null ? String(s.cout).replace('.', ',') : '', numAttr), 'Facultatif.')}
-    ${dlist('dl-coach', historyValues('seances', 'coach'))}${dlist('dl-cavs', cavs)}${dlist('dl-lieux', lieux)}`;
+    ${payeField(s.payePar, 'f_cout', Number(s.cout) || 0)}
+    ${dlist('dl-coach', historyValues('seances', 'coach'))}${dlist('dl-lieux', lieux)}`;
   openSheet(ex ? (ex.statut === 'prevu' ? 'Séance prévue' : 'Séance') : 'Séance de travail', body, {
     onMount: f => {
       let touched = false;
@@ -92,11 +93,11 @@ function formSeance(id, pre = {}) {
       if (dRaw && (!duree || duree <= 0 || duree > 600)) return 'La durée se note en minutes, par exemple 45.';
       const coutRaw = val('f_cout'), cout = parseNum(coutRaw);
       if (coutRaw && (cout == null || cout < 0)) return 'Le prix doit être un nombre, par exemple 35.';
-      const heure = val('f_heure');
+      const heure = val('f_heure'), cav = readPerson('cav');
       const base = {
         date, heure: /^\d{2}:\d{2}$/.test(heure) ? heure : null, statut, type, duree: duree ? Math.round(duree) : null,
-        intensite: chipVal(f, 'int'), coach: val('f_coach'), cavalier: val('f_cav'), lieu: val('f_lieu'), notes: val('f_notes'),
-        ressenti: statut === 'fait' ? chipVal(f, 'res') : null, cout
+        intensite: chipVal(f, 'int'), coach: val('f_coach'), cavalier: cav ? cav.nom : '', cavalierUid: cav ? cav.uid : null, lieu: val('f_lieu'), notes: val('f_notes'),
+        ressenti: statut === 'fait' ? chipVal(f, 'res') : null, cout, payePar: lirePaye(cout)
       };
       if (ex) { put('seances', Object.assign({}, ex, base, { horseId: hids[0] })); toast('Séance enregistrée'); return; }
       const ids = hids.map(hid => put('seances', Object.assign({ horseId: hid }, base)).id);

@@ -10,7 +10,7 @@ function formCheval(id) {
     ${fld('Nom', inp('f_nom', h.nom, 'required autocomplete="off" autocapitalize="words" enterkeyhint="next"'))}
     ${fld('Date de naissance', inp('f_naiss', h.naissance, 'type="date"'), "L'âge est calculé automatiquement.")}
     ${grp('Sexe', chips('sexe', SEXES.map(s => ({ v: s, l: s })), h.sexe, { optional: true }))}
-    ${fld('Propriétaire', inp('f_prop', h.proprietaire, 'autocomplete="off" autocapitalize="words" placeholder="Pour un cheval en pension"'), 'Laisse vide pour tes propres chevaux.')}
+    ${pickPerson('prop', 'Propriétaire', propRef(h), { ph: 'Prénom et nom', hint: 'Facultatif. Les demi-pensions se notent ensuite dans la fiche du cheval, rubrique Propriété.' })}
     ${fld('Race', inp('f_race', h.race, 'list="dl-race" autocomplete="off" placeholder="ex. Anglo-Arabe x Selle Français"'))}
     ${fld('Robe', inp('f_robe', h.robe, 'list="dl-robe" autocomplete="off"'))}
     <div class="grid2">${fld('Taille (cm)', inp('f_taille', h.taille, 'inputmode="numeric" autocomplete="off"'))}${fld('Poids (kg)', inp('f_poids', h.poids, 'inputmode="numeric" autocomplete="off"'))}</div>
@@ -31,10 +31,11 @@ function formCheval(id) {
       if (pr.changed) h.photo = pr.photo || null;
       const naiss = val('f_naiss');
       if (naiss && naiss > todayISO()) return 'La date de naissance ne peut pas être dans le futur.';
+      const prop = readPerson('prop');
       Object.assign(h, {
         nom, naissance: naiss || null, sexe: chipVal(f, 'sexe'), race: val('f_race'), robe: val('f_robe'),
         taille: parseNum(val('f_taille')), poids: parseNum(val('f_poids')), sire: val('f_sire'), puce: val('f_puce'),
-        couleur: parseInt(chipVal(f, 'coul') || '0', 10), notes: val('f_notes'), proprietaire: val('f_prop')
+        couleur: parseInt(chipVal(f, 'coul') || '0', 10), notes: val('f_notes'), proprietaire: prop ? prop.nom : '', propUid: prop ? prop.uid : null
       });
       if (ex) h.archive = $('#f_arch').checked;
       const saved = put('chevaux', h);
@@ -57,6 +58,62 @@ function deleteHorse(id) {
   toast(`${h.nom} supprimé`);
 }
 ACT['edit-cheval'] = d => formCheval(d.id);
+
+/* Propriétaire seul, sans rouvrir toute la fiche */
+function formProp(hid) {
+  const h = cheval(hid);
+  if (!h) return;
+  openSheet(`Propriétaire de ${h.nom}`, pickPerson('prop', 'Propriétaire', propRef(h), { ph: 'Prénom et nom', hint: "Une personne de l'équipe, ou « Autre personne » si elle n'a pas de compte." }), {
+    onSubmit: () => {
+      const r = readPerson('prop'), cur = cheval(hid);
+      if (!cur) return;
+      put('chevaux', Object.assign({}, cur, { proprietaire: r ? r.nom : '', propUid: r ? r.uid : null }));
+      toast(r ? `Propriétaire : ${nomCourt(r)}` : 'Propriétaire retiré');
+    }
+  });
+}
+ACT['edit-prop'] = d => formProp(d.id);
+
+/* Demi-pension : qui, quels jours, quelle participation, depuis quand */
+function formDP(hid, id) {
+  const h0 = hid ? cheval(hid) : null;
+  if (hid && !h0) return;
+  if (!chevaux().length) { toast("Ajoute d'abord un cheval."); formCheval(null); return; }
+  const ex = id && h0 ? dpsDe(h0).find(x => x.id === id) : null;
+  if (id && !ex) return;
+  const x = ex ? clone(ex) : { id: 'dp' + uid(), qui: null, jours: [], part: null, debut: todayISO(), fin: null, notes: '' };
+  const hs = chevaux();
+  const body = `
+    ${h0 ? '' : grp('Cheval', chips('h', horseOpts(hs), hs.length === 1 ? [hs[0].id] : []))}
+    ${pickPerson('dp', 'Demi-pensionnaire', x.qui, { ph: 'Prénom et nom', hint: membres().length ? "Une personne de l'équipe, ou « Autre personne » si elle n'a pas de compte." : '' })}
+    ${grp('Ses jours', chips('jours', JOURS.map(j => ({ v: String(j.id), l: j.l })), (x.jours || []).map(String), { multi: true }), "Ils s'affichent sur l'accueil le jour venu, pour que personne d'autre ne prévoie le cheval.")}
+    ${fld('Participation (€ par mois)', inp('f_dpeur', x.part != null ? String(x.part).replace('.', ',') : '', numAttr + ' placeholder="ex. 150"'), 'Facultatif.')}
+    <div class="grid2">${fld('Depuis le', inp('f_deb', x.debut, 'type="date"'))}${fld("Jusqu'au", inp('f_dfin', x.fin, 'type="date"'), 'Vide : en cours.')}</div>
+    ${fld('Conditions', area('f_notes', x.notes, 'rows="3" placeholder="Cours compris, concours, assurance, frais partagés…"'))}`;
+  openSheet(h0 ? `Demi-pension · ${h0.nom}` : 'Demi-pension', body, {
+    onSubmit: f => {
+      const h = h0 || cheval(chipVal(f, 'h'));
+      if (!h) return 'Choisis le cheval.';
+      const qui = readPerson('dp');
+      if (!qui) return 'Indique qui prend le cheval en demi-pension.';
+      const raw = val('f_dpeur'), part = parseNum(raw);
+      if (raw && (part == null || part < 0)) return 'La participation doit être un nombre, par exemple 150.';
+      const debut = val('f_deb'), fin = val('f_dfin');
+      if (validISO(debut) && validISO(fin) && fin < debut) return 'La fin doit suivre le début.';
+      Object.assign(x, { qui, jours: chipVals(f, 'jours').map(Number), part, debut: validISO(debut) ? debut : null, fin: validISO(fin) ? fin : null, notes: val('f_notes') });
+      const cur = cheval(h.id), lst = (Array.isArray(cur.dp) ? cur.dp : []).filter(z => z && z.id !== x.id);
+      put('chevaux', Object.assign({}, cur, { dp: [...lst, x] }));
+      toast(ex ? 'Demi-pension enregistrée' : `Demi-pension de ${nomCourt(qui)} sur ${h.nom}`);
+    },
+    onDelete: ex ? () => {
+      const cur = cheval(hid), prev = clone(cur);
+      put('chevaux', Object.assign({}, cur, { dp: (cur.dp || []).filter(z => z && z.id !== id) }));
+      toast('Demi-pension supprimée', { undo: () => put('chevaux', prev) });
+    } : null
+  });
+}
+ACT['edit-dp'] = d => formDP(d.hid, d.id);
+ACT['new-dp'] = d => formDP(d.hid || null, null);
 
 function formRation(hid, lid) {
   const h = cheval(hid);
@@ -128,6 +185,7 @@ function formSoin(id, pre = {}) {
     ${ex && ex.statut === 'prevu' ? `<button type="button" class="btn" id="b_done">${ic('check', 'sm')}Marquer fait aujourd'hui</button>` : ''}
     <div class="grid2">${fld('Praticien', inp('f_prat', s.praticien, 'list="dl-prat" autocomplete="off"'))}${fld('Produit', inp('f_prod', s.produit, 'list="dl-prod" autocomplete="off" placeholder="vaccin, vermifuge…"'))}</div>
     <div class="grid2">${fld('Coût (€)', inp('f_cout', s.cout != null ? String(s.cout).replace('.', ',') : '', numAttr))}${fld('Prochain rappel', inp('f_proch', s.prochain, 'type="date"'), 'Vide : calculé selon les réglages')}</div>
+    ${payeField(s.payePar, 'f_cout', Number(s.cout) || 0)}
     ${fld('Notes', area('f_notes', s.notes, 'rows="2"'))}
     ${dlist('dl-prat', historyValues('soins', 'praticien'))}${dlist('dl-prod', historyValues('soins', 'produit'))}`;
   openSheet(ex ? soinLabel(ex) : 'Soin ou rendez-vous', body, {
@@ -157,7 +215,7 @@ function formSoin(id, pre = {}) {
       if (coutRaw && cout == null) return 'Le coût doit être un nombre, par exemple 45 ou 45,50.';
       const proch = val('f_proch');
       if (proch && proch <= date) return 'Le prochain rappel doit tomber après la date du soin.';
-      const base = { types, label: types.includes('autre') ? val('f_label') : '', date, statut, praticien: val('f_prat'), produit: val('f_prod'), cout, prochain: proch || null, notes: val('f_notes') };
+      const base = { types, label: types.includes('autre') ? val('f_label') : '', date, statut, praticien: val('f_prat'), produit: val('f_prod'), cout, payePar: lirePaye(cout), prochain: proch || null, notes: val('f_notes') };
       if (ex) { put('soins', Object.assign({}, ex, base, { horseId: hids[0] })); toast('Soin enregistré'); return; }
       const ids = hids.map(hid => put('soins', Object.assign({ horseId: hid }, base)).id);
       toast(`${statut === 'prevu' ? 'Rendez-vous noté' : 'Soin enregistré'}${ids.length > 1 ? ` pour ${ids.length} chevaux` : ''}`, { undo: () => ids.forEach(i => del('soins', i)) });

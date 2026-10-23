@@ -1,6 +1,6 @@
 # EquiValdi · Carnet d'écurie
 
-Application pour téléphone : chevaux, rations, soins, entraînement, prés, foin, concours et tâches partagées.
+Application pour téléphone : chevaux, rations, soins, entraînement, prés, foin, concours, tâches partagées et équipe (qui fait quoi, dépenses, propriétaires et demi-pensions).
 Elle s'installe depuis le navigateur, fonctionne sans réseau et se partage entre plusieurs personnes.
 
 ## Mise en route (une seule fois)
@@ -18,7 +18,9 @@ Elle s'installe depuis le navigateur, fonctionne sans réseau et se partage entr
 
 ## Inviter l'équipe
 
-*Réglages* › *Gérer l'équipe* : saisir l'adresse e-mail de la personne et choisir ses droits (*Peut modifier* ou *Lecture seule*). Envoyer ensuite le lien du carnet : la personne crée son compte avec cette adresse et confirme son e-mail.
+Onglet *Équipe* › *Inviter, gérer les accès* (ou *Réglages* › *Gérer l'équipe*) : saisir l'adresse e-mail de la personne et choisir ses droits (*Peut modifier* ou *Lecture seule*). Envoyer ensuite le lien du carnet : la personne crée son compte avec cette adresse et confirme son e-mail.
+
+Dans l'onglet *Équipe*, chacun tient sa fiche (téléphone, jours de présence, matériel) et voit qui a fait quoi : tâches cochées, séances, dépenses de soins, de cours et d'engagements. Le propriétaire et les demi-pensions se notent dans la fiche de chaque cheval, rubrique *Propriété*.
 
 ## Fichiers
 

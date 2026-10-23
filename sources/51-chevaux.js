@@ -7,13 +7,19 @@ function urgentPill(hid) {
   if (r.days <= cfg().alerte) return `<span class="pill warn">${r.type.short} ${dRel(r.due)}</span>`;
   return '';
 }
+/* Étiquettes de propriété : propriétaire (sauf la gérante) et demi-pensions en cours */
+function proprioPills(h) {
+  const pr = propRef(h);
+  const prop = pr && !proprioGerante(h) ? `<span class="pill info">${ic('user')}Propriétaire · ${esc(nomCourt(pr).slice(0, 22))}</span>` : '';
+  return prop + dpsDe(h).filter(x => dpActive(x)).map(x => `<span class="pill">${ic('card')}Demi-pension · ${esc(nomCourt(x.qui).slice(0, 22))}</span>`).join('');
+}
 function rowCheval(h) {
   const w = horseWhere(h.id);
   const sub = [ageTxt(h.naissance), h.sexe, h.race].filter(Boolean).join(' · ');
   return `<button type="button" class="row" data-act="open-cheval" data-id="${h.id}">${av(h, 'm')}<div class="row-main">
     <div class="row-t">${esc(h.nom)} ${exTag(h)}${h.archive ? '<span class="pill">Archivé</span>' : ''}</div>
     <div class="row-s trunc">${esc(sub || 'Fiche à compléter')}</div>
-    <div class="wrap" style="margin-top:4px"><span class="pill">${ic(w.pre ? 'fence' : 'barn')}${esc(w.txt)}</span>${h.proprietaire ? `<span class="pill info">${ic('user')}Pension · ${esc(String(h.proprietaire).slice(0, 18))}</span>` : ''}${urgentPill(h.id)}</div>
+    <div class="wrap" style="margin-top:4px"><span class="pill">${ic(w.pre ? 'fence' : 'barn')}${esc(w.txt)}</span>${proprioPills(h)}${urgentPill(h.id)}</div>
   </div><span class="row-end">${ic('next', 'sm')}</span></button>`;
 }
 VIEWS.chevaux = () => {
@@ -75,7 +81,6 @@ function ficheHtml(h) {
   const lies = tachesTriees(tk => tk.horseId === h.id);
   const tks = lies.length ? section('Tâches', tachesListe(lies)) : '';
   const items = [
-    ['Propriétaire', h.proprietaire ? `${h.proprietaire} (pension)` : ''],
     ['Naissance', h.naissance ? `${dFull(h.naissance)} · ${ageTxt(h.naissance)}` : ''],
     ['Sexe', h.sexe], ['Race', h.race], ['Robe', h.robe],
     ['Taille', h.taille ? `${num(h.taille, 0)} cm` : ''], ['Poids', h.poids ? `${num(h.poids, 0)} kg` : ''],
@@ -84,8 +89,50 @@ function ficheHtml(h) {
   const dl = items.length ? `<dl class="dl">${items.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`
     : empty('Fiche à compléter', 'Date de naissance, race, robe, n° SIRE, transpondeur…');
   const notes = h.notes ? `<div class="card"><div class="eyebrow">Notes</div><div style="white-space:pre-wrap">${esc(h.notes)}</div></div>` : '';
-  return loc + tks + rap + section('Identité', dl + notes, `<button type="button" class="link" data-act="edit-cheval" data-id="${h.id}">${ic('edit', 'sm')}Modifier</button>`);
+  return loc + tks + rap + proprieteHtml(h) + depensesChevalHtml(h) + section('Identité', dl + notes, `<button type="button" class="link" data-act="edit-cheval" data-id="${h.id}">${ic('edit', 'sm')}Modifier</button>`);
 }
+/* Propriété : à qui est le cheval, qui le prend en demi-pension, à quelles conditions */
+function proprieteHtml(h) {
+  const t = todayISO(), pr = propRef(h), mp = refMembre(pr), rows = [];
+  rows.push(pr
+    ? crow(`data-act="edit-prop" data-id="${h.id}"`, `${pav(pr)}<span class="row-main"><span class="row-t">${esc(nomDe(pr))}${estMoi(pr) ? ' <span class="pill ok">Toi</span>' : ''}</span><span class="row-s">Propriétaire${mp ? '' : ' · hors équipe'}</span></span>`, mp && mp.tel, nomDe(pr))
+    : `<button type="button" class="row" data-act="edit-prop" data-id="${h.id}">${lead('user')}<div class="row-main"><div class="row-t">Propriétaire</div><div class="row-s">Non renseigné : touche pour l'indiquer</div></div><span class="row-end">${ic('next', 'sm')}</span></button>`);
+  dpsDe(h).sort((a, b) => (dpActive(b) - dpActive(a)) || String(b.debut || '').localeCompare(String(a.debut || ''))).forEach(x => {
+    const fini = validISO(x.fin) && x.fin < t, futur = validISO(x.debut) && x.debut > t, mx = refMembre(x.qui);
+    const det = [joursTxt(x.jours), Number(x.part) > 0 ? eur(x.part) + ' / mois' : '',
+      fini ? 'terminée le ' + dShort(x.fin) : futur ? 'à partir du ' + dShort(x.debut) : (validISO(x.debut) ? 'depuis le ' + dShort(x.debut) : '')].filter(Boolean).join(' · ');
+    rows.push(crow(`data-act="edit-dp" data-hid="${h.id}" data-id="${esc(x.id)}"`,
+      `${pav(x.qui)}<span class="row-main"><span class="row-t">${esc(nomDe(x.qui))}${estMoi(x.qui) ? ' <span class="pill ok">Toi</span>' : ''}${fini ? ' <span class="pill">Terminée</span>' : futur ? ' <span class="pill info">À venir</span>' : ''}</span><span class="row-s">Demi-pension${det ? ' · ' + esc(det) : ''}</span>${x.notes ? `<span class="row-s clamp2">${esc(x.notes)}</span>` : ''}</span>`,
+      mx && mx.tel, nomDe(x.qui)));
+  });
+  const add = sync.readOnly ? '' : `<button type="button" class="link" data-act="new-dp" data-hid="${h.id}">${ic('plus', 'sm')}Demi-pension</button>`;
+  return section('Propriété', `<div class="list">${rows.join('')}</div>`, add);
+}
+/* Dépenses de l'année pour ce cheval, et qui les a payées */
+function depensesChevalHtml(h) {
+  const yr = todayISO().slice(0, 4);
+  const es = depenses(yr + '-01-01').filter(e => e.hid === h.id);
+  if (!es.length) return '';
+  const tot = es.reduce((s, e) => s + e.v, 0);
+  const cats = CATS.map(c => ({ c, v: es.filter(e => e.cat === c.id).reduce((s, e) => s + e.v, 0) })).filter(x => x.v > 0);
+  const by = new Map();
+  es.forEach(e => { const k = pKey(e.qui) || '_'; if (!by.has(k)) by.set(k, { v: 0, cats: {} }); const b = by.get(k); b.v += e.v; b.cats[e.cat] = (b.cats[e.cat] || 0) + e.v; });
+  const rows = [...by.entries()].sort((a, b) => (a[0] === '_') - (b[0] === '_') || b[1].v - a[1].v).map(([k, b]) => {
+    const p = personne(k), det = CATS.filter(c => b.cats[c.id]).map(c => `${c.label} ${eur(b.cats[c.id])}`).join(' · ');
+    return p
+      ? `<button type="button" class="row" data-act="open-membre" data-k="${esc(k)}">${pav(p)}<div class="row-main"><div class="row-t">${esc(p.nom)}</div><div class="row-s">${esc(det)}</div></div><span class="row-end num">${eur(b.v)}</span></button>`
+      : `<button type="button" class="row sev-warn" data-act="dep-cheval" data-id="${h.id}">${lead('euro')}<div class="row-main"><div class="row-t">Payeur à indiquer</div><div class="row-s">${esc(det)}</div></div><span class="row-end num">${eur(b.v)}</span></button>`;
+  }).join('');
+  return section(`Dépenses ${yr}`, `<div class="card"><div class="pnums"><span class="big">${eur(tot)}</span><span class="unit">${esc(cats.map(x => `${x.c.label.toLowerCase()} ${eur(x.v)}`).join(' · '))}</span></div></div><div class="list">${rows}</div>`,
+    `<button type="button" class="link" data-act="dep-cheval" data-id="${h.id}">Détail ${ic('next', 'sm')}</button>`);
+}
+ACT['dep-cheval'] = d => {
+  const h = cheval(d.id);
+  if (!h) return;
+  const yr = todayISO().slice(0, 4);
+  const es = depenses(yr + '-01-01').filter(e => e.hid === h.id);
+  openSheet(`Dépenses ${yr} · ${h.nom}`, es.length ? `<p class="note">Touche une ligne pour la modifier ou indiquer qui l'a payée.</p><div class="list">${es.map(e => rowDep(e)).join('')}</div>` : empty('Aucune dépense', 'Les coûts des soins, des cours et des engagements de ce cheval apparaîtront ici.'));
+};
 
 function rationHtml(h) {
   const lines = h.ration || [];

@@ -5,7 +5,8 @@ const TABS = [
   { id: 'chevaux', label: 'Chevaux', icon: 'horse' },
   { id: 'pres', label: 'Prés', icon: 'fence' },
   { id: 'foin', label: 'Foin', icon: 'bale' },
-  { id: 'concours', label: 'Concours', icon: 'rosette' }
+  { id: 'concours', label: 'Concours', icon: 'rosette' },
+  { id: 'equipe', label: 'Équipe', icon: 'users' }
 ];
 const nav = { tab: TABS.some(t => t.id === ui.tab) ? ui.tab : 'accueil', stack: [], savedY: 0 };
 const VIEWS = {};
@@ -158,12 +159,74 @@ const horseOpts = (hs, sub) => hs.map(h => ({
   html: `${av(h, 's')}${sub ? `<span class="two"><span>${esc(h.nom)}</span><small>${esc(sub(h))}</small></span>` : `<span>${esc(h.nom)}</span>`}`
 }));
 
+/* Choisir une personne : les membres de l'équipe en pastilles, « Autre » pour quelqu'un d'extérieur.
+   Sans fiches de membres (carnet partagé sur claude.ai), simple saisie avec suggestions. */
+function nomsConnus() {
+  const s = new Map();
+  const add = n => { const v = String(n || '').trim(); if (v && !s.has(normNom(v))) s.set(normNom(v), v); };
+  add(moiNom());
+  list('seances').forEach(x => add(x.cavalier));
+  list('concours').forEach(x => add(x.cavalier));
+  taches().forEach(tk => faitsDe(tk).forEach(f => add(f.par)));
+  chevaux(true).forEach(h => { add(h.proprietaire); dpsDe(h).forEach(x => add(x.qui.nom)); });
+  return [...s.values()];
+}
+function pickPerson(name, label, ref, o = {}) {
+  const ms = membres();
+  if (!ms.length) {
+    const v = ref ? nomDe(ref) : (o.def || (o.moi ? moiNom() : ''));
+    return fld(label, inp('f_' + name, v, `list="dl-p${name}" autocomplete="off" autocapitalize="words"${o.ph ? ` placeholder="${esc(o.ph)}"` : ''}`), o.hint || '') + dlist('dl-p' + name, nomsConnus());
+  }
+  const autre = o.autre !== false, m = refMembre(ref);
+  let sel = m ? m.id : (autre && ref && String(ref.nom || '').trim() ? '_autre' : null);
+  if (!ref && o.moi && me.uid && get('membres', me.uid)) sel = me.uid;
+  const opts = ms.map(x => ({ v: x.id, html: `${pav({ uid: x.id }, 's')}<span>${esc(nomCourt({ uid: x.id }))}</span>` }));
+  if (autre) opts.push({ v: '_autre', l: o.autreLabel || 'Autre personne' });
+  const other = autre ? `<div id="w_pp_${name}"${sel === '_autre' ? '' : ' hidden'}>${inp('ppn_' + name, sel === '_autre' ? ref.nom : '', `autocomplete="off" autocapitalize="words" placeholder="${esc(o.phAutre || 'Prénom et nom')}" aria-label="${esc(label)} : nom"`)}</div>` : '';
+  return grp(label, chips('pp_' + name, opts, sel ? [sel] : [], { optional: o.optional !== false }) + other, o.hint || '');
+}
+const hasPerson = name => !!(document.getElementById('f_' + name) || document.querySelector(`[data-chips="pp_${name}"]`));
+function readPerson(name) {
+  if (document.getElementById('f_' + name)) {
+    const v = val('f_' + name).replace(/\s+/g, ' ');
+    if (!v) return null;
+    return estMoi({ nom: v }) && me.uid ? { uid: me.uid, nom: v } : { uid: null, nom: v };
+  }
+  const v = chipVal(document, 'pp_' + name);
+  if (!v) return null;
+  if (v === '_autre') { const n = val('ppn_' + name).replace(/\s+/g, ' '); return n ? { uid: null, nom: n } : null; }
+  const m = get('membres', v);
+  return m ? { uid: m.id, nom: mNom(m) } : null;
+}
+document.addEventListener('chipchange', e => {
+  const n = e.detail && e.detail.name;
+  if (!n || !n.startsWith('pp_')) return;
+  const w = document.getElementById('w_' + n);
+  if (!w) return;
+  const on = chipVal(document, n) === '_autre';
+  w.hidden = !on;
+  if (on) { const i = w.querySelector('input'); if (i) i.focus(); }
+});
+/* « Payé par » : apparaît dès qu'un montant est saisi ; inutile quand on est seul dans le carnet */
+function payeField(ref, montantId, montant) {
+  if (membres().length === 1) return '';
+  return `<div id="w_paye" data-for="${montantId}"${montant > 0 ? '' : ' hidden'}>${pickPerson('paye', 'Payé par', ref, { moi: true, hint: "Sert au bilan des dépenses de l'onglet Équipe." })}</div>`;
+}
+const lirePaye = montant => !(montant > 0) ? null : (hasPerson('paye') ? readPerson('paye') : moiRef());
+document.addEventListener('input', e => {
+  const w = document.getElementById('w_paye');
+  if (w && e.target && e.target.id === w.dataset.for) w.hidden = !(parseNum(e.target.value) > 0);
+});
+
 /* ---------- Briques d'affichage ---------- */
 const section = (title, inner, action = '') => `<section class="sec"><div class="sec-h"><h2>${title}</h2>${action}</div>${inner}</section>`;
 const empty = (t, s) => `<div class="empty"><b>${t}</b>${s}</div>`;
 const segCtl = (key, opts, cur, cls = '') => `<div class="seg${cls ? ' ' + cls : ''}" role="group">${opts.map(([v, l]) =>
   `<button type="button" data-act="seg" data-k="${key}" data-v="${v}" aria-pressed="${v === cur}">${l}</button>`).join('')}</div>`;
 const lead = (icon, sev = '') => `<span class="lead">${ic(icon)}</span>`;
+/* Ligne avec bouton d'appel à droite (un lien ne peut pas être dans un bouton) */
+const callBtn = (tel, who) => tel ? `<a class="callbtn" href="${esc(telHref(tel))}" aria-label="Appeler ${esc(who)}">${ic('phone')}</a>` : '';
+const crow = (act, inner, tel, who) => `<div class="crow"><button type="button" class="crow-main" ${act}>${inner}</button>${callBtn(tel, who)}</div>`;
 
 /* ---------- Évènements ---------- */
 /* Actions qui écrivent directement : bloquées en lecture seule */

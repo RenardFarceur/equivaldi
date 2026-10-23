@@ -2,6 +2,9 @@
 /* ---------- Données : copie locale + base de l'artifact ---------- */
 const COLS = ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches'];
 const S = { chevaux: {}, soins: {}, pres: {}, places: {}, entretiens: {}, foin: {}, concours: {}, seances: {}, taches: {}, cfg: null };
+/* Fiches des membres (version installable) : lues avec le carnet, jamais exportées ni effacées avec lui */
+const EXTRA = window.EQ_MODE ? ['membres'] : [];
+EXTRA.forEach(k => { S[k] = {}; });
 const CACHE_KEY = 'carnet-ecurie:cache:v1';
 const OUTBOX_KEY = 'carnet-ecurie:outbox:v1';
 const UI_KEY = 'carnet-ecurie:ui:v1';
@@ -17,6 +20,9 @@ function getMoi() {
   try { const v = JSON.parse(localStorage.getItem(MOI_KEY) || 'null'); if (v && typeof v.nom === 'string' && v.nom) return v.nom; } catch (e) { /* stockage indisponible */ }
   return moiMem;
 }
+/* Mon nom : celui de ma fiche dans l'équipe, sinon le prénom gardé sur ce téléphone */
+const moiNom = () => { const m = me.uid && S.membres ? S.membres[me.uid] : null; return (m && String(m.nom || '').trim()) || getMoi() || me.platformName || ''; };
+const moiRef = () => ({ uid: me.uid || null, nom: moiNom() });
 function setMoi(n) { moiMem = n; try { localStorage.setItem(MOI_KEY, JSON.stringify({ nom: n })); } catch (e) { /* gardé pour cette visite */ } }
 const RO_MSG = window.EQ_MODE
   ? "Tu as un accès en lecture seule. Demande à la gérante du carnet de te passer en « Peut modifier »."
@@ -50,7 +56,7 @@ function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch
 function loadCache() {
   const c = lsGet(CACHE_KEY);
   if (c && typeof c === 'object') {
-    COLS.forEach(k => { S[k] = (c[k] && typeof c[k] === 'object') ? c[k] : {}; });
+    [...COLS, ...EXTRA].forEach(k => { S[k] = (c[k] && typeof c[k] === 'object') ? c[k] : {}; });
     S.cfg = c.cfg || null;
   }
   const o = lsGet(OUTBOX_KEY);
@@ -63,7 +69,7 @@ function saveCache() {
   clearTimeout(cacheTimer);
   cacheTimer = setTimeout(() => {
     const o = { cfg: S.cfg };
-    COLS.forEach(k => { o[k] = S[k]; });
+    [...COLS, ...EXTRA].forEach(k => { o[k] = S[k]; });
     lsSet(CACHE_KEY, o);
   }, 200);
 }
@@ -80,9 +86,12 @@ const list = coll => Object.values(S[coll] || {});
 const get = (coll, id) => (S[coll] || {})[id];
 
 /* Écriture : immédiate en local, envoyée ensuite dans l'ordre */
+let restauration = false;   // pendant une restauration, les fiches gardent leur auteur d'origine
 function put(coll, obj) {
   const o = clone(obj);
   if (!o.id) o.id = uid();
+  // qui a ajouté la fiche : sert au fil de l'équipe
+  if (coll !== 'membres' && !restauration && !S[coll][o.id] && !o.creePar) o.creePar = Object.assign(moiRef(), { t: Date.now() });
   o.maj = Date.now();
   S[coll][o.id] = o;
   queue(coll, o.id, 'set', o);
@@ -204,7 +213,7 @@ async function connect() {
   DB = db;
   connectUser();
   sync.mode = 'cloud';
-  COLS.forEach(subscribe);
+  [...COLS, ...EXTRA].forEach(subscribe);
   subscribeCfg();
   flushSoon(50);
   updateSync();

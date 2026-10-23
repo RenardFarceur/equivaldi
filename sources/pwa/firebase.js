@@ -32,9 +32,12 @@ const code = e => ({ 'permission-denied': 'invalid_argument', 'invalid-argument'
 const fail = e => { throw { code: code(e), message: e && e.message }; };
 const clean = d => JSON.parse(JSON.stringify(d));
 const snapDoc = s => ({ id: s.id, exists: s.exists(), data: () => s.data(), metadata: { fromCache: s.metadata.fromCache, hasPendingWrites: s.metadata.hasPendingWrites } });
+// Les fiches de l'équipe sont fusionnées, jamais remplacées, et sans le rôle ni l'adresse :
+// ceux-là ne changent que par la gérante (changerRole), même si la copie locale est ancienne.
+const fiche = d => { const o = clean(d); delete o.role; delete o.email; return o; };
 const docApi = r => ({
   id: r.id, path: r.path,
-  set: d => setDoc(r, clean(d)).catch(fail),
+  set: d => (String(r.path).startsWith('membres/') ? setDoc(r, fiche(d), { merge: true }) : setDoc(r, clean(d))).catch(fail),
   delete: () => deleteDoc(r).catch(fail),
   get: () => getDoc(r).then(snapDoc, fail),
   onSnapshot: (next, err) => onSnapshot(r, { includeMetadataChanges: true }, s => next(snapDoc(s)), e => err && err({ code: code(e), message: e.message }))

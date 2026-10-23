@@ -19,7 +19,7 @@ html = f"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 {title}
-<meta name="description" content="Carnet d'écurie EquiValdi : chevaux, rations, soins, entraînement, prés, foin, concours et tâches partagées.">
+<meta name="description" content="Carnet d'écurie EquiValdi : chevaux, rations, soins, entraînement, prés, foin, concours, tâches partagées et équipe.">
 <meta name="theme-color" content="#EEF1EB" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0D1611" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="./manifest.webmanifest">
@@ -47,7 +47,7 @@ shutil.copy(os.path.join(SRC, 'pwa/firestore.rules'), os.path.join(OUT, 'firesto
 open(os.path.join(OUT, '.nojekyll'), 'w').write('')
 manifest = {
     'name': "EquiValdi · Carnet d'écurie", 'short_name': 'EquiValdi', 'lang': 'fr',
-    'description': "Chevaux, rations, soins, entraînement, prés, foin, concours et tâches partagées.",
+    'description': "Chevaux, rations, soins, entraînement, prés, foin, concours, tâches partagées, équipe et demi-pensions.",
     'start_url': './', 'scope': './', 'display': 'standalone', 'orientation': 'portrait',
     'background_color': '#EEF1EB', 'theme_color': '#2B6340',
     'icons': [

@@ -102,17 +102,25 @@ const ICONS = {
   tasks: '<path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="m3.5 6.5 1.3 1.3 2.5-2.5M3.5 12l1.3 1.3 2.5-2.5M3.5 17.5l1.3 1.3 2.5-2.5"/>',
   user: '<circle cx="12" cy="8" r="3.8"/><path d="M4.5 20.5c.6-3.9 3.6-6.3 7.5-6.3s6.9 2.4 7.5 6.3"/>',
   users: '<circle cx="9" cy="8.5" r="3.3"/><path d="M2.8 19.5c.5-3.4 3-5.5 6.2-5.5s5.7 2.1 6.2 5.5"/><path d="M15.5 5.6a3.2 3.2 0 0 1 0 5.8M17.5 14.3c2.1.7 3.5 2.5 3.8 5.2"/>',
-  lock: '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>'
+  lock: '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>',
+  phone: '<path d="M6.6 3.5h3l1.6 4.4-2.1 1.4a11.5 11.5 0 0 0 5.6 5.6l1.4-2.1 4.4 1.6v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z"/>',
+  euro: '<path d="M18.5 6.2A7.6 7.6 0 0 0 13.6 4.5 7.6 7.6 0 0 0 6 12a7.6 7.6 0 0 0 7.6 7.5 7.6 7.6 0 0 0 4.9-1.7"/><path d="M3.5 10h10M3.5 14h8"/>',
+  card: '<rect x="3.5" y="5" width="17" height="14" rx="2.5"/><circle cx="9" cy="11" r="2.3"/><path d="M5.8 16.3c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4M14.5 10h3.5M14.5 13.5h3.5"/>'
 };
 const durTxt = m => {
   m = Math.round(Number(m) || 0);
   if (!m) return '';
-  if (m < 60) return `${m} min`;
+  if (m < 60) return `${m}\u00a0min`;
   const h = Math.floor(m / 60), r = m % 60;
-  return r ? `${h} h ${pad(r)}` : `${h} h`;
+  return r ? `${h}\u00a0h\u00a0${pad(r)}` : `${h}\u00a0h`;
 };
-const hTxt = ms => { const d = new Date(ms); return `${d.getHours()} h ${pad(d.getMinutes())}`; };
-const heureTxt = s => { if (!/^\d{2}:\d{2}$/.test(s || '')) return ''; const [h, m] = s.split(':'); return m === '00' ? `${+h} h` : `${+h} h ${m}`; };
+const NF2 = new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+/* Montant en euros : centimes seulement s'il y en a */
+const eur = v => { const r = Math.round((Number(v) || 0) * 100) / 100; return (Number.isInteger(r) ? num(r, 0) : NF2.format(r)) + ' €'; };
+const telHref = s => 'tel:' + String(s || '').replace(/[^\d+]/g, '');
+/* Heures avec espaces insécables : « 8 h 05 » ne se coupe jamais en fin de ligne */
+const hTxt = ms => { const d = new Date(ms); return `${d.getHours()}\u00a0h\u00a0${pad(d.getMinutes())}`; };
+const heureTxt = s => { if (!/^\d{2}:\d{2}$/.test(s || '')) return ''; const [h, m] = s.split(':'); return m === '00' ? `${+h}\u00a0h` : `${+h}\u00a0h\u00a0${m}`; };
 const ICON_VB = {};   // icônes pleines tirées du logo (autre repère que 24 × 24)
 const ic = (n, c = '') => `<svg class="ic${ICON_VB[n] ? ' solid' : ''} ${c}" viewBox="${ICON_VB[n] || '0 0 24 24'}" aria-hidden="true" focusable="false">${ICONS[n] || ''}</svg>`;
 
@@ -159,3 +167,6 @@ const TACHES_SUGG = [
 ];
 const DEF_BALLES = [{ id: 'round', nom: 'Round', poids: 250 }, { id: 'botte', nom: 'Petite botte', poids: 18 }, { id: 'cube', nom: 'Gros cube', poids: 300 }];
 const NB_COULEURS = 8;
+/* Jours de la semaine (0 = dimanche, comme getUTCDay) */
+const JOURS = [{ id: 1, l: 'Lun' }, { id: 2, l: 'Mar' }, { id: 3, l: 'Mer' }, { id: 4, l: 'Jeu' }, { id: 5, l: 'Ven' }, { id: 6, l: 'Sam' }, { id: 0, l: 'Dim' }];
+const METIERS = ['Vétérinaire', 'Maréchal', 'Dentiste', 'Ostéopathe', 'Coach', 'Fourrage', 'Sellerie', 'Transport', 'Autre'];

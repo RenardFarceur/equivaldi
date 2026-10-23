@@ -47,7 +47,7 @@ function agenda() {
   list('concours').filter(c => c.date >= t && c.date <= lim && c.statut !== 'forfait').forEach(c =>
     items.push({ d: c.date, icon: 'rosette', t: `${c.lieu || 'Concours'} · ${hNom(c.horseId)}`, s: [c.discipline, nivLabel(c.niveau), c.epreuve].filter(Boolean).join(' · ') || 'Concours', act: `data-act="edit-concours" data-id="${c.id}"` }));
   list('seances').filter(s => s.statut === 'prevu' && validISO(s.date) && s.date >= t && s.date <= lim && cheval(s.horseId)).forEach(s =>
-    items.push({ d: s.date, h: s.heure || '', icon: 'timer', t: `${s.type || 'Séance'}${s.coach ? ' avec ' + s.coach : ''} · ${hNom(s.horseId)}`, s: [heureTxt(s.heure), s.lieu, s.cavalier].filter(Boolean).join(' · ') || 'Séance prévue', act: `data-act="edit-seance" data-id="${s.id}"` }));
+    items.push({ d: s.date, h: s.heure || '', icon: 'timer', t: `${s.type || 'Séance'}${s.coach ? ' avec ' + s.coach : ''} · ${hNom(s.horseId)}`, s: [heureTxt(s.heure), s.lieu, nomDe({ uid: s.cavalierUid, nom: s.cavalier })].filter(Boolean).join(' · ') || 'Séance prévue', act: `data-act="edit-seance" data-id="${s.id}"` }));
   rappels().filter(r => !r.planned && r.days > C.alerte && r.due <= lim).forEach(r =>
     items.push({ d: r.due, icon: r.type.icon, t: `Rappel ${r.type.short} · ${r.h.nom}`, s: `Dernier le ${dShort(r.last.date)}`, act: `data-act="new" data-what="soin" data-hid="${r.h.id}" data-type="${r.type.id}"` }));
   return items.sort((a, b) => a.d.localeCompare(b.d) || String(a.h || '').localeCompare(String(b.h || '')));
@@ -120,6 +120,7 @@ VIEWS.accueil = () => {
   }
   if (sync.readOnly) html.push(`<div class="banner ro">${ic('lock')}<div class="row-main"><b>Lecture seule</b><span class="small">${esc(RO_MSG)}</span></div></div>`);
   else html.push(quickHtml());
+  html.push(presentsHtml());
   html.push(tachesSection());
   const al = alerts();
   html.push(section('À traiter', al.length ? `<div class="list">${al.map(rowAlert).join('')}</div>`

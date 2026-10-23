@@ -1,8 +1,11 @@
 
 /* ---------- Concours : sorties prévues et résultats ---------- */
+const plusieursCavaliers = () => new Set(list('concours').map(x => pKey({ uid: x.cavalierUid, nom: x.cavalier })).filter(Boolean)).size > 1;
 function ccard(c, showHorse = true) {
   const h = cheval(c.horseId), t = todayISO(), past = c.date < t;
-  const meta = [sameYear(c.date) ? '' : c.date.slice(0, 4), c.discipline, nivLabel(c.niveau), c.epreuve].filter(Boolean).join(' · ');
+  // le cavalier n'est affiché que si plusieurs personnes sortent en concours
+  const cav = (c.cavalier || c.cavalierUid) && plusieursCavaliers() ? nomCourt({ uid: c.cavalierUid, nom: c.cavalier }) : '';
+  const meta = [sameYear(c.date) ? '' : c.date.slice(0, 4), c.discipline, nivLabel(c.niveau), c.epreuve, cav].filter(Boolean).join(' · ');
   const pills = past ? '' : engPill(c) + vacCheck(c).filter(i => i.sev !== 'ok').map(i => `<span class="pill ${i.sev}">${ic('alert')}${esc(i.short)}</span>`).join('');
   let res = '';
   if (past) {
@@ -51,8 +54,9 @@ function formConcours(id, pre = {}) {
   if (ex) c = clone(ex);
   else if (pre.copy) {
     const o = pre.copy;
-    c = { date: o.date, dateFin: o.dateFin, lieu: o.lieu, discipline: o.discipline, niveau: o.niveau, epreuve: o.epreuve, cavalier: o.cavalier, statut: 'a_engager', cloture: o.cloture, frais: o.frais };
-  } else c = { date: '', discipline: lastUsed('concours', 'discipline') || null, niveau: lastUsed('concours', 'niveau') || null, statut: 'a_engager', cavalier: lastUsed('concours', 'cavalier') };
+    c = { date: o.date, dateFin: o.dateFin, lieu: o.lieu, discipline: o.discipline, niveau: o.niveau, epreuve: o.epreuve, cavalier: o.cavalier, cavalierUid: o.cavalierUid || null, statut: 'a_engager', cloture: o.cloture, frais: o.frais, payePar: o.payePar || null };
+  } else c = { date: '', discipline: lastUsed('concours', 'discipline') || null, niveau: lastUsed('concours', 'niveau') || null, statut: 'a_engager' };
+  const cavRef = c.cavalier || c.cavalierUid ? { uid: c.cavalierUid || null, nom: c.cavalier || '' } : null;
   const selH = ex ? [ex.horseId] : pre.hid ? [pre.hid] : (hs.length === 1 ? [hs[0].id] : []);
   const passe = !!(ex && ex.date <= t);
   const hOpts = horseOpts(ex ? all.filter(h => !h.archive || h.id === ex.horseId) : hs);
@@ -74,13 +78,14 @@ function formConcours(id, pre = {}) {
     ${grp('Discipline', chips('disc', DISCIPLINES.map(x => ({ v: x, l: x })), c.discipline ? [c.discipline] : [], { optional: true }))}
     ${grp('Niveau', chips('niv', NIVEAUX.map(n => ({ v: n.id, l: n.label })), c.niveau ? [c.niveau] : [], { optional: true }), 'Sert à vérifier les vaccins exigés.')}
     ${fld('Épreuve', inp('f_epr', c.epreuve, 'list="dl-epr" autocomplete="off" placeholder="ex. Club 2 Grand Prix"'))}
-    ${fld('Cavalier', inp('f_cav', c.cavalier, 'list="dl-cav" autocomplete="off"'))}
+    ${pickPerson('cav', 'Cavalier', cavRef, { moi: !cavRef, def: lastUsed('concours', 'cavalier') })}
     ${grp('Engagement', chips('eng', ENGAGEMENT.map(e => ({ v: e.id, l: e.label })), c.statut || 'a_engager'))}
     <div class="grid2">${fld('Clôture des engagements', inp('f_clot', c.cloture, 'type="date"'))}${fld('Frais (€)', inp('f_frais', c.frais != null ? String(c.frais).replace('.', ',') : '', numAttr))}</div>
+    ${payeField(c.payePar, 'f_frais', Number(c.frais) || 0)}
     ${passe ? '' : resultat}
     ${fld('Notes', area('f_notes', c.notes, 'rows="2" placeholder="Horaires, box, transport…"'))}
     ${ex && !passe ? `<button type="button" class="btn" id="b_dup">${ic('copy', 'sm')}Dupliquer pour un autre cheval ou une autre épreuve</button>` : ''}
-    ${dlist('dl-lieu', historyValues('concours', 'lieu'))}${dlist('dl-epr', historyValues('concours', 'epreuve'))}${dlist('dl-cav', historyValues('concours', 'cavalier'))}`;
+    ${dlist('dl-lieu', historyValues('concours', 'lieu'))}${dlist('dl-epr', historyValues('concours', 'epreuve'))}`;
   const title = ex ? (passe && !hasResult(ex) ? 'Saisir le résultat' : (ex.lieu || 'Concours')) : 'Nouveau concours';
   openSheet(title, body, {
     onMount: () => {
@@ -103,9 +108,10 @@ function formConcours(id, pre = {}) {
       if (val('f_rang') && (!Number.isInteger(rang) || rang < 1)) return 'Le classement est un nombre entier : 1 pour le premier.';
       if (val('f_part') && (!Number.isInteger(part) || part < 1)) return 'Le nombre de partants est un nombre entier.';
       if (rang && part && rang > part) return 'Le classement ne peut pas dépasser le nombre de partants.';
+      const cav = readPerson('cav');
       const base = {
         date, dateFin: fin || null, lieu: val('f_lieu'), discipline: chipVal(f, 'disc'), niveau: chipVal(f, 'niv'), epreuve: val('f_epr'),
-        cavalier: val('f_cav'), statut: chipVal(f, 'eng') || 'a_engager', cloture: clot || null, frais,
+        cavalier: cav ? cav.nom : '', cavalierUid: cav ? cav.uid : null, statut: chipVal(f, 'eng') || 'a_engager', cloture: clot || null, frais, payePar: lirePaye(frais),
         rang: rang || null, partants: part || null, score: val('f_score'), notes: val('f_notes')
       };
       if (ex) { put('concours', Object.assign({}, ex, base, { horseId: hids[0] })); toast(hasResult(base) && !hasResult(ex) ? 'Résultat enregistré' : 'Concours enregistré'); return; }

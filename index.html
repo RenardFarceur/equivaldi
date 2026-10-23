@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>EquiValdi</title>
-<meta name="description" content="Carnet d'écurie EquiValdi : chevaux, rations, soins, entraînement, prés, foin, concours et tâches partagées.">
+<meta name="description" content="Carnet d'écurie EquiValdi : chevaux, rations, soins, entraînement, prés, foin, concours, tâches partagées et équipe.">
 <meta name="theme-color" content="#EEF1EB" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0D1611" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="./manifest.webmanifest">
@@ -165,6 +165,19 @@ button.row:active{background:var(--surface-2)}
 .avbtn .cam .ic{width:18px;height:18px}
 .avbtn:active .av{filter:brightness(.92)}
 
+/* Personnes : pastilles rondes ; lignes avec bouton d'appel */
+.av.pp{border-radius:50%}
+.crow{display:flex;align-items:stretch;border-top:1px solid var(--line);min-height:62px}
+.crow:first-child{border-top:0}
+.crow-main{flex:1;min-width:0;display:flex;align-items:center;gap:12px;text-align:left;border:0;background:transparent;color:var(--ink);padding:10px 8px 10px 14px}
+.crow-main:active{background:var(--surface-2)}
+.callbtn{width:60px;flex:none;display:grid;place-items:center;text-decoration:none;color:var(--accent-strong)}
+.callbtn .ic{width:42px;height:42px;padding:10px;border-radius:12px;background:var(--accent-soft)}
+.callbtn:active .ic{filter:brightness(.94)}
+.phead{flex-direction:row;align-items:center;gap:16px}
+.phead .btnrow{margin-top:6px}
+a.btn{text-decoration:none}
+
 /* Photo : choix et cadrage */
 .pf{display:flex;gap:16px;align-items:center}
 .pf-frame{position:relative;width:132px;max-width:100%;aspect-ratio:1/1;border-radius:24px;overflow:hidden;background:var(--surface-2);flex:none}
@@ -285,9 +298,10 @@ label.btn{cursor:pointer}
 .menu{display:flex;flex-direction:column;gap:8px}
 
 /* Onglets : pastille Menthe sous l'icône active */
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));padding-bottom:env(safe-area-inset-bottom,0px)}
-.tabs button{height:var(--tab-h);border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--ink-2);font-size:12px;font-weight:500;min-width:0}
-.tab-ic{display:grid;place-items:center;width:54px;height:30px;border-radius:999px;transition:background .15s}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,minmax(0,1fr));padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px));padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabs button{height:var(--tab-h);border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--ink-2);font-size:12px;font-weight:500;min-width:0;padding:0 1px}
+.tabs button>span:last-child{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tab-ic{display:grid;place-items:center;width:50px;height:30px;border-radius:999px;transition:background .15s}
 .tabs button[aria-current="page"]{color:var(--accent-strong);font-weight:600}
 .tabs button[aria-current="page"] .tab-ic{background:var(--accent-soft)}
 .tabs button[aria-current="page"] .ic{stroke-width:2.4}
@@ -354,7 +368,8 @@ label.btn{cursor:pointer}
 .toast button{background:transparent;border:0;color:inherit;text-decoration:underline;font-weight:600;min-height:40px;padding:0 10px;flex:none}
 body.lock .toast{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto}
 
-@media (max-width:350px){.quick,.grid2{grid-template-columns:minmax(0,1fr)}.stat{padding:8px}.stat b{font-size:21px}.top h1{font-size:28px}.tab-ic{width:46px}}
+@media (max-width:370px){.tabs button{font-size:11px}.tab-ic{width:44px}}
+@media (max-width:350px){.quick,.grid2{grid-template-columns:minmax(0,1fr)}.stat{padding:8px}.stat b{font-size:21px}.top h1{font-size:28px}.tab-ic{width:40px}.phead{flex-direction:column;align-items:flex-start}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
 /* Version installable : marges des barres système et écran de connexion */
@@ -530,17 +545,25 @@ const ICONS = {
   tasks: '<path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="m3.5 6.5 1.3 1.3 2.5-2.5M3.5 12l1.3 1.3 2.5-2.5M3.5 17.5l1.3 1.3 2.5-2.5"/>',
   user: '<circle cx="12" cy="8" r="3.8"/><path d="M4.5 20.5c.6-3.9 3.6-6.3 7.5-6.3s6.9 2.4 7.5 6.3"/>',
   users: '<circle cx="9" cy="8.5" r="3.3"/><path d="M2.8 19.5c.5-3.4 3-5.5 6.2-5.5s5.7 2.1 6.2 5.5"/><path d="M15.5 5.6a3.2 3.2 0 0 1 0 5.8M17.5 14.3c2.1.7 3.5 2.5 3.8 5.2"/>',
-  lock: '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>'
+  lock: '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>',
+  phone: '<path d="M6.6 3.5h3l1.6 4.4-2.1 1.4a11.5 11.5 0 0 0 5.6 5.6l1.4-2.1 4.4 1.6v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z"/>',
+  euro: '<path d="M18.5 6.2A7.6 7.6 0 0 0 13.6 4.5 7.6 7.6 0 0 0 6 12a7.6 7.6 0 0 0 7.6 7.5 7.6 7.6 0 0 0 4.9-1.7"/><path d="M3.5 10h10M3.5 14h8"/>',
+  card: '<rect x="3.5" y="5" width="17" height="14" rx="2.5"/><circle cx="9" cy="11" r="2.3"/><path d="M5.8 16.3c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4M14.5 10h3.5M14.5 13.5h3.5"/>'
 };
 const durTxt = m => {
   m = Math.round(Number(m) || 0);
   if (!m) return '';
-  if (m < 60) return `${m} min`;
+  if (m < 60) return `${m}\u00a0min`;
   const h = Math.floor(m / 60), r = m % 60;
-  return r ? `${h} h ${pad(r)}` : `${h} h`;
+  return r ? `${h}\u00a0h\u00a0${pad(r)}` : `${h}\u00a0h`;
 };
-const hTxt = ms => { const d = new Date(ms); return `${d.getHours()} h ${pad(d.getMinutes())}`; };
-const heureTxt = s => { if (!/^\d{2}:\d{2}$/.test(s || '')) return ''; const [h, m] = s.split(':'); return m === '00' ? `${+h} h` : `${+h} h ${m}`; };
+const NF2 = new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+/* Montant en euros : centimes seulement s'il y en a */
+const eur = v => { const r = Math.round((Number(v) || 0) * 100) / 100; return (Number.isInteger(r) ? num(r, 0) : NF2.format(r)) + ' €'; };
+const telHref = s => 'tel:' + String(s || '').replace(/[^\d+]/g, '');
+/* Heures avec espaces insécables : « 8 h 05 » ne se coupe jamais en fin de ligne */
+const hTxt = ms => { const d = new Date(ms); return `${d.getHours()}\u00a0h\u00a0${pad(d.getMinutes())}`; };
+const heureTxt = s => { if (!/^\d{2}:\d{2}$/.test(s || '')) return ''; const [h, m] = s.split(':'); return m === '00' ? `${+h}\u00a0h` : `${+h}\u00a0h\u00a0${m}`; };
 const ICON_VB = {};   // icônes pleines tirées du logo (autre repère que 24 × 24)
 const ic = (n, c = '') => `<svg class="ic${ICON_VB[n] ? ' solid' : ''} ${c}" viewBox="${ICON_VB[n] || '0 0 24 24'}" aria-hidden="true" focusable="false">${ICONS[n] || ''}</svg>`;
 
@@ -587,6 +610,9 @@ const TACHES_SUGG = [
 ];
 const DEF_BALLES = [{ id: 'round', nom: 'Round', poids: 250 }, { id: 'botte', nom: 'Petite botte', poids: 18 }, { id: 'cube', nom: 'Gros cube', poids: 300 }];
 const NB_COULEURS = 8;
+/* Jours de la semaine (0 = dimanche, comme getUTCDay) */
+const JOURS = [{ id: 1, l: 'Lun' }, { id: 2, l: 'Mar' }, { id: 3, l: 'Mer' }, { id: 4, l: 'Jeu' }, { id: 5, l: 'Ven' }, { id: 6, l: 'Sam' }, { id: 0, l: 'Dim' }];
+const METIERS = ['Vétérinaire', 'Maréchal', 'Dentiste', 'Ostéopathe', 'Coach', 'Fourrage', 'Sellerie', 'Transport', 'Autre'];
 
 /* ---------- Identité EquiValdi : symbole et logo Cheval-feuille (charte « Logo EquiValdi ») ---------- */
 const BRAND = {
@@ -607,6 +633,9 @@ ICON_VB.horse = BRAND.markVB;
 /* ---------- Données : copie locale + base de l'artifact ---------- */
 const COLS = ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches'];
 const S = { chevaux: {}, soins: {}, pres: {}, places: {}, entretiens: {}, foin: {}, concours: {}, seances: {}, taches: {}, cfg: null };
+/* Fiches des membres (version installable) : lues avec le carnet, jamais exportées ni effacées avec lui */
+const EXTRA = window.EQ_MODE ? ['membres'] : [];
+EXTRA.forEach(k => { S[k] = {}; });
 const CACHE_KEY = 'carnet-ecurie:cache:v1';
 const OUTBOX_KEY = 'carnet-ecurie:outbox:v1';
 const UI_KEY = 'carnet-ecurie:ui:v1';
@@ -622,6 +651,9 @@ function getMoi() {
   try { const v = JSON.parse(localStorage.getItem(MOI_KEY) || 'null'); if (v && typeof v.nom === 'string' && v.nom) return v.nom; } catch (e) { /* stockage indisponible */ }
   return moiMem;
 }
+/* Mon nom : celui de ma fiche dans l'équipe, sinon le prénom gardé sur ce téléphone */
+const moiNom = () => { const m = me.uid && S.membres ? S.membres[me.uid] : null; return (m && String(m.nom || '').trim()) || getMoi() || me.platformName || ''; };
+const moiRef = () => ({ uid: me.uid || null, nom: moiNom() });
 function setMoi(n) { moiMem = n; try { localStorage.setItem(MOI_KEY, JSON.stringify({ nom: n })); } catch (e) { /* gardé pour cette visite */ } }
 const RO_MSG = window.EQ_MODE
   ? "Tu as un accès en lecture seule. Demande à la gérante du carnet de te passer en « Peut modifier »."
@@ -655,7 +687,7 @@ function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch
 function loadCache() {
   const c = lsGet(CACHE_KEY);
   if (c && typeof c === 'object') {
-    COLS.forEach(k => { S[k] = (c[k] && typeof c[k] === 'object') ? c[k] : {}; });
+    [...COLS, ...EXTRA].forEach(k => { S[k] = (c[k] && typeof c[k] === 'object') ? c[k] : {}; });
     S.cfg = c.cfg || null;
   }
   const o = lsGet(OUTBOX_KEY);
@@ -668,7 +700,7 @@ function saveCache() {
   clearTimeout(cacheTimer);
   cacheTimer = setTimeout(() => {
     const o = { cfg: S.cfg };
-    COLS.forEach(k => { o[k] = S[k]; });
+    [...COLS, ...EXTRA].forEach(k => { o[k] = S[k]; });
     lsSet(CACHE_KEY, o);
   }, 200);
 }
@@ -685,9 +717,12 @@ const list = coll => Object.values(S[coll] || {});
 const get = (coll, id) => (S[coll] || {})[id];
 
 /* Écriture : immédiate en local, envoyée ensuite dans l'ordre */
+let restauration = false;   // pendant une restauration, les fiches gardent leur auteur d'origine
 function put(coll, obj) {
   const o = clone(obj);
   if (!o.id) o.id = uid();
+  // qui a ajouté la fiche : sert au fil de l'équipe
+  if (coll !== 'membres' && !restauration && !S[coll][o.id] && !o.creePar) o.creePar = Object.assign(moiRef(), { t: Date.now() });
   o.maj = Date.now();
   S[coll][o.id] = o;
   queue(coll, o.id, 'set', o);
@@ -809,7 +844,7 @@ async function connect() {
   DB = db;
   connectUser();
   sync.mode = 'cloud';
-  COLS.forEach(subscribe);
+  [...COLS, ...EXTRA].forEach(subscribe);
   subscribeCfg();
   flushSoon(50);
   updateSync();
@@ -1164,13 +1199,173 @@ function faitTxt(f) {
   return `Fait${qui} ${dRel(f.d)}`;
 }
 
+/* ---------- Personnes : membres de l'équipe et noms saisis à la main ---------- */
+const normNom = s => String(s || '').trim().replace(/\s+/g, ' ').toLowerCase();
+const prenomDe = s => String(s || '').trim().split(/\s+/)[0] || '';
+const ROLE_ORD = { gerante: 0, equipe: 1, lecture: 2 };
+const mNom = m => (m && (String(m.nom || '').trim() || String(m.email || '').split('@')[0])) || '';
+function membres() {
+  return list('membres').filter(m => m && m.id)
+    .sort((a, b) => ((ROLE_ORD[a.role] ?? 3) - (ROLE_ORD[b.role] ?? 3)) || mNom(a).localeCompare(mNom(b), 'fr', { sensitivity: 'base' }));
+}
+/* Le membre derrière une référence { uid, nom } : par identifiant, sinon par nom, ou par prénom s'il est unique */
+function refMembre(r) {
+  if (!r) return null;
+  if (r.uid) { const m = get('membres', r.uid); if (m) return m; }
+  const n = normNom(r.nom);
+  if (!n) return null;
+  const ms = membres();
+  const full = ms.find(m => normNom(mNom(m)) === n);
+  if (full) return full;
+  const first = ms.filter(m => normNom(prenomDe(mNom(m))) === n);
+  return first.length === 1 ? first[0] : null;
+}
+const NOMS = new Map();   // orthographe affichée des noms saisis librement
+function pKey(r) {
+  if (!r) return null;
+  const m = refMembre(r);
+  if (m) return 'u:' + m.id;
+  const n = normNom(r.nom);
+  if (!n) return null;
+  if (!NOMS.has(n)) NOMS.set(n, String(r.nom).trim().replace(/\s+/g, ' '));
+  return 'n:' + n;
+}
+const nomDe = r => { const m = refMembre(r); return m ? mNom(m) : String((r && r.nom) || '').trim(); };
+/* Prénom seul, sauf si deux membres le partagent */
+function nomCourt(r) {
+  const m = refMembre(r);
+  if (!m) return nomDe(r);
+  const nom = mNom(m), p = normNom(prenomDe(nom));
+  return membres().filter(x => normNom(prenomDe(mNom(x))) === p).length > 1 ? nom : prenomDe(nom);
+}
+function personne(k) {
+  if (!k || k === '_') return null;
+  if (k.startsWith('u:')) {
+    const m = get('membres', k.slice(2));
+    return m ? { k, uid: m.id, nom: mNom(m), m } : null;
+  }
+  const n = k.slice(2);
+  return { k, uid: null, nom: NOMS.get(n) || n, m: null };
+}
+const kMoi = () => (me.uid && get('membres', me.uid)) ? 'u:' + me.uid : pKey({ uid: me.uid, nom: moiNom() });
+const estMoi = r => { const k = typeof r === 'string' ? r : pKey(r); return !!k && k === kMoi(); };
+const hashCol = s => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) | 0; return Math.abs(h) % NB_COULEURS; };
+/* Pastille ronde d'une personne (les chevaux ont des pastilles carrées) */
+function pav(r, size = '') {
+  const m = refMembre(r), nom = m ? mNom(m) : String((r && r.nom) || '?');
+  const c = m && Number.isInteger(m.couleur) ? Math.abs(m.couleur) % NB_COULEURS : hashCol(normNom(nom));
+  return `<span class="av pp ${size} hc${c}" aria-hidden="true">${esc(initials(nom))}</span>`;
+}
+const ROLE_LABEL = { gerante: 'Gérante', equipe: 'Peut modifier', lecture: 'Lecture seule' };
+
+/* ---------- Propriété et demi-pensions ---------- */
+const propRef = h => (h && (h.propUid || String(h.proprietaire || '').trim())) ? { uid: h.propUid || null, nom: String(h.proprietaire || '').trim() } : null;
+const dpsDe = h => (Array.isArray(h && h.dp) ? h.dp : []).filter(x => x && x.id && x.qui);
+const dpActive = (x, d = todayISO()) => (!validISO(x.debut) || x.debut <= d) && (!validISO(x.fin) || x.fin >= d);
+const jourDe = iso => new Date(toUTC(iso)).getUTCDay();
+const joursTxt = js => { const s = new Set((js || []).map(Number)); return JOURS.filter(j => s.has(j.id)).map(j => j.l).join(', '); };
+/* La gérante : ses chevaux n'ont pas besoin d'étiquette de propriétaire dans la liste */
+const proprioGerante = h => { const m = refMembre(propRef(h)); return !!(m && m.role === 'gerante'); };
+function dpAujourdhui() {
+  const t = todayISO(), j = jourDe(t);
+  return chevaux().flatMap(h => dpsDe(h).filter(x => dpActive(x, t) && (x.jours || []).map(Number).includes(j)).map(x => ({ h, x })));
+}
+/* Qui est attendu aujourd'hui : demi-pensions du jour et jours de présence des fiches */
+function presentsAujourdhui() {
+  const j = jourDe(todayISO()), by = new Map();
+  dpAujourdhui().forEach(({ h, x }) => {
+    const k = pKey(x.qui);
+    if (!k) return;
+    if (!by.has(k)) by.set(k, { k, ref: x.qui, chevaux: [] });
+    by.get(k).chevaux.push(h);
+  });
+  membres().forEach(m => {
+    const k = 'u:' + m.id;
+    if (!by.has(k) && (Array.isArray(m.dispo) ? m.dispo : []).map(Number).includes(j)) by.set(k, { k, ref: { uid: m.id, nom: mNom(m) }, chevaux: [] });
+  });
+  return [...by.values()];
+}
+
+/* ---------- Dépenses : soins, cours, engagements, foin, et qui a payé ---------- */
+const CATS = [
+  { id: 'soins', label: 'Soins', icon: 'stetho' }, { id: 'cours', label: 'Cours', icon: 'timer' },
+  { id: 'concours', label: 'Concours', icon: 'rosette' }, { id: 'foin', label: 'Foin', icon: 'bale' }
+];
+const catDe = id => CATS.find(c => c.id === id) || CATS[0];
+const ACT_DEP = { soins: 'edit-soin', seances: 'edit-seance', concours: 'edit-concours', foin: 'edit-foin' };
+function depenses(from = null) {
+  const out = [], ok = d => validISO(d) && (!from || d >= from);
+  const add = (coll, o, cat, v, label, d) => { if (v > 0 && ok(d)) out.push({ coll, id: o.id, cat, d, v, qui: o.payePar || null, hid: o.horseId || null, label }); };
+  list('soins').forEach(s => { if (s.statut !== 'prevu') add('soins', s, 'soins', Number(s.cout) || 0, soinLabel(s), s.date); });
+  list('seances').forEach(s => { if (s.statut !== 'prevu') add('seances', s, 'cours', Number(s.cout) || 0, [s.type || 'Séance', s.coach ? 'avec ' + s.coach : ''].filter(Boolean).join(' '), s.date); });
+  // un engagement compte une fois payé : statut « Engagé » ou résultat saisi
+  list('concours').forEach(c => { if (c.statut === 'engage' || hasResult(c)) add('concours', c, 'concours', Number(c.frais) || 0, c.lieu || 'Concours', c.date); });
+  list('foin').forEach(m => { if (m.sens === 'in') add('foin', m, 'foin', (Number(m.nb) || 0) * (Number(m.prix) || 0), `${m.nb} ${balleNom(m.balle, m.nb)}`, m.date); });
+  return out.sort((a, b) => b.d.localeCompare(a.d));
+}
+function periode(p) {
+  const t = todayISO();
+  if (p === 'annee') return { id: 'annee', from: t.slice(0, 4) + '-01-01', label: 'en ' + t.slice(0, 4) };
+  if (p === 'tout') return { id: 'tout', from: null, label: 'depuis le début' };
+  return { id: 'mois', from: t.slice(0, 7) + '-01', label: 'ce mois-ci' };
+}
+/* Bilan par personne : tâches cochées, séances montées, dépenses (clé « _ » : non attribuées) */
+function bilan(from) {
+  const t = todayISO(), by = new Map();
+  const acc = k => { if (!by.has(k)) by.set(k, { k, taches: 0, seances: 0, minutes: 0, dep: 0, cats: {}, items: [] }); return by.get(k); };
+  taches().forEach(tk => faitsDe(tk).forEach(f => {
+    if (from && f.d < from) return;
+    const k = pKey({ uid: f.uid, nom: f.par });
+    if (k) acc(k).taches++;
+  }));
+  list('seances').forEach(s => {
+    if (s.statut === 'prevu' || !validISO(s.date) || (from && s.date < from) || s.date > t) return;
+    const k = pKey({ uid: s.cavalierUid, nom: s.cavalier });
+    if (k) { const a = acc(k); a.seances++; a.minutes += Number(s.duree) || 0; }
+  });
+  const deps = depenses(from);
+  deps.forEach(e => { const a = acc(pKey(e.qui) || '_'); a.dep += e.v; a.cats[e.cat] = (a.cats[e.cat] || 0) + e.v; a.items.push(e); });
+  const vals = [...by.values()].filter(a => a.k !== '_');
+  return {
+    by, deps, total: deps.reduce((s, e) => s + e.v, 0),
+    taches: vals.reduce((s, a) => s + a.taches, 0), seances: vals.reduce((s, a) => s + a.seances, 0)
+  };
+}
+const nomPre = id => (get('pres', id) || {}).nom || 'un pré';
+/* Fil de l'équipe : qui a fait quoi, du plus récent au plus ancien */
+/* Chaque entrée : ce qui a été fait (quoi) et sur quoi (objet), par qui et quand */
+function filEquipe(fromT = 0, limit = 30, k = null) {
+  const items = [];
+  // une action sans auteur connu (saisie d'avant le prénom) n'apprend rien sur qui fait quoi
+  const push = (t, r, icon, quoi, objet, act) => { const pk = pKey(r); if (t && t >= fromT && pk && (!k || pk === k)) items.push({ t, r, icon, quoi, objet, act }); };
+  taches().forEach(tk => faitsDe(tk).forEach(f => push(f.t, { uid: f.uid, nom: f.par }, 'tasks', 'Tâche cochée', tk.titre, `data-act="edit-tache" data-id="${tk.id}"`)));
+  const crees = (coll, icon, fn, act) => list(coll).forEach(o => {
+    const c = o.creePar;
+    if (!c || !c.t) return;
+    const x = fn(o);
+    if (x) push(c.t, c, icon, x[0], x[1], act ? `data-act="${act}" data-id="${o.id}"` : (x[2] || ''));
+  });
+  crees('soins', 'syringe', s => [s.statut === 'prevu' ? 'Rendez-vous pris' : 'Soin noté', `${soinLabel(s)} · ${hNom(s.horseId)}`], 'edit-soin');
+  crees('seances', 'timer', s => [s.statut === 'prevu' ? 'Séance prévue' : 'Séance notée', `${s.type || 'Séance'} · ${hNom(s.horseId)}`], 'edit-seance');
+  crees('concours', 'rosette', c => ['Concours ajouté', `${c.lieu || 'Lieu à préciser'} · ${hNom(c.horseId)}`], 'edit-concours');
+  crees('foin', 'bale', m => m.sens === 'in' ? ['Foin rentré', `${m.nb} ${balleNom(m.balle, m.nb)}`] : [m.nb > 1 ? 'Balles entamées' : 'Balle entamée', `${m.nb} ${balleNom(m.balle, m.nb)}`], 'edit-foin');
+  crees('places', 'move', p => ['Mise au pré', `${hNom(p.horseId)} → ${nomPre(p.preId)}`], null);
+  crees('entretiens', 'tool', e => ['Entretien noté', `${e.type || 'Travail'} · ${nomPre(e.preId)}`], 'edit-entretien');
+  crees('chevaux', 'horse', h => ['Fiche ajoutée', h.nom, `data-act="open-cheval" data-id="${h.id}"`], null);
+  crees('pres', 'fence', p => ['Pré ajouté', p.nom, `data-act="open-pre" data-id="${p.id}"`], null);
+  crees('taches', 'tasks', tk => ['Tâche créée', tk.titre], 'edit-tache');
+  return items.sort((a, b) => b.t - a.t).slice(0, limit);
+}
+const quandTxt = t => { const d = isoOf(new Date(t)), r = dRel(d); return (d === todayISO() ? '' : r + ' · ') + hTxt(t); };
+
 /* ---------- Navigation ---------- */
 const TABS = [
   { id: 'accueil', label: 'Accueil', icon: 'home' },
   { id: 'chevaux', label: 'Chevaux', icon: 'horse' },
   { id: 'pres', label: 'Prés', icon: 'fence' },
   { id: 'foin', label: 'Foin', icon: 'bale' },
-  { id: 'concours', label: 'Concours', icon: 'rosette' }
+  { id: 'concours', label: 'Concours', icon: 'rosette' },
+  { id: 'equipe', label: 'Équipe', icon: 'users' }
 ];
 const nav = { tab: TABS.some(t => t.id === ui.tab) ? ui.tab : 'accueil', stack: [], savedY: 0 };
 const VIEWS = {};
@@ -1323,12 +1518,74 @@ const horseOpts = (hs, sub) => hs.map(h => ({
   html: `${av(h, 's')}${sub ? `<span class="two"><span>${esc(h.nom)}</span><small>${esc(sub(h))}</small></span>` : `<span>${esc(h.nom)}</span>`}`
 }));
 
+/* Choisir une personne : les membres de l'équipe en pastilles, « Autre » pour quelqu'un d'extérieur.
+   Sans fiches de membres (carnet partagé sur claude.ai), simple saisie avec suggestions. */
+function nomsConnus() {
+  const s = new Map();
+  const add = n => { const v = String(n || '').trim(); if (v && !s.has(normNom(v))) s.set(normNom(v), v); };
+  add(moiNom());
+  list('seances').forEach(x => add(x.cavalier));
+  list('concours').forEach(x => add(x.cavalier));
+  taches().forEach(tk => faitsDe(tk).forEach(f => add(f.par)));
+  chevaux(true).forEach(h => { add(h.proprietaire); dpsDe(h).forEach(x => add(x.qui.nom)); });
+  return [...s.values()];
+}
+function pickPerson(name, label, ref, o = {}) {
+  const ms = membres();
+  if (!ms.length) {
+    const v = ref ? nomDe(ref) : (o.def || (o.moi ? moiNom() : ''));
+    return fld(label, inp('f_' + name, v, `list="dl-p${name}" autocomplete="off" autocapitalize="words"${o.ph ? ` placeholder="${esc(o.ph)}"` : ''}`), o.hint || '') + dlist('dl-p' + name, nomsConnus());
+  }
+  const autre = o.autre !== false, m = refMembre(ref);
+  let sel = m ? m.id : (autre && ref && String(ref.nom || '').trim() ? '_autre' : null);
+  if (!ref && o.moi && me.uid && get('membres', me.uid)) sel = me.uid;
+  const opts = ms.map(x => ({ v: x.id, html: `${pav({ uid: x.id }, 's')}<span>${esc(nomCourt({ uid: x.id }))}</span>` }));
+  if (autre) opts.push({ v: '_autre', l: o.autreLabel || 'Autre personne' });
+  const other = autre ? `<div id="w_pp_${name}"${sel === '_autre' ? '' : ' hidden'}>${inp('ppn_' + name, sel === '_autre' ? ref.nom : '', `autocomplete="off" autocapitalize="words" placeholder="${esc(o.phAutre || 'Prénom et nom')}" aria-label="${esc(label)} : nom"`)}</div>` : '';
+  return grp(label, chips('pp_' + name, opts, sel ? [sel] : [], { optional: o.optional !== false }) + other, o.hint || '');
+}
+const hasPerson = name => !!(document.getElementById('f_' + name) || document.querySelector(`[data-chips="pp_${name}"]`));
+function readPerson(name) {
+  if (document.getElementById('f_' + name)) {
+    const v = val('f_' + name).replace(/\s+/g, ' ');
+    if (!v) return null;
+    return estMoi({ nom: v }) && me.uid ? { uid: me.uid, nom: v } : { uid: null, nom: v };
+  }
+  const v = chipVal(document, 'pp_' + name);
+  if (!v) return null;
+  if (v === '_autre') { const n = val('ppn_' + name).replace(/\s+/g, ' '); return n ? { uid: null, nom: n } : null; }
+  const m = get('membres', v);
+  return m ? { uid: m.id, nom: mNom(m) } : null;
+}
+document.addEventListener('chipchange', e => {
+  const n = e.detail && e.detail.name;
+  if (!n || !n.startsWith('pp_')) return;
+  const w = document.getElementById('w_' + n);
+  if (!w) return;
+  const on = chipVal(document, n) === '_autre';
+  w.hidden = !on;
+  if (on) { const i = w.querySelector('input'); if (i) i.focus(); }
+});
+/* « Payé par » : apparaît dès qu'un montant est saisi ; inutile quand on est seul dans le carnet */
+function payeField(ref, montantId, montant) {
+  if (membres().length === 1) return '';
+  return `<div id="w_paye" data-for="${montantId}"${montant > 0 ? '' : ' hidden'}>${pickPerson('paye', 'Payé par', ref, { moi: true, hint: "Sert au bilan des dépenses de l'onglet Équipe." })}</div>`;
+}
+const lirePaye = montant => !(montant > 0) ? null : (hasPerson('paye') ? readPerson('paye') : moiRef());
+document.addEventListener('input', e => {
+  const w = document.getElementById('w_paye');
+  if (w && e.target && e.target.id === w.dataset.for) w.hidden = !(parseNum(e.target.value) > 0);
+});
+
 /* ---------- Briques d'affichage ---------- */
 const section = (title, inner, action = '') => `<section class="sec"><div class="sec-h"><h2>${title}</h2>${action}</div>${inner}</section>`;
 const empty = (t, s) => `<div class="empty"><b>${t}</b>${s}</div>`;
 const segCtl = (key, opts, cur, cls = '') => `<div class="seg${cls ? ' ' + cls : ''}" role="group">${opts.map(([v, l]) =>
   `<button type="button" data-act="seg" data-k="${key}" data-v="${v}" aria-pressed="${v === cur}">${l}</button>`).join('')}</div>`;
 const lead = (icon, sev = '') => `<span class="lead">${ic(icon)}</span>`;
+/* Ligne avec bouton d'appel à droite (un lien ne peut pas être dans un bouton) */
+const callBtn = (tel, who) => tel ? `<a class="callbtn" href="${esc(telHref(tel))}" aria-label="Appeler ${esc(who)}">${ic('phone')}</a>` : '';
+const crow = (act, inner, tel, who) => `<div class="crow"><button type="button" class="crow-main" ${act}>${inner}</button>${callBtn(tel, who)}</div>`;
 
 /* ---------- Évènements ---------- */
 /* Actions qui écrivent directement : bloquées en lecture seule */
@@ -1636,7 +1893,7 @@ function agenda() {
   list('concours').filter(c => c.date >= t && c.date <= lim && c.statut !== 'forfait').forEach(c =>
     items.push({ d: c.date, icon: 'rosette', t: `${c.lieu || 'Concours'} · ${hNom(c.horseId)}`, s: [c.discipline, nivLabel(c.niveau), c.epreuve].filter(Boolean).join(' · ') || 'Concours', act: `data-act="edit-concours" data-id="${c.id}"` }));
   list('seances').filter(s => s.statut === 'prevu' && validISO(s.date) && s.date >= t && s.date <= lim && cheval(s.horseId)).forEach(s =>
-    items.push({ d: s.date, h: s.heure || '', icon: 'timer', t: `${s.type || 'Séance'}${s.coach ? ' avec ' + s.coach : ''} · ${hNom(s.horseId)}`, s: [heureTxt(s.heure), s.lieu, s.cavalier].filter(Boolean).join(' · ') || 'Séance prévue', act: `data-act="edit-seance" data-id="${s.id}"` }));
+    items.push({ d: s.date, h: s.heure || '', icon: 'timer', t: `${s.type || 'Séance'}${s.coach ? ' avec ' + s.coach : ''} · ${hNom(s.horseId)}`, s: [heureTxt(s.heure), s.lieu, nomDe({ uid: s.cavalierUid, nom: s.cavalier })].filter(Boolean).join(' · ') || 'Séance prévue', act: `data-act="edit-seance" data-id="${s.id}"` }));
   rappels().filter(r => !r.planned && r.days > C.alerte && r.due <= lim).forEach(r =>
     items.push({ d: r.due, icon: r.type.icon, t: `Rappel ${r.type.short} · ${r.h.nom}`, s: `Dernier le ${dShort(r.last.date)}`, act: `data-act="new" data-what="soin" data-hid="${r.h.id}" data-type="${r.type.id}"` }));
   return items.sort((a, b) => a.d.localeCompare(b.d) || String(a.h || '').localeCompare(String(b.h || '')));
@@ -1709,6 +1966,7 @@ VIEWS.accueil = () => {
   }
   if (sync.readOnly) html.push(`<div class="banner ro">${ic('lock')}<div class="row-main"><b>Lecture seule</b><span class="small">${esc(RO_MSG)}</span></div></div>`);
   else html.push(quickHtml());
+  html.push(presentsHtml());
   html.push(tachesSection());
   const al = alerts();
   html.push(section('À traiter', al.length ? `<div class="list">${al.map(rowAlert).join('')}</div>`
@@ -1771,13 +2029,19 @@ function urgentPill(hid) {
   if (r.days <= cfg().alerte) return `<span class="pill warn">${r.type.short} ${dRel(r.due)}</span>`;
   return '';
 }
+/* Étiquettes de propriété : propriétaire (sauf la gérante) et demi-pensions en cours */
+function proprioPills(h) {
+  const pr = propRef(h);
+  const prop = pr && !proprioGerante(h) ? `<span class="pill info">${ic('user')}Propriétaire · ${esc(nomCourt(pr).slice(0, 22))}</span>` : '';
+  return prop + dpsDe(h).filter(x => dpActive(x)).map(x => `<span class="pill">${ic('card')}Demi-pension · ${esc(nomCourt(x.qui).slice(0, 22))}</span>`).join('');
+}
 function rowCheval(h) {
   const w = horseWhere(h.id);
   const sub = [ageTxt(h.naissance), h.sexe, h.race].filter(Boolean).join(' · ');
   return `<button type="button" class="row" data-act="open-cheval" data-id="${h.id}">${av(h, 'm')}<div class="row-main">
     <div class="row-t">${esc(h.nom)} ${exTag(h)}${h.archive ? '<span class="pill">Archivé</span>' : ''}</div>
     <div class="row-s trunc">${esc(sub || 'Fiche à compléter')}</div>
-    <div class="wrap" style="margin-top:4px"><span class="pill">${ic(w.pre ? 'fence' : 'barn')}${esc(w.txt)}</span>${h.proprietaire ? `<span class="pill info">${ic('user')}Pension · ${esc(String(h.proprietaire).slice(0, 18))}</span>` : ''}${urgentPill(h.id)}</div>
+    <div class="wrap" style="margin-top:4px"><span class="pill">${ic(w.pre ? 'fence' : 'barn')}${esc(w.txt)}</span>${proprioPills(h)}${urgentPill(h.id)}</div>
   </div><span class="row-end">${ic('next', 'sm')}</span></button>`;
 }
 VIEWS.chevaux = () => {
@@ -1839,7 +2103,6 @@ function ficheHtml(h) {
   const lies = tachesTriees(tk => tk.horseId === h.id);
   const tks = lies.length ? section('Tâches', tachesListe(lies)) : '';
   const items = [
-    ['Propriétaire', h.proprietaire ? `${h.proprietaire} (pension)` : ''],
     ['Naissance', h.naissance ? `${dFull(h.naissance)} · ${ageTxt(h.naissance)}` : ''],
     ['Sexe', h.sexe], ['Race', h.race], ['Robe', h.robe],
     ['Taille', h.taille ? `${num(h.taille, 0)} cm` : ''], ['Poids', h.poids ? `${num(h.poids, 0)} kg` : ''],
@@ -1848,8 +2111,50 @@ function ficheHtml(h) {
   const dl = items.length ? `<dl class="dl">${items.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`
     : empty('Fiche à compléter', 'Date de naissance, race, robe, n° SIRE, transpondeur…');
   const notes = h.notes ? `<div class="card"><div class="eyebrow">Notes</div><div style="white-space:pre-wrap">${esc(h.notes)}</div></div>` : '';
-  return loc + tks + rap + section('Identité', dl + notes, `<button type="button" class="link" data-act="edit-cheval" data-id="${h.id}">${ic('edit', 'sm')}Modifier</button>`);
+  return loc + tks + rap + proprieteHtml(h) + depensesChevalHtml(h) + section('Identité', dl + notes, `<button type="button" class="link" data-act="edit-cheval" data-id="${h.id}">${ic('edit', 'sm')}Modifier</button>`);
 }
+/* Propriété : à qui est le cheval, qui le prend en demi-pension, à quelles conditions */
+function proprieteHtml(h) {
+  const t = todayISO(), pr = propRef(h), mp = refMembre(pr), rows = [];
+  rows.push(pr
+    ? crow(`data-act="edit-prop" data-id="${h.id}"`, `${pav(pr)}<span class="row-main"><span class="row-t">${esc(nomDe(pr))}${estMoi(pr) ? ' <span class="pill ok">Toi</span>' : ''}</span><span class="row-s">Propriétaire${mp ? '' : ' · hors équipe'}</span></span>`, mp && mp.tel, nomDe(pr))
+    : `<button type="button" class="row" data-act="edit-prop" data-id="${h.id}">${lead('user')}<div class="row-main"><div class="row-t">Propriétaire</div><div class="row-s">Non renseigné : touche pour l'indiquer</div></div><span class="row-end">${ic('next', 'sm')}</span></button>`);
+  dpsDe(h).sort((a, b) => (dpActive(b) - dpActive(a)) || String(b.debut || '').localeCompare(String(a.debut || ''))).forEach(x => {
+    const fini = validISO(x.fin) && x.fin < t, futur = validISO(x.debut) && x.debut > t, mx = refMembre(x.qui);
+    const det = [joursTxt(x.jours), Number(x.part) > 0 ? eur(x.part) + ' / mois' : '',
+      fini ? 'terminée le ' + dShort(x.fin) : futur ? 'à partir du ' + dShort(x.debut) : (validISO(x.debut) ? 'depuis le ' + dShort(x.debut) : '')].filter(Boolean).join(' · ');
+    rows.push(crow(`data-act="edit-dp" data-hid="${h.id}" data-id="${esc(x.id)}"`,
+      `${pav(x.qui)}<span class="row-main"><span class="row-t">${esc(nomDe(x.qui))}${estMoi(x.qui) ? ' <span class="pill ok">Toi</span>' : ''}${fini ? ' <span class="pill">Terminée</span>' : futur ? ' <span class="pill info">À venir</span>' : ''}</span><span class="row-s">Demi-pension${det ? ' · ' + esc(det) : ''}</span>${x.notes ? `<span class="row-s clamp2">${esc(x.notes)}</span>` : ''}</span>`,
+      mx && mx.tel, nomDe(x.qui)));
+  });
+  const add = sync.readOnly ? '' : `<button type="button" class="link" data-act="new-dp" data-hid="${h.id}">${ic('plus', 'sm')}Demi-pension</button>`;
+  return section('Propriété', `<div class="list">${rows.join('')}</div>`, add);
+}
+/* Dépenses de l'année pour ce cheval, et qui les a payées */
+function depensesChevalHtml(h) {
+  const yr = todayISO().slice(0, 4);
+  const es = depenses(yr + '-01-01').filter(e => e.hid === h.id);
+  if (!es.length) return '';
+  const tot = es.reduce((s, e) => s + e.v, 0);
+  const cats = CATS.map(c => ({ c, v: es.filter(e => e.cat === c.id).reduce((s, e) => s + e.v, 0) })).filter(x => x.v > 0);
+  const by = new Map();
+  es.forEach(e => { const k = pKey(e.qui) || '_'; if (!by.has(k)) by.set(k, { v: 0, cats: {} }); const b = by.get(k); b.v += e.v; b.cats[e.cat] = (b.cats[e.cat] || 0) + e.v; });
+  const rows = [...by.entries()].sort((a, b) => (a[0] === '_') - (b[0] === '_') || b[1].v - a[1].v).map(([k, b]) => {
+    const p = personne(k), det = CATS.filter(c => b.cats[c.id]).map(c => `${c.label} ${eur(b.cats[c.id])}`).join(' · ');
+    return p
+      ? `<button type="button" class="row" data-act="open-membre" data-k="${esc(k)}">${pav(p)}<div class="row-main"><div class="row-t">${esc(p.nom)}</div><div class="row-s">${esc(det)}</div></div><span class="row-end num">${eur(b.v)}</span></button>`
+      : `<button type="button" class="row sev-warn" data-act="dep-cheval" data-id="${h.id}">${lead('euro')}<div class="row-main"><div class="row-t">Payeur à indiquer</div><div class="row-s">${esc(det)}</div></div><span class="row-end num">${eur(b.v)}</span></button>`;
+  }).join('');
+  return section(`Dépenses ${yr}`, `<div class="card"><div class="pnums"><span class="big">${eur(tot)}</span><span class="unit">${esc(cats.map(x => `${x.c.label.toLowerCase()} ${eur(x.v)}`).join(' · '))}</span></div></div><div class="list">${rows}</div>`,
+    `<button type="button" class="link" data-act="dep-cheval" data-id="${h.id}">Détail ${ic('next', 'sm')}</button>`);
+}
+ACT['dep-cheval'] = d => {
+  const h = cheval(d.id);
+  if (!h) return;
+  const yr = todayISO().slice(0, 4);
+  const es = depenses(yr + '-01-01').filter(e => e.hid === h.id);
+  openSheet(`Dépenses ${yr} · ${h.nom}`, es.length ? `<p class="note">Touche une ligne pour la modifier ou indiquer qui l'a payée.</p><div class="list">${es.map(e => rowDep(e)).join('')}</div>` : empty('Aucune dépense', 'Les coûts des soins, des cours et des engagements de ce cheval apparaîtront ici.'));
+};
 
 function rationHtml(h) {
   const lines = h.ration || [];
@@ -1903,7 +2208,7 @@ function formCheval(id) {
     ${fld('Nom', inp('f_nom', h.nom, 'required autocomplete="off" autocapitalize="words" enterkeyhint="next"'))}
     ${fld('Date de naissance', inp('f_naiss', h.naissance, 'type="date"'), "L'âge est calculé automatiquement.")}
     ${grp('Sexe', chips('sexe', SEXES.map(s => ({ v: s, l: s })), h.sexe, { optional: true }))}
-    ${fld('Propriétaire', inp('f_prop', h.proprietaire, 'autocomplete="off" autocapitalize="words" placeholder="Pour un cheval en pension"'), 'Laisse vide pour tes propres chevaux.')}
+    ${pickPerson('prop', 'Propriétaire', propRef(h), { ph: 'Prénom et nom', hint: 'Facultatif. Les demi-pensions se notent ensuite dans la fiche du cheval, rubrique Propriété.' })}
     ${fld('Race', inp('f_race', h.race, 'list="dl-race" autocomplete="off" placeholder="ex. Anglo-Arabe x Selle Français"'))}
     ${fld('Robe', inp('f_robe', h.robe, 'list="dl-robe" autocomplete="off"'))}
     <div class="grid2">${fld('Taille (cm)', inp('f_taille', h.taille, 'inputmode="numeric" autocomplete="off"'))}${fld('Poids (kg)', inp('f_poids', h.poids, 'inputmode="numeric" autocomplete="off"'))}</div>
@@ -1924,10 +2229,11 @@ function formCheval(id) {
       if (pr.changed) h.photo = pr.photo || null;
       const naiss = val('f_naiss');
       if (naiss && naiss > todayISO()) return 'La date de naissance ne peut pas être dans le futur.';
+      const prop = readPerson('prop');
       Object.assign(h, {
         nom, naissance: naiss || null, sexe: chipVal(f, 'sexe'), race: val('f_race'), robe: val('f_robe'),
         taille: parseNum(val('f_taille')), poids: parseNum(val('f_poids')), sire: val('f_sire'), puce: val('f_puce'),
-        couleur: parseInt(chipVal(f, 'coul') || '0', 10), notes: val('f_notes'), proprietaire: val('f_prop')
+        couleur: parseInt(chipVal(f, 'coul') || '0', 10), notes: val('f_notes'), proprietaire: prop ? prop.nom : '', propUid: prop ? prop.uid : null
       });
       if (ex) h.archive = $('#f_arch').checked;
       const saved = put('chevaux', h);
@@ -1950,6 +2256,62 @@ function deleteHorse(id) {
   toast(`${h.nom} supprimé`);
 }
 ACT['edit-cheval'] = d => formCheval(d.id);
+
+/* Propriétaire seul, sans rouvrir toute la fiche */
+function formProp(hid) {
+  const h = cheval(hid);
+  if (!h) return;
+  openSheet(`Propriétaire de ${h.nom}`, pickPerson('prop', 'Propriétaire', propRef(h), { ph: 'Prénom et nom', hint: "Une personne de l'équipe, ou « Autre personne » si elle n'a pas de compte." }), {
+    onSubmit: () => {
+      const r = readPerson('prop'), cur = cheval(hid);
+      if (!cur) return;
+      put('chevaux', Object.assign({}, cur, { proprietaire: r ? r.nom : '', propUid: r ? r.uid : null }));
+      toast(r ? `Propriétaire : ${nomCourt(r)}` : 'Propriétaire retiré');
+    }
+  });
+}
+ACT['edit-prop'] = d => formProp(d.id);
+
+/* Demi-pension : qui, quels jours, quelle participation, depuis quand */
+function formDP(hid, id) {
+  const h0 = hid ? cheval(hid) : null;
+  if (hid && !h0) return;
+  if (!chevaux().length) { toast("Ajoute d'abord un cheval."); formCheval(null); return; }
+  const ex = id && h0 ? dpsDe(h0).find(x => x.id === id) : null;
+  if (id && !ex) return;
+  const x = ex ? clone(ex) : { id: 'dp' + uid(), qui: null, jours: [], part: null, debut: todayISO(), fin: null, notes: '' };
+  const hs = chevaux();
+  const body = `
+    ${h0 ? '' : grp('Cheval', chips('h', horseOpts(hs), hs.length === 1 ? [hs[0].id] : []))}
+    ${pickPerson('dp', 'Demi-pensionnaire', x.qui, { ph: 'Prénom et nom', hint: membres().length ? "Une personne de l'équipe, ou « Autre personne » si elle n'a pas de compte." : '' })}
+    ${grp('Ses jours', chips('jours', JOURS.map(j => ({ v: String(j.id), l: j.l })), (x.jours || []).map(String), { multi: true }), "Ils s'affichent sur l'accueil le jour venu, pour que personne d'autre ne prévoie le cheval.")}
+    ${fld('Participation (€ par mois)', inp('f_dpeur', x.part != null ? String(x.part).replace('.', ',') : '', numAttr + ' placeholder="ex. 150"'), 'Facultatif.')}
+    <div class="grid2">${fld('Depuis le', inp('f_deb', x.debut, 'type="date"'))}${fld("Jusqu'au", inp('f_dfin', x.fin, 'type="date"'), 'Vide : en cours.')}</div>
+    ${fld('Conditions', area('f_notes', x.notes, 'rows="3" placeholder="Cours compris, concours, assurance, frais partagés…"'))}`;
+  openSheet(h0 ? `Demi-pension · ${h0.nom}` : 'Demi-pension', body, {
+    onSubmit: f => {
+      const h = h0 || cheval(chipVal(f, 'h'));
+      if (!h) return 'Choisis le cheval.';
+      const qui = readPerson('dp');
+      if (!qui) return 'Indique qui prend le cheval en demi-pension.';
+      const raw = val('f_dpeur'), part = parseNum(raw);
+      if (raw && (part == null || part < 0)) return 'La participation doit être un nombre, par exemple 150.';
+      const debut = val('f_deb'), fin = val('f_dfin');
+      if (validISO(debut) && validISO(fin) && fin < debut) return 'La fin doit suivre le début.';
+      Object.assign(x, { qui, jours: chipVals(f, 'jours').map(Number), part, debut: validISO(debut) ? debut : null, fin: validISO(fin) ? fin : null, notes: val('f_notes') });
+      const cur = cheval(h.id), lst = (Array.isArray(cur.dp) ? cur.dp : []).filter(z => z && z.id !== x.id);
+      put('chevaux', Object.assign({}, cur, { dp: [...lst, x] }));
+      toast(ex ? 'Demi-pension enregistrée' : `Demi-pension de ${nomCourt(qui)} sur ${h.nom}`);
+    },
+    onDelete: ex ? () => {
+      const cur = cheval(hid), prev = clone(cur);
+      put('chevaux', Object.assign({}, cur, { dp: (cur.dp || []).filter(z => z && z.id !== id) }));
+      toast('Demi-pension supprimée', { undo: () => put('chevaux', prev) });
+    } : null
+  });
+}
+ACT['edit-dp'] = d => formDP(d.hid, d.id);
+ACT['new-dp'] = d => formDP(d.hid || null, null);
 
 function formRation(hid, lid) {
   const h = cheval(hid);
@@ -2021,6 +2383,7 @@ function formSoin(id, pre = {}) {
     ${ex && ex.statut === 'prevu' ? `<button type="button" class="btn" id="b_done">${ic('check', 'sm')}Marquer fait aujourd'hui</button>` : ''}
     <div class="grid2">${fld('Praticien', inp('f_prat', s.praticien, 'list="dl-prat" autocomplete="off"'))}${fld('Produit', inp('f_prod', s.produit, 'list="dl-prod" autocomplete="off" placeholder="vaccin, vermifuge…"'))}</div>
     <div class="grid2">${fld('Coût (€)', inp('f_cout', s.cout != null ? String(s.cout).replace('.', ',') : '', numAttr))}${fld('Prochain rappel', inp('f_proch', s.prochain, 'type="date"'), 'Vide : calculé selon les réglages')}</div>
+    ${payeField(s.payePar, 'f_cout', Number(s.cout) || 0)}
     ${fld('Notes', area('f_notes', s.notes, 'rows="2"'))}
     ${dlist('dl-prat', historyValues('soins', 'praticien'))}${dlist('dl-prod', historyValues('soins', 'produit'))}`;
   openSheet(ex ? soinLabel(ex) : 'Soin ou rendez-vous', body, {
@@ -2050,7 +2413,7 @@ function formSoin(id, pre = {}) {
       if (coutRaw && cout == null) return 'Le coût doit être un nombre, par exemple 45 ou 45,50.';
       const proch = val('f_proch');
       if (proch && proch <= date) return 'Le prochain rappel doit tomber après la date du soin.';
-      const base = { types, label: types.includes('autre') ? val('f_label') : '', date, statut, praticien: val('f_prat'), produit: val('f_prod'), cout, prochain: proch || null, notes: val('f_notes') };
+      const base = { types, label: types.includes('autre') ? val('f_label') : '', date, statut, praticien: val('f_prat'), produit: val('f_prod'), cout, payePar: lirePaye(cout), prochain: proch || null, notes: val('f_notes') };
       if (ex) { put('soins', Object.assign({}, ex, base, { horseId: hids[0] })); toast('Soin enregistré'); return; }
       const ids = hids.map(hid => put('soins', Object.assign({ horseId: hid }, base)).id);
       toast(`${statut === 'prevu' ? 'Rendez-vous noté' : 'Soin enregistré'}${ids.length > 1 ? ` pour ${ids.length} chevaux` : ''}`, { undo: () => ids.forEach(i => del('soins', i)) });
@@ -2340,6 +2703,7 @@ function formFoin(id, pre = {}) {
     <div class="grid2">${fld('Nombre', inp('f_nb', m.nb, 'inputmode="numeric" autocomplete="off" required'))}${fld('Date', inp('f_date', m.date, 'type="date" required'))}</div>
     <div id="w_in" style="display:flex;flex-direction:column;gap:16px"${m.sens === 'in' ? '' : ' hidden'}>
       <div class="grid2">${fld('Poids par balle (kg)', inp('f_poids', m.poids, `${numAttr} placeholder="${defW(m.balle)}"`))}${fld('Prix par balle (€)', inp('f_prix', m.prix != null ? String(m.prix).replace('.', ',') : '', numAttr + ' placeholder="vide si récolte"'))}</div>
+      ${payeField(m.payePar, 'f_prix', Number(m.prix) || 0)}
       ${fld('Provenance', inp('f_orig', m.origine, `list="dl-orig" autocomplete="off" placeholder="Récolte d'un pré, fournisseur…"`))}
     </div>
     ${fld('Notes', area('f_notes', m.notes, 'rows="2" placeholder="Qualité, coupe, humidité…"'))}
@@ -2368,7 +2732,7 @@ function formFoin(id, pre = {}) {
       if (sens === 'in' && val('f_poids') && (poids == null || poids <= 0)) return 'Le poids doit être un nombre positif.';
       const prix = sens === 'in' ? parseNum(val('f_prix')) : null;
       if (sens === 'in' && val('f_prix') && (prix == null || prix < 0)) return 'Le prix doit être un nombre.';
-      const saved = put('foin', Object.assign(m, { sens, balle, nb, date, poids, prix, origine: sens === 'in' ? val('f_orig') : '', notes: val('f_notes') }));
+      const saved = put('foin', Object.assign(m, { sens, balle, nb, date, poids, prix, payePar: sens === 'in' ? lirePaye(prix) : null, origine: sens === 'in' ? val('f_orig') : '', notes: val('f_notes') }));
       toast(ex ? 'Mouvement enregistré' : `${sens === 'in' ? 'Entrée' : 'Sortie'} : ${nb} ${balleNom(balle, nb)}`, ex ? {} : { undo: () => del('foin', saved.id) });
     },
     onDelete: ex ? () => { del('foin', id); toast('Mouvement supprimé'); } : null
@@ -2377,9 +2741,12 @@ function formFoin(id, pre = {}) {
 ACT['edit-foin'] = d => formFoin(d.id);
 
 /* ---------- Concours : sorties prévues et résultats ---------- */
+const plusieursCavaliers = () => new Set(list('concours').map(x => pKey({ uid: x.cavalierUid, nom: x.cavalier })).filter(Boolean)).size > 1;
 function ccard(c, showHorse = true) {
   const h = cheval(c.horseId), t = todayISO(), past = c.date < t;
-  const meta = [sameYear(c.date) ? '' : c.date.slice(0, 4), c.discipline, nivLabel(c.niveau), c.epreuve].filter(Boolean).join(' · ');
+  // le cavalier n'est affiché que si plusieurs personnes sortent en concours
+  const cav = (c.cavalier || c.cavalierUid) && plusieursCavaliers() ? nomCourt({ uid: c.cavalierUid, nom: c.cavalier }) : '';
+  const meta = [sameYear(c.date) ? '' : c.date.slice(0, 4), c.discipline, nivLabel(c.niveau), c.epreuve, cav].filter(Boolean).join(' · ');
   const pills = past ? '' : engPill(c) + vacCheck(c).filter(i => i.sev !== 'ok').map(i => `<span class="pill ${i.sev}">${ic('alert')}${esc(i.short)}</span>`).join('');
   let res = '';
   if (past) {
@@ -2428,8 +2795,9 @@ function formConcours(id, pre = {}) {
   if (ex) c = clone(ex);
   else if (pre.copy) {
     const o = pre.copy;
-    c = { date: o.date, dateFin: o.dateFin, lieu: o.lieu, discipline: o.discipline, niveau: o.niveau, epreuve: o.epreuve, cavalier: o.cavalier, statut: 'a_engager', cloture: o.cloture, frais: o.frais };
-  } else c = { date: '', discipline: lastUsed('concours', 'discipline') || null, niveau: lastUsed('concours', 'niveau') || null, statut: 'a_engager', cavalier: lastUsed('concours', 'cavalier') };
+    c = { date: o.date, dateFin: o.dateFin, lieu: o.lieu, discipline: o.discipline, niveau: o.niveau, epreuve: o.epreuve, cavalier: o.cavalier, cavalierUid: o.cavalierUid || null, statut: 'a_engager', cloture: o.cloture, frais: o.frais, payePar: o.payePar || null };
+  } else c = { date: '', discipline: lastUsed('concours', 'discipline') || null, niveau: lastUsed('concours', 'niveau') || null, statut: 'a_engager' };
+  const cavRef = c.cavalier || c.cavalierUid ? { uid: c.cavalierUid || null, nom: c.cavalier || '' } : null;
   const selH = ex ? [ex.horseId] : pre.hid ? [pre.hid] : (hs.length === 1 ? [hs[0].id] : []);
   const passe = !!(ex && ex.date <= t);
   const hOpts = horseOpts(ex ? all.filter(h => !h.archive || h.id === ex.horseId) : hs);
@@ -2451,13 +2819,14 @@ function formConcours(id, pre = {}) {
     ${grp('Discipline', chips('disc', DISCIPLINES.map(x => ({ v: x, l: x })), c.discipline ? [c.discipline] : [], { optional: true }))}
     ${grp('Niveau', chips('niv', NIVEAUX.map(n => ({ v: n.id, l: n.label })), c.niveau ? [c.niveau] : [], { optional: true }), 'Sert à vérifier les vaccins exigés.')}
     ${fld('Épreuve', inp('f_epr', c.epreuve, 'list="dl-epr" autocomplete="off" placeholder="ex. Club 2 Grand Prix"'))}
-    ${fld('Cavalier', inp('f_cav', c.cavalier, 'list="dl-cav" autocomplete="off"'))}
+    ${pickPerson('cav', 'Cavalier', cavRef, { moi: !cavRef, def: lastUsed('concours', 'cavalier') })}
     ${grp('Engagement', chips('eng', ENGAGEMENT.map(e => ({ v: e.id, l: e.label })), c.statut || 'a_engager'))}
     <div class="grid2">${fld('Clôture des engagements', inp('f_clot', c.cloture, 'type="date"'))}${fld('Frais (€)', inp('f_frais', c.frais != null ? String(c.frais).replace('.', ',') : '', numAttr))}</div>
+    ${payeField(c.payePar, 'f_frais', Number(c.frais) || 0)}
     ${passe ? '' : resultat}
     ${fld('Notes', area('f_notes', c.notes, 'rows="2" placeholder="Horaires, box, transport…"'))}
     ${ex && !passe ? `<button type="button" class="btn" id="b_dup">${ic('copy', 'sm')}Dupliquer pour un autre cheval ou une autre épreuve</button>` : ''}
-    ${dlist('dl-lieu', historyValues('concours', 'lieu'))}${dlist('dl-epr', historyValues('concours', 'epreuve'))}${dlist('dl-cav', historyValues('concours', 'cavalier'))}`;
+    ${dlist('dl-lieu', historyValues('concours', 'lieu'))}${dlist('dl-epr', historyValues('concours', 'epreuve'))}`;
   const title = ex ? (passe && !hasResult(ex) ? 'Saisir le résultat' : (ex.lieu || 'Concours')) : 'Nouveau concours';
   openSheet(title, body, {
     onMount: () => {
@@ -2480,9 +2849,10 @@ function formConcours(id, pre = {}) {
       if (val('f_rang') && (!Number.isInteger(rang) || rang < 1)) return 'Le classement est un nombre entier : 1 pour le premier.';
       if (val('f_part') && (!Number.isInteger(part) || part < 1)) return 'Le nombre de partants est un nombre entier.';
       if (rang && part && rang > part) return 'Le classement ne peut pas dépasser le nombre de partants.';
+      const cav = readPerson('cav');
       const base = {
         date, dateFin: fin || null, lieu: val('f_lieu'), discipline: chipVal(f, 'disc'), niveau: chipVal(f, 'niv'), epreuve: val('f_epr'),
-        cavalier: val('f_cav'), statut: chipVal(f, 'eng') || 'a_engager', cloture: clot || null, frais,
+        cavalier: cav ? cav.nom : '', cavalierUid: cav ? cav.uid : null, statut: chipVal(f, 'eng') || 'a_engager', cloture: clot || null, frais, payePar: lirePaye(frais),
         rang: rang || null, partants: part || null, score: val('f_score'), notes: val('f_notes')
       };
       if (ex) { put('concours', Object.assign({}, ex, base, { horseId: hids[0] })); toast(hasResult(base) && !hasResult(ex) ? 'Résultat enregistré' : 'Concours enregistré'); return; }
@@ -2556,7 +2926,8 @@ ACT['save-cfg'] = () => {
   if (!balles.length) { toast('Garde au moins un type de balle.', { danger: true }); return; }
   if (balles.some(b => !b.nom || !(b.poids > 0))) { toast("Chaque type de balle a besoin d'un nom et d'un poids.", { danger: true }); return; }
   const fs = val('c_fin');
-  putCfg({ rappels, alerte: Math.round(alerte), repos: Math.round(repos), paturage: Math.round(paturage), balles, finSaison: validISO(fs) ? fs.slice(5) : C.finSaison });
+  // les autres réglages communs (contacts utiles…) sont gardés tels quels
+  putCfg(Object.assign({}, S.cfg || {}, { rappels, alerte: Math.round(alerte), repos: Math.round(repos), paturage: Math.round(paturage), balles, finSaison: validISO(fs) ? fs.slice(5) : C.finSaison }));
   toast('Réglages enregistrés');
 };
 ACT.export = async () => {
@@ -2600,12 +2971,15 @@ function confirmImport(d) {
 }
 function doImport(d) {
   const okId = o => o && typeof o === 'object' && typeof o.id === 'string' && /^[A-Za-z0-9_\-~:@+]{1,100}$/.test(o.id);
-  COLS.forEach(k => {
-    const incoming = (Array.isArray(d[k]) ? d[k] : []).filter(okId);
-    const keep = new Set(incoming.map(o => o.id));
-    list(k).forEach(o => { if (!keep.has(o.id)) del(k, o.id); });
-    incoming.forEach(o => put(k, o));
-  });
+  restauration = true;
+  try {
+    COLS.forEach(k => {
+      const incoming = (Array.isArray(d[k]) ? d[k] : []).filter(okId);
+      const keep = new Set(incoming.map(o => o.id));
+      list(k).forEach(o => { if (!keep.has(o.id)) del(k, o.id); });
+      incoming.forEach(o => put(k, o));
+    });
+  } finally { restauration = false; }
   if (d.cfg && typeof d.cfg === 'object') putCfg(d.cfg);
   nav.stack = [];
   render();
@@ -2620,13 +2994,13 @@ ACT.wipe = () => {
 };
 
 /* ---------- Gérer à plusieurs ---------- */
-const ROLE_LABEL = { gerante: 'Gérante', equipe: 'Peut modifier', lecture: 'Lecture seule' };
 function equipeHtml() {
   if (window.EQ_MODE && window.EQ) return section('Ton compte', `<div class="card">
     <div class="row-main"><div class="row-t">${esc(EQ.email)}</div><div class="row-s">${esc(ROLE_LABEL[EQ.role] || '')}</div></div>
-    ${fld('Ton prénom', inp('f_moi', getMoi() || me.platformName || '', 'autocomplete="given-name" autocapitalize="words"'), 'Affiché à côté des tâches que tu coches.')}
+    ${fld('Ton prénom', inp('f_moi', moiNom(), 'autocomplete="given-name" autocapitalize="words"'), "Affiché dans l'équipe et à côté des tâches que tu coches.")}
     <div class="btnrow">
       <button type="button" class="btn small" data-act="save-moi">${ic('check', 'sm')}Enregistrer le prénom</button>
+      <button type="button" class="btn small" data-act="ma-fiche">${ic('user', 'sm')}Ma fiche</button>
       ${EQ.role === 'gerante' ? `<button type="button" class="btn small" data-act="equipe">${ic('users', 'sm')}Gérer l'équipe</button>` : ''}
       <button type="button" class="btn small" data-act="deconnexion">Se déconnecter</button>
     </div>
@@ -2684,16 +3058,20 @@ ACT['eq-copy'] = () => {
   try { navigator.clipboard.writeText(txt).then(() => toast('Lien copié'), () => toast(txt)); } catch (e) { toast(txt); }
 };
 ACT['save-moi'] = () => {
-  const v = val('f_moi');
+  const v = val('f_moi').replace(/\s+/g, ' ').slice(0, 40);
   if (!v) { toast('Indique ton prénom.'); return; }
-  setMoi(v.slice(0, 40));
+  setMoi(v);
+  // version installable : le prénom de la fiche d'équipe suit, sur tous les téléphones
+  const m = me.uid ? get('membres', me.uid) : null;
+  if (m && m.role && m.nom !== v) put('membres', Object.assign({}, m, { nom: v }));
   toast('Prénom enregistré');
 };
 
 /* ---------- Tâches partagées : chacun coche, tout le monde voit ---------- */
 function tacheSub(tk, e) {
   const pre = tk.preId ? get('pres', tk.preId) : null, h = tk.horseId ? cheval(tk.horseId) : null;
-  const where = [pre ? pre.nom : '', h ? h.nom : ''].filter(Boolean).join(' · ');
+  const qui = tk.resp && pKey(tk.resp) ? (estMoi(tk.resp) ? 'Pour toi' : 'Pour ' + nomCourt(tk.resp)) : '';
+  const where = [qui, pre ? pre.nom : '', h ? h.nom : ''].filter(Boolean).join(' · ');
   let st;
   if (e.done) st = faitTxt(e.last) + (e.n > 1 && e.next ? ` · à refaire ${dRel(e.next)}` : '');
   else if (tk.freq === 'une') st = e.due ? (e.days < 0 ? `En retard de ${nJ(-e.days)}` : `À faire ${dRel(e.due)}`) : 'À faire';
@@ -2731,7 +3109,7 @@ function tachesSection() {
 
 /* Prénom affiché à côté des coches (demandé une fois par téléphone) */
 function withName(cb) {
-  const n = getMoi();
+  const n = window.EQ_MODE ? moiNom() : getMoi();
   if (n) { cb(n); return; }
   openSheet('Qui coche ?', fld('Ton prénom', inp('f_moi', me.platformName || '', 'autocomplete="given-name" autocapitalize="words" required'),
     "Il s'affiche à côté des tâches que tu coches, pour que les autres sachent qui les a faites. Il reste sur ce téléphone."), {
@@ -2786,6 +3164,7 @@ function formTache(id, pre = {}) {
     <div id="w_date"${tk.freq === 'une' ? '' : ' hidden'}>${fld('À faire le', inp('f_date', tk.date, 'type="date"'), 'Facultatif.')}</div>
     ${ps.length ? grp('Pré', chips('pre', ps.map(p => ({ v: p.id, l: p.nom })), tk.preId ? [tk.preId] : [], { optional: true }), 'Facultatif.') : ''}
     ${hs.length ? grp('Cheval', chips('h', horseOpts(hs), tk.horseId ? [tk.horseId] : [], { optional: true }), 'Facultatif.') : ''}
+    ${pickPerson('resp', "Qui s'en charge", tk.resp || null, { autre: false, hint: "Facultatif. Vide : toute l'équipe." })}
     ${fld('Consignes', area('f_notes', tk.notes, 'rows="2" placeholder="ex. 2 rounds dans le râtelier, vérifier le niveau d\'eau"'))}
     ${hist}`;
   openSheet(ex ? 'Tâche' : 'Nouvelle tâche', body, {
@@ -2806,7 +3185,7 @@ function formTache(id, pre = {}) {
         if (!Number.isInteger(n) || n < 1 || n > 365) return 'Indique un nombre de jours entre 1 et 365.';
       }
       const date = freq === 'une' ? val('f_date') : '';
-      Object.assign(tk, { titre, freq, n, date: validISO(date) ? date : null, preId: chipVal(f, 'pre'), horseId: chipVal(f, 'h'), notes: val('f_notes') });
+      Object.assign(tk, { titre, freq, n, date: validISO(date) ? date : null, preId: chipVal(f, 'pre'), horseId: chipVal(f, 'h'), resp: readPerson('resp'), notes: val('f_notes') });
       if (!Array.isArray(tk.fait)) tk.fait = [];
       put('taches', tk);
       toast(ex ? 'Tâche enregistrée' : 'Tâche ajoutée');
@@ -2820,7 +3199,8 @@ ACT['edit-tache'] = d => formTache(d.id);
 function seanceRow(s, showHorse = false) {
   const t = todayISO(), h = cheval(s.horseId), prevu = s.statut === 'prevu';
   const title = [s.type || 'Séance', durTxt(s.duree)].filter(Boolean).join(' · ');
-  const who = [prevu && s.heure ? heureTxt(s.heure) : '', s.coach ? `Coach : ${s.coach}` : '', s.cavalier ? `Cavalier : ${s.cavalier}` : '', s.lieu].filter(Boolean).join(' · ');
+  const cav = nomDe({ uid: s.cavalierUid, nom: s.cavalier });
+  const who = [prevu && s.heure ? heureTxt(s.heure) : '', s.coach ? `Coach : ${s.coach}` : '', cav ? `Cavalier : ${cav}` : '', s.lieu].filter(Boolean).join(' · ');
   const pills = [
     prevu ? (s.date < t ? '<span class="pill warn">À confirmer</span>' : '<span class="pill info">Prévue</span>') : '',
     s.intensite ? `<span class="pill">${esc(intLabel(s.intensite))}</span>` : '',
@@ -2854,13 +3234,12 @@ function formSeance(id, pre = {}) {
   const hs = chevaux(), all = chevaux(true);
   if (!all.length) { toast("Ajoute d'abord un cheval."); formCheval(null); return; }
   const t = todayISO();
-  const s = ex ? clone(ex) : { date: t, type: null, cavalier: lastUsed('seances', 'cavalier') };
+  const s = ex ? clone(ex) : { date: t, type: null };
   const selH = ex ? [ex.horseId] : pre.hid ? [pre.hid] : (hs.length === 1 ? [hs[0].id] : []);
   const auto = d => (d > todayISO() ? 'prevu' : 'fait');
   const statut0 = ex ? (ex.statut === 'prevu' ? 'prevu' : 'fait') : auto(s.date);
   const hOpts = horseOpts(ex ? all.filter(h => !h.archive || h.id === ex.horseId) : hs);
   const lieux = Array.from(new Set([...historyValues('seances', 'lieu'), ...LIEUX]));
-  const cavs = Array.from(new Set([...historyValues('seances', 'cavalier'), ...historyValues('concours', 'cavalier')]));
   const body = `
     ${grp(ex ? 'Cheval' : 'Chevaux', chips('h', hOpts, selH, { multi: !ex }))}
     <div class="grid2">${fld('Date', inp('f_date', s.date, 'type="date" required'))}${fld('Heure', inp('f_heure', s.heure, 'type="time"'), 'Facultatif.')}</div>
@@ -2871,12 +3250,13 @@ function formSeance(id, pre = {}) {
     <div class="wrap">${DUREES.map(m => `<button type="button" class="chip" data-act="fill" data-target="f_duree" data-fill="${m}">${durTxt(m)}</button>`).join('')}</div>
     ${grp('Intensité', chips('int', INTENSITES.map(x => ({ v: x.id, l: x.label })), s.intensite ? [s.intensite] : [], { optional: true }))}
     ${fld('Coach (s\'il y en a un)', inp('f_coach', s.coach, 'list="dl-coach" autocomplete="off" autocapitalize="words"'), 'Laisse vide pour une séance sans coach.')}
-    ${fld('Cavalier', inp('f_cav', s.cavalier, 'list="dl-cavs" autocomplete="off" autocapitalize="words"'))}
+    ${pickPerson('cav', 'Cavalier', ex && (s.cavalier || s.cavalierUid) ? { uid: s.cavalierUid || null, nom: s.cavalier || '' } : null, { moi: !ex, def: lastUsed('seances', 'cavalier') })}
     ${fld('Lieu', inp('f_lieu', s.lieu, 'list="dl-lieux" autocomplete="off" placeholder="Carrière, manège, extérieur…"'))}
     ${fld('Contenu, objectifs', area('f_notes', s.notes, 'rows="3" placeholder="ex. transitions, épaule en dedans, gymnastique à 1 m"'))}
     <div id="w_res"${statut0 === 'fait' ? '' : ' hidden'}>${grp('Ressenti', chips('res', RESSENTIS.map(x => ({ v: x.id, l: x.label })), s.ressenti ? [s.ressenti] : [], { optional: true }))}</div>
     ${fld('Prix du cours (€)', inp('f_cout', s.cout != null ? String(s.cout).replace('.', ',') : '', numAttr), 'Facultatif.')}
-    ${dlist('dl-coach', historyValues('seances', 'coach'))}${dlist('dl-cavs', cavs)}${dlist('dl-lieux', lieux)}`;
+    ${payeField(s.payePar, 'f_cout', Number(s.cout) || 0)}
+    ${dlist('dl-coach', historyValues('seances', 'coach'))}${dlist('dl-lieux', lieux)}`;
   openSheet(ex ? (ex.statut === 'prevu' ? 'Séance prévue' : 'Séance') : 'Séance de travail', body, {
     onMount: f => {
       let touched = false;
@@ -2909,11 +3289,11 @@ function formSeance(id, pre = {}) {
       if (dRaw && (!duree || duree <= 0 || duree > 600)) return 'La durée se note en minutes, par exemple 45.';
       const coutRaw = val('f_cout'), cout = parseNum(coutRaw);
       if (coutRaw && (cout == null || cout < 0)) return 'Le prix doit être un nombre, par exemple 35.';
-      const heure = val('f_heure');
+      const heure = val('f_heure'), cav = readPerson('cav');
       const base = {
         date, heure: /^\d{2}:\d{2}$/.test(heure) ? heure : null, statut, type, duree: duree ? Math.round(duree) : null,
-        intensite: chipVal(f, 'int'), coach: val('f_coach'), cavalier: val('f_cav'), lieu: val('f_lieu'), notes: val('f_notes'),
-        ressenti: statut === 'fait' ? chipVal(f, 'res') : null, cout
+        intensite: chipVal(f, 'int'), coach: val('f_coach'), cavalier: cav ? cav.nom : '', cavalierUid: cav ? cav.uid : null, lieu: val('f_lieu'), notes: val('f_notes'),
+        ressenti: statut === 'fait' ? chipVal(f, 'res') : null, cout, payePar: lirePaye(cout)
       };
       if (ex) { put('seances', Object.assign({}, ex, base, { horseId: hids[0] })); toast('Séance enregistrée'); return; }
       const ids = hids.map(hid => put('seances', Object.assign({ horseId: hid }, base)).id);
@@ -2923,6 +3303,232 @@ function formSeance(id, pre = {}) {
   });
 }
 ACT['edit-seance'] = d => formSeance(d.id);
+
+/* ---------- Équipe : qui fait quoi, dépenses, fiches personnelles, contacts utiles ---------- */
+const eurRond = v => num(Math.round(Number(v) || 0), 0) + ' €';
+const perSeg = () => segCtl('eqPer', [['mois', 'Ce mois'], ['annee', 'Cette année'], ['tout', 'Tout']], periode(ui.eqPer).id);
+const debutT = P => P.from ? new Date(P.from + 'T00:00:00').getTime() : 0;
+const estGerante = () => !!(window.EQ_MODE && window.EQ && EQ.role === 'gerante');
+
+function chevauxDe(k) {
+  const own = chevaux(true).filter(h => pKey(propRef(h)) === k);
+  const dps = [];
+  chevaux(true).forEach(h => dpsDe(h).forEach(x => { if (pKey(x.qui) === k) dps.push({ h, x }); }));
+  return { own, dps };
+}
+function resumeBilan(a) {
+  const parts = [];
+  if (a && a.taches) parts.push(`${a.taches} ${pl(a.taches, 'tâche')}`);
+  if (a && a.seances) parts.push(`${a.seances} ${pl(a.seances, 'séance')}`);
+  if (a && a.dep) parts.push(eur(a.dep));
+  return parts.join(' · ') || 'Rien sur la période';
+}
+function rowPersonne(p, a) {
+  const { own, dps } = chevauxDe(p.k);
+  const enCours = dps.filter(d => dpActive(d.x));
+  const chev = [own.length ? `Propriétaire : ${own.map(h => h.nom).join(', ')}` : '', enCours.length ? `Demi-pension : ${enCours.map(d => d.h.nom).join(', ')}` : ''].filter(Boolean).join(' · ');
+  const role = p.m && p.m.role !== 'equipe' ? `<span class="pill${p.m.role === 'gerante' ? ' ok' : ''}">${esc(ROLE_LABEL[p.m.role] || '')}</span>` : '';
+  const moi = estMoi(p.k) ? '<span class="pill ok">Toi</span>' : '';
+  return `<button type="button" class="row" data-act="open-membre" data-k="${esc(p.k)}">${pav(p, 'm')}<div class="row-main">
+    <div class="row-t">${esc(p.nom)} ${moi}${role}</div><div class="row-s">${esc(resumeBilan(a))}</div>${chev ? `<div class="row-s">${esc(chev)}</div>` : ''}
+  </div><span class="row-end">${ic('next', 'sm')}</span></button>`;
+}
+function rowDep(e, sansPayeur = false) {
+  const qui = pKey(e.qui) ? nomCourt(e.qui) : 'Payeur à indiquer';
+  const sub = [dShort(e.d), e.hid ? hNom(e.hid) : '', sansPayeur ? '' : qui].filter(Boolean).join(' · ');
+  return `<button type="button" class="row" data-act="${ACT_DEP[e.coll]}" data-id="${esc(e.id)}">${lead(catDe(e.cat).icon)}<div class="row-main"><div class="row-t">${esc(e.label)}</div><div class="row-s">${esc(sub)}</div></div><span class="row-end num">${eur(e.v)}</span></button>`;
+}
+/* Fil de l'équipe : la personne, puis ce qu'elle a fait ; dans une fiche, l'objet puis l'action */
+function rowFil(it, dansFiche = false) {
+  const inner = dansFiche
+    ? `${lead(it.icon)}<div class="row-main"><div class="row-t">${esc(it.objet)}</div><div class="row-s">${esc(it.quoi)} · ${esc(quandTxt(it.t))}</div></div>`
+    : `${pav(it.r)}<div class="row-main"><div class="row-t">${esc(nomDe(it.r) || "Quelqu'un")}</div><div class="row-s">${esc(it.quoi)} : ${esc(it.objet)} · ${esc(quandTxt(it.t))}</div></div>`;
+  return it.act ? `<button type="button" class="row" ${it.act}>${inner}</button>` : `<div class="row">${inner}</div>`;
+}
+
+VIEWS.equipe = () => {
+  const P = periode(ui.eqPer), B = bilan(P.from), ms = membres();
+  let html = perSeg();
+  html += `<div class="stats">
+    <div class="stat"><b>${B.taches}</b><span>${pl(B.taches, 'tâche cochée', 'tâches cochées')}</span></div>
+    <div class="stat"><b>${B.seances}</b><span>${pl(B.seances, 'séance', 'séances')} de travail</span></div>
+    <div class="stat"><b>${eurRond(B.total)}</b><span>de dépenses</span></div></div>`;
+  // les membres, puis les personnes hors équipe qui apparaissent dans le carnet (demi-pension, cavalier, payeur…)
+  const keys = new Set(ms.map(m => 'u:' + m.id)), autres = new Set();
+  const voir = k => { if (k && k !== '_' && !keys.has(k)) autres.add(k); };
+  B.by.forEach((a, k) => voir(k));
+  chevaux(true).forEach(h => { voir(pKey(propRef(h))); dpsDe(h).forEach(x => voir(pKey(x.qui))); });
+  if (!ms.length) voir(kMoi());
+  const na = B.by.get('_');
+  const naRow = na && na.dep > 0 ? `<button type="button" class="row sev-warn" data-act="dep-na">${lead('euro')}<div class="row-main"><div class="row-t">${eur(na.dep)} sans payeur</div><div class="row-s">${na.items.length} ${pl(na.items.length, 'dépense')} ${P.label} : touche pour indiquer qui a payé</div></div><span class="row-end">${ic('next', 'sm')}</span></button>` : '';
+  const ext = [...autres].map(personne).filter(Boolean).sort(byName).map(p => rowPersonne(p, B.by.get(p.k)));
+  if (ms.length) {
+    html += section(`L'équipe <span class="count">${ms.length}</span>`, `<div class="list">${ms.map(m => rowPersonne(personne('u:' + m.id), B.by.get('u:' + m.id))).join('')}${naRow}</div>`);
+    if (ext.length) html += section('Hors équipe', `<div class="list">${ext.join('')}</div>`);
+  } else {
+    html += section('Les personnes', ext.length || naRow ? `<div class="list">${ext.join('')}${naRow}</div>`
+      : empty('Personne pour l\'instant', "Les prénoms apparaissent dès qu'une tâche est cochée, qu'une séance est notée ou qu'un propriétaire est indiqué."));
+  }
+  const fil = filEquipe(debutT(P), 25);
+  html += section("Ce qui s'est passé", fil.length ? `<div class="list">${fil.map(it => rowFil(it)).join('')}</div>`
+    : '<p class="note">Les tâches cochées, les soins, les séances, le foin et les déplacements notés par chacun apparaîtront ici.</p>');
+  const cs = contacts();
+  html += section('Contacts utiles', cs.length ? `<div class="list">${cs.map(rowContact).join('')}</div>`
+    : '<p class="note">Vétérinaire, maréchal, dentiste, coach… Garde leurs numéros ici pour les appeler en un geste.</p>',
+    sync.readOnly ? '' : `<button type="button" class="link" data-act="new-contact">${ic('plus', 'sm')}Ajouter</button>`);
+  if (estGerante()) html += `<button type="button" class="btn" data-act="equipe">${ic('users', 'sm')}Inviter, gérer les accès</button>`;
+  return { title: 'Équipe', eyebrow: ms.length ? `${ms.length} ${pl(ms.length, 'personne')}` : 'Qui fait quoi', html, fab: menuEquipe, fabLabel: 'Ajouter' };
+};
+
+VIEWS.membre = p => {
+  const P = periode(ui.eqPer), B = bilan(P.from), pe = personne(p.k);
+  if (!pe) return { title: 'Équipe', html: empty('Fiche introuvable', "Cette personne ne fait plus partie de l'équipe.") };
+  const m = pe.m, a = B.by.get(pe.k), moi = estMoi(pe.k);
+  const modif = !!(m && (m.id === me.uid || estGerante()));
+  const dispo = m && Array.isArray(m.dispo) && m.dispo.length ? joursTxt(m.dispo) : '';
+  const btns = [m && m.tel ? `<a class="btn small" href="${esc(telHref(m.tel))}">${ic('phone', 'sm')}${esc(m.tel)}</a>` : '',
+    modif ? `<button type="button" class="btn small" data-act="edit-profil" data-uid="${esc(m.id)}">${ic('edit', 'sm')}${moi ? 'Modifier ma fiche' : 'Modifier'}</button>` : ''].join('');
+  let html = `<div class="card phead">${pav(pe, 'xl')}<div class="row-main">
+    <div class="row-t">${esc(pe.nom)}${moi ? ' <span class="pill ok">Toi</span>' : ''}</div>
+    <div class="row-s">${esc(m ? (ROLE_LABEL[m.role] || '') : 'Hors équipe')}</div>
+    ${m && m.email ? `<div class="row-s trunc">${esc(m.email)}</div>` : ''}
+    ${dispo ? `<div class="row-s">Jours de présence : ${esc(dispo)}</div>` : ''}
+    ${btns ? `<div class="btnrow">${btns}</div>` : ''}</div></div>`;
+  html += perSeg();
+  html += `<div class="stats">
+    <div class="stat"><b>${a ? a.taches : 0}</b><span>${pl(a ? a.taches : 0, 'tâche cochée', 'tâches cochées')}</span></div>
+    <div class="stat"><b>${a ? a.seances : 0}</b><span>${pl(a ? a.seances : 0, 'séance')}${a && a.minutes ? ' · ' + durTxt(a.minutes) : ''}</span></div>
+    <div class="stat"><b>${eurRond(a ? a.dep : 0)}</b><span>de dépenses</span></div></div>`;
+  const { own, dps } = chevauxDe(pe.k);
+  const rowH = (h, sub) => `<button type="button" class="row" data-act="open-cheval" data-id="${h.id}">${av(h)}<div class="row-main"><div class="row-t">${esc(h.nom)}</div><div class="row-s">${esc(sub)}</div></div><span class="row-end">${ic('next', 'sm')}</span></button>`;
+  if (own.length || dps.length) html += section('Chevaux', `<div class="list">${[
+    ...own.map(h => rowH(h, 'Propriétaire')),
+    ...dps.map(({ h, x }) => rowH(h, ['Demi-pension', joursTxt(x.jours), Number(x.part) > 0 ? eur(x.part) + ' / mois' : '', dpActive(x) ? '' : (validISO(x.fin) && x.fin < todayISO() ? 'terminée' : 'à venir')].filter(Boolean).join(' · ')))
+  ].join('')}</div>`);
+  if (a && a.items.length) {
+    const cats = CATS.filter(c => a.cats[c.id]).map(c => `<span class="pill">${ic(c.icon)}${c.label} ${eur(a.cats[c.id])}</span>`).join('');
+    html += section(`Dépenses ${P.label}`, `<div class="wrap">${cats}</div><div class="list">${a.items.slice(0, 40).map(e => rowDep(e, true)).join('')}</div>`);
+  }
+  const resp = tachesTriees(tk => pKey(tk.resp) === pe.k);
+  if (resp.length) html += section(moi ? 'Mes tâches' : 'Ses tâches', tachesListe(resp));
+  const fil = filEquipe(debutT(P), 20, pe.k);
+  if (fil.length) html += section(`Activité ${P.label}`, `<div class="list">${fil.map(it => rowFil(it, true)).join('')}</div>`);
+  const ss = list('seances').filter(s => s.statut !== 'prevu' && validISO(s.date) && (!P.from || s.date >= P.from) && pKey({ uid: s.cavalierUid, nom: s.cavalier }) === pe.k)
+    .sort((x, y) => y.date.localeCompare(x.date));
+  if (ss.length) html += section(`Séances ${P.label}`, `<div class="list">${ss.slice(0, 10).map(s => seanceRow(s, true)).join('')}</div>`);
+  if (m && (m.materiel || m.notes)) html += section('Matériel et infos', `<div class="card">${m.materiel ? `<div><div class="eyebrow">Matériel</div><div style="white-space:pre-wrap">${esc(m.materiel)}</div></div>` : ''}${m.notes ? `<div><div class="eyebrow">Notes</div><div style="white-space:pre-wrap">${esc(m.notes)}</div></div>` : ''}</div>`);
+  else if (modif && moi) html += '<p class="note">Ajoute ton téléphone, tes jours de présence et ton matériel avec « Modifier ma fiche » : toute l\'équipe les verra.</p>';
+  return { title: pe.nom, eyebrow: moi ? 'Ma fiche' : (m ? 'Équipe' : 'Hors équipe'), html, fab: null };
+};
+ACT['open-membre'] = d => { if (d.k) push('membre', { k: d.k }); };
+ACT['ma-fiche'] = () => { const k = kMoi(); if (k) push('membre', { k }); else toast("Ta fiche n'est pas encore chargée."); };
+
+function menuEquipe() {
+  const mi = (act, icon, t, s) => `<button type="button" class="row" data-act="${act}">${lead(icon)}<div class="row-main"><div class="row-t">${t}</div><div class="row-s">${s}</div></div></button>`;
+  openSheet('Ajouter', `<div class="list">
+    ${estGerante() ? mi('equipe', 'users', "Inviter quelqu'un", 'Par adresse e-mail, avec ses droits') : ''}
+    ${mi('new-dp', 'card', 'Demi-pension', 'Qui prend quel cheval, quels jours')}
+    ${mi('new-contact', 'phone', 'Contact utile', 'Vétérinaire, maréchal, coach…')}
+    ${me.uid && get('membres', me.uid) ? mi('edit-profil-moi', 'user', 'Ma fiche', 'Téléphone, jours de présence, matériel') : ''}
+  </div>`);
+}
+
+/* Fiche personnelle : chacun tient la sienne, la gérante peut toutes les corriger */
+function formProfil(uidM) {
+  const m = get('membres', uidM);
+  if (!m || !m.role) { toast("La fiche n'est pas encore chargée : réessaie dans un instant."); return; }
+  const moi = uidM === me.uid;
+  const coul = Number.isInteger(m.couleur) ? m.couleur : hashCol(normNom(mNom(m)));
+  const body = `
+    ${fld('Prénom', inp('f_pnom', mNom(m), 'required autocomplete="given-name" autocapitalize="words"'))}
+    ${fld('Téléphone', inp('f_tel', m.tel || '', 'type="tel" inputmode="tel" autocomplete="tel" placeholder="06 12 34 56 78"'), "Visible par toute l'équipe, pour s'appeler en un geste.")}
+    ${grp('Jours de présence', chips('dispo', JOURS.map(j => ({ v: String(j.id), l: j.l })), (Array.isArray(m.dispo) ? m.dispo : []).map(String), { multi: true }), "Les jours où tu passes à l'écurie : ils s'affichent sur l'accueil le jour venu.")}
+    ${fld('Matériel personnel', area('f_mat', m.materiel || '', 'rows="3" placeholder="Selle, filet, tapis, couvertures, bombe…"'))}
+    ${fld('Notes', area('f_pnotes', m.notes || '', 'rows="2" placeholder="Personne à prévenir, préférences, véhicule…"'))}
+    ${grp('Pastille', chips('pcoul', Array.from({ length: NB_COULEURS }, (_, i) => ({ v: String(i), html: `<span class="sw hc${i}"></span>`, cls: 'col', aria: `Couleur ${i + 1}` })), String(coul)))}`;
+  openSheet(moi ? 'Ma fiche' : `Fiche de ${mNom(m)}`, body, {
+    local: moi,   // chacun peut tenir sa fiche à jour, même en lecture seule
+    onSubmit: f => {
+      const nom = val('f_pnom').replace(/\s+/g, ' ');
+      if (!nom) return 'Indique le prénom.';
+      if (nom.length > 40) return 'Un prénom court suffit.';
+      const tel = val('f_tel');
+      if (tel && tel.replace(/[^\d]/g, '').length < 6) return 'Ce numéro de téléphone semble incomplet.';
+      const cur = get('membres', uidM);
+      if (!cur || !cur.role) return "La fiche n'est pas encore chargée : réessaie dans un instant.";
+      put('membres', Object.assign({}, cur, {
+        nom, tel, dispo: chipVals(f, 'dispo').map(Number), materiel: val('f_mat'), notes: val('f_pnotes'),
+        couleur: parseInt(chipVal(f, 'pcoul') || String(coul), 10)
+      }));
+      if (moi) setMoi(nom);
+      toast('Fiche enregistrée');
+    }
+  });
+}
+ACT['edit-profil'] = d => formProfil(d.uid);
+ACT['edit-profil-moi'] = () => formProfil(me.uid);
+
+/* Contacts utiles : gardés dans les réglages communs du carnet */
+const METIER_IC = { 'Vétérinaire': 'stetho', 'Maréchal': 'shoe', 'Dentiste': 'tooth', 'Ostéopathe': 'hands', 'Coach': 'timer', 'Fourrage': 'bale', 'Sellerie': 'tool', 'Transport': 'move' };
+function contacts() {
+  const cs = (S.cfg && Array.isArray(S.cfg.contacts) ? S.cfg.contacts : []).filter(c => c && c.id && c.nom);
+  const ord = c => { const i = METIERS.indexOf(c.metier); return i < 0 ? 99 : i; };
+  return cs.slice().sort((a, b) => ord(a) - ord(b) || byName(a, b));
+}
+const rowContact = c => crow(`data-act="edit-contact" data-id="${esc(c.id)}"`,
+  `${lead(METIER_IC[c.metier] || 'user')}<span class="row-main"><span class="row-t">${esc(c.nom)}</span><span class="row-s">${esc([c.metier, c.tel].filter(Boolean).join(' · ') || 'Touche pour compléter')}</span>${c.notes ? `<span class="row-s clamp2">${esc(c.notes)}</span>` : ''}</span>`, c.tel, c.nom);
+function formContact(id) {
+  const ex = id ? contacts().find(c => c.id === id) : null;
+  if (id && !ex) return;
+  const c = ex ? clone(ex) : { id: 'c' + uid(), nom: '', metier: null, tel: '', notes: '' };
+  const noms = Array.from(new Set([...historyValues('soins', 'praticien'), ...historyValues('seances', 'coach')]));
+  const body = `
+    ${fld('Nom', inp('f_cnom', c.nom, 'required autocomplete="off" autocapitalize="words" list="dl-cnom" placeholder="ex. Dr Martin, clinique vétérinaire"'))}
+    ${grp('Métier', chips('metier', METIERS.map(x => ({ v: x, l: x })), c.metier ? [c.metier] : [], { optional: true }))}
+    ${fld('Téléphone', inp('f_ctel', c.tel, 'type="tel" inputmode="tel" autocomplete="off"'))}
+    ${fld('Notes', area('f_cnotes', c.notes, 'rows="2" placeholder="Urgences, horaires, adresse…"'))}
+    ${dlist('dl-cnom', noms)}`;
+  openSheet(ex ? ex.nom : 'Contact utile', body, {
+    focus: ex ? null : '#f_cnom',
+    onSubmit: f => {
+      const nom = val('f_cnom');
+      if (!nom) return 'Indique le nom.';
+      Object.assign(c, { nom, metier: chipVal(f, 'metier'), tel: val('f_ctel'), notes: val('f_cnotes') });
+      putCfg(Object.assign({}, S.cfg || {}, { contacts: [...contacts().filter(x => x.id !== c.id), c] }));
+      toast(ex ? 'Contact enregistré' : `${nom} ajouté aux contacts`);
+    },
+    onDelete: ex ? () => { const prev = clone(S.cfg || {}); putCfg(Object.assign({}, S.cfg || {}, { contacts: contacts().filter(x => x.id !== id) })); toast('Contact supprimé', { undo: () => putCfg(prev) }); } : null
+  });
+}
+ACT['edit-contact'] = d => formContact(d.id);
+ACT['new-contact'] = () => formContact(null);
+
+/* Dépenses sans payeur : on les attribue une par une, ou toutes d'un coup */
+ACT['dep-na'] = () => {
+  const P = periode(ui.eqPer);
+  const es = depenses(P.from).filter(e => !pKey(e.qui));
+  if (!es.length) return;
+  const tot = es.reduce((s, e) => s + e.v, 0);
+  openSheet('Qui a payé ?', `<p class="note">${es.length} ${pl(es.length, 'dépense')} ${P.label} sans payeur, pour ${eur(tot)}. Touche une ligne pour la corriger, ou attribue-les toutes à la même personne.</p>
+    <div class="list">${es.map(e => rowDep(e, true)).join('')}</div>
+    ${pickPerson('attrib', 'Tout attribuer à', null, { moi: true, autre: false })}`, {
+    submit: 'Attribuer',
+    onSubmit: () => {
+      const r = readPerson('attrib');
+      if (!r) return 'Choisis une personne.';
+      const prev = [];
+      es.forEach(e => { const o = get(e.coll, e.id); if (o && !pKey(o.payePar)) { prev.push([e.coll, clone(o)]); put(e.coll, Object.assign({}, o, { payePar: r })); } });
+      toast(`${prev.length} ${pl(prev.length, 'dépense attribuée', 'dépenses attribuées')} à ${nomCourt(r)}`, { undo: () => prev.forEach(([k, o]) => put(k, o)) });
+    }
+  });
+};
+
+/* Accueil : qui est attendu aujourd'hui */
+function presentsHtml() {
+  const ps = presentsAujourdhui();
+  if (!ps.length) return '';
+  return section("Aujourd'hui à l'écurie", `<div class="list">${ps.map(x => `<button type="button" class="row" data-act="open-membre" data-k="${esc(x.k)}">${pav(x.ref)}<div class="row-main"><div class="row-t">${esc(nomDe(x.ref))}${estMoi(x.k) ? ' <span class="pill ok">Toi</span>' : ''}</div><div class="row-s">${esc(x.chevaux.length ? 'Demi-pension · ' + x.chevaux.map(h => h.nom).join(', ') : 'Jour de présence')}</div></div><span class="row-end">${ic('next', 'sm')}</span></button>`).join('')}</div>`);
+}
 
 /* ---------- Démarrage ---------- */
 loadCache();
@@ -2965,9 +3571,12 @@ const code = e => ({ 'permission-denied': 'invalid_argument', 'invalid-argument'
 const fail = e => { throw { code: code(e), message: e && e.message }; };
 const clean = d => JSON.parse(JSON.stringify(d));
 const snapDoc = s => ({ id: s.id, exists: s.exists(), data: () => s.data(), metadata: { fromCache: s.metadata.fromCache, hasPendingWrites: s.metadata.hasPendingWrites } });
+// Les fiches de l'équipe sont fusionnées, jamais remplacées, et sans le rôle ni l'adresse :
+// ceux-là ne changent que par la gérante (changerRole), même si la copie locale est ancienne.
+const fiche = d => { const o = clean(d); delete o.role; delete o.email; return o; };
 const docApi = r => ({
   id: r.id, path: r.path,
-  set: d => setDoc(r, clean(d)).catch(fail),
+  set: d => (String(r.path).startsWith('membres/') ? setDoc(r, fiche(d), { merge: true }) : setDoc(r, clean(d))).catch(fail),
   delete: () => deleteDoc(r).catch(fail),
   get: () => getDoc(r).then(snapDoc, fail),
   onSnapshot: (next, err) => onSnapshot(r, { includeMetadataChanges: true }, s => next(snapDoc(s)), e => err && err({ code: code(e), message: e.message }))

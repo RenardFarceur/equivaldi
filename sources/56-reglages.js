@@ -61,7 +61,8 @@ ACT['save-cfg'] = () => {
   if (!balles.length) { toast('Garde au moins un type de balle.', { danger: true }); return; }
   if (balles.some(b => !b.nom || !(b.poids > 0))) { toast("Chaque type de balle a besoin d'un nom et d'un poids.", { danger: true }); return; }
   const fs = val('c_fin');
-  putCfg({ rappels, alerte: Math.round(alerte), repos: Math.round(repos), paturage: Math.round(paturage), balles, finSaison: validISO(fs) ? fs.slice(5) : C.finSaison });
+  // les autres réglages communs (contacts utiles…) sont gardés tels quels
+  putCfg(Object.assign({}, S.cfg || {}, { rappels, alerte: Math.round(alerte), repos: Math.round(repos), paturage: Math.round(paturage), balles, finSaison: validISO(fs) ? fs.slice(5) : C.finSaison }));
   toast('Réglages enregistrés');
 };
 ACT.export = async () => {
@@ -105,12 +106,15 @@ function confirmImport(d) {
 }
 function doImport(d) {
   const okId = o => o && typeof o === 'object' && typeof o.id === 'string' && /^[A-Za-z0-9_\-~:@+]{1,100}$/.test(o.id);
-  COLS.forEach(k => {
-    const incoming = (Array.isArray(d[k]) ? d[k] : []).filter(okId);
-    const keep = new Set(incoming.map(o => o.id));
-    list(k).forEach(o => { if (!keep.has(o.id)) del(k, o.id); });
-    incoming.forEach(o => put(k, o));
-  });
+  restauration = true;
+  try {
+    COLS.forEach(k => {
+      const incoming = (Array.isArray(d[k]) ? d[k] : []).filter(okId);
+      const keep = new Set(incoming.map(o => o.id));
+      list(k).forEach(o => { if (!keep.has(o.id)) del(k, o.id); });
+      incoming.forEach(o => put(k, o));
+    });
+  } finally { restauration = false; }
   if (d.cfg && typeof d.cfg === 'object') putCfg(d.cfg);
   nav.stack = [];
   render();
@@ -125,13 +129,13 @@ ACT.wipe = () => {
 };
 
 /* ---------- Gérer à plusieurs ---------- */
-const ROLE_LABEL = { gerante: 'Gérante', equipe: 'Peut modifier', lecture: 'Lecture seule' };
 function equipeHtml() {
   if (window.EQ_MODE && window.EQ) return section('Ton compte', `<div class="card">
     <div class="row-main"><div class="row-t">${esc(EQ.email)}</div><div class="row-s">${esc(ROLE_LABEL[EQ.role] || '')}</div></div>
-    ${fld('Ton prénom', inp('f_moi', getMoi() || me.platformName || '', 'autocomplete="given-name" autocapitalize="words"'), 'Affiché à côté des tâches que tu coches.')}
+    ${fld('Ton prénom', inp('f_moi', moiNom(), 'autocomplete="given-name" autocapitalize="words"'), "Affiché dans l'équipe et à côté des tâches que tu coches.")}
     <div class="btnrow">
       <button type="button" class="btn small" data-act="save-moi">${ic('check', 'sm')}Enregistrer le prénom</button>
+      <button type="button" class="btn small" data-act="ma-fiche">${ic('user', 'sm')}Ma fiche</button>
       ${EQ.role === 'gerante' ? `<button type="button" class="btn small" data-act="equipe">${ic('users', 'sm')}Gérer l'équipe</button>` : ''}
       <button type="button" class="btn small" data-act="deconnexion">Se déconnecter</button>
     </div>
@@ -189,8 +193,11 @@ ACT['eq-copy'] = () => {
   try { navigator.clipboard.writeText(txt).then(() => toast('Lien copié'), () => toast(txt)); } catch (e) { toast(txt); }
 };
 ACT['save-moi'] = () => {
-  const v = val('f_moi');
+  const v = val('f_moi').replace(/\s+/g, ' ').slice(0, 40);
   if (!v) { toast('Indique ton prénom.'); return; }
-  setMoi(v.slice(0, 40));
+  setMoi(v);
+  // version installable : le prénom de la fiche d'équipe suit, sur tous les téléphones
+  const m = me.uid ? get('membres', me.uid) : null;
+  if (m && m.role && m.nom !== v) put('membres', Object.assign({}, m, { nom: v }));
   toast('Prénom enregistré');
 };
