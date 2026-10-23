@@ -1,0 +1,30 @@
+
+<header class="top" id="top">
+  <div class="top-in">
+    <button class="iconbtn" id="backBtn" data-act="back" aria-label="Retour" hidden><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="brand" id="brandBtn" data-act="go" data-tab="accueil" aria-label="EquiValdi, accueil">{{MARK}}</button>
+    <div class="top-title">
+      <div class="eyebrow" id="topEyebrow">Carnet d'écurie</div>
+      <h1 id="topTitle">EquiValdi</h1>
+    </div>
+    <button class="sync" id="sync" data-act="sync-info" aria-label="État de l'enregistrement"><i></i></button>
+    <button class="iconbtn" id="settingsBtn" data-act="reglages" aria-label="Réglages"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></button>
+  </div>
+</header>
+<main class="view" id="view" aria-live="polite">
+  <div class="loading">{{LOGO}}<p class="note">Ouverture du carnet…</p></div>
+</main>
+<button class="fab" id="fab" data-act="fab" aria-label="Ajouter"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+<nav class="tabs" id="tabs" aria-label="Sections"></nav>
+<div class="sheet-root" id="sheet" hidden>
+  <div class="scrim" data-act="close-sheet"></div>
+  <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-h">
+      <h2 id="sheetTitle">&nbsp;</h2>
+      <button class="iconbtn" data-act="close-sheet" aria-label="Fermer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="sheet-b" id="sheetBody"></div>
+    <div class="sheet-f" id="sheetFoot"></div>
+  </section>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>

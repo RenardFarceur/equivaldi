@@ -1,0 +1,35 @@
+rules_version = '2';
+// Règles d'accès du carnet EquiValdi : à coller dans Firebase > Firestore Database > Règles
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function connecte() { return request.auth != null && request.auth.token.email_verified == true; }
+    function mail() { return request.auth.token.email.lower(); }
+    function fiche() { return /databases/$(database)/documents/membres/$(request.auth.uid); }
+    function membre() { return connecte() && exists(fiche()); }
+    function role() { return get(fiche()).data.role; }
+    function gerante() { return membre() && role() == 'gerante'; }
+    function editeur() { return membre() && role() in ['gerante', 'equipe']; }
+    function invitation() { return /databases/$(database)/documents/invitations/$(mail()); }
+
+    // Qui a accès : chacun crée sa propre fiche, avec le rôle de son invitation
+    match /membres/{uid} {
+      allow read: if membre() || (connecte() && request.auth.uid == uid);
+      allow create: if connecte() && request.auth.uid == uid
+        && request.resource.data.email == mail()
+        && ((mail() == 'celiacourtois8@gmail.com' && request.resource.data.role == 'gerante')
+            || (exists(invitation()) && request.resource.data.role == get(invitation()).data.role));
+      allow update: if gerante() || (request.auth.uid == uid && request.resource.data.role == resource.data.role);
+      allow delete: if gerante();
+    }
+    match /invitations/{adresse} {
+      allow read: if gerante() || (connecte() && adresse == mail());
+      allow write: if gerante();
+    }
+
+    // Le carnet : lecture pour tous les membres, écriture pour la gérante et « Peut modifier »
+    match /{coll}/{id} {
+      allow read: if membre() && coll in ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches', 'config'];
+      allow write: if editeur() && coll in ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches', 'config'];
+    }
+  }
+}
