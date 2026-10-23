@@ -92,12 +92,13 @@ function quickHtml() {
   const nB = Object.values(st.by).reduce((n, x) => n + Math.max(0, x.n), 0);
   const t = todayISO();
   const n7 = list('seances').filter(s => s.statut !== 'prevu' && validISO(s.date) && s.date > addDays(t, -7) && s.date <= t).length;
-  const qa = (act, icon, t1, t2) => `<button type="button" class="qa" ${act}>${ic(icon)}<span>${t1}<small>${esc(t2)}</small></span></button>`;
+  // grosses touches « autocollant » : pastille de couleur irrégulière, comme dessinée à la main
+  const qa = (act, icon, tint, t1, t2) => `<button type="button" class="qa" ${act}><span class="qa-ic ${tint}">${ic(icon)}</span><span>${t1}<small>${esc(t2)}</small></span></button>`;
   return `<div class="quick">
-    ${qa('data-act="new" data-what="soin"', 'syringe', 'Soin / RDV', 'vaccin, maréchal, véto')}
-    ${qa('data-act="new" data-what="seance"', 'timer', 'Séance', n7 ? `${n7} ${pl(n7, 'séance')} sur 7 jours` : 'plat, saut, longe, cours')}
-    ${qa('data-act="new" data-what="move"', 'move', 'Déplacer', occN ? `${occN} ${pl(occN, 'pré occupé', 'prés occupés')}` : 'rotation des prés')}
-    ${qa('data-act="foin-out-pick"', 'bale', 'Balle entamée', `${nB} ${pl(nB, 'balle')} en stock`)}
+    ${qa('data-act="new" data-what="soin"', 'syringe', 'ciel', 'Soin / RDV', 'vaccin, maréchal, véto')}
+    ${qa('data-act="new" data-what="seance"', 'timer', 'menthe', 'Séance', n7 ? `${n7} ${pl(n7, 'séance')} sur 7 jours` : 'plat, saut, longe, cours')}
+    ${qa('data-act="new" data-what="move"', 'move', 'prairie', 'Déplacer', occN ? `${occN} ${pl(occN, 'pré occupé', 'prés occupés')}` : 'rotation des prés')}
+    ${qa('data-act="foin-out-pick"', 'bale', 'paille', 'Balle entamée', `${nB} ${pl(nB, 'balle')} en stock`)}
   </div>`;
 }
 function bienvenueHtml() {
@@ -124,7 +125,7 @@ VIEWS.accueil = () => {
   html.push(tachesSection());
   const al = alerts();
   html.push(section('À traiter', al.length ? `<div class="list">${al.map(rowAlert).join('')}</div>`
-    : empty("Rien d'urgent", "Les rappels de soins, les prés à changer et les concours à préparer s'afficheront ici.")));
+    : emptyH("Rien d'urgent", "Les rappels de soins, les prés à changer et les concours à préparer s'afficheront ici.")));
   html.push(section('Au pré', auPreHtml(), `<button type="button" class="link" data-act="go" data-tab="pres">Rotation ${ic('next', 'sm')}</button>`));
   html.push(section('Les 30 prochains jours', agendaHtml(agenda())));
   html.push(section('Foin', foinMini()));

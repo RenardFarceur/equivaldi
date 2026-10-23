@@ -14,7 +14,7 @@ VIEWS.foin = () => {
   const A = autonomie(), st = A.st, t = todayISO();
   const types = Object.values(st.by).filter(x => !x.orphan || x.n !== 0);
   let html = `<div class="hero"><div class="eyebrow">Stock estimé</div><div><span class="big">${num(st.kg / 1000, 1)}</span><span class="unit"> t de foin</span></div>
-    ${types.map(x => `<div class="bale-row"><div class="row-main"><div class="row-t">${esc(x.b.nom)}</div><div class="row-s">≈ ${num(x.poidsMoy, 0)} kg la balle</div></div>
+    ${types.map(x => `<div class="bale-row" data-key="b-${esc(x.b.id)}"><div class="row-main"><div class="row-t">${esc(x.b.nom)}</div><div class="row-s">≈ ${num(x.poidsMoy, 0)} kg la balle</div></div>
       <span class="big" aria-label="${x.n} en stock">${x.n}</span>
       <button type="button" class="stepbtn out" data-act="foin-out" data-balle="${esc(x.b.id)}" aria-label="Entamer une balle : ${esc(x.b.nom)}">${ic('minus')}</button>
       <button type="button" class="stepbtn" data-act="new" data-what="foin" data-balle="${esc(x.b.id)}" data-sens="in" aria-label="Entrée : ${esc(x.b.nom)}">${ic('plus')}</button></div>`).join('')}
@@ -45,7 +45,7 @@ VIEWS.foin = () => {
     html += section('Achats sur 12 mois', `<div class="stats"><div class="stat"><b>${num(eur, 0)} €</b><span>dépensés</span></div><div class="stat"><b>${kg ? num(eur / kg * 1000, 0) : '–'}</b><span>€ la tonne</span></div><div class="stat"><b>${num(kg / 1000, 1)}</b><span>t achetées</span></div></div>`);
   }
   const mv = list('foin').sort((a, b) => b.date.localeCompare(a.date) || (b.maj || 0) - (a.maj || 0)).slice(0, 40);
-  html += section('Mouvements', mv.length ? `<div class="list">${mv.map(rowFoin).join('')}</div>` : empty('Aucun mouvement', 'Ajoute ta première livraison ou récolte avec le bouton +.'),
+  html += section('Mouvements', mv.length ? `<div class="list">${mv.map(rowFoin).join('')}</div>` : emptyH('Aucun mouvement', 'Ajoute ta première livraison ou récolte avec le bouton +.'),
     `<button type="button" class="link" data-act="new" data-what="foin" data-sens="in">${ic('plus', 'sm')}Entrée</button>`);
   return { title: 'Foin', eyebrow: 'Stock et autonomie', html, fab: () => formFoin(null, { sens: 'in' }), fabLabel: 'Entrée de foin' };
 };
@@ -54,6 +54,9 @@ function quickOut(balle) {
   const x = stock().by[balle];
   if (!x || x.n <= 0) { toast('Plus de balle de ce type en stock.'); return; }
   const m = put('foin', { date: todayISO(), sens: 'out', balle, nb: 1 });
+  render();
+  // le compteur de balles fait un petit bond
+  $$(`.bale-row[data-key="b-${CSS.escape(balle)}"] .big`).forEach(el => fxOnce(el, 'fx-pop', 450));
   toast(`Sortie : 1 ${balleNom(balle)} · reste ${x.n - 1}`, { undo: () => del('foin', m.id) });
 }
 ACT['foin-out'] = d => { closeSheet(); quickOut(d.balle); };

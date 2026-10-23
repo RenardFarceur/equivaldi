@@ -450,7 +450,7 @@ const nomPre = id => (get('pres', id) || {}).nom || 'un pré';
 function filEquipe(fromT = 0, limit = 30, k = null) {
   const items = [];
   // une action sans auteur connu (saisie d'avant le prénom) n'apprend rien sur qui fait quoi
-  const push = (t, r, icon, quoi, objet, act) => { const pk = pKey(r); if (t && t >= fromT && pk && (!k || pk === k)) items.push({ t, r, icon, quoi, objet, act }); };
+  const push = (t, r, icon, quoi, objet, act) => { if (!t || t < fromT) return; const pk = pKey(r); if (pk && (!k || pk === k)) items.push({ t, r, icon, quoi, objet, act }); };
   taches().forEach(tk => faitsDe(tk).forEach(f => push(f.t, { uid: f.uid, nom: f.par }, 'tasks', 'Tâche cochée', tk.titre, `data-act="edit-tache" data-id="${tk.id}"`)));
   const crees = (coll, icon, fn, act) => list(coll).forEach(o => {
     const c = o.creePar;

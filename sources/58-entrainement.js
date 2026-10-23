@@ -18,7 +18,7 @@ function seanceRow(s, showHorse = false) {
 }
 function entrainementHtml(h) {
   const t = todayISO(), st = statsSeances(h.id), ss = seancesDe(h.id);
-  if (!ss.length) return empty('Aucune séance', "Note le travail du jour ou prévois un cours avec ton coach : type, durée, intensité, cavalier, coach, ressenti.")
+  if (!ss.length) return emptyH('Aucune séance', "Note le travail du jour ou prévois un cours avec ton coach : type, durée, intensité, cavalier, coach, ressenti.")
     + (sync.readOnly ? '' : `<button type="button" class="btn primary" data-act="new" data-what="seance" data-hid="${h.id}">${ic('plus', 'sm')}Ajouter une séance</button>`);
   const repos = st.last ? diffDays(st.last.date, t) : null;
   const stats = `<div class="stats">

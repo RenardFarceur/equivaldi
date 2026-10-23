@@ -27,10 +27,10 @@ VIEWS.concours = () => {
   let html = segCtl('concSeg', [['avenir', `À venir${up.length ? ' · ' + up.length : ''}`], ['resultats', 'Résultats']], seg);
   if (seg === 'avenir') {
     html += up.length ? `<div class="list">${up.map(c => ccard(c)).join('')}</div>`
-      : empty('Aucun concours prévu', "Ajoute une sortie avec le bouton + : date, lieu, épreuve. Le carnet te rappelle l'engagement et vérifie les vaccins.");
+      : emptyH('Aucun concours prévu', "Ajoute une sortie avec le bouton + : date, lieu, épreuve. Le carnet te rappelle l'engagement et vérifie les vaccins.");
     html += "<p class=\"note\">Vérification des vaccins : rappel grippe de moins de 12 mois (6 mois et 21 jours en FEI), rhinopneumonie en Amateur, Pro et SHF, aucune injection dans les 7 jours avant. La primo-vaccination n'est pas contrôlée.</p>";
   } else if (!past.length) {
-    html += empty('Aucun résultat', "Les concours passés et leurs classements s'afficheront ici.");
+    html += emptyH('Aucun résultat', "Les concours passés et leurs classements s'afficheront ici.");
   } else {
     const st = statsConcours();
     html += `<div class="stats"><div class="stat"><b>${st.sorties}</b><span>${pl(st.sorties, 'sortie')}</span></div><div class="stat"><b>${st.podiums}</b><span>${pl(st.podiums, 'podium')}</span></div><div class="stat"><b>${st.victoires}</b><span>${pl(st.victoires, 'victoire')}</span></div></div>`;

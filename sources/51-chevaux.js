@@ -28,7 +28,7 @@ VIEWS.chevaux = () => {
   const hs = chevaux();
   if (seg === 'rations') return { title: 'Chevaux', eyebrow: 'Rations du jour', html: html + rationsDuJour(), fab: null };
   html += hs.length ? `<div class="list">${hs.map(rowCheval).join('')}</div>`
-    : empty('Aucun cheval', 'Ajoute ta première fiche avec le bouton +. Âge, ration, soins et concours seront regroupés ici.');
+    : emptyH('Aucun cheval', 'Ajoute ta première fiche avec le bouton +. Âge, ration, soins et concours seront regroupés ici.');
   const arch = list('chevaux').filter(h => h.archive).sort(byName);
   if (arch.length) {
     html += `<div class="sec"><button type="button" class="link" data-act="toggle-arch" style="align-self:flex-start">${ui.showArch ? 'Masquer' : 'Afficher'} les chevaux archivés (${arch.length})</button>${ui.showArch ? `<div class="list">${arch.map(rowCheval).join('')}</div>` : ''}</div>`;
@@ -138,7 +138,7 @@ function rationHtml(h) {
   const lines = h.ration || [];
   const others = chevaux().some(x => x.id !== h.id && (x.ration || []).length);
   const actions = `<div class="btnrow"><button type="button" class="btn small primary" data-act="new" data-what="ration" data-hid="${h.id}">${ic('plus', 'sm')}Aliment</button>${others ? `<button type="button" class="btn small" data-act="copy-ration" data-hid="${h.id}">${ic('copy', 'sm')}Copier une autre ration</button>` : ''}</div>`;
-  if (!lines.length) return empty('Pas encore de ration', 'Ajoute chaque aliment avec sa quantité et les repas où il est donné : il apparaîtra dans les rations du jour.') + actions;
+  if (!lines.length) return emptyH('Pas encore de ration', 'Ajoute chaque aliment avec sa quantité et les repas où il est donné : il apparaîtra dans les rations du jour.') + actions;
   const rows = lines.map(l => {
     const repas = (l.repas || []).map(id => (REPAS.find(r => r.id === id) || {}).label).filter(Boolean).join(', ').toLowerCase();
     const tot = l.qte != null ? `${num(l.qte * nbRepas(l), 2)} ${esc(l.unite || '')}/j` : '';
@@ -157,7 +157,7 @@ function soinsHtml(h) {
     : `<p class="note">Les rappels apparaissent dès qu'un soin à intervalle (vaccin, vermifuge, maréchal, dentiste, ostéo) est enregistré. Les intervalles se règlent dans les réglages.</p>`;
   const cost = ss.filter(s => s.date.startsWith(yr) && s.statut !== 'prevu').reduce((a, s) => a + (Number(s.cout) || 0), 0);
   const hist = ss.length ? `<div class="list">${ss.map(rowSoin).join('')}</div>${cost ? `<p class="note">Dépenses de soins en ${yr} : <b>${num(cost, 2)} €</b></p>` : ''}`
-    : empty('Aucun soin enregistré', 'Utilise le bouton + pour noter un vaccin, un vermifuge, le passage du maréchal…');
+    : emptyH('Aucun soin enregistré', 'Utilise le bouton + pour noter un vaccin, un vermifuge, le passage du maréchal…');
   return section('Rappels', rap) + section('Historique', hist);
 }
 function rowSoin(s) {
@@ -168,7 +168,7 @@ function rowSoin(s) {
 function concoursCheval(h) {
   const t = todayISO(), st = statsConcours(h.id);
   const cs = list('concours').filter(c => c.horseId === h.id).sort((a, b) => b.date.localeCompare(a.date));
-  if (!cs.length) return empty('Aucun concours', 'Ajoute une sortie avec le bouton + : date, lieu, épreuve, puis le résultat.');
+  if (!cs.length) return emptyH('Aucun concours', 'Ajoute une sortie avec le bouton + : date, lieu, épreuve, puis le résultat.');
   const stats = `<div class="stats"><div class="stat"><b>${st.sorties}</b><span>${pl(st.sorties, 'sortie')}</span></div><div class="stat"><b>${st.podiums}</b><span>${pl(st.podiums, 'podium')}</span></div><div class="stat"><b>${st.best ? ordinal(st.best) : '–'}</b><span>meilleure place</span></div></div>`;
   const up = cs.filter(c => c.date >= t).reverse(), past = cs.filter(c => c.date < t);
   return stats + (up.length ? section('À venir', `<div class="list">${up.map(c => ccard(c, false)).join('')}</div>`) : '')

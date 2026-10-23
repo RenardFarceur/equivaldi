@@ -8,8 +8,8 @@
 <meta name="theme-color" content="#EEF1EB" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0D1611" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="./manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
-<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png?v=c">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png?v=c">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="EquiValdi">
@@ -40,6 +40,10 @@
   --f-display:"Barlow Condensed","Arial Narrow","Roboto Condensed",system-ui,sans-serif;
   --f-body:"Outfit",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --r:20px; --r-sm:14px; --bw:1.5px; --tab-h:68px;
+  --edge:#C3CDBE; --accent-edge:#1B4229; --danger-edge:#E3BDB2; --hay-edge:#E2CFA0; --prairie-soft:#CDEBD5;
+  --wob:18px 22px 17px 23px / 22px 17px 23px 18px; --wob-s:14px 17px 13px 18px / 17px 13px 18px 14px; --blob:47% 53% 44% 56% / 56% 45% 55% 44%;
+  --spring:cubic-bezier(.34,1.56,.64,1);
+  --zz:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M3 1.6 7.6 4.6 3 8 7.6 11.4 3 14.4' fill='none' stroke='%235DB075' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzh:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 10'%3E%3Cpath d='M2 7 7.5 3 13 7 18.5 3 24 7 29.5 3 35 7 40.5 3' fill='none' stroke='%23C3CDBE' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzf:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 24'%3E%3Cpath d='M9 2 3.4 6.5 9 11 3.4 15.5 9 20' fill='none' stroke='%235DB075' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzm:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M3 1.6 7.6 4.6 3 8 7.6 11.4 3 14.4' fill='none' stroke='%23000000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0D1611; --surface:#15211A; --surface-2:#1F2E25; --ink:#E8EFE9; --ink-2:#A7B5AB; --line:#2B3C31; --ctl:#6E8274;
@@ -48,7 +52,9 @@
   --hay:#DDB45C; --hay-ink:#E7C67C; --hay-soft:#33291A;
   --danger:#F28C76; --danger-soft:#3B1F19; --warn:#F0B45C; --warn-soft:#382A15; --info:#90BAE6; --info-soft:#1A2938;
   --h0:#3F8A5A; --h1:#9A6440; --h2:#B8693F; --h3:#6E7C85; --h4:#3F918C; --h5:#8A7638; --h6:#4E9A66; --h7:#5A524C; --on-h:#FFFFFF;
-  --float:0 1px 2px rgba(0,0,0,.5),0 8px 20px rgba(0,0,0,.35); --scrim:rgba(0,0,0,.62); color-scheme:dark}}
+  --float:0 1px 2px rgba(0,0,0,.5),0 8px 20px rgba(0,0,0,.35); --scrim:rgba(0,0,0,.62); color-scheme:dark;
+  --edge:#050A07; --accent-edge:#5DB075; --danger-edge:#2A1410; --hay-edge:#1C150B; --prairie-soft:#1C3A26;
+  --zz:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M3 1.6 7.6 4.6 3 8 7.6 11.4 3 14.4' fill='none' stroke='%239FD6AE' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzh:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 10'%3E%3Cpath d='M2 7 7.5 3 13 7 18.5 3 24 7 29.5 3 35 7 40.5 3' fill='none' stroke='%23365040' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");}}
 :root[data-theme="dark"]{
   --bg:#0D1611; --surface:#15211A; --surface-2:#1F2E25; --ink:#E8EFE9; --ink-2:#A7B5AB; --line:#2B3C31; --ctl:#6E8274;
   --accent:#9FD6AE; --accent-strong:#C2E8CD; --accent-ink:#0D1611; --accent-soft:#1E3828;
@@ -56,7 +62,9 @@
   --hay:#DDB45C; --hay-ink:#E7C67C; --hay-soft:#33291A;
   --danger:#F28C76; --danger-soft:#3B1F19; --warn:#F0B45C; --warn-soft:#382A15; --info:#90BAE6; --info-soft:#1A2938;
   --h0:#3F8A5A; --h1:#9A6440; --h2:#B8693F; --h3:#6E7C85; --h4:#3F918C; --h5:#8A7638; --h6:#4E9A66; --h7:#5A524C; --on-h:#FFFFFF;
-  --float:0 1px 2px rgba(0,0,0,.5),0 8px 20px rgba(0,0,0,.35); --scrim:rgba(0,0,0,.62); color-scheme:dark}
+  --float:0 1px 2px rgba(0,0,0,.5),0 8px 20px rgba(0,0,0,.35); --scrim:rgba(0,0,0,.62); color-scheme:dark;
+  --edge:#050A07; --accent-edge:#5DB075; --danger-edge:#2A1410; --hay-edge:#1C150B; --prairie-soft:#1C3A26;
+  --zz:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M3 1.6 7.6 4.6 3 8 7.6 11.4 3 14.4' fill='none' stroke='%239FD6AE' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzh:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 10'%3E%3Cpath d='M2 7 7.5 3 13 7 18.5 3 24 7 29.5 3 35 7 40.5 3' fill='none' stroke='%23365040' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");}
 
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -69,7 +77,7 @@ b,strong{font-weight:600}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
 h1,h2,h3{text-wrap:balance}
 sup{font-size:.6em;line-height:0}
-.ic{width:24px;height:24px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ic{width:24px;height:24px;flex:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .ic.sm{width:18px;height:18px}
 .ic.solid{fill:currentColor;stroke:none}
 .ic.solid .i-leaf{opacity:.55}
@@ -83,16 +91,26 @@ sup{font-size:.6em;line-height:0}
 /* Logo Cheval-feuille : couleurs portées par le thème */
 .lg-ink{fill:var(--logo-ink)}
 .lg-leaf{fill:var(--logo-leaf)}
-.brand-mark{display:block;height:34px;width:auto}
-.brand-logo{display:block;height:auto;max-width:100%}
-.brand{width:44px;height:48px;display:grid;place-items:center;border:0;background:transparent;border-radius:12px;flex:none;margin-left:-6px;padding:0}
+.brand-mark{display:block;height:36px;width:auto;overflow:visible}
+.brand-logo{display:block;height:auto;max-width:100%;overflow:visible}
+.brand{width:48px;height:48px;display:grid;place-items:center;border:0;background:transparent;border-radius:var(--wob-s);flex:none;margin-left:-8px;padding:0}
 .brand:active{background:var(--surface-2)}
 .loading,.welcome,.about{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
-.loading{padding:48px 0 0}
-.loading .brand-logo,.welcome .brand-logo{width:min(250px,72%)}
-.welcome{padding:10px 0 2px}
+.loading{padding:40px 0 0}
+.loading .brand-logo,.welcome .brand-logo{width:min(210px,58%)}
+.welcome{padding:6px 0 2px}
 .about{padding:20px 0 4px}
-.about .brand-logo{width:min(200px,60%)}
+.about .brand-logo{width:min(160px,46%)}
+/* Le cheval du logo est vivant : il saute, il fouette de la queue */
+.lg-cheval{transform-box:fill-box;transform-origin:50% 100%}
+.lg-queue{transform-box:fill-box;transform-origin:94% 6%}
+.lg-criniere{transform-box:fill-box;transform-origin:20% 100%}
+.brand .lg-queue,.welcome .lg-queue,.about .lg-queue,.empty.illu .lg-queue,.auth-in .lg-queue{animation:queue 7s ease-in-out 1.5s infinite}
+.brand:active .lg-cheval{animation:saut .55s var(--spring)}
+.loading .lg-cheval{animation:saut 1.15s ease-in-out infinite}
+.loading .lg-queue{animation:fouette .5s ease-in-out infinite alternate}
+.loading .lg-criniere{animation:crins .5s ease-in-out infinite alternate}
+.welcome .lg-cheval,.auth-in .lg-cheval{animation:saut .9s ease-in-out .3s 2}
 
 /* Barre du haut */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:8px;border-bottom:1px solid transparent;transition:border-color .2s}
@@ -113,11 +131,14 @@ sup{font-size:.6em;line-height:0}
 .view{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:6px calc(var(--tab-h) + 100px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:24px}
 .sec{display:flex;flex-direction:column;gap:10px}
 .sec-h{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:28px}
-.sec-h h2{font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin:0}
+.sec-h h2{font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin:0;display:flex;align-items:center;gap:8px}
+/* petite crinière en zigzag devant chaque titre de rubrique */
+.sec-h h2::before{content:"";width:8px;height:14px;flex:none;background:var(--zz) no-repeat center/contain}
 .link{font-size:15px;color:var(--accent);background:none;border:0;font-weight:600;min-height:44px;padding:0 4px;display:inline-flex;align-items:center;gap:6px}
 
 /* Surfaces : blanc bordé, sans ombre, comme la charte */
 .list,.card,.pcard,.hero,.meal,.dl,.empty,.qa{background:var(--surface);border:var(--bw) solid var(--line);border-radius:var(--r)}
+.empty.illu .brand-mark{height:60px;margin:0 auto 12px}
 .list,.meal,.dl{overflow:hidden}
 .row{display:flex;align-items:center;gap:12px;padding:12px 14px;min-height:58px;width:100%;text-align:left;border:0;background:transparent;border-top:1px solid var(--line);color:var(--ink);transition:background .12s}
 .row:first-child{border-top:0}
@@ -149,10 +170,10 @@ button.row:active{background:var(--surface-2)}
 .count{font-family:var(--f-display);font-size:14px;font-weight:600;letter-spacing:.06em;background:var(--accent-soft);color:var(--accent-strong);border-radius:999px;padding:1px 9px;margin-left:6px;vertical-align:1px}
 
 /* Chevaux : avatars aux teintes de robes et de prés */
-.av{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--on-h);font-family:var(--f-display);font-weight:600;font-size:20px;flex:none;background:var(--h0);letter-spacing:.02em}
-.av.s{width:26px;height:26px;border-radius:8px;font-size:14px}
-.av.m{width:48px;height:48px;border-radius:14px;font-size:23px}
-.av.xl{width:96px;height:96px;border-radius:24px;font-size:42px}
+.av{width:40px;height:40px;border-radius:12px 14px 11px 15px / 14px 11px 15px 12px;display:grid;place-items:center;color:var(--on-h);font-family:var(--f-display);font-weight:600;font-size:20px;flex:none;background:var(--h0);letter-spacing:.02em}
+.av.s{width:26px;height:26px;border-radius:8px 9px 7px 10px / 9px 7px 10px 8px;font-size:14px}
+.av.m{width:48px;height:48px;border-radius:14px 17px 13px 18px / 17px 13px 18px 14px;font-size:23px}
+.av.xl{width:96px;height:96px;border-radius:26px 30px 24px 32px / 30px 24px 32px 26px;font-size:42px}
 .av.photo{background-color:var(--surface-2);background-size:cover;background-position:center;background-repeat:no-repeat}
 .hc0{background:var(--h0)}.hc1{background:var(--h1)}.hc2{background:var(--h2)}.hc3{background:var(--h3)}.hc4{background:var(--h4)}.hc5{background:var(--h5)}.hc6{background:var(--h6)}.hc7{background:var(--h7)}
 .hchip{display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 3px;border-radius:999px;background:var(--surface-2);font-size:14px;font-weight:600;color:var(--ink);max-width:100%}
@@ -166,14 +187,14 @@ button.row:active{background:var(--surface-2)}
 .avbtn:active .av{filter:brightness(.92)}
 
 /* Personnes : pastilles rondes ; lignes avec bouton d'appel */
-.av.pp{border-radius:50%}
+.av.pp{border-radius:var(--blob)}
 .crow{display:flex;align-items:stretch;border-top:1px solid var(--line);min-height:62px}
 .crow:first-child{border-top:0}
 .crow-main{flex:1;min-width:0;display:flex;align-items:center;gap:12px;text-align:left;border:0;background:transparent;color:var(--ink);padding:10px 8px 10px 14px}
 .crow-main:active{background:var(--surface-2)}
 .callbtn{width:60px;flex:none;display:grid;place-items:center;text-decoration:none;color:var(--accent-strong)}
-.callbtn .ic{width:42px;height:42px;padding:10px;border-radius:12px;background:var(--accent-soft)}
-.callbtn:active .ic{filter:brightness(.94)}
+.callbtn .ic{width:42px;height:42px;padding:10px;border-radius:var(--blob);background:var(--accent-soft);box-shadow:0 2px 0 var(--edge);transition:transform .12s,box-shadow .12s}
+.callbtn:active .ic{transform:translateY(2px);box-shadow:0 0 0 var(--edge)}
 .phead{flex-direction:row;align-items:center;gap:16px}
 .phead .btnrow{margin-top:6px}
 a.btn{text-decoration:none}
@@ -197,10 +218,14 @@ label.btn{cursor:pointer}
 .trow{display:flex;align-items:center;border-top:1px solid var(--line);min-height:62px}
 .trow:first-child{border-top:0}
 .tick{width:56px;align-self:stretch;flex:none;display:grid;place-items:center;border:0;background:transparent;padding:0 0 0 6px}
-.tick .ic{width:30px;height:30px;padding:4px;border-radius:9px;border:2px solid var(--ctl);color:transparent;stroke-width:3;transition:background .12s,border-color .12s,color .12s}
+/* Case à cocher dessinée : la coche se trace, la case rebondit */
+.tick .ic{width:32px;height:32px;padding:4px;border-radius:10px 12px 9px 13px / 12px 9px 13px 10px;border:2.5px solid var(--ctl);color:transparent;stroke-width:3.2;transition:background .2s,border-color .2s,color .2s,transform .15s}
+.tick .ic path{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .32s ease-out .05s}
 .tick:hover .ic{border-color:var(--accent)}
-.tick[aria-pressed="true"] .ic{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.tick:active .ic{transform:scale(.92)}
+.tick[aria-pressed="true"] .ic{background:var(--accent);border-color:var(--accent-edge);color:var(--accent-ink)}
+.tick[aria-pressed="true"] .ic path{stroke-dashoffset:0}
+.tick:active .ic{transform:scale(.88)}
+.tick.fx-coche .ic{animation:coche .6s var(--spring)}
 .trow.late .tick .ic{border-color:var(--warn)}
 .trow-main{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;text-align:left;border:0;background:transparent;color:var(--ink);padding:10px 14px 10px 6px;min-height:62px}
 .trow-main:active{background:var(--surface-2)}
@@ -211,11 +236,18 @@ label.btn{cursor:pointer}
 .clamp2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
 /* Accueil */
-.quick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.qa{display:flex;align-items:center;gap:10px;min-height:68px;padding:12px;text-align:left;font-weight:600;line-height:1.2;color:var(--ink);transition:background .12s,border-color .12s}
-.qa .ic{color:var(--accent)}
+/* Grosses touches « autocollant » : bord épais, tranche en relief, pastille dessinée à la main */
+.quick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 10px}
+.qa{display:flex;align-items:center;gap:10px;min-height:72px;padding:12px 10px;text-align:left;font-weight:600;line-height:1.2;color:var(--ink);border-width:2px;border-radius:var(--wob);box-shadow:0 4px 0 var(--edge);transition:transform .12s,box-shadow .12s}
+.qa-ic{width:42px;height:42px;flex:none;display:grid;place-items:center;border-radius:var(--blob)}
+.qa-ic .ic{color:inherit}
+.qa-ic.ciel{background:var(--info-soft);color:var(--info)}
+.qa-ic.menthe{background:var(--accent-soft);color:var(--accent-strong)}
+.qa-ic.prairie{background:var(--prairie-soft);color:var(--accent-strong)}
+.qa-ic.paille{background:var(--hay-soft);color:var(--hay-ink)}
 .qa small{display:block;font-weight:400;font-size:13px;color:var(--ink-2);margin-top:2px}
-.qa:active{background:var(--surface-2)}
+.qa:active{transform:translateY(4px);box-shadow:0 0 0 var(--edge)}
+.qa:active .qa-ic .ic{animation:frime .45s ease}
 .banner{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:var(--r);background:var(--info-soft);color:var(--ink)}
 .banner .ic{color:var(--info)}
 .banner.ro{background:var(--warn-soft)}
@@ -224,7 +256,7 @@ label.btn{cursor:pointer}
 
 /* Jauges et chiffres : la repousse en Vert pousse, la pâture en paille */
 .gauge{height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden}
-.gauge>i{display:block;height:100%;border-radius:99px;background:var(--pousse)}
+.gauge>i{display:block;height:100%;border-radius:99px;background:var(--pousse);transform-origin:left center;animation:pousse 1s cubic-bezier(.2,.8,.2,1) .12s both}
 .gauge.graze>i{background:var(--hay)}
 .gauge.over>i{background:var(--danger)}
 .big{font-family:var(--f-display);font-weight:600;font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
@@ -261,7 +293,7 @@ label.btn{cursor:pointer}
 .ccard{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;width:100%;border:0;border-top:1px solid var(--line);background:transparent;text-align:left;color:var(--ink)}
 .ccard:first-child{border-top:0}
 .ccard:active{background:var(--surface-2)}
-.dblock{width:54px;flex:none;text-align:center;border-radius:12px;background:var(--accent-soft);color:var(--accent-strong);padding:6px 0 7px;display:flex;flex-direction:column;align-items:center}
+.dblock{width:54px;flex:none;text-align:center;border-radius:12px 15px 11px 16px / 15px 11px 16px 12px;background:var(--accent-soft);color:var(--accent-strong);padding:6px 0 7px;display:flex;flex-direction:column;align-items:center}
 .dblock b{font-family:var(--f-display);font-size:27px;line-height:1;font-weight:600;font-variant-numeric:tabular-nums}
 .dblock span{font-family:var(--f-display);font-size:12px;text-transform:uppercase;letter-spacing:.1em;font-weight:600}
 .rank{font-family:var(--f-display);font-weight:600;font-size:27px;line-height:1;color:var(--accent)}
@@ -272,24 +304,31 @@ label.btn{cursor:pointer}
 .hero .big{font-size:48px;color:var(--accent)}
 .bale-row{display:flex;align-items:center;gap:10px;padding-top:10px;margin-top:4px;border-top:1px solid var(--line)}
 .bale-row .big{font-size:30px;min-width:2ch;text-align:right;color:var(--ink)}
-.stepbtn{width:48px;height:48px;border-radius:14px;border:var(--bw) solid var(--line);background:var(--surface);display:grid;place-items:center;color:var(--accent);flex:none;transition:background .12s}
-.stepbtn.out{background:var(--hay-soft);border-color:transparent;color:var(--hay-ink)}
-.stepbtn:active{filter:brightness(.94)}
+.bale-row .big.fx-pop{animation:pop .45s var(--spring)}
+.stepbtn{width:48px;height:48px;border-radius:var(--wob-s);border:2px solid var(--line);background:var(--surface);display:grid;place-items:center;color:var(--accent);flex:none;box-shadow:0 3px 0 var(--edge);transition:transform .12s,box-shadow .12s}
+.stepbtn.out{background:var(--hay-soft);border-color:var(--hay-edge);color:var(--hay-ink);box-shadow:0 3px 0 var(--hay-edge)}
+.stepbtn:active{transform:translateY(3px);box-shadow:none}
+.stepbtn:active .ic{animation:frime .4s ease}
 
 /* Boutons et commandes */
-.btn{min-height:48px;padding:0 18px;border-radius:var(--r-sm);border:var(--bw) solid var(--line);background:var(--surface);font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px;color:var(--ink);transition:background .12s,filter .12s}
-.btn .ic{color:var(--accent)}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+/* Boutons « autocollant » dans l'esprit du logo : trait épais, coins irréguliers, tranche qui s'enfonce au toucher */
+.btn{min-height:48px;padding:0 18px;border-radius:var(--wob-s);border:2px solid var(--line);background:var(--surface);font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px;color:var(--ink);box-shadow:0 3px 0 var(--edge);transition:transform .12s ease,box-shadow .12s ease,background .15s,filter .12s}
+.btn .ic{color:var(--accent);transition:transform .3s var(--spring)}
+.btn.primary{background:var(--accent);border-color:var(--accent-edge);color:var(--accent-ink);box-shadow:0 3px 0 var(--accent-edge)}
 .btn.primary .ic{color:inherit}
-.btn.danger,.btn.armed{background:var(--danger-soft);border-color:transparent;color:var(--danger)}
+.btn.danger,.btn.armed{background:var(--danger-soft);border-color:var(--danger-edge);color:var(--danger);box-shadow:0 3px 0 var(--danger-edge)}
 .btn.danger .ic,.btn.armed .ic{color:inherit}
+.btn.armed{animation:secoue .4s ease}
 .btn.small{min-height:44px;padding:0 14px;font-size:15px}
-.btn:active{filter:brightness(.94)}
+.btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--edge)}
+.btn.primary:active{box-shadow:0 0 0 var(--accent-edge)}
+.btn:active .ic{transform:rotate(-12deg) scale(1.1)}
 .btn[disabled]{opacity:.5;cursor:not-allowed}
 .btnrow{display:flex;gap:10px;flex-wrap:wrap}
-.seg{display:flex;background:var(--surface-2);border-radius:var(--r-sm);padding:3px;gap:3px}
-.seg button{flex:1;min-height:42px;border:0;border-radius:11px;background:transparent;font-weight:500;color:var(--ink-2);font-size:15px;padding:0 6px;min-width:0}
-.seg button[aria-pressed="true"]{background:var(--surface);color:var(--accent);font-weight:600;box-shadow:0 0 0 1px var(--line)}
+.seg{display:flex;background:var(--surface-2);border-radius:var(--wob-s);padding:4px;gap:4px}
+.seg button{flex:1;min-height:42px;border:0;border-radius:12px 14px 11px 15px / 14px 11px 15px 12px;background:transparent;font-weight:500;color:var(--ink-2);font-size:15px;padding:0 6px;min-width:0;transition:background .2s,color .2s,box-shadow .2s,transform .15s}
+.seg button:active{transform:scale(.95)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--accent);font-weight:600;box-shadow:0 0 0 1.5px var(--line),0 2px 0 var(--edge)}
 .seg.scroll{position:relative;overflow-x:auto;scrollbar-width:none;overscroll-behavior-x:contain}
 .seg.scroll::-webkit-scrollbar{display:none}
 .seg.scroll button{flex:0 0 auto;padding:0 12px;font-size:14.5px}
@@ -301,20 +340,27 @@ label.btn{cursor:pointer}
 .tabs{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,minmax(0,1fr));padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px));padding-bottom:env(safe-area-inset-bottom,0px)}
 .tabs button{height:var(--tab-h);border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--ink-2);font-size:12px;font-weight:500;min-width:0;padding:0 1px}
 .tabs button>span:last-child{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tab-ic{display:grid;place-items:center;width:50px;height:30px;border-radius:999px;transition:background .15s}
+.tab-ic{display:grid;place-items:center;width:50px;height:30px;border-radius:var(--wob-s);transition:background .2s,transform .2s var(--spring)}
+.tabs button:active .tab-ic{transform:scale(.86)}
 .tabs button[aria-current="page"]{color:var(--accent-strong);font-weight:600}
-.tabs button[aria-current="page"] .tab-ic{background:var(--accent-soft)}
-.tabs button[aria-current="page"] .ic{stroke-width:2.4}
+.tabs button[aria-current="page"] .tab-ic{background:var(--accent-soft);animation:tache .5s var(--spring)}
+.tabs button[aria-current="page"] .ic{stroke-width:2.6;animation:hop .6s var(--spring)}
 .tabs button[aria-current="page"] .ic.solid .i-leaf{opacity:1;fill:var(--logo-leaf)}
-.fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(var(--tab-h) + 16px + env(safe-area-inset-bottom,0px));z-index:24;width:60px;height:60px;border-radius:var(--r);border:0;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;box-shadow:var(--float);transition:transform .12s}
-.fab .ic{width:30px;height:30px;stroke-width:2.4}
-.fab:active{transform:scale(.95)}
+/* Bouton + : un autocollant vert, avec une touffe de crinière comme le cheval du logo */
+.fab{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(var(--tab-h) + 18px + env(safe-area-inset-bottom,0px));z-index:24;width:62px;height:62px;border-radius:var(--wob);border:2px solid var(--accent-edge);background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;box-shadow:0 4px 0 var(--accent-edge),var(--float);transition:transform .2s var(--spring),box-shadow .12s}
+.fab::before{content:"";position:absolute;left:-11px;top:6px;width:13px;height:26px;background:var(--zzf) no-repeat center/contain;transform:rotate(-6deg);transform-origin:100% 50%;transition:transform .35s var(--spring)}
+.fab .ic{width:30px;height:30px;stroke-width:2.8;transition:transform .4s var(--spring)}
+.fab:active{transform:translateY(4px) scale(.97);box-shadow:0 0 0 var(--accent-edge),var(--float)}
+.fab:active::before{transform:rotate(-24deg) translateX(-2px)}
+.fab:active .ic{transform:rotate(90deg)}
+.fab:not([hidden]){animation:fabin .55s var(--spring)}
 
 /* Feuille (formulaires) */
 .sheet-root{position:fixed;inset:0;z-index:40}
 .scrim{position:absolute;inset:0;background:var(--scrim);opacity:0;transition:opacity .2s}
-.sheet{position:absolute;left:0;right:0;bottom:0;max-height:calc(100% - 24px - env(safe-area-inset-top,0px));display:flex;flex-direction:column;background:var(--bg);border-radius:24px 24px 0 0;transform:translateY(100%);transition:transform .25s cubic-bezier(.2,.8,.2,1);max-width:720px;margin:0 auto}
-.sheet::before{content:"";width:40px;height:5px;border-radius:9px;background:var(--line);align-self:center;margin-top:8px;flex:none}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:calc(100% - 24px - env(safe-area-inset-top,0px));display:flex;flex-direction:column;background:var(--bg);border-radius:26px 30px 0 0 / 22px 26px 0 0;transform:translateY(100%);transition:transform .42s cubic-bezier(.2,1.18,.36,1);max-width:720px;margin:0 auto;box-shadow:0 160px 0 0 var(--bg)}
+/* poignée en zigzag, comme la crinière */
+.sheet::before{content:"";width:44px;height:10px;background:var(--zzh) no-repeat center/contain;align-self:center;margin-top:8px;flex:none}
 .sheet-root.open .scrim{opacity:1}
 .sheet-root.open .sheet{transform:none}
 .sheet-h{display:flex;align-items:center;gap:8px;padding:4px max(10px,env(safe-area-inset-right,0px)) 4px max(16px,env(safe-area-inset-left,0px));flex:none}
@@ -322,7 +368,7 @@ label.btn{cursor:pointer}
 .sheet-b{overflow:auto;overscroll-behavior:contain;padding:6px max(16px,env(safe-area-inset-right,0px)) 18px max(16px,env(safe-area-inset-left,0px));flex:1;min-height:0}
 .sheet-f{display:flex;gap:10px;padding:10px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));border-top:1px solid var(--line);background:var(--bg);flex:none}
 .sheet-f .btn{flex:1}
-.sheet-f .btn.ghost{flex:0 1 auto;background:transparent;border-color:transparent;color:var(--danger);padding:0 10px}
+.sheet-f .btn.ghost{flex:0 1 auto;background:transparent;border-color:transparent;color:var(--danger);padding:0 10px;box-shadow:none}
 .sheet-f .btn.ghost .ic{color:inherit}
 .sheet-f .btn.ghost.armed{background:var(--danger-soft);flex:1}
 
@@ -340,9 +386,11 @@ label.btn{cursor:pointer}
 .check{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:600}
 .check input{width:22px;height:22px;accent-color:var(--accent)}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{min-height:44px;padding:0 14px;border-radius:999px;border:var(--bw) solid var(--line);background:var(--surface);font-weight:500;font-size:15px;display:inline-flex;align-items:center;gap:8px;color:var(--ink);text-align:left;transition:background .12s,border-color .12s}
+.chip{min-height:44px;padding:0 14px;border-radius:999px;border:2px solid var(--line);background:var(--surface);font-weight:500;font-size:15px;display:inline-flex;align-items:center;gap:8px;color:var(--ink);text-align:left;transition:background .15s,border-color .15s,box-shadow .15s,transform .2s var(--spring)}
 .chip .ic{color:var(--accent)}
-.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.chip:active{transform:scale(.93)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent-edge);color:var(--accent-ink);font-weight:600;box-shadow:0 2px 0 var(--accent-edge)}
+.chip.fx-pop{animation:pop .45s var(--spring)}
 .chip[aria-pressed="true"] .ic{color:inherit}
 .chip small{display:block;font-weight:400;font-size:12px;opacity:.85;line-height:1.15}
 .chip .two{display:flex;flex-direction:column;line-height:1.15;padding:5px 0}
@@ -365,12 +413,54 @@ label.btn{cursor:pointer}
 /* Message bref */
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--tab-h) + 90px + env(safe-area-inset-bottom,0px));z-index:50;background:var(--ink);color:var(--bg);padding:8px 8px 8px 16px;border-radius:var(--r-sm);display:flex;align-items:center;gap:10px;width:max-content;max-width:calc(100% - 32px);box-shadow:var(--float);font-weight:600;font-size:15px;min-height:48px}
 .toast.danger{background:var(--danger);color:var(--surface)}
+.toast.pop{animation:bulle .45s var(--spring)}
+.toast.fete{background:var(--accent);color:var(--accent-ink)}
+.toast .brand-mark{height:32px;flex:none;margin:-4px 0 -4px -4px}
+.toast.fete .lg-ink{fill:currentColor}
+.toast.fete .lg-leaf{fill:var(--menthe)}
+.toast.fete .lg-cheval{animation:saut .6s ease-in-out .2s 3}
 .toast button{background:transparent;border:0;color:inherit;text-decoration:underline;font-weight:600;min-height:40px;padding:0 10px;flex:none}
 body.lock .toast{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto}
 
 @media (max-width:370px){.tabs button{font-size:11px}.tab-ic{width:44px}}
 @media (max-width:350px){.quick,.grid2{grid-template-columns:minmax(0,1fr)}.stat{padding:8px}.stat b{font-size:21px}.top h1{font-size:28px}.tab-ic{width:40px}.phead{flex-direction:column;align-items:flex-start}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* ---------- Animations ---------- */
+/* Entrée des écrans : par onglet, vers une fiche, retour, changement de rubrique */
+.view.in-tab>*{animation:monte .42s cubic-bezier(.2,.8,.2,1) both}
+.view.in-tab>:nth-child(2){animation-delay:.05s}.view.in-tab>:nth-child(3){animation-delay:.1s}.view.in-tab>:nth-child(4){animation-delay:.15s}.view.in-tab>:nth-child(5){animation-delay:.2s}.view.in-tab>:nth-child(n+6){animation-delay:.24s}
+.view.in-push>*{animation:entre .36s cubic-bezier(.2,.8,.2,1) both}
+.view.in-push>:nth-child(2){animation-delay:.03s}.view.in-push>:nth-child(3){animation-delay:.06s}.view.in-push>:nth-child(n+4){animation-delay:.09s}
+.view.in-back>*{animation:revient .32s cubic-bezier(.2,.8,.2,1) both}
+.view.in-seg>:not(.seg){animation:fond .3s ease-out both}
+/* Effets : gerbe de crins, galop de fête */
+#fx{position:fixed;inset:0;pointer-events:none;z-index:70;overflow:hidden}
+.cf{position:absolute;width:10px;height:16px;margin:-8px 0 0 -5px}
+.cf-pt{width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:currentColor}
+.cf-tr{width:13px;height:4px;margin:-2px 0 0 -6px;border-radius:4px;background:currentColor}
+.cf-zz{background:currentColor;-webkit-mask:var(--zzm) center/contain no-repeat;mask:var(--zzm) center/contain no-repeat}
+.cc0{color:var(--pousse)}.cc1{color:var(--menthe)}.cc2{color:var(--accent)}.cc3{color:var(--hay)}
+.galop{position:absolute;left:0;bottom:calc(var(--tab-h) + 26px + env(safe-area-inset-bottom,0px));width:70px}
+.galop .brand-mark{height:60px;width:auto}
+.galop .lg-queue{animation:fouette .17s ease-in-out infinite alternate}
+.galop .lg-criniere{animation:crins .17s ease-in-out infinite alternate}
+@keyframes monte{from{opacity:0;transform:translateY(16px)}}
+@keyframes entre{from{opacity:0;transform:translateX(26px)}}
+@keyframes revient{from{opacity:0;transform:translateX(-20px)}}
+@keyframes fond{from{opacity:0;transform:translateY(8px)}}
+@keyframes saut{0%,100%{transform:none}28%{transform:translateY(-14%) rotate(-5deg)}52%{transform:translateY(0) scale(1.03,.94)}68%{transform:translateY(-4%) rotate(2deg)}}
+@keyframes queue{0%,78%,100%{transform:none}82%{transform:rotate(18deg)}86%{transform:rotate(-10deg)}90%{transform:rotate(14deg)}95%{transform:rotate(-4deg)}}
+@keyframes fouette{from{transform:rotate(-12deg)}to{transform:rotate(16deg)}}
+@keyframes crins{from{transform:skewY(-4deg)}to{transform:skewY(5deg)}}
+@keyframes hop{0%{transform:none}30%{transform:translateY(-6px) rotate(-8deg)}62%{transform:translateY(1px) rotate(4deg)}100%{transform:none}}
+@keyframes tache{0%{transform:scale(.4,.25);opacity:.2}100%{transform:none;opacity:1}}
+@keyframes pop{0%{transform:scale(.84)}55%{transform:scale(1.09)}100%{transform:none}}
+@keyframes coche{0%{transform:scale(.7)}45%{transform:scale(1.22) rotate(-8deg)}75%{transform:scale(.95) rotate(3deg)}100%{transform:none}}
+@keyframes frime{25%{transform:rotate(-14deg) scale(1.1)}50%{transform:rotate(10deg)}75%{transform:rotate(-5deg)}}
+@keyframes secoue{20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+@keyframes fabin{from{transform:scale(.3) rotate(-30deg);opacity:0}}
+@keyframes bulle{from{opacity:0;transform:translateX(-50%) translateY(22px) scale(.85)}}
+@keyframes pousse{from{transform:scaleX(0)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
 
 /* Version installable : marges des barres système et écran de connexion */
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -378,7 +468,7 @@ body.lock .toast{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto}
 img{max-width:100%}
 .auth{position:fixed;inset:0;z-index:60;background:var(--bg);overflow:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:calc(env(safe-area-inset-top,0px) + 32px) calc(env(safe-area-inset-bottom,0px) + 32px)}
 .auth-in{max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
-.auth-in .brand-logo{width:min(250px,72%);align-self:center}
+.auth-in .brand-logo{width:min(220px,62%);align-self:center}
 .auth-t{font-family:var(--f-display);font-weight:600;font-size:28px;margin:0}
 .auth p{margin:0}
 .auth-links{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
@@ -391,7 +481,7 @@ img{max-width:100%}
 <header class="top" id="top">
   <div class="top-in">
     <button class="iconbtn" id="backBtn" data-act="back" aria-label="Retour" hidden><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-    <button class="brand" id="brandBtn" data-act="go" data-tab="accueil" aria-label="EquiValdi, accueil"><svg class="brand-mark" viewBox="0 -1 86 102" aria-hidden="true" focusable="false"><path class="lg-leaf" d="M32.11 19.12Q10.54 49.51 1.72 94.61Q-7.11 45.59 32.11 19.12Z"/><path class="lg-ink" d="M13.07 97.29Q8.34 75.22 13.2 54.01Q18.27 31.92 32.08 19.14L37.68 2.35Q38.76 -0.91 42.02 0.18Q43.73 0.75 44.23 2.48L50.08 22.77Q52.1 24.94 56.16 29.22Q73.94 47.96 80.87 57.17Q86.28 63.54 85.26 70.48Q84.1 78.28 76.08 80.29Q75.88 80.34 75.67 80.37Q65.42 81.65 49.92 70.1Q48.21 69.27 44.57 67.83Q38.55 65.44 35.31 63.51Q36.69 71.94 38.89 82.9Q40.71 92.03 41.37 96Q41.66 97.7 40.95 98.68Q40.25 99.67 38.55 99.95Q35.17 100.52 34.61 97.13Q33.96 93.27 32.16 84.24Q28.06 63.76 26.74 51.85Q26.39 48.72 29.47 48.11Q32.84 47.43 33.51 50.8Q34.24 54.46 37.95 57.05Q40.49 58.83 47.1 61.45Q51.31 63.12 53.25 64.09Q53.53 64.23 53.77 64.41Q67.05 74.37 74.61 73.58Q78 72.65 78.47 69.47Q79.04 65.59 75.58 61.55Q75.51 61.46 75.44 61.37Q68.77 52.48 51.18 33.94Q46.5 29 44.49 26.84Q43.94 26.24 43.71 25.46L40.69 14.99L38.3 22.16Q38.02 23.03 37.34 23.64Q24.59 35.04 19.89 55.55Q15.37 75.27 19.78 95.85Q20.5 99.2 17.14 99.92Q15.46 100.28 14.44 99.62Q13.43 98.97 13.07 97.29ZM45.15 36.37C45.15 34.53 46.64 33.04 48.48 33.04C50.32 33.04 51.81 34.53 51.81 36.37C51.81 38.21 50.32 39.71 48.48 39.71C46.64 39.71 45.15 38.21 45.15 36.37Z"/></svg></button>
+    <button class="brand" id="brandBtn" data-act="go" data-tab="accueil" aria-label="EquiValdi, accueil"><svg class="brand-mark" viewBox="-8 -8 118.01 116" aria-hidden="true" focusable="false"><g class="lg-cheval"><path class="lg-leaf lg-queue" d="M17.61 59.34 12.55 59.64 12.82 65.05Q12.89 66.56 11.6 67.36L7.09 70.12L9.72 74.6Q10.62 76.13 9.51 77.51L6.15 81.69L10.06 84.97Q12.03 86.61 10.38 88.58Q9.56 89.56 8.66 89.64Q7.75 89.72 6.77 88.9L0.93 84.01Q-1 82.4 0.58 80.44L4.41 75.67L1.4 70.55Q0.12 68.38 2.27 67.06L7.62 63.78L7.31 57.36Q7.18 54.83 9.72 54.68L17.31 54.23Q19.87 54.07 20.02 56.63Q20.17 59.19 17.61 59.34Z"/><path class="lg-leaf lg-criniere" d="M60.98 40.41 54.88 38.59Q52.51 37.88 53.22 35.51Q53.46 34.69 54.16 34.2L57.25 32.03L55.37 31.15Q53.12 30.11 54.17 27.87Q54.53 27.09 55.29 26.7L59.16 24.75L57.03 22.93Q56.09 22.13 56.02 21.26Q55.95 20.39 56.75 19.45Q57.33 18.77 58.2 18.61L61.95 17.95L60.57 16.3Q58.98 14.4 60.88 12.82Q61.54 12.27 62.39 12.24L70.45 11.99Q71.68 11.95 72.32 12.55Q72.96 13.15 73 14.38Q73.07 16.85 70.6 16.93L67.63 17.02L68.49 18.05Q68.91 18.55 69.03 19.2Q69.46 21.64 67.03 22.07L64.23 22.57L65.2 23.39Q65.57 23.72 65.8 24.16Q66.91 26.36 64.71 27.48L62.08 28.81L63.22 29.34Q63.82 29.62 64.2 30.16Q64.91 31.17 64.76 32.04Q64.61 32.9 63.6 33.61L61.18 35.31L62.4 35.68Q64.77 36.39 64.06 38.75Q63.7 39.94 62.93 40.35Q62.16 40.77 60.98 40.41Z"/><path class="lg-ink lg-corps" d="M19.92 49.18Q23.75 46.86 35.39 46.24Q38.07 46.09 43.16 46.75Q47.48 47.31 49.52 47.24Q51.51 47.17 55.93 46.26Q57.53 45.94 58.87 45.71Q57.91 40.39 57.91 37.69Q57.91 31.16 59.8 24.78Q60.72 21.65 63.45 17.55Q63.95 16.81 64.17 16.47Q65.26 14.76 67.62 12.06L66.97 4.27Q66.85 2.77 67.53 1.95Q68.22 1.14 69.72 1.02Q71.7 0.85 72.63 2.6L73.37 3.97L74.22 1.88Q75.35 -0.91 78.14 0.22Q79.68 0.84 79.98 2.47L81.56 11.09Q81.74 11.26 81.95 11.46Q85.09 14.56 86.48 16.01Q88.04 17.64 91.23 21.17Q91.8 21.81 92.06 22.1Q93.14 23.29 94.84 25.21Q95.66 26.15 96.1 26.64Q96.46 27.04 97.37 27.9Q99.79 30.19 100.59 31.87Q102.55 35.99 101.83 39.76Q101.03 43.96 97.49 46.25Q93.84 48.61 89.66 47.66Q87.6 47.19 84.26 44.59Q83.42 43.93 83.03 43.64Q81.75 42.72 79.25 40.6Q77.97 39.51 77.37 39.03Q76.82 38.58 75.63 37.72Q75.54 37.66 75.45 37.59Q75.59 38.64 75.77 39.88Q75.91 40.82 75.97 41.28Q76.25 43.22 76.97 47.69Q77.07 48.33 77.14 48.74Q82.47 52.6 82.78 58.64Q82.96 61.96 81.84 65.56Q80.42 70.12 77.56 72.26Q76.32 73.19 74.12 73.85L76.74 95.62Q77.1 98.61 74.1 98.97Q71.11 99.33 70.75 96.34L68.18 74.95Q66.16 75.17 63.75 75.29L64.2 96.92Q64.26 99.94 61.24 100Q58.23 100.06 58.17 97.05L57.72 75.29Q55.61 75.16 52.83 74.87Q47.83 74.34 45.65 74.37Q43.91 74.4 40.68 74.89L41.58 96.86Q41.64 98.37 40.92 99.15Q40.2 99.94 38.69 100Q35.68 100.12 35.56 97.11L34.68 75.75Q32.63 75.95 31.34 75.87Q30.77 75.84 30.22 75.79L28.51 97.23Q28.39 98.73 27.58 99.42Q26.76 100.11 25.26 99.99Q22.26 99.75 22.5 96.74L24.27 74.63Q21.5 73.73 19.6 72.2Q13.44 67.28 13.44 60.8Q13.44 57.66 15.1 54.48Q16.92 50.99 19.92 49.18ZM23.04 54.34Q19.47 56.5 19.47 60.8Q19.47 64.38 23.37 67.49Q24.49 68.4 26.31 68.97Q26.93 68.79 27.75 68.85Q29.16 68.97 29.86 69.69Q30.74 69.79 31.72 69.86Q33.49 69.97 38.05 69.2Q42.94 68.39 45.55 68.34Q48.1 68.3 53.47 68.87Q57.8 69.33 60.24 69.37Q60.42 69.35 60.62 69.35Q60.91 69.34 61.17 69.36Q61.36 69.36 61.53 69.35Q62.1 69.32 63.24 69.27Q66.07 69.15 68.19 68.91Q68.84 68.04 70.37 67.86Q71.62 67.71 72.41 68.14Q73.42 67.83 73.94 67.44Q75.24 66.47 76.08 63.77Q76.88 61.2 76.76 58.95Q76.58 55.56 73.09 53.27Q70.63 51.66 65.45 51.33Q64.89 52.48 63.12 52.73Q60.99 53.04 60.16 51.61Q58.84 51.82 57.14 52.17Q52.23 53.18 49.73 53.26Q47.2 53.36 42.38 52.73Q37.84 52.14 35.71 52.26Q25.59 52.8 23.04 54.34ZM64.92 45.26Q68.06 45.4 70.59 45.95Q70.2 43.47 70.01 42.14Q69.94 41.68 69.8 40.76Q69.13 36.1 68.93 33.94Q68.79 32.31 68.69 29.27Q68.66 29.22 68.65 29.19Q67.48 27.24 68.66 25.88Q68.97 23.73 71.5 23.62Q73.01 23.56 73.8 24.28Q74.58 25 74.65 26.5Q74.66 26.81 74.68 27.72Q75.84 29.91 76.5 30.66Q77.15 31.39 79.15 32.82Q80.48 33.78 81.17 34.34Q81.82 34.87 83.15 36Q85.48 37.97 86.57 38.77Q87.05 39.12 87.97 39.83Q90.25 41.61 91 41.78Q92.7 42.17 94.22 41.19Q95.59 40.3 95.91 38.63Q96.07 37.75 95.9 36.76C95.63 37.02 95.26 37.19 94.85 37.19C94.02 37.19 93.34 36.51 93.34 35.68C93.34 34.85 94.02 34.17 94.85 34.17C94.89 34.17 94.93 34.17 94.97 34.18Q94.52 33.51 93.23 32.29Q92.12 31.25 91.59 30.65Q91.15 30.15 90.31 29.2Q88.64 27.31 87.59 26.14Q87.32 25.85 86.75 25.21Q83.62 21.75 82.12 20.17Q80.79 18.79 77.72 15.76Q76.89 14.95 76.64 14.69Q76.02 14.08 75.83 13.24Q75.54 13.51 75.17 13.71Q74.28 14.19 73.53 14.21Q73.36 14.6 73.08 14.95Q72.86 15.22 72.23 15.95Q70.11 18.36 69.25 19.72Q68.99 20.11 68.47 20.9Q66.24 24.24 65.58 26.48Q63.94 32.03 63.94 37.69Q63.94 40.02 64.92 45.26ZM75.75 21.61C75.75 20.22 76.88 19.1 78.27 19.1C79.65 19.1 80.78 20.22 80.78 21.61C80.78 23 79.65 24.12 78.27 24.12C76.88 24.12 75.75 23 75.75 21.61Z"/></g></svg></button>
     <div class="top-title">
       <div class="eyebrow" id="topEyebrow">Carnet d'écurie</div>
       <h1 id="topTitle">EquiValdi</h1>
@@ -401,7 +491,7 @@ img{max-width:100%}
   </div>
 </header>
 <main class="view" id="view" aria-live="polite">
-  <div class="loading"><svg class="brand-logo" viewBox="-171 -90 573 170" role="img" aria-label="EquiValdi, carnet d'écurie" focusable="false"><path class="lg-leaf" d="M-115.96 -56.88Q-152.19 -5.82 -167.02 69.94Q-181.84 -12.41 -115.96 -56.88Z"/><path class="lg-ink" d="M-147.95 74.44Q-155.89 37.36 -147.72 1.74Q-139.21 -35.37 -116.01 -56.84L-106.6 -85.06Q-104.78 -90.53 -99.31 -88.7Q-96.44 -87.75 -95.6 -84.83L-85.77 -50.74Q-82.37 -47.1 -75.55 -39.91Q-45.68 -8.43 -34.05 7.04Q-24.94 17.75 -26.67 29.4Q-28.61 42.52 -42.09 45.89Q-42.43 45.97 -42.77 46.01Q-60 48.17 -86.04 28.76Q-88.91 27.37 -95.03 24.95Q-105.14 20.94 -110.58 17.69Q-108.25 31.86 -104.57 50.27Q-101.5 65.61 -100.39 72.29Q-99.92 75.13 -101.1 76.79Q-102.29 78.45 -105.13 78.92Q-110.82 79.87 -111.76 74.18Q-112.85 67.69 -115.88 52.53Q-122.76 18.12 -124.98 -1.89Q-125.57 -7.15 -120.38 -8.18Q-114.73 -9.31 -113.6 -3.66Q-112.37 2.5 -106.15 6.84Q-101.87 9.83 -90.78 14.23Q-83.7 17.04 -80.44 18.67Q-79.97 18.9 -79.56 19.21Q-57.26 35.94 -44.55 34.61Q-38.86 33.05 -38.07 27.71Q-37.11 21.19 -42.92 14.4Q-43.05 14.26 -43.16 14.11Q-54.36 -0.83 -83.92 -31.98Q-91.79 -40.27 -95.15 -43.91Q-96.08 -44.91 -96.46 -46.23L-101.53 -63.81L-105.55 -51.77Q-106.03 -50.31 -107.17 -49.29Q-128.59 -30.13 -136.49 4.32Q-144.09 37.45 -136.68 72.03Q-135.47 77.66 -141.1 78.87Q-143.92 79.48 -145.63 78.37Q-147.34 77.26 -147.95 74.44ZM-94.05 -27.89C-94.05 -30.99 -91.55 -33.49 -88.45 -33.49C-85.36 -33.49 -82.85 -30.99 -82.85 -27.89C-82.85 -24.8 -85.36 -22.29 -88.45 -22.29C-91.55 -22.29 -94.05 -24.8 -94.05 -27.89Z"/><path class="lg-ink" d="M7.6 0V-70H19.1V0ZM15.5 0V-10.5H54.7V0ZM15.5 -30.7V-40.8H51.3V-30.7ZM15.5 -59.5V-70H54.2V-59.5Z M83.4 1Q76.9 1 71.65 -2.3Q66.4 -5.6 63.35 -11.25Q60.3 -16.9 60.3 -23.9Q60.3 -31 63.35 -36.65Q66.4 -42.3 71.65 -45.65Q76.9 -49 83.4 -49Q88.9 -49 93.15 -46.65Q97.4 -44.3 99.9 -40.2Q102.4 -36.1 102.4 -30.9V-17.1Q102.4 -11.9 99.95 -7.8Q97.5 -3.7 93.2 -1.35Q88.9 1 83.4 1ZM85.2 -9.4Q91.3 -9.4 95.05 -13.5Q98.8 -17.6 98.8 -24Q98.8 -28.3 97.1 -31.6Q95.4 -34.9 92.35 -36.75Q89.3 -38.6 85.2 -38.6Q81.2 -38.6 78.15 -36.75Q75.1 -34.9 73.35 -31.6Q71.6 -28.3 71.6 -24Q71.6 -19.7 73.35 -16.4Q75.1 -13.1 78.15 -11.25Q81.2 -9.4 85.2 -9.4ZM98.1 20V-11.8L100 -23.4L98.1 -35.1V-48H109.1V20Z M140 1Q133.9 1 129.15 -1.7Q124.4 -4.4 121.75 -9.15Q119.1 -13.9 119.1 -20.1V-48H130.1V-20.6Q130.1 -17.1 131.25 -14.65Q132.4 -12.2 134.65 -10.9Q136.9 -9.6 140 -9.6Q144.8 -9.6 147.35 -12.45Q149.9 -15.3 149.9 -20.6V-48H160.9V-20.1Q160.9 -13.8 158.25 -9.05Q155.6 -4.3 150.9 -1.65Q146.2 1 140 1Z M171.1 0V-48H182.1V0ZM176.6 -56.8Q173.8 -56.8 171.95 -58.7Q170.1 -60.6 170.1 -63.4Q170.1 -66.2 171.95 -68.1Q173.8 -70 176.6 -70Q179.5 -70 181.3 -68.1Q183.1 -66.2 183.1 -63.4Q183.1 -60.6 181.3 -58.7Q179.5 -56.8 176.6 -56.8Z M218 0 189.7 -70H202.2L224.3 -13.3H219.9L242.2 -70H254.5L226 0Z M272.5 1Q266 1 260.75 -2.3Q255.5 -5.6 252.45 -11.25Q249.4 -16.9 249.4 -23.9Q249.4 -31 252.45 -36.65Q255.5 -42.3 260.75 -45.65Q266 -49 272.5 -49Q278 -49 282.25 -46.65Q286.5 -44.3 289 -40.2Q291.5 -36.1 291.5 -30.9V-17.1Q291.5 -11.9 289.05 -7.8Q286.6 -3.7 282.3 -1.35Q278 1 272.5 1ZM274.3 -9.4Q280.4 -9.4 284.15 -13.5Q287.9 -17.6 287.9 -24Q287.9 -28.3 286.2 -31.6Q284.5 -34.9 281.45 -36.75Q278.4 -38.6 274.3 -38.6Q270.3 -38.6 267.25 -36.75Q264.2 -34.9 262.45 -31.6Q260.7 -28.3 260.7 -24Q260.7 -19.7 262.45 -16.4Q264.2 -13.1 267.25 -11.25Q270.3 -9.4 274.3 -9.4ZM287.2 0V-12.9L289.1 -24.6L287.2 -36.2V-48H298.2V0Z M309.4 0V-72H320.4V0Z M351.7 1Q345.2 1 339.95 -2.3Q334.7 -5.6 331.65 -11.25Q328.6 -16.9 328.6 -23.9Q328.6 -31 331.65 -36.65Q334.7 -42.3 339.95 -45.65Q345.2 -49 351.7 -49Q357.2 -49 361.45 -46.65Q365.7 -44.3 368.2 -40.2Q370.7 -36.1 370.7 -30.9V-17.1Q370.7 -11.9 368.25 -7.8Q365.8 -3.7 361.5 -1.35Q357.2 1 351.7 1ZM353.5 -9.4Q357.6 -9.4 360.65 -11.25Q363.7 -13.1 365.4 -16.4Q367.1 -19.7 367.1 -24Q367.1 -28.3 365.4 -31.6Q363.7 -34.9 360.65 -36.75Q357.6 -38.6 353.6 -38.6Q349.5 -38.6 346.45 -36.75Q343.4 -34.9 341.65 -31.6Q339.9 -28.3 339.9 -24Q339.9 -19.7 341.65 -16.4Q343.4 -13.1 346.45 -11.25Q349.5 -9.4 353.5 -9.4ZM377.4 0H366.4V-12.9L368.3 -24.6L366.4 -36.2V-72H377.4Z M388.7 0V-48H399.7V0ZM394.2 -56.8Q391.4 -56.8 389.55 -58.7Q387.7 -60.6 387.7 -63.4Q387.7 -66.2 389.55 -68.1Q391.4 -70 394.2 -70Q397.1 -70 398.9 -68.1Q400.7 -66.2 400.7 -63.4Q400.7 -60.6 398.9 -58.7Q397.1 -56.8 394.2 -56.8Z"/><path class="lg-ink" d="M7.6 57.5V48.98Q7.6 46.83 8.89 45.56Q10.18 44.3 12.3 44.3Q14.45 44.3 15.75 45.56Q17.05 46.83 17.05 48.98V49.27Q17.05 49.4 16.96 49.5Q16.88 49.6 16.75 49.6L14.43 49.7Q14.12 49.7 14.12 49.4V48.77Q14.12 47.9 13.62 47.35Q13.12 46.8 12.3 46.8Q11.5 46.8 11 47.35Q10.5 47.9 10.5 48.77V57.73Q10.5 58.6 11 59.15Q11.5 59.7 12.3 59.7Q13.12 59.7 13.62 59.15Q14.12 58.6 14.12 57.73V57.1Q14.12 56.98 14.21 56.89Q14.3 56.8 14.43 56.8L16.75 56.9Q16.88 56.9 16.96 56.99Q17.05 57.08 17.05 57.2V57.5Q17.05 59.62 15.75 60.91Q14.45 62.2 12.3 62.2Q10.18 62.2 8.89 60.91Q7.6 59.62 7.6 57.5Z M31.9 61.73 31.43 59.1Q31.43 58.98 31.28 58.98H27.63Q27.48 58.98 27.48 59.1L27 61.73Q26.98 62 26.68 62H24.4Q24.05 62 24.13 61.67L27.83 44.77Q27.88 44.5 28.15 44.5H30.8Q31.08 44.5 31.13 44.77L34.83 61.67V61.77Q34.83 62 34.55 62H32.23Q31.93 62 31.9 61.73ZM28.05 56.7H30.83Q30.98 56.7 30.95 56.58L29.5 48.67Q29.48 48.6 29.43 48.6Q29.38 48.6 29.35 48.67L27.93 56.58Q27.9 56.7 28.05 56.7Z M49.12 61.75 47 54.58Q46.95 54.48 46.88 54.48H45.55Q45.42 54.48 45.42 54.6V61.7Q45.42 61.83 45.34 61.91Q45.25 62 45.12 62H42.82Q42.7 62 42.61 61.91Q42.52 61.83 42.52 61.7V44.8Q42.52 44.67 42.61 44.59Q42.7 44.5 42.82 44.5H47.52Q48.85 44.5 49.86 45.14Q50.88 45.77 51.44 46.94Q52 48.1 52 49.6Q52 51.15 51.4 52.27Q50.8 53.4 49.72 53.98Q49.62 54 49.65 54.12L52.1 61.65Q52.12 61.7 52.12 61.77Q52.12 62 51.85 62H49.45Q49.2 62 49.12 61.75ZM45.42 47.12V52.1Q45.42 52.23 45.55 52.23H47.07Q47.97 52.23 48.54 51.53Q49.1 50.83 49.1 49.62Q49.1 48.42 48.54 47.71Q47.97 47 47.07 47H45.55Q45.42 47 45.42 47.12Z M67.45 44.5H69.73Q69.85 44.5 69.94 44.59Q70.03 44.67 70.03 44.8V61.7Q70.03 61.83 69.94 61.91Q69.85 62 69.73 62H67.1Q66.85 62 66.78 61.75L63.05 51.15Q63.03 51.08 62.96 51.09Q62.9 51.1 62.9 51.17L62.93 61.7Q62.93 61.83 62.84 61.91Q62.75 62 62.62 62H60.35Q60.23 62 60.14 61.91Q60.05 61.83 60.05 61.7V44.8Q60.05 44.67 60.14 44.59Q60.23 44.5 60.35 44.5H62.93Q63.18 44.5 63.25 44.75L67 55.27Q67.03 55.35 67.09 55.34Q67.15 55.33 67.15 55.25V44.8Q67.15 44.67 67.24 44.59Q67.33 44.5 67.45 44.5Z M87.15 47H81.75Q81.62 47 81.62 47.12V51.85Q81.62 51.98 81.75 51.98H84.95Q85.08 51.98 85.16 52.06Q85.25 52.15 85.25 52.27V54.2Q85.25 54.33 85.16 54.41Q85.08 54.5 84.95 54.5H81.75Q81.62 54.5 81.62 54.62V59.38Q81.62 59.5 81.75 59.5H87.15Q87.28 59.5 87.36 59.59Q87.45 59.67 87.45 59.8V61.7Q87.45 61.83 87.36 61.91Q87.28 62 87.15 62H79.03Q78.9 62 78.81 61.91Q78.72 61.83 78.72 61.7V44.8Q78.72 44.67 78.81 44.59Q78.9 44.5 79.03 44.5H87.15Q87.28 44.5 87.36 44.59Q87.45 44.67 87.45 44.8V46.7Q87.45 46.83 87.36 46.91Q87.28 47 87.15 47Z M104.88 44.8V46.7Q104.88 46.83 104.79 46.91Q104.7 47 104.58 47H101.4Q101.28 47 101.28 47.12V61.7Q101.28 61.83 101.19 61.91Q101.1 62 100.97 62H98.67Q98.55 62 98.46 61.91Q98.38 61.83 98.38 61.7V47.12Q98.38 47 98.25 47H95.25Q95.12 47 95.04 46.91Q94.95 46.83 94.95 46.7V44.8Q94.95 44.67 95.04 44.59Q95.12 44.5 95.25 44.5H104.58Q104.7 44.5 104.79 44.59Q104.88 44.67 104.88 44.8Z M123.9 61.7V44.8Q123.9 44.67 123.99 44.59Q124.08 44.5 124.2 44.5H128.47Q130.62 44.5 131.91 45.8Q133.2 47.1 133.2 49.27V57.23Q133.2 59.4 131.91 60.7Q130.62 62 128.47 62H124.2Q124.08 62 123.99 61.91Q123.9 61.83 123.9 61.7ZM126.92 59.5 128.43 59.48Q129.25 59.48 129.76 58.81Q130.28 58.15 130.3 57.05V49.45Q130.3 48.33 129.79 47.66Q129.28 47 128.4 47H126.92Q126.8 47 126.8 47.12V59.38Q126.8 59.5 126.92 59.5Z M144.35 44.85 142.73 49.7Q142.65 49.95 142.4 49.95H140.68Q140.35 49.95 140.43 49.62L141.48 44.77Q141.53 44.5 141.8 44.5H144.13Q144.28 44.5 144.34 44.59Q144.4 44.67 144.35 44.85Z M160.25 47H154.85Q154.73 47 154.73 47.12V51.85Q154.73 51.98 154.85 51.98H158.05Q158.18 51.98 158.26 52.06Q158.35 52.15 158.35 52.27V54.2Q158.35 54.33 158.26 54.41Q158.18 54.5 158.05 54.5H154.85Q154.73 54.5 154.73 54.62V59.38Q154.73 59.5 154.85 59.5H160.25Q160.38 59.5 160.46 59.59Q160.55 59.67 160.55 59.8V61.7Q160.55 61.83 160.46 61.91Q160.38 62 160.25 62H152.13Q152 62 151.91 61.91Q151.83 61.83 151.83 61.7V44.8Q151.83 44.67 151.91 44.59Q152 44.5 152.13 44.5H160.25Q160.38 44.5 160.46 44.59Q160.55 44.67 160.55 44.8V46.7Q160.55 46.83 160.46 46.91Q160.38 47 160.25 47ZM154.83 42.55 156.3 39.97Q156.4 39.77 156.68 39.77H158.48Q158.68 39.77 158.73 39.89Q158.78 40 158.68 40.15L156.83 42.72Q156.7 42.9 156.48 42.9H155.05Q154.88 42.9 154.8 42.8Q154.73 42.7 154.83 42.55Z M168.4 57.5V48.98Q168.4 46.83 169.69 45.56Q170.98 44.3 173.1 44.3Q175.25 44.3 176.55 45.56Q177.85 46.83 177.85 48.98V49.27Q177.85 49.4 177.76 49.5Q177.68 49.6 177.55 49.6L175.23 49.7Q174.93 49.7 174.93 49.4V48.77Q174.93 47.9 174.43 47.35Q173.93 46.8 173.1 46.8Q172.3 46.8 171.8 47.35Q171.3 47.9 171.3 48.77V57.73Q171.3 58.6 171.8 59.15Q172.3 59.7 173.1 59.7Q173.93 59.7 174.43 59.15Q174.93 58.6 174.93 57.73V57.1Q174.93 56.98 175.01 56.89Q175.1 56.8 175.23 56.8L177.55 56.9Q177.68 56.9 177.76 56.99Q177.85 57.08 177.85 57.2V57.5Q177.85 59.62 176.55 60.91Q175.25 62.2 173.1 62.2Q170.98 62.2 169.69 60.91Q168.4 59.62 168.4 57.5Z M186.03 57.15V44.8Q186.03 44.67 186.11 44.59Q186.2 44.5 186.33 44.5H188.63Q188.75 44.5 188.84 44.59Q188.93 44.67 188.93 44.8V57.45Q188.93 58.45 189.43 59.08Q189.93 59.7 190.75 59.7Q191.58 59.7 192.08 59.08Q192.58 58.45 192.58 57.45V44.8Q192.58 44.67 192.66 44.59Q192.75 44.5 192.88 44.5H195.18Q195.3 44.5 195.39 44.59Q195.48 44.67 195.48 44.8V57.15Q195.48 59.42 194.18 60.81Q192.88 62.2 190.75 62.2Q188.6 62.2 187.31 60.81Q186.03 59.42 186.03 57.15Z M210.68 61.75 208.55 54.58Q208.5 54.48 208.43 54.48H207.1Q206.98 54.48 206.98 54.6V61.7Q206.98 61.83 206.89 61.91Q206.8 62 206.68 62H204.38Q204.25 62 204.16 61.91Q204.08 61.83 204.08 61.7V44.8Q204.08 44.67 204.16 44.59Q204.25 44.5 204.38 44.5H209.08Q210.4 44.5 211.41 45.14Q212.43 45.77 212.99 46.94Q213.55 48.1 213.55 49.6Q213.55 51.15 212.95 52.27Q212.35 53.4 211.28 53.98Q211.18 54 211.2 54.12L213.65 61.65Q213.68 61.7 213.68 61.77Q213.68 62 213.4 62H211Q210.75 62 210.68 61.75ZM206.98 47.12V52.1Q206.98 52.23 207.1 52.23H208.63Q209.53 52.23 210.09 51.53Q210.65 50.83 210.65 49.62Q210.65 48.42 210.09 47.71Q209.53 47 208.63 47H207.1Q206.98 47 206.98 47.12Z M221.6 61.7V44.8Q221.6 44.67 221.69 44.59Q221.78 44.5 221.9 44.5H224.2Q224.33 44.5 224.41 44.59Q224.5 44.67 224.5 44.8V61.7Q224.5 61.83 224.41 61.91Q224.33 62 224.2 62H221.9Q221.78 62 221.69 61.91Q221.6 61.83 221.6 61.7Z M241.63 47H236.23Q236.1 47 236.1 47.12V51.85Q236.1 51.98 236.23 51.98H239.43Q239.55 51.98 239.64 52.06Q239.73 52.15 239.73 52.27V54.2Q239.73 54.33 239.64 54.41Q239.55 54.5 239.43 54.5H236.23Q236.1 54.5 236.1 54.62V59.38Q236.1 59.5 236.23 59.5H241.63Q241.75 59.5 241.84 59.59Q241.93 59.67 241.93 59.8V61.7Q241.93 61.83 241.84 61.91Q241.75 62 241.63 62H233.5Q233.38 62 233.29 61.91Q233.2 61.83 233.2 61.7V44.8Q233.2 44.67 233.29 44.59Q233.38 44.5 233.5 44.5H241.63Q241.75 44.5 241.84 44.59Q241.93 44.67 241.93 44.8V46.7Q241.93 46.83 241.84 46.91Q241.75 47 241.63 47Z"/></svg><p class="note">Ouverture du carnet…</p></div>
+  <div class="loading"><svg class="brand-logo" viewBox="-220.55 -24 441.1 442" role="img" aria-label="EquiValdi, carnet d'écurie" focusable="false"><g class="lg-cheval"><path class="lg-leaf lg-queue" d="M-70.12 124.62 -80.75 125.25 -80.19 136.6Q-80.03 139.78 -82.76 141.45L-92.22 147.25L-86.69 156.66Q-84.81 159.87 -87.14 162.76L-94.2 171.55L-85.98 178.44Q-81.85 181.89 -85.31 186.02Q-87.03 188.08 -88.93 188.25Q-90.83 188.42 -92.89 186.69L-105.16 176.42Q-109.21 173.03 -105.9 168.92L-97.85 158.91L-104.18 148.15Q-106.86 143.59 -102.35 140.83L-91.1 133.94L-91.76 120.46Q-92.02 115.13 -86.71 114.82L-70.76 113.87Q-65.39 113.56 -65.07 118.93Q-64.75 124.3 -70.12 124.62Z"/><path class="lg-leaf lg-criniere" d="M20.95 84.87 8.13 81.04Q3.16 79.55 4.64 74.57Q5.16 72.85 6.63 71.81L13.12 67.25L9.16 65.42Q4.45 63.23 6.64 58.52Q7.39 56.89 9 56.07L17.13 51.96L12.66 48.15Q10.68 46.47 10.54 44.64Q10.39 42.81 12.07 40.83Q13.28 39.42 15.12 39.09L22.99 37.69L20.09 34.23Q16.76 30.25 20.74 26.91Q22.11 25.76 23.91 25.7L40.83 25.18Q43.43 25.1 44.76 26.35Q46.1 27.61 46.18 30.21Q46.34 35.39 41.15 35.56L34.91 35.75L36.71 37.9Q37.6 38.96 37.85 40.33Q38.75 45.44 33.64 46.35L27.77 47.39L29.8 49.13Q30.59 49.8 31.06 50.73Q33.41 55.37 28.77 57.71L23.25 60.5L25.65 61.62Q26.91 62.2 27.71 63.34Q29.21 65.47 28.89 67.27Q28.57 69.08 26.45 70.58L21.36 74.16L23.92 74.92Q28.9 76.41 27.41 81.39Q26.67 83.87 25.05 84.74Q23.43 85.62 20.95 84.87Z"/><path class="lg-ink lg-corps" d="M-65.28 103.28Q-57.23 98.4 -32.79 97.09Q-27.16 96.79 -16.48 98.18Q-7.41 99.35 -3.13 99.2Q1.06 99.05 10.35 97.15Q13.69 96.46 16.51 95.99Q14.51 84.81 14.51 79.15Q14.51 65.44 18.46 52.03Q20.4 45.47 26.14 36.86Q27.18 35.31 27.64 34.58Q29.94 30.99 34.89 25.32L33.53 8.97Q33.26 5.81 34.71 4.1Q36.16 2.4 39.31 2.13Q43.45 1.79 45.42 5.45L46.96 8.34L48.74 3.95Q51.13 -1.92 56.99 0.47Q60.21 1.77 60.84 5.18L64.17 23.28Q64.54 23.64 64.98 24.07Q71.57 30.57 74.49 33.61Q77.77 37.05 84.46 44.46Q85.66 45.8 86.22 46.41Q88.48 48.91 92.04 52.95Q93.77 54.91 94.7 55.94Q95.45 56.79 97.36 58.6Q102.44 63.4 104.12 66.93Q108.24 75.58 106.74 83.5Q105.06 92.31 97.62 97.12Q89.95 102.09 81.17 100.09Q76.84 99.11 69.83 93.63Q68.08 92.26 67.24 91.65Q64.56 89.7 59.32 85.25Q56.63 82.98 55.37 81.96Q54.22 81.02 51.71 79.21Q51.51 79.08 51.33 78.94Q51.63 81.15 52.01 83.76Q52.3 85.72 52.44 86.69Q53.02 90.76 54.53 100.15Q54.75 101.5 54.88 102.36Q66.07 110.46 66.74 123.13Q67.11 130.11 64.75 137.68Q61.76 147.25 55.77 151.75Q53.16 153.71 48.55 155.09L54.04 200.8Q54.79 207.09 48.51 207.84Q42.22 208.6 41.46 202.31L36.08 157.4Q31.82 157.87 26.77 158.1L27.7 203.54Q27.83 209.87 21.5 210Q15.17 210.13 15.04 203.8L14.11 158.12Q9.66 157.84 3.83 157.22Q-6.67 156.1 -11.24 156.18Q-14.9 156.24 -21.68 157.27L-19.79 203.41Q-19.66 206.57 -21.18 208.22Q-22.7 209.87 -25.86 209.99Q-32.19 210.25 -32.44 203.93L-34.28 159.08Q-38.59 159.5 -41.29 159.33Q-42.49 159.26 -43.64 159.15L-47.24 204.17Q-47.5 207.33 -49.2 208.78Q-50.9 210.23 -54.06 209.98Q-60.37 209.47 -59.87 203.16L-56.15 156.72Q-61.96 154.82 -65.95 151.63Q-78.88 141.28 -78.88 127.69Q-78.88 121.08 -75.39 114.4Q-71.57 107.09 -65.28 103.28ZM-58.72 114.11Q-66.22 118.65 -66.22 127.69Q-66.22 135.2 -58.04 141.74Q-55.67 143.63 -51.86 144.83Q-50.56 144.45 -48.83 144.59Q-45.87 144.83 -44.41 146.34Q-42.55 146.57 -40.5 146.7Q-36.79 146.93 -27.2 145.33Q-16.94 143.61 -11.45 143.52Q-6.1 143.43 5.17 144.63Q14.27 145.6 19.39 145.67Q19.77 145.64 20.18 145.63Q20.8 145.62 21.35 145.66Q21.75 145.65 22.11 145.64Q23.29 145.58 25.69 145.47Q31.63 145.21 36.08 144.72Q37.46 142.89 40.67 142.51Q43.28 142.19 44.94 143.1Q47.08 142.44 48.17 141.62Q50.89 139.58 52.65 133.92Q54.34 128.51 54.09 123.8Q53.72 116.69 46.39 111.88Q41.22 108.48 30.34 107.79Q29.15 110.2 25.45 110.74Q20.97 111.39 19.23 108.37Q16.45 108.83 12.89 109.56Q2.56 111.67 -2.68 111.86Q-8 112.05 -18.11 110.73Q-27.64 109.5 -32.11 109.74Q-53.38 110.88 -58.72 114.11ZM29.21 95.05Q35.81 95.35 41.12 96.5Q40.3 91.29 39.9 88.49Q39.76 87.53 39.48 85.59Q38.06 75.82 37.65 71.27Q37.34 67.85 37.14 61.47Q37.08 61.36 37.05 61.3Q34.59 57.2 37.07 54.34Q37.73 49.83 43.05 49.6Q46.21 49.47 47.86 50.98Q49.51 52.5 49.64 55.66Q49.67 56.31 49.72 58.2Q52.14 62.82 53.54 64.39Q54.9 65.91 59.09 68.93Q61.9 70.95 63.34 72.11Q64.72 73.23 67.51 75.6Q72.39 79.74 74.69 81.41Q75.7 82.15 77.63 83.65Q82.41 87.39 83.98 87.75Q87.55 88.56 90.74 86.49Q93.63 84.63 94.3 81.13Q94.65 79.28 94.29 77.19C93.72 77.75 92.94 78.09 92.07 78.09C90.32 78.09 88.91 76.67 88.91 74.92C88.91 73.18 90.32 71.76 92.07 71.76C92.16 71.76 92.25 71.76 92.33 71.77Q91.38 70.37 88.66 67.8Q86.35 65.62 85.23 64.36Q84.29 63.31 82.55 61.33Q79.04 57.35 76.82 54.9Q76.26 54.28 75.06 52.95Q68.49 45.67 65.34 42.37Q62.55 39.46 56.1 33.1Q54.36 31.39 53.83 30.86Q52.53 29.57 52.13 27.8Q51.52 28.38 50.74 28.8Q48.87 29.8 47.29 29.84Q46.95 30.66 46.36 31.39Q45.9 31.97 44.57 33.49Q40.13 38.56 38.31 41.4Q37.78 42.24 36.68 43.89Q32 50.9 30.61 55.61Q27.17 67.26 27.17 79.15Q27.17 84.04 29.21 95.05ZM51.97 45.38C51.97 42.46 54.33 40.1 57.25 40.1C60.16 40.1 62.53 42.46 62.53 45.38C62.53 48.29 60.16 50.65 57.25 50.65C54.33 50.65 51.97 48.29 51.97 45.38Z"/></g><path class="lg-ink" d="M-196.55 332V262H-185.05V332ZM-188.65 332V321.5H-149.45V332ZM-188.65 301.3V291.2H-152.85V301.3ZM-188.65 272.5V262H-149.95V272.5Z M-120.75 333Q-127.25 333 -132.5 329.7Q-137.75 326.4 -140.8 320.75Q-143.85 315.1 -143.85 308.1Q-143.85 301 -140.8 295.35Q-137.75 289.7 -132.5 286.35Q-127.25 283 -120.75 283Q-115.25 283 -111 285.35Q-106.75 287.7 -104.25 291.8Q-101.75 295.9 -101.75 301.1V314.9Q-101.75 320.1 -104.2 324.2Q-106.65 328.3 -110.95 330.65Q-115.25 333 -120.75 333ZM-118.95 322.6Q-112.85 322.6 -109.1 318.5Q-105.35 314.4 -105.35 308Q-105.35 303.7 -107.05 300.4Q-108.75 297.1 -111.8 295.25Q-114.85 293.4 -118.95 293.4Q-122.95 293.4 -126 295.25Q-129.05 297.1 -130.8 300.4Q-132.55 303.7 -132.55 308Q-132.55 312.3 -130.8 315.6Q-129.05 318.9 -126 320.75Q-122.95 322.6 -118.95 322.6ZM-106.05 352V320.2L-104.15 308.6L-106.05 296.9V284H-95.05V352Z M-64.15 333Q-70.25 333 -75 330.3Q-79.75 327.6 -82.4 322.85Q-85.05 318.1 -85.05 311.9V284H-74.05V311.4Q-74.05 314.9 -72.9 317.35Q-71.75 319.8 -69.5 321.1Q-67.25 322.4 -64.15 322.4Q-59.35 322.4 -56.8 319.55Q-54.25 316.7 -54.25 311.4V284H-43.25V311.9Q-43.25 318.2 -45.9 322.95Q-48.55 327.7 -53.25 330.35Q-57.95 333 -64.15 333Z M-33.05 332V284H-22.05V332ZM-27.55 275.2Q-30.35 275.2 -32.2 273.3Q-34.05 271.4 -34.05 268.6Q-34.05 265.8 -32.2 263.9Q-30.35 262 -27.55 262Q-24.65 262 -22.85 263.9Q-21.05 265.8 -21.05 268.6Q-21.05 271.4 -22.85 273.3Q-24.65 275.2 -27.55 275.2Z M13.85 332 -14.45 262H-1.95L20.15 318.7H15.75L38.05 262H50.35L21.85 332Z M68.35 333Q61.85 333 56.6 329.7Q51.35 326.4 48.3 320.75Q45.25 315.1 45.25 308.1Q45.25 301 48.3 295.35Q51.35 289.7 56.6 286.35Q61.85 283 68.35 283Q73.85 283 78.1 285.35Q82.35 287.7 84.85 291.8Q87.35 295.9 87.35 301.1V314.9Q87.35 320.1 84.9 324.2Q82.45 328.3 78.15 330.65Q73.85 333 68.35 333ZM70.15 322.6Q76.25 322.6 80 318.5Q83.75 314.4 83.75 308Q83.75 303.7 82.05 300.4Q80.35 297.1 77.3 295.25Q74.25 293.4 70.15 293.4Q66.15 293.4 63.1 295.25Q60.05 297.1 58.3 300.4Q56.55 303.7 56.55 308Q56.55 312.3 58.3 315.6Q60.05 318.9 63.1 320.75Q66.15 322.6 70.15 322.6ZM83.05 332V319.1L84.95 307.4L83.05 295.8V284H94.05V332Z M105.25 332V260H116.25V332Z M147.55 333Q141.05 333 135.8 329.7Q130.55 326.4 127.5 320.75Q124.45 315.1 124.45 308.1Q124.45 301 127.5 295.35Q130.55 289.7 135.8 286.35Q141.05 283 147.55 283Q153.05 283 157.3 285.35Q161.55 287.7 164.05 291.8Q166.55 295.9 166.55 301.1V314.9Q166.55 320.1 164.1 324.2Q161.65 328.3 157.35 330.65Q153.05 333 147.55 333ZM149.35 322.6Q153.45 322.6 156.5 320.75Q159.55 318.9 161.25 315.6Q162.95 312.3 162.95 308Q162.95 303.7 161.25 300.4Q159.55 297.1 156.5 295.25Q153.45 293.4 149.45 293.4Q145.35 293.4 142.3 295.25Q139.25 297.1 137.5 300.4Q135.75 303.7 135.75 308Q135.75 312.3 137.5 315.6Q139.25 318.9 142.3 320.75Q145.35 322.6 149.35 322.6ZM173.25 332H162.25V319.1L164.15 307.4L162.25 295.8V260H173.25Z M184.55 332V284H195.55V332ZM190.05 275.2Q187.25 275.2 185.4 273.3Q183.55 271.4 183.55 268.6Q183.55 265.8 185.4 263.9Q187.25 262 190.05 262Q192.95 262 194.75 263.9Q196.55 265.8 196.55 268.6Q196.55 271.4 194.75 273.3Q192.95 275.2 190.05 275.2Z"/><path class="lg-ink" d="M-117.16 389.5V380.98Q-117.16 378.82 -115.88 377.56Q-114.59 376.3 -112.46 376.3Q-110.31 376.3 -109.01 377.56Q-107.71 378.82 -107.71 380.98V381.27Q-107.71 381.4 -107.8 381.5Q-107.89 381.6 -108.01 381.6L-110.34 381.7Q-110.64 381.7 -110.64 381.4V380.77Q-110.64 379.9 -111.14 379.35Q-111.64 378.8 -112.46 378.8Q-113.26 378.8 -113.76 379.35Q-114.26 379.9 -114.26 380.77V389.73Q-114.26 390.6 -113.76 391.15Q-113.26 391.7 -112.46 391.7Q-111.64 391.7 -111.14 391.15Q-110.64 390.6 -110.64 389.73V389.1Q-110.64 388.98 -110.55 388.89Q-110.46 388.8 -110.34 388.8L-108.01 388.9Q-107.89 388.9 -107.8 388.99Q-107.71 389.07 -107.71 389.2V389.5Q-107.71 391.62 -109.01 392.91Q-110.31 394.2 -112.46 394.2Q-114.59 394.2 -115.88 392.91Q-117.16 391.62 -117.16 389.5Z M-92.86 393.73 -93.34 391.1Q-93.34 390.98 -93.49 390.98H-97.14Q-97.29 390.98 -97.29 391.1L-97.76 393.73Q-97.79 394 -98.09 394H-100.36Q-100.71 394 -100.64 393.68L-96.94 376.77Q-96.89 376.5 -96.61 376.5H-93.96Q-93.69 376.5 -93.64 376.77L-89.94 393.68V393.77Q-89.94 394 -90.21 394H-92.54Q-92.84 394 -92.86 393.73ZM-96.71 388.7H-93.94Q-93.79 388.7 -93.81 388.57L-95.26 380.68Q-95.29 380.6 -95.34 380.6Q-95.39 380.6 -95.41 380.68L-96.84 388.57Q-96.86 388.7 -96.71 388.7Z M-75.64 393.75 -77.76 386.57Q-77.81 386.48 -77.89 386.48H-79.21Q-79.34 386.48 -79.34 386.6V393.7Q-79.34 393.82 -79.43 393.91Q-79.51 394 -79.64 394H-81.94Q-82.06 394 -82.15 393.91Q-82.24 393.82 -82.24 393.7V376.8Q-82.24 376.68 -82.15 376.59Q-82.06 376.5 -81.94 376.5H-77.24Q-75.91 376.5 -74.9 377.14Q-73.89 377.77 -73.33 378.94Q-72.76 380.1 -72.76 381.6Q-72.76 383.15 -73.36 384.27Q-73.96 385.4 -75.04 385.98Q-75.14 386 -75.11 386.12L-72.66 393.65Q-72.64 393.7 -72.64 393.77Q-72.64 394 -72.91 394H-75.31Q-75.56 394 -75.64 393.75ZM-79.34 379.12V384.1Q-79.34 384.23 -79.21 384.23H-77.69Q-76.79 384.23 -76.23 383.52Q-75.66 382.82 -75.66 381.62Q-75.66 380.43 -76.23 379.71Q-76.79 379 -77.69 379H-79.21Q-79.34 379 -79.34 379.12Z M-57.31 376.5H-55.04Q-54.91 376.5 -54.83 376.59Q-54.74 376.68 -54.74 376.8V393.7Q-54.74 393.82 -54.83 393.91Q-54.91 394 -55.04 394H-57.66Q-57.91 394 -57.99 393.75L-61.71 383.15Q-61.74 383.07 -61.8 383.09Q-61.86 383.1 -61.86 383.18L-61.84 393.7Q-61.84 393.82 -61.92 393.91Q-62.01 394 -62.14 394H-64.41Q-64.54 394 -64.62 393.91Q-64.71 393.82 -64.71 393.7V376.8Q-64.71 376.68 -64.62 376.59Q-64.54 376.5 -64.41 376.5H-61.84Q-61.59 376.5 -61.51 376.75L-57.76 387.27Q-57.74 387.35 -57.67 387.34Q-57.61 387.32 -57.61 387.25V376.8Q-57.61 376.68 -57.52 376.59Q-57.44 376.5 -57.31 376.5Z M-37.61 379H-43.01Q-43.14 379 -43.14 379.12V383.85Q-43.14 383.98 -43.01 383.98H-39.81Q-39.69 383.98 -39.6 384.06Q-39.51 384.15 -39.51 384.27V386.2Q-39.51 386.32 -39.6 386.41Q-39.69 386.5 -39.81 386.5H-43.01Q-43.14 386.5 -43.14 386.62V391.38Q-43.14 391.5 -43.01 391.5H-37.61Q-37.49 391.5 -37.4 391.59Q-37.31 391.68 -37.31 391.8V393.7Q-37.31 393.82 -37.4 393.91Q-37.49 394 -37.61 394H-45.74Q-45.86 394 -45.95 393.91Q-46.04 393.82 -46.04 393.7V376.8Q-46.04 376.68 -45.95 376.59Q-45.86 376.5 -45.74 376.5H-37.61Q-37.49 376.5 -37.4 376.59Q-37.31 376.68 -37.31 376.8V378.7Q-37.31 378.82 -37.4 378.91Q-37.49 379 -37.61 379Z M-19.89 376.8V378.7Q-19.89 378.82 -19.98 378.91Q-20.06 379 -20.19 379H-23.36Q-23.49 379 -23.49 379.12V393.7Q-23.49 393.82 -23.58 393.91Q-23.66 394 -23.79 394H-26.09Q-26.21 394 -26.3 393.91Q-26.39 393.82 -26.39 393.7V379.12Q-26.39 379 -26.51 379H-29.51Q-29.64 379 -29.73 378.91Q-29.81 378.82 -29.81 378.7V376.8Q-29.81 376.68 -29.73 376.59Q-29.64 376.5 -29.51 376.5H-20.19Q-20.06 376.5 -19.98 376.59Q-19.89 376.68 -19.89 376.8Z M-0.86 393.7V376.8Q-0.86 376.68 -0.78 376.59Q-0.69 376.5 -0.56 376.5H3.71Q5.86 376.5 7.15 377.8Q8.44 379.1 8.44 381.27V389.23Q8.44 391.4 7.15 392.7Q5.86 394 3.71 394H-0.56Q-0.69 394 -0.78 393.91Q-0.86 393.82 -0.86 393.7ZM2.16 391.5 3.66 391.48Q4.49 391.48 5 390.81Q5.51 390.15 5.54 389.05V381.45Q5.54 380.32 5.02 379.66Q4.51 379 3.64 379H2.16Q2.04 379 2.04 379.12V391.38Q2.04 391.5 2.16 391.5Z M19.59 376.85 17.96 381.7Q17.89 381.95 17.64 381.95H15.91Q15.59 381.95 15.66 381.62L16.71 376.77Q16.76 376.5 17.04 376.5H19.36Q19.51 376.5 19.58 376.59Q19.64 376.68 19.59 376.85Z M35.49 379H30.09Q29.96 379 29.96 379.12V383.85Q29.96 383.98 30.09 383.98H33.29Q33.41 383.98 33.5 384.06Q33.59 384.15 33.59 384.27V386.2Q33.59 386.32 33.5 386.41Q33.41 386.5 33.29 386.5H30.09Q29.96 386.5 29.96 386.62V391.38Q29.96 391.5 30.09 391.5H35.49Q35.61 391.5 35.7 391.59Q35.79 391.68 35.79 391.8V393.7Q35.79 393.82 35.7 393.91Q35.61 394 35.49 394H27.36Q27.24 394 27.15 393.91Q27.06 393.82 27.06 393.7V376.8Q27.06 376.68 27.15 376.59Q27.24 376.5 27.36 376.5H35.49Q35.61 376.5 35.7 376.59Q35.79 376.68 35.79 376.8V378.7Q35.79 378.82 35.7 378.91Q35.61 379 35.49 379ZM30.06 374.55 31.54 371.97Q31.64 371.77 31.91 371.77H33.71Q33.91 371.77 33.96 371.89Q34.01 372 33.91 372.15L32.06 374.72Q31.94 374.9 31.71 374.9H30.29Q30.11 374.9 30.04 374.8Q29.96 374.7 30.06 374.55Z M43.64 389.5V380.98Q43.64 378.82 44.93 377.56Q46.21 376.3 48.34 376.3Q50.49 376.3 51.79 377.56Q53.09 378.82 53.09 380.98V381.27Q53.09 381.4 53 381.5Q52.91 381.6 52.79 381.6L50.46 381.7Q50.16 381.7 50.16 381.4V380.77Q50.16 379.9 49.66 379.35Q49.16 378.8 48.34 378.8Q47.54 378.8 47.04 379.35Q46.54 379.9 46.54 380.77V389.73Q46.54 390.6 47.04 391.15Q47.54 391.7 48.34 391.7Q49.16 391.7 49.66 391.15Q50.16 390.6 50.16 389.73V389.1Q50.16 388.98 50.25 388.89Q50.34 388.8 50.46 388.8L52.79 388.9Q52.91 388.9 53 388.99Q53.09 389.07 53.09 389.2V389.5Q53.09 391.62 51.79 392.91Q50.49 394.2 48.34 394.2Q46.21 394.2 44.93 392.91Q43.64 391.62 43.64 389.5Z M61.26 389.15V376.8Q61.26 376.68 61.35 376.59Q61.44 376.5 61.56 376.5H63.86Q63.99 376.5 64.08 376.59Q64.16 376.68 64.16 376.8V389.45Q64.16 390.45 64.66 391.07Q65.16 391.7 65.99 391.7Q66.81 391.7 67.31 391.07Q67.81 390.45 67.81 389.45V376.8Q67.81 376.68 67.9 376.59Q67.99 376.5 68.11 376.5H70.41Q70.54 376.5 70.63 376.59Q70.71 376.68 70.71 376.8V389.15Q70.71 391.43 69.41 392.81Q68.11 394.2 65.99 394.2Q63.84 394.2 62.55 392.81Q61.26 391.43 61.26 389.15Z M85.91 393.75 83.79 386.57Q83.74 386.48 83.66 386.48H82.34Q82.21 386.48 82.21 386.6V393.7Q82.21 393.82 82.12 393.91Q82.04 394 81.91 394H79.61Q79.49 394 79.4 393.91Q79.31 393.82 79.31 393.7V376.8Q79.31 376.68 79.4 376.59Q79.49 376.5 79.61 376.5H84.31Q85.64 376.5 86.65 377.14Q87.66 377.77 88.23 378.94Q88.79 380.1 88.79 381.6Q88.79 383.15 88.19 384.27Q87.59 385.4 86.51 385.98Q86.41 386 86.44 386.12L88.89 393.65Q88.91 393.7 88.91 393.77Q88.91 394 88.64 394H86.24Q85.99 394 85.91 393.75ZM82.21 379.12V384.1Q82.21 384.23 82.34 384.23H83.86Q84.76 384.23 85.33 383.52Q85.89 382.82 85.89 381.62Q85.89 380.43 85.33 379.71Q84.76 379 83.86 379H82.34Q82.21 379 82.21 379.12Z M96.84 393.7V376.8Q96.84 376.68 96.93 376.59Q97.01 376.5 97.14 376.5H99.44Q99.56 376.5 99.65 376.59Q99.74 376.68 99.74 376.8V393.7Q99.74 393.82 99.65 393.91Q99.56 394 99.44 394H97.14Q97.01 394 96.93 393.91Q96.84 393.82 96.84 393.7Z M116.86 379H111.46Q111.34 379 111.34 379.12V383.85Q111.34 383.98 111.46 383.98H114.66Q114.79 383.98 114.88 384.06Q114.96 384.15 114.96 384.27V386.2Q114.96 386.32 114.88 386.41Q114.79 386.5 114.66 386.5H111.46Q111.34 386.5 111.34 386.62V391.38Q111.34 391.5 111.46 391.5H116.86Q116.99 391.5 117.08 391.59Q117.16 391.68 117.16 391.8V393.7Q117.16 393.82 117.08 393.91Q116.99 394 116.86 394H108.74Q108.61 394 108.53 393.91Q108.44 393.82 108.44 393.7V376.8Q108.44 376.68 108.53 376.59Q108.61 376.5 108.74 376.5H116.86Q116.99 376.5 117.08 376.59Q117.16 376.68 117.16 376.8V378.7Q117.16 378.82 117.08 378.91Q116.99 379 116.86 379Z"/></svg><p class="note">Ouverture du carnet…</p></div>
 </main>
 <button class="fab" id="fab" data-act="fab" aria-label="Ajouter"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
 <nav class="tabs" id="tabs" aria-label="Sections"></nav>
@@ -418,7 +508,7 @@ img{max-width:100%}
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
-<div id="auth" class="auth" hidden><div class="auth-in"><svg class="brand-logo" viewBox="-171 -90 573 170" role="img" aria-label="EquiValdi, carnet d'écurie" focusable="false"><path class="lg-leaf" d="M-115.96 -56.88Q-152.19 -5.82 -167.02 69.94Q-181.84 -12.41 -115.96 -56.88Z"/><path class="lg-ink" d="M-147.95 74.44Q-155.89 37.36 -147.72 1.74Q-139.21 -35.37 -116.01 -56.84L-106.6 -85.06Q-104.78 -90.53 -99.31 -88.7Q-96.44 -87.75 -95.6 -84.83L-85.77 -50.74Q-82.37 -47.1 -75.55 -39.91Q-45.68 -8.43 -34.05 7.04Q-24.94 17.75 -26.67 29.4Q-28.61 42.52 -42.09 45.89Q-42.43 45.97 -42.77 46.01Q-60 48.17 -86.04 28.76Q-88.91 27.37 -95.03 24.95Q-105.14 20.94 -110.58 17.69Q-108.25 31.86 -104.57 50.27Q-101.5 65.61 -100.39 72.29Q-99.92 75.13 -101.1 76.79Q-102.29 78.45 -105.13 78.92Q-110.82 79.87 -111.76 74.18Q-112.85 67.69 -115.88 52.53Q-122.76 18.12 -124.98 -1.89Q-125.57 -7.15 -120.38 -8.18Q-114.73 -9.31 -113.6 -3.66Q-112.37 2.5 -106.15 6.84Q-101.87 9.83 -90.78 14.23Q-83.7 17.04 -80.44 18.67Q-79.97 18.9 -79.56 19.21Q-57.26 35.94 -44.55 34.61Q-38.86 33.05 -38.07 27.71Q-37.11 21.19 -42.92 14.4Q-43.05 14.26 -43.16 14.11Q-54.36 -0.83 -83.92 -31.98Q-91.79 -40.27 -95.15 -43.91Q-96.08 -44.91 -96.46 -46.23L-101.53 -63.81L-105.55 -51.77Q-106.03 -50.31 -107.17 -49.29Q-128.59 -30.13 -136.49 4.32Q-144.09 37.45 -136.68 72.03Q-135.47 77.66 -141.1 78.87Q-143.92 79.48 -145.63 78.37Q-147.34 77.26 -147.95 74.44ZM-94.05 -27.89C-94.05 -30.99 -91.55 -33.49 -88.45 -33.49C-85.36 -33.49 -82.85 -30.99 -82.85 -27.89C-82.85 -24.8 -85.36 -22.29 -88.45 -22.29C-91.55 -22.29 -94.05 -24.8 -94.05 -27.89Z"/><path class="lg-ink" d="M7.6 0V-70H19.1V0ZM15.5 0V-10.5H54.7V0ZM15.5 -30.7V-40.8H51.3V-30.7ZM15.5 -59.5V-70H54.2V-59.5Z M83.4 1Q76.9 1 71.65 -2.3Q66.4 -5.6 63.35 -11.25Q60.3 -16.9 60.3 -23.9Q60.3 -31 63.35 -36.65Q66.4 -42.3 71.65 -45.65Q76.9 -49 83.4 -49Q88.9 -49 93.15 -46.65Q97.4 -44.3 99.9 -40.2Q102.4 -36.1 102.4 -30.9V-17.1Q102.4 -11.9 99.95 -7.8Q97.5 -3.7 93.2 -1.35Q88.9 1 83.4 1ZM85.2 -9.4Q91.3 -9.4 95.05 -13.5Q98.8 -17.6 98.8 -24Q98.8 -28.3 97.1 -31.6Q95.4 -34.9 92.35 -36.75Q89.3 -38.6 85.2 -38.6Q81.2 -38.6 78.15 -36.75Q75.1 -34.9 73.35 -31.6Q71.6 -28.3 71.6 -24Q71.6 -19.7 73.35 -16.4Q75.1 -13.1 78.15 -11.25Q81.2 -9.4 85.2 -9.4ZM98.1 20V-11.8L100 -23.4L98.1 -35.1V-48H109.1V20Z M140 1Q133.9 1 129.15 -1.7Q124.4 -4.4 121.75 -9.15Q119.1 -13.9 119.1 -20.1V-48H130.1V-20.6Q130.1 -17.1 131.25 -14.65Q132.4 -12.2 134.65 -10.9Q136.9 -9.6 140 -9.6Q144.8 -9.6 147.35 -12.45Q149.9 -15.3 149.9 -20.6V-48H160.9V-20.1Q160.9 -13.8 158.25 -9.05Q155.6 -4.3 150.9 -1.65Q146.2 1 140 1Z M171.1 0V-48H182.1V0ZM176.6 -56.8Q173.8 -56.8 171.95 -58.7Q170.1 -60.6 170.1 -63.4Q170.1 -66.2 171.95 -68.1Q173.8 -70 176.6 -70Q179.5 -70 181.3 -68.1Q183.1 -66.2 183.1 -63.4Q183.1 -60.6 181.3 -58.7Q179.5 -56.8 176.6 -56.8Z M218 0 189.7 -70H202.2L224.3 -13.3H219.9L242.2 -70H254.5L226 0Z M272.5 1Q266 1 260.75 -2.3Q255.5 -5.6 252.45 -11.25Q249.4 -16.9 249.4 -23.9Q249.4 -31 252.45 -36.65Q255.5 -42.3 260.75 -45.65Q266 -49 272.5 -49Q278 -49 282.25 -46.65Q286.5 -44.3 289 -40.2Q291.5 -36.1 291.5 -30.9V-17.1Q291.5 -11.9 289.05 -7.8Q286.6 -3.7 282.3 -1.35Q278 1 272.5 1ZM274.3 -9.4Q280.4 -9.4 284.15 -13.5Q287.9 -17.6 287.9 -24Q287.9 -28.3 286.2 -31.6Q284.5 -34.9 281.45 -36.75Q278.4 -38.6 274.3 -38.6Q270.3 -38.6 267.25 -36.75Q264.2 -34.9 262.45 -31.6Q260.7 -28.3 260.7 -24Q260.7 -19.7 262.45 -16.4Q264.2 -13.1 267.25 -11.25Q270.3 -9.4 274.3 -9.4ZM287.2 0V-12.9L289.1 -24.6L287.2 -36.2V-48H298.2V0Z M309.4 0V-72H320.4V0Z M351.7 1Q345.2 1 339.95 -2.3Q334.7 -5.6 331.65 -11.25Q328.6 -16.9 328.6 -23.9Q328.6 -31 331.65 -36.65Q334.7 -42.3 339.95 -45.65Q345.2 -49 351.7 -49Q357.2 -49 361.45 -46.65Q365.7 -44.3 368.2 -40.2Q370.7 -36.1 370.7 -30.9V-17.1Q370.7 -11.9 368.25 -7.8Q365.8 -3.7 361.5 -1.35Q357.2 1 351.7 1ZM353.5 -9.4Q357.6 -9.4 360.65 -11.25Q363.7 -13.1 365.4 -16.4Q367.1 -19.7 367.1 -24Q367.1 -28.3 365.4 -31.6Q363.7 -34.9 360.65 -36.75Q357.6 -38.6 353.6 -38.6Q349.5 -38.6 346.45 -36.75Q343.4 -34.9 341.65 -31.6Q339.9 -28.3 339.9 -24Q339.9 -19.7 341.65 -16.4Q343.4 -13.1 346.45 -11.25Q349.5 -9.4 353.5 -9.4ZM377.4 0H366.4V-12.9L368.3 -24.6L366.4 -36.2V-72H377.4Z M388.7 0V-48H399.7V0ZM394.2 -56.8Q391.4 -56.8 389.55 -58.7Q387.7 -60.6 387.7 -63.4Q387.7 -66.2 389.55 -68.1Q391.4 -70 394.2 -70Q397.1 -70 398.9 -68.1Q400.7 -66.2 400.7 -63.4Q400.7 -60.6 398.9 -58.7Q397.1 -56.8 394.2 -56.8Z"/><path class="lg-ink" d="M7.6 57.5V48.98Q7.6 46.83 8.89 45.56Q10.18 44.3 12.3 44.3Q14.45 44.3 15.75 45.56Q17.05 46.83 17.05 48.98V49.27Q17.05 49.4 16.96 49.5Q16.88 49.6 16.75 49.6L14.43 49.7Q14.12 49.7 14.12 49.4V48.77Q14.12 47.9 13.62 47.35Q13.12 46.8 12.3 46.8Q11.5 46.8 11 47.35Q10.5 47.9 10.5 48.77V57.73Q10.5 58.6 11 59.15Q11.5 59.7 12.3 59.7Q13.12 59.7 13.62 59.15Q14.12 58.6 14.12 57.73V57.1Q14.12 56.98 14.21 56.89Q14.3 56.8 14.43 56.8L16.75 56.9Q16.88 56.9 16.96 56.99Q17.05 57.08 17.05 57.2V57.5Q17.05 59.62 15.75 60.91Q14.45 62.2 12.3 62.2Q10.18 62.2 8.89 60.91Q7.6 59.62 7.6 57.5Z M31.9 61.73 31.43 59.1Q31.43 58.98 31.28 58.98H27.63Q27.48 58.98 27.48 59.1L27 61.73Q26.98 62 26.68 62H24.4Q24.05 62 24.13 61.67L27.83 44.77Q27.88 44.5 28.15 44.5H30.8Q31.08 44.5 31.13 44.77L34.83 61.67V61.77Q34.83 62 34.55 62H32.23Q31.93 62 31.9 61.73ZM28.05 56.7H30.83Q30.98 56.7 30.95 56.58L29.5 48.67Q29.48 48.6 29.43 48.6Q29.38 48.6 29.35 48.67L27.93 56.58Q27.9 56.7 28.05 56.7Z M49.12 61.75 47 54.58Q46.95 54.48 46.88 54.48H45.55Q45.42 54.48 45.42 54.6V61.7Q45.42 61.83 45.34 61.91Q45.25 62 45.12 62H42.82Q42.7 62 42.61 61.91Q42.52 61.83 42.52 61.7V44.8Q42.52 44.67 42.61 44.59Q42.7 44.5 42.82 44.5H47.52Q48.85 44.5 49.86 45.14Q50.88 45.77 51.44 46.94Q52 48.1 52 49.6Q52 51.15 51.4 52.27Q50.8 53.4 49.72 53.98Q49.62 54 49.65 54.12L52.1 61.65Q52.12 61.7 52.12 61.77Q52.12 62 51.85 62H49.45Q49.2 62 49.12 61.75ZM45.42 47.12V52.1Q45.42 52.23 45.55 52.23H47.07Q47.97 52.23 48.54 51.53Q49.1 50.83 49.1 49.62Q49.1 48.42 48.54 47.71Q47.97 47 47.07 47H45.55Q45.42 47 45.42 47.12Z M67.45 44.5H69.73Q69.85 44.5 69.94 44.59Q70.03 44.67 70.03 44.8V61.7Q70.03 61.83 69.94 61.91Q69.85 62 69.73 62H67.1Q66.85 62 66.78 61.75L63.05 51.15Q63.03 51.08 62.96 51.09Q62.9 51.1 62.9 51.17L62.93 61.7Q62.93 61.83 62.84 61.91Q62.75 62 62.62 62H60.35Q60.23 62 60.14 61.91Q60.05 61.83 60.05 61.7V44.8Q60.05 44.67 60.14 44.59Q60.23 44.5 60.35 44.5H62.93Q63.18 44.5 63.25 44.75L67 55.27Q67.03 55.35 67.09 55.34Q67.15 55.33 67.15 55.25V44.8Q67.15 44.67 67.24 44.59Q67.33 44.5 67.45 44.5Z M87.15 47H81.75Q81.62 47 81.62 47.12V51.85Q81.62 51.98 81.75 51.98H84.95Q85.08 51.98 85.16 52.06Q85.25 52.15 85.25 52.27V54.2Q85.25 54.33 85.16 54.41Q85.08 54.5 84.95 54.5H81.75Q81.62 54.5 81.62 54.62V59.38Q81.62 59.5 81.75 59.5H87.15Q87.28 59.5 87.36 59.59Q87.45 59.67 87.45 59.8V61.7Q87.45 61.83 87.36 61.91Q87.28 62 87.15 62H79.03Q78.9 62 78.81 61.91Q78.72 61.83 78.72 61.7V44.8Q78.72 44.67 78.81 44.59Q78.9 44.5 79.03 44.5H87.15Q87.28 44.5 87.36 44.59Q87.45 44.67 87.45 44.8V46.7Q87.45 46.83 87.36 46.91Q87.28 47 87.15 47Z M104.88 44.8V46.7Q104.88 46.83 104.79 46.91Q104.7 47 104.58 47H101.4Q101.28 47 101.28 47.12V61.7Q101.28 61.83 101.19 61.91Q101.1 62 100.97 62H98.67Q98.55 62 98.46 61.91Q98.38 61.83 98.38 61.7V47.12Q98.38 47 98.25 47H95.25Q95.12 47 95.04 46.91Q94.95 46.83 94.95 46.7V44.8Q94.95 44.67 95.04 44.59Q95.12 44.5 95.25 44.5H104.58Q104.7 44.5 104.79 44.59Q104.88 44.67 104.88 44.8Z M123.9 61.7V44.8Q123.9 44.67 123.99 44.59Q124.08 44.5 124.2 44.5H128.47Q130.62 44.5 131.91 45.8Q133.2 47.1 133.2 49.27V57.23Q133.2 59.4 131.91 60.7Q130.62 62 128.47 62H124.2Q124.08 62 123.99 61.91Q123.9 61.83 123.9 61.7ZM126.92 59.5 128.43 59.48Q129.25 59.48 129.76 58.81Q130.28 58.15 130.3 57.05V49.45Q130.3 48.33 129.79 47.66Q129.28 47 128.4 47H126.92Q126.8 47 126.8 47.12V59.38Q126.8 59.5 126.92 59.5Z M144.35 44.85 142.73 49.7Q142.65 49.95 142.4 49.95H140.68Q140.35 49.95 140.43 49.62L141.48 44.77Q141.53 44.5 141.8 44.5H144.13Q144.28 44.5 144.34 44.59Q144.4 44.67 144.35 44.85Z M160.25 47H154.85Q154.73 47 154.73 47.12V51.85Q154.73 51.98 154.85 51.98H158.05Q158.18 51.98 158.26 52.06Q158.35 52.15 158.35 52.27V54.2Q158.35 54.33 158.26 54.41Q158.18 54.5 158.05 54.5H154.85Q154.73 54.5 154.73 54.62V59.38Q154.73 59.5 154.85 59.5H160.25Q160.38 59.5 160.46 59.59Q160.55 59.67 160.55 59.8V61.7Q160.55 61.83 160.46 61.91Q160.38 62 160.25 62H152.13Q152 62 151.91 61.91Q151.83 61.83 151.83 61.7V44.8Q151.83 44.67 151.91 44.59Q152 44.5 152.13 44.5H160.25Q160.38 44.5 160.46 44.59Q160.55 44.67 160.55 44.8V46.7Q160.55 46.83 160.46 46.91Q160.38 47 160.25 47ZM154.83 42.55 156.3 39.97Q156.4 39.77 156.68 39.77H158.48Q158.68 39.77 158.73 39.89Q158.78 40 158.68 40.15L156.83 42.72Q156.7 42.9 156.48 42.9H155.05Q154.88 42.9 154.8 42.8Q154.73 42.7 154.83 42.55Z M168.4 57.5V48.98Q168.4 46.83 169.69 45.56Q170.98 44.3 173.1 44.3Q175.25 44.3 176.55 45.56Q177.85 46.83 177.85 48.98V49.27Q177.85 49.4 177.76 49.5Q177.68 49.6 177.55 49.6L175.23 49.7Q174.93 49.7 174.93 49.4V48.77Q174.93 47.9 174.43 47.35Q173.93 46.8 173.1 46.8Q172.3 46.8 171.8 47.35Q171.3 47.9 171.3 48.77V57.73Q171.3 58.6 171.8 59.15Q172.3 59.7 173.1 59.7Q173.93 59.7 174.43 59.15Q174.93 58.6 174.93 57.73V57.1Q174.93 56.98 175.01 56.89Q175.1 56.8 175.23 56.8L177.55 56.9Q177.68 56.9 177.76 56.99Q177.85 57.08 177.85 57.2V57.5Q177.85 59.62 176.55 60.91Q175.25 62.2 173.1 62.2Q170.98 62.2 169.69 60.91Q168.4 59.62 168.4 57.5Z M186.03 57.15V44.8Q186.03 44.67 186.11 44.59Q186.2 44.5 186.33 44.5H188.63Q188.75 44.5 188.84 44.59Q188.93 44.67 188.93 44.8V57.45Q188.93 58.45 189.43 59.08Q189.93 59.7 190.75 59.7Q191.58 59.7 192.08 59.08Q192.58 58.45 192.58 57.45V44.8Q192.58 44.67 192.66 44.59Q192.75 44.5 192.88 44.5H195.18Q195.3 44.5 195.39 44.59Q195.48 44.67 195.48 44.8V57.15Q195.48 59.42 194.18 60.81Q192.88 62.2 190.75 62.2Q188.6 62.2 187.31 60.81Q186.03 59.42 186.03 57.15Z M210.68 61.75 208.55 54.58Q208.5 54.48 208.43 54.48H207.1Q206.98 54.48 206.98 54.6V61.7Q206.98 61.83 206.89 61.91Q206.8 62 206.68 62H204.38Q204.25 62 204.16 61.91Q204.08 61.83 204.08 61.7V44.8Q204.08 44.67 204.16 44.59Q204.25 44.5 204.38 44.5H209.08Q210.4 44.5 211.41 45.14Q212.43 45.77 212.99 46.94Q213.55 48.1 213.55 49.6Q213.55 51.15 212.95 52.27Q212.35 53.4 211.28 53.98Q211.18 54 211.2 54.12L213.65 61.65Q213.68 61.7 213.68 61.77Q213.68 62 213.4 62H211Q210.75 62 210.68 61.75ZM206.98 47.12V52.1Q206.98 52.23 207.1 52.23H208.63Q209.53 52.23 210.09 51.53Q210.65 50.83 210.65 49.62Q210.65 48.42 210.09 47.71Q209.53 47 208.63 47H207.1Q206.98 47 206.98 47.12Z M221.6 61.7V44.8Q221.6 44.67 221.69 44.59Q221.78 44.5 221.9 44.5H224.2Q224.33 44.5 224.41 44.59Q224.5 44.67 224.5 44.8V61.7Q224.5 61.83 224.41 61.91Q224.33 62 224.2 62H221.9Q221.78 62 221.69 61.91Q221.6 61.83 221.6 61.7Z M241.63 47H236.23Q236.1 47 236.1 47.12V51.85Q236.1 51.98 236.23 51.98H239.43Q239.55 51.98 239.64 52.06Q239.73 52.15 239.73 52.27V54.2Q239.73 54.33 239.64 54.41Q239.55 54.5 239.43 54.5H236.23Q236.1 54.5 236.1 54.62V59.38Q236.1 59.5 236.23 59.5H241.63Q241.75 59.5 241.84 59.59Q241.93 59.67 241.93 59.8V61.7Q241.93 61.83 241.84 61.91Q241.75 62 241.63 62H233.5Q233.38 62 233.29 61.91Q233.2 61.83 233.2 61.7V44.8Q233.2 44.67 233.29 44.59Q233.38 44.5 233.5 44.5H241.63Q241.75 44.5 241.84 44.59Q241.93 44.67 241.93 44.8V46.7Q241.93 46.83 241.84 46.91Q241.75 47 241.63 47Z"/></svg><div id="authBody"></div></div></div>
+<div id="auth" class="auth" hidden><div class="auth-in"><svg class="brand-logo" viewBox="-220.55 -24 441.1 442" role="img" aria-label="EquiValdi, carnet d'écurie" focusable="false"><g class="lg-cheval"><path class="lg-leaf lg-queue" d="M-70.12 124.62 -80.75 125.25 -80.19 136.6Q-80.03 139.78 -82.76 141.45L-92.22 147.25L-86.69 156.66Q-84.81 159.87 -87.14 162.76L-94.2 171.55L-85.98 178.44Q-81.85 181.89 -85.31 186.02Q-87.03 188.08 -88.93 188.25Q-90.83 188.42 -92.89 186.69L-105.16 176.42Q-109.21 173.03 -105.9 168.92L-97.85 158.91L-104.18 148.15Q-106.86 143.59 -102.35 140.83L-91.1 133.94L-91.76 120.46Q-92.02 115.13 -86.71 114.82L-70.76 113.87Q-65.39 113.56 -65.07 118.93Q-64.75 124.3 -70.12 124.62Z"/><path class="lg-leaf lg-criniere" d="M20.95 84.87 8.13 81.04Q3.16 79.55 4.64 74.57Q5.16 72.85 6.63 71.81L13.12 67.25L9.16 65.42Q4.45 63.23 6.64 58.52Q7.39 56.89 9 56.07L17.13 51.96L12.66 48.15Q10.68 46.47 10.54 44.64Q10.39 42.81 12.07 40.83Q13.28 39.42 15.12 39.09L22.99 37.69L20.09 34.23Q16.76 30.25 20.74 26.91Q22.11 25.76 23.91 25.7L40.83 25.18Q43.43 25.1 44.76 26.35Q46.1 27.61 46.18 30.21Q46.34 35.39 41.15 35.56L34.91 35.75L36.71 37.9Q37.6 38.96 37.85 40.33Q38.75 45.44 33.64 46.35L27.77 47.39L29.8 49.13Q30.59 49.8 31.06 50.73Q33.41 55.37 28.77 57.71L23.25 60.5L25.65 61.62Q26.91 62.2 27.71 63.34Q29.21 65.47 28.89 67.27Q28.57 69.08 26.45 70.58L21.36 74.16L23.92 74.92Q28.9 76.41 27.41 81.39Q26.67 83.87 25.05 84.74Q23.43 85.62 20.95 84.87Z"/><path class="lg-ink lg-corps" d="M-65.28 103.28Q-57.23 98.4 -32.79 97.09Q-27.16 96.79 -16.48 98.18Q-7.41 99.35 -3.13 99.2Q1.06 99.05 10.35 97.15Q13.69 96.46 16.51 95.99Q14.51 84.81 14.51 79.15Q14.51 65.44 18.46 52.03Q20.4 45.47 26.14 36.86Q27.18 35.31 27.64 34.58Q29.94 30.99 34.89 25.32L33.53 8.97Q33.26 5.81 34.71 4.1Q36.16 2.4 39.31 2.13Q43.45 1.79 45.42 5.45L46.96 8.34L48.74 3.95Q51.13 -1.92 56.99 0.47Q60.21 1.77 60.84 5.18L64.17 23.28Q64.54 23.64 64.98 24.07Q71.57 30.57 74.49 33.61Q77.77 37.05 84.46 44.46Q85.66 45.8 86.22 46.41Q88.48 48.91 92.04 52.95Q93.77 54.91 94.7 55.94Q95.45 56.79 97.36 58.6Q102.44 63.4 104.12 66.93Q108.24 75.58 106.74 83.5Q105.06 92.31 97.62 97.12Q89.95 102.09 81.17 100.09Q76.84 99.11 69.83 93.63Q68.08 92.26 67.24 91.65Q64.56 89.7 59.32 85.25Q56.63 82.98 55.37 81.96Q54.22 81.02 51.71 79.21Q51.51 79.08 51.33 78.94Q51.63 81.15 52.01 83.76Q52.3 85.72 52.44 86.69Q53.02 90.76 54.53 100.15Q54.75 101.5 54.88 102.36Q66.07 110.46 66.74 123.13Q67.11 130.11 64.75 137.68Q61.76 147.25 55.77 151.75Q53.16 153.71 48.55 155.09L54.04 200.8Q54.79 207.09 48.51 207.84Q42.22 208.6 41.46 202.31L36.08 157.4Q31.82 157.87 26.77 158.1L27.7 203.54Q27.83 209.87 21.5 210Q15.17 210.13 15.04 203.8L14.11 158.12Q9.66 157.84 3.83 157.22Q-6.67 156.1 -11.24 156.18Q-14.9 156.24 -21.68 157.27L-19.79 203.41Q-19.66 206.57 -21.18 208.22Q-22.7 209.87 -25.86 209.99Q-32.19 210.25 -32.44 203.93L-34.28 159.08Q-38.59 159.5 -41.29 159.33Q-42.49 159.26 -43.64 159.15L-47.24 204.17Q-47.5 207.33 -49.2 208.78Q-50.9 210.23 -54.06 209.98Q-60.37 209.47 -59.87 203.16L-56.15 156.72Q-61.96 154.82 -65.95 151.63Q-78.88 141.28 -78.88 127.69Q-78.88 121.08 -75.39 114.4Q-71.57 107.09 -65.28 103.28ZM-58.72 114.11Q-66.22 118.65 -66.22 127.69Q-66.22 135.2 -58.04 141.74Q-55.67 143.63 -51.86 144.83Q-50.56 144.45 -48.83 144.59Q-45.87 144.83 -44.41 146.34Q-42.55 146.57 -40.5 146.7Q-36.79 146.93 -27.2 145.33Q-16.94 143.61 -11.45 143.52Q-6.1 143.43 5.17 144.63Q14.27 145.6 19.39 145.67Q19.77 145.64 20.18 145.63Q20.8 145.62 21.35 145.66Q21.75 145.65 22.11 145.64Q23.29 145.58 25.69 145.47Q31.63 145.21 36.08 144.72Q37.46 142.89 40.67 142.51Q43.28 142.19 44.94 143.1Q47.08 142.44 48.17 141.62Q50.89 139.58 52.65 133.92Q54.34 128.51 54.09 123.8Q53.72 116.69 46.39 111.88Q41.22 108.48 30.34 107.79Q29.15 110.2 25.45 110.74Q20.97 111.39 19.23 108.37Q16.45 108.83 12.89 109.56Q2.56 111.67 -2.68 111.86Q-8 112.05 -18.11 110.73Q-27.64 109.5 -32.11 109.74Q-53.38 110.88 -58.72 114.11ZM29.21 95.05Q35.81 95.35 41.12 96.5Q40.3 91.29 39.9 88.49Q39.76 87.53 39.48 85.59Q38.06 75.82 37.65 71.27Q37.34 67.85 37.14 61.47Q37.08 61.36 37.05 61.3Q34.59 57.2 37.07 54.34Q37.73 49.83 43.05 49.6Q46.21 49.47 47.86 50.98Q49.51 52.5 49.64 55.66Q49.67 56.31 49.72 58.2Q52.14 62.82 53.54 64.39Q54.9 65.91 59.09 68.93Q61.9 70.95 63.34 72.11Q64.72 73.23 67.51 75.6Q72.39 79.74 74.69 81.41Q75.7 82.15 77.63 83.65Q82.41 87.39 83.98 87.75Q87.55 88.56 90.74 86.49Q93.63 84.63 94.3 81.13Q94.65 79.28 94.29 77.19C93.72 77.75 92.94 78.09 92.07 78.09C90.32 78.09 88.91 76.67 88.91 74.92C88.91 73.18 90.32 71.76 92.07 71.76C92.16 71.76 92.25 71.76 92.33 71.77Q91.38 70.37 88.66 67.8Q86.35 65.62 85.23 64.36Q84.29 63.31 82.55 61.33Q79.04 57.35 76.82 54.9Q76.26 54.28 75.06 52.95Q68.49 45.67 65.34 42.37Q62.55 39.46 56.1 33.1Q54.36 31.39 53.83 30.86Q52.53 29.57 52.13 27.8Q51.52 28.38 50.74 28.8Q48.87 29.8 47.29 29.84Q46.95 30.66 46.36 31.39Q45.9 31.97 44.57 33.49Q40.13 38.56 38.31 41.4Q37.78 42.24 36.68 43.89Q32 50.9 30.61 55.61Q27.17 67.26 27.17 79.15Q27.17 84.04 29.21 95.05ZM51.97 45.38C51.97 42.46 54.33 40.1 57.25 40.1C60.16 40.1 62.53 42.46 62.53 45.38C62.53 48.29 60.16 50.65 57.25 50.65C54.33 50.65 51.97 48.29 51.97 45.38Z"/></g><path class="lg-ink" d="M-196.55 332V262H-185.05V332ZM-188.65 332V321.5H-149.45V332ZM-188.65 301.3V291.2H-152.85V301.3ZM-188.65 272.5V262H-149.95V272.5Z M-120.75 333Q-127.25 333 -132.5 329.7Q-137.75 326.4 -140.8 320.75Q-143.85 315.1 -143.85 308.1Q-143.85 301 -140.8 295.35Q-137.75 289.7 -132.5 286.35Q-127.25 283 -120.75 283Q-115.25 283 -111 285.35Q-106.75 287.7 -104.25 291.8Q-101.75 295.9 -101.75 301.1V314.9Q-101.75 320.1 -104.2 324.2Q-106.65 328.3 -110.95 330.65Q-115.25 333 -120.75 333ZM-118.95 322.6Q-112.85 322.6 -109.1 318.5Q-105.35 314.4 -105.35 308Q-105.35 303.7 -107.05 300.4Q-108.75 297.1 -111.8 295.25Q-114.85 293.4 -118.95 293.4Q-122.95 293.4 -126 295.25Q-129.05 297.1 -130.8 300.4Q-132.55 303.7 -132.55 308Q-132.55 312.3 -130.8 315.6Q-129.05 318.9 -126 320.75Q-122.95 322.6 -118.95 322.6ZM-106.05 352V320.2L-104.15 308.6L-106.05 296.9V284H-95.05V352Z M-64.15 333Q-70.25 333 -75 330.3Q-79.75 327.6 -82.4 322.85Q-85.05 318.1 -85.05 311.9V284H-74.05V311.4Q-74.05 314.9 -72.9 317.35Q-71.75 319.8 -69.5 321.1Q-67.25 322.4 -64.15 322.4Q-59.35 322.4 -56.8 319.55Q-54.25 316.7 -54.25 311.4V284H-43.25V311.9Q-43.25 318.2 -45.9 322.95Q-48.55 327.7 -53.25 330.35Q-57.95 333 -64.15 333Z M-33.05 332V284H-22.05V332ZM-27.55 275.2Q-30.35 275.2 -32.2 273.3Q-34.05 271.4 -34.05 268.6Q-34.05 265.8 -32.2 263.9Q-30.35 262 -27.55 262Q-24.65 262 -22.85 263.9Q-21.05 265.8 -21.05 268.6Q-21.05 271.4 -22.85 273.3Q-24.65 275.2 -27.55 275.2Z M13.85 332 -14.45 262H-1.95L20.15 318.7H15.75L38.05 262H50.35L21.85 332Z M68.35 333Q61.85 333 56.6 329.7Q51.35 326.4 48.3 320.75Q45.25 315.1 45.25 308.1Q45.25 301 48.3 295.35Q51.35 289.7 56.6 286.35Q61.85 283 68.35 283Q73.85 283 78.1 285.35Q82.35 287.7 84.85 291.8Q87.35 295.9 87.35 301.1V314.9Q87.35 320.1 84.9 324.2Q82.45 328.3 78.15 330.65Q73.85 333 68.35 333ZM70.15 322.6Q76.25 322.6 80 318.5Q83.75 314.4 83.75 308Q83.75 303.7 82.05 300.4Q80.35 297.1 77.3 295.25Q74.25 293.4 70.15 293.4Q66.15 293.4 63.1 295.25Q60.05 297.1 58.3 300.4Q56.55 303.7 56.55 308Q56.55 312.3 58.3 315.6Q60.05 318.9 63.1 320.75Q66.15 322.6 70.15 322.6ZM83.05 332V319.1L84.95 307.4L83.05 295.8V284H94.05V332Z M105.25 332V260H116.25V332Z M147.55 333Q141.05 333 135.8 329.7Q130.55 326.4 127.5 320.75Q124.45 315.1 124.45 308.1Q124.45 301 127.5 295.35Q130.55 289.7 135.8 286.35Q141.05 283 147.55 283Q153.05 283 157.3 285.35Q161.55 287.7 164.05 291.8Q166.55 295.9 166.55 301.1V314.9Q166.55 320.1 164.1 324.2Q161.65 328.3 157.35 330.65Q153.05 333 147.55 333ZM149.35 322.6Q153.45 322.6 156.5 320.75Q159.55 318.9 161.25 315.6Q162.95 312.3 162.95 308Q162.95 303.7 161.25 300.4Q159.55 297.1 156.5 295.25Q153.45 293.4 149.45 293.4Q145.35 293.4 142.3 295.25Q139.25 297.1 137.5 300.4Q135.75 303.7 135.75 308Q135.75 312.3 137.5 315.6Q139.25 318.9 142.3 320.75Q145.35 322.6 149.35 322.6ZM173.25 332H162.25V319.1L164.15 307.4L162.25 295.8V260H173.25Z M184.55 332V284H195.55V332ZM190.05 275.2Q187.25 275.2 185.4 273.3Q183.55 271.4 183.55 268.6Q183.55 265.8 185.4 263.9Q187.25 262 190.05 262Q192.95 262 194.75 263.9Q196.55 265.8 196.55 268.6Q196.55 271.4 194.75 273.3Q192.95 275.2 190.05 275.2Z"/><path class="lg-ink" d="M-117.16 389.5V380.98Q-117.16 378.82 -115.88 377.56Q-114.59 376.3 -112.46 376.3Q-110.31 376.3 -109.01 377.56Q-107.71 378.82 -107.71 380.98V381.27Q-107.71 381.4 -107.8 381.5Q-107.89 381.6 -108.01 381.6L-110.34 381.7Q-110.64 381.7 -110.64 381.4V380.77Q-110.64 379.9 -111.14 379.35Q-111.64 378.8 -112.46 378.8Q-113.26 378.8 -113.76 379.35Q-114.26 379.9 -114.26 380.77V389.73Q-114.26 390.6 -113.76 391.15Q-113.26 391.7 -112.46 391.7Q-111.64 391.7 -111.14 391.15Q-110.64 390.6 -110.64 389.73V389.1Q-110.64 388.98 -110.55 388.89Q-110.46 388.8 -110.34 388.8L-108.01 388.9Q-107.89 388.9 -107.8 388.99Q-107.71 389.07 -107.71 389.2V389.5Q-107.71 391.62 -109.01 392.91Q-110.31 394.2 -112.46 394.2Q-114.59 394.2 -115.88 392.91Q-117.16 391.62 -117.16 389.5Z M-92.86 393.73 -93.34 391.1Q-93.34 390.98 -93.49 390.98H-97.14Q-97.29 390.98 -97.29 391.1L-97.76 393.73Q-97.79 394 -98.09 394H-100.36Q-100.71 394 -100.64 393.68L-96.94 376.77Q-96.89 376.5 -96.61 376.5H-93.96Q-93.69 376.5 -93.64 376.77L-89.94 393.68V393.77Q-89.94 394 -90.21 394H-92.54Q-92.84 394 -92.86 393.73ZM-96.71 388.7H-93.94Q-93.79 388.7 -93.81 388.57L-95.26 380.68Q-95.29 380.6 -95.34 380.6Q-95.39 380.6 -95.41 380.68L-96.84 388.57Q-96.86 388.7 -96.71 388.7Z M-75.64 393.75 -77.76 386.57Q-77.81 386.48 -77.89 386.48H-79.21Q-79.34 386.48 -79.34 386.6V393.7Q-79.34 393.82 -79.43 393.91Q-79.51 394 -79.64 394H-81.94Q-82.06 394 -82.15 393.91Q-82.24 393.82 -82.24 393.7V376.8Q-82.24 376.68 -82.15 376.59Q-82.06 376.5 -81.94 376.5H-77.24Q-75.91 376.5 -74.9 377.14Q-73.89 377.77 -73.33 378.94Q-72.76 380.1 -72.76 381.6Q-72.76 383.15 -73.36 384.27Q-73.96 385.4 -75.04 385.98Q-75.14 386 -75.11 386.12L-72.66 393.65Q-72.64 393.7 -72.64 393.77Q-72.64 394 -72.91 394H-75.31Q-75.56 394 -75.64 393.75ZM-79.34 379.12V384.1Q-79.34 384.23 -79.21 384.23H-77.69Q-76.79 384.23 -76.23 383.52Q-75.66 382.82 -75.66 381.62Q-75.66 380.43 -76.23 379.71Q-76.79 379 -77.69 379H-79.21Q-79.34 379 -79.34 379.12Z M-57.31 376.5H-55.04Q-54.91 376.5 -54.83 376.59Q-54.74 376.68 -54.74 376.8V393.7Q-54.74 393.82 -54.83 393.91Q-54.91 394 -55.04 394H-57.66Q-57.91 394 -57.99 393.75L-61.71 383.15Q-61.74 383.07 -61.8 383.09Q-61.86 383.1 -61.86 383.18L-61.84 393.7Q-61.84 393.82 -61.92 393.91Q-62.01 394 -62.14 394H-64.41Q-64.54 394 -64.62 393.91Q-64.71 393.82 -64.71 393.7V376.8Q-64.71 376.68 -64.62 376.59Q-64.54 376.5 -64.41 376.5H-61.84Q-61.59 376.5 -61.51 376.75L-57.76 387.27Q-57.74 387.35 -57.67 387.34Q-57.61 387.32 -57.61 387.25V376.8Q-57.61 376.68 -57.52 376.59Q-57.44 376.5 -57.31 376.5Z M-37.61 379H-43.01Q-43.14 379 -43.14 379.12V383.85Q-43.14 383.98 -43.01 383.98H-39.81Q-39.69 383.98 -39.6 384.06Q-39.51 384.15 -39.51 384.27V386.2Q-39.51 386.32 -39.6 386.41Q-39.69 386.5 -39.81 386.5H-43.01Q-43.14 386.5 -43.14 386.62V391.38Q-43.14 391.5 -43.01 391.5H-37.61Q-37.49 391.5 -37.4 391.59Q-37.31 391.68 -37.31 391.8V393.7Q-37.31 393.82 -37.4 393.91Q-37.49 394 -37.61 394H-45.74Q-45.86 394 -45.95 393.91Q-46.04 393.82 -46.04 393.7V376.8Q-46.04 376.68 -45.95 376.59Q-45.86 376.5 -45.74 376.5H-37.61Q-37.49 376.5 -37.4 376.59Q-37.31 376.68 -37.31 376.8V378.7Q-37.31 378.82 -37.4 378.91Q-37.49 379 -37.61 379Z M-19.89 376.8V378.7Q-19.89 378.82 -19.98 378.91Q-20.06 379 -20.19 379H-23.36Q-23.49 379 -23.49 379.12V393.7Q-23.49 393.82 -23.58 393.91Q-23.66 394 -23.79 394H-26.09Q-26.21 394 -26.3 393.91Q-26.39 393.82 -26.39 393.7V379.12Q-26.39 379 -26.51 379H-29.51Q-29.64 379 -29.73 378.91Q-29.81 378.82 -29.81 378.7V376.8Q-29.81 376.68 -29.73 376.59Q-29.64 376.5 -29.51 376.5H-20.19Q-20.06 376.5 -19.98 376.59Q-19.89 376.68 -19.89 376.8Z M-0.86 393.7V376.8Q-0.86 376.68 -0.78 376.59Q-0.69 376.5 -0.56 376.5H3.71Q5.86 376.5 7.15 377.8Q8.44 379.1 8.44 381.27V389.23Q8.44 391.4 7.15 392.7Q5.86 394 3.71 394H-0.56Q-0.69 394 -0.78 393.91Q-0.86 393.82 -0.86 393.7ZM2.16 391.5 3.66 391.48Q4.49 391.48 5 390.81Q5.51 390.15 5.54 389.05V381.45Q5.54 380.32 5.02 379.66Q4.51 379 3.64 379H2.16Q2.04 379 2.04 379.12V391.38Q2.04 391.5 2.16 391.5Z M19.59 376.85 17.96 381.7Q17.89 381.95 17.64 381.95H15.91Q15.59 381.95 15.66 381.62L16.71 376.77Q16.76 376.5 17.04 376.5H19.36Q19.51 376.5 19.58 376.59Q19.64 376.68 19.59 376.85Z M35.49 379H30.09Q29.96 379 29.96 379.12V383.85Q29.96 383.98 30.09 383.98H33.29Q33.41 383.98 33.5 384.06Q33.59 384.15 33.59 384.27V386.2Q33.59 386.32 33.5 386.41Q33.41 386.5 33.29 386.5H30.09Q29.96 386.5 29.96 386.62V391.38Q29.96 391.5 30.09 391.5H35.49Q35.61 391.5 35.7 391.59Q35.79 391.68 35.79 391.8V393.7Q35.79 393.82 35.7 393.91Q35.61 394 35.49 394H27.36Q27.24 394 27.15 393.91Q27.06 393.82 27.06 393.7V376.8Q27.06 376.68 27.15 376.59Q27.24 376.5 27.36 376.5H35.49Q35.61 376.5 35.7 376.59Q35.79 376.68 35.79 376.8V378.7Q35.79 378.82 35.7 378.91Q35.61 379 35.49 379ZM30.06 374.55 31.54 371.97Q31.64 371.77 31.91 371.77H33.71Q33.91 371.77 33.96 371.89Q34.01 372 33.91 372.15L32.06 374.72Q31.94 374.9 31.71 374.9H30.29Q30.11 374.9 30.04 374.8Q29.96 374.7 30.06 374.55Z M43.64 389.5V380.98Q43.64 378.82 44.93 377.56Q46.21 376.3 48.34 376.3Q50.49 376.3 51.79 377.56Q53.09 378.82 53.09 380.98V381.27Q53.09 381.4 53 381.5Q52.91 381.6 52.79 381.6L50.46 381.7Q50.16 381.7 50.16 381.4V380.77Q50.16 379.9 49.66 379.35Q49.16 378.8 48.34 378.8Q47.54 378.8 47.04 379.35Q46.54 379.9 46.54 380.77V389.73Q46.54 390.6 47.04 391.15Q47.54 391.7 48.34 391.7Q49.16 391.7 49.66 391.15Q50.16 390.6 50.16 389.73V389.1Q50.16 388.98 50.25 388.89Q50.34 388.8 50.46 388.8L52.79 388.9Q52.91 388.9 53 388.99Q53.09 389.07 53.09 389.2V389.5Q53.09 391.62 51.79 392.91Q50.49 394.2 48.34 394.2Q46.21 394.2 44.93 392.91Q43.64 391.62 43.64 389.5Z M61.26 389.15V376.8Q61.26 376.68 61.35 376.59Q61.44 376.5 61.56 376.5H63.86Q63.99 376.5 64.08 376.59Q64.16 376.68 64.16 376.8V389.45Q64.16 390.45 64.66 391.07Q65.16 391.7 65.99 391.7Q66.81 391.7 67.31 391.07Q67.81 390.45 67.81 389.45V376.8Q67.81 376.68 67.9 376.59Q67.99 376.5 68.11 376.5H70.41Q70.54 376.5 70.63 376.59Q70.71 376.68 70.71 376.8V389.15Q70.71 391.43 69.41 392.81Q68.11 394.2 65.99 394.2Q63.84 394.2 62.55 392.81Q61.26 391.43 61.26 389.15Z M85.91 393.75 83.79 386.57Q83.74 386.48 83.66 386.48H82.34Q82.21 386.48 82.21 386.6V393.7Q82.21 393.82 82.12 393.91Q82.04 394 81.91 394H79.61Q79.49 394 79.4 393.91Q79.31 393.82 79.31 393.7V376.8Q79.31 376.68 79.4 376.59Q79.49 376.5 79.61 376.5H84.31Q85.64 376.5 86.65 377.14Q87.66 377.77 88.23 378.94Q88.79 380.1 88.79 381.6Q88.79 383.15 88.19 384.27Q87.59 385.4 86.51 385.98Q86.41 386 86.44 386.12L88.89 393.65Q88.91 393.7 88.91 393.77Q88.91 394 88.64 394H86.24Q85.99 394 85.91 393.75ZM82.21 379.12V384.1Q82.21 384.23 82.34 384.23H83.86Q84.76 384.23 85.33 383.52Q85.89 382.82 85.89 381.62Q85.89 380.43 85.33 379.71Q84.76 379 83.86 379H82.34Q82.21 379 82.21 379.12Z M96.84 393.7V376.8Q96.84 376.68 96.93 376.59Q97.01 376.5 97.14 376.5H99.44Q99.56 376.5 99.65 376.59Q99.74 376.68 99.74 376.8V393.7Q99.74 393.82 99.65 393.91Q99.56 394 99.44 394H97.14Q97.01 394 96.93 393.91Q96.84 393.82 96.84 393.7Z M116.86 379H111.46Q111.34 379 111.34 379.12V383.85Q111.34 383.98 111.46 383.98H114.66Q114.79 383.98 114.88 384.06Q114.96 384.15 114.96 384.27V386.2Q114.96 386.32 114.88 386.41Q114.79 386.5 114.66 386.5H111.46Q111.34 386.5 111.34 386.62V391.38Q111.34 391.5 111.46 391.5H116.86Q116.99 391.5 117.08 391.59Q117.16 391.68 117.16 391.8V393.7Q117.16 393.82 117.08 393.91Q116.99 394 116.86 394H108.74Q108.61 394 108.53 393.91Q108.44 393.82 108.44 393.7V376.8Q108.44 376.68 108.53 376.59Q108.61 376.5 108.74 376.5H116.86Q116.99 376.5 117.08 376.59Q117.16 376.68 117.16 376.8V378.7Q117.16 378.82 117.08 378.91Q116.99 379 116.86 379Z"/></svg><div id="authBody"></div></div></div>
 <script>/* Pont hors Claude : même interface que window.claude, servie par Firebase (voir firebase.js) */
 window.EQ_MODE = true;
 window.claude = (() => {
@@ -613,22 +703,17 @@ const NB_COULEURS = 8;
 /* Jours de la semaine (0 = dimanche, comme getUTCDay) */
 const JOURS = [{ id: 1, l: 'Lun' }, { id: 2, l: 'Mar' }, { id: 3, l: 'Mer' }, { id: 4, l: 'Jeu' }, { id: 5, l: 'Ven' }, { id: 6, l: 'Sam' }, { id: 0, l: 'Dim' }];
 const METIERS = ['Vétérinaire', 'Maréchal', 'Dentiste', 'Ostéopathe', 'Coach', 'Fourrage', 'Sellerie', 'Transport', 'Autre'];
-
-/* ---------- Identité EquiValdi : symbole et logo Cheval-feuille (charte « Logo EquiValdi ») ---------- */
-const BRAND = {
-  markVB: '0 -1 86 102',
-  markLeaf: 'M32.11 19.12Q10.54 49.51 1.72 94.61Q-7.11 45.59 32.11 19.12Z',
-  markHorse: 'M13.07 97.29Q8.34 75.22 13.2 54.01Q18.27 31.92 32.08 19.14L37.68 2.35Q38.76 -0.91 42.02 0.18Q43.73 0.75 44.23 2.48L50.08 22.77Q52.1 24.94 56.16 29.22Q73.94 47.96 80.87 57.17Q86.28 63.54 85.26 70.48Q84.1 78.28 76.08 80.29Q75.88 80.34 75.67 80.37Q65.42 81.65 49.92 70.1Q48.21 69.27 44.57 67.83Q38.55 65.44 35.31 63.51Q36.69 71.94 38.89 82.9Q40.71 92.03 41.37 96Q41.66 97.7 40.95 98.68Q40.25 99.67 38.55 99.95Q35.17 100.52 34.61 97.13Q33.96 93.27 32.16 84.24Q28.06 63.76 26.74 51.85Q26.39 48.72 29.47 48.11Q32.84 47.43 33.51 50.8Q34.24 54.46 37.95 57.05Q40.49 58.83 47.1 61.45Q51.31 63.12 53.25 64.09Q53.53 64.23 53.77 64.41Q67.05 74.37 74.61 73.58Q78 72.65 78.47 69.47Q79.04 65.59 75.58 61.55Q75.51 61.46 75.44 61.37Q68.77 52.48 51.18 33.94Q46.5 29 44.49 26.84Q43.94 26.24 43.71 25.46L40.69 14.99L38.3 22.16Q38.02 23.03 37.34 23.64Q24.59 35.04 19.89 55.55Q15.37 75.27 19.78 95.85Q20.5 99.2 17.14 99.92Q15.46 100.28 14.44 99.62Q13.43 98.97 13.07 97.29ZM45.15 36.37C45.15 34.53 46.64 33.04 48.48 33.04C50.32 33.04 51.81 34.53 51.81 36.37C51.81 38.21 50.32 39.71 48.48 39.71C46.64 39.71 45.15 38.21 45.15 36.37Z',
-  logoVB: '-171 -90 573 170',
-  logo: [["leaf", "M-115.96 -56.88Q-152.19 -5.82 -167.02 69.94Q-181.84 -12.41 -115.96 -56.88Z"], ["ink", "M-147.95 74.44Q-155.89 37.36 -147.72 1.74Q-139.21 -35.37 -116.01 -56.84L-106.6 -85.06Q-104.78 -90.53 -99.31 -88.7Q-96.44 -87.75 -95.6 -84.83L-85.77 -50.74Q-82.37 -47.1 -75.55 -39.91Q-45.68 -8.43 -34.05 7.04Q-24.94 17.75 -26.67 29.4Q-28.61 42.52 -42.09 45.89Q-42.43 45.97 -42.77 46.01Q-60 48.17 -86.04 28.76Q-88.91 27.37 -95.03 24.95Q-105.14 20.94 -110.58 17.69Q-108.25 31.86 -104.57 50.27Q-101.5 65.61 -100.39 72.29Q-99.92 75.13 -101.1 76.79Q-102.29 78.45 -105.13 78.92Q-110.82 79.87 -111.76 74.18Q-112.85 67.69 -115.88 52.53Q-122.76 18.12 -124.98 -1.89Q-125.57 -7.15 -120.38 -8.18Q-114.73 -9.31 -113.6 -3.66Q-112.37 2.5 -106.15 6.84Q-101.87 9.83 -90.78 14.23Q-83.7 17.04 -80.44 18.67Q-79.97 18.9 -79.56 19.21Q-57.26 35.94 -44.55 34.61Q-38.86 33.05 -38.07 27.71Q-37.11 21.19 -42.92 14.4Q-43.05 14.26 -43.16 14.11Q-54.36 -0.83 -83.92 -31.98Q-91.79 -40.27 -95.15 -43.91Q-96.08 -44.91 -96.46 -46.23L-101.53 -63.81L-105.55 -51.77Q-106.03 -50.31 -107.17 -49.29Q-128.59 -30.13 -136.49 4.32Q-144.09 37.45 -136.68 72.03Q-135.47 77.66 -141.1 78.87Q-143.92 79.48 -145.63 78.37Q-147.34 77.26 -147.95 74.44ZM-94.05 -27.89C-94.05 -30.99 -91.55 -33.49 -88.45 -33.49C-85.36 -33.49 -82.85 -30.99 -82.85 -27.89C-82.85 -24.8 -85.36 -22.29 -88.45 -22.29C-91.55 -22.29 -94.05 -24.8 -94.05 -27.89Z"], ["ink", "M7.6 0V-70H19.1V0ZM15.5 0V-10.5H54.7V0ZM15.5 -30.7V-40.8H51.3V-30.7ZM15.5 -59.5V-70H54.2V-59.5Z M83.4 1Q76.9 1 71.65 -2.3Q66.4 -5.6 63.35 -11.25Q60.3 -16.9 60.3 -23.9Q60.3 -31 63.35 -36.65Q66.4 -42.3 71.65 -45.65Q76.9 -49 83.4 -49Q88.9 -49 93.15 -46.65Q97.4 -44.3 99.9 -40.2Q102.4 -36.1 102.4 -30.9V-17.1Q102.4 -11.9 99.95 -7.8Q97.5 -3.7 93.2 -1.35Q88.9 1 83.4 1ZM85.2 -9.4Q91.3 -9.4 95.05 -13.5Q98.8 -17.6 98.8 -24Q98.8 -28.3 97.1 -31.6Q95.4 -34.9 92.35 -36.75Q89.3 -38.6 85.2 -38.6Q81.2 -38.6 78.15 -36.75Q75.1 -34.9 73.35 -31.6Q71.6 -28.3 71.6 -24Q71.6 -19.7 73.35 -16.4Q75.1 -13.1 78.15 -11.25Q81.2 -9.4 85.2 -9.4ZM98.1 20V-11.8L100 -23.4L98.1 -35.1V-48H109.1V20Z M140 1Q133.9 1 129.15 -1.7Q124.4 -4.4 121.75 -9.15Q119.1 -13.9 119.1 -20.1V-48H130.1V-20.6Q130.1 -17.1 131.25 -14.65Q132.4 -12.2 134.65 -10.9Q136.9 -9.6 140 -9.6Q144.8 -9.6 147.35 -12.45Q149.9 -15.3 149.9 -20.6V-48H160.9V-20.1Q160.9 -13.8 158.25 -9.05Q155.6 -4.3 150.9 -1.65Q146.2 1 140 1Z M171.1 0V-48H182.1V0ZM176.6 -56.8Q173.8 -56.8 171.95 -58.7Q170.1 -60.6 170.1 -63.4Q170.1 -66.2 171.95 -68.1Q173.8 -70 176.6 -70Q179.5 -70 181.3 -68.1Q183.1 -66.2 183.1 -63.4Q183.1 -60.6 181.3 -58.7Q179.5 -56.8 176.6 -56.8Z M218 0 189.7 -70H202.2L224.3 -13.3H219.9L242.2 -70H254.5L226 0Z M272.5 1Q266 1 260.75 -2.3Q255.5 -5.6 252.45 -11.25Q249.4 -16.9 249.4 -23.9Q249.4 -31 252.45 -36.65Q255.5 -42.3 260.75 -45.65Q266 -49 272.5 -49Q278 -49 282.25 -46.65Q286.5 -44.3 289 -40.2Q291.5 -36.1 291.5 -30.9V-17.1Q291.5 -11.9 289.05 -7.8Q286.6 -3.7 282.3 -1.35Q278 1 272.5 1ZM274.3 -9.4Q280.4 -9.4 284.15 -13.5Q287.9 -17.6 287.9 -24Q287.9 -28.3 286.2 -31.6Q284.5 -34.9 281.45 -36.75Q278.4 -38.6 274.3 -38.6Q270.3 -38.6 267.25 -36.75Q264.2 -34.9 262.45 -31.6Q260.7 -28.3 260.7 -24Q260.7 -19.7 262.45 -16.4Q264.2 -13.1 267.25 -11.25Q270.3 -9.4 274.3 -9.4ZM287.2 0V-12.9L289.1 -24.6L287.2 -36.2V-48H298.2V0Z M309.4 0V-72H320.4V0Z M351.7 1Q345.2 1 339.95 -2.3Q334.7 -5.6 331.65 -11.25Q328.6 -16.9 328.6 -23.9Q328.6 -31 331.65 -36.65Q334.7 -42.3 339.95 -45.65Q345.2 -49 351.7 -49Q357.2 -49 361.45 -46.65Q365.7 -44.3 368.2 -40.2Q370.7 -36.1 370.7 -30.9V-17.1Q370.7 -11.9 368.25 -7.8Q365.8 -3.7 361.5 -1.35Q357.2 1 351.7 1ZM353.5 -9.4Q357.6 -9.4 360.65 -11.25Q363.7 -13.1 365.4 -16.4Q367.1 -19.7 367.1 -24Q367.1 -28.3 365.4 -31.6Q363.7 -34.9 360.65 -36.75Q357.6 -38.6 353.6 -38.6Q349.5 -38.6 346.45 -36.75Q343.4 -34.9 341.65 -31.6Q339.9 -28.3 339.9 -24Q339.9 -19.7 341.65 -16.4Q343.4 -13.1 346.45 -11.25Q349.5 -9.4 353.5 -9.4ZM377.4 0H366.4V-12.9L368.3 -24.6L366.4 -36.2V-72H377.4Z M388.7 0V-48H399.7V0ZM394.2 -56.8Q391.4 -56.8 389.55 -58.7Q387.7 -60.6 387.7 -63.4Q387.7 -66.2 389.55 -68.1Q391.4 -70 394.2 -70Q397.1 -70 398.9 -68.1Q400.7 -66.2 400.7 -63.4Q400.7 -60.6 398.9 -58.7Q397.1 -56.8 394.2 -56.8Z"], ["ink", "M7.6 57.5V48.98Q7.6 46.83 8.89 45.56Q10.18 44.3 12.3 44.3Q14.45 44.3 15.75 45.56Q17.05 46.83 17.05 48.98V49.27Q17.05 49.4 16.96 49.5Q16.88 49.6 16.75 49.6L14.43 49.7Q14.12 49.7 14.12 49.4V48.77Q14.12 47.9 13.62 47.35Q13.12 46.8 12.3 46.8Q11.5 46.8 11 47.35Q10.5 47.9 10.5 48.77V57.73Q10.5 58.6 11 59.15Q11.5 59.7 12.3 59.7Q13.12 59.7 13.62 59.15Q14.12 58.6 14.12 57.73V57.1Q14.12 56.98 14.21 56.89Q14.3 56.8 14.43 56.8L16.75 56.9Q16.88 56.9 16.96 56.99Q17.05 57.08 17.05 57.2V57.5Q17.05 59.62 15.75 60.91Q14.45 62.2 12.3 62.2Q10.18 62.2 8.89 60.91Q7.6 59.62 7.6 57.5Z M31.9 61.73 31.43 59.1Q31.43 58.98 31.28 58.98H27.63Q27.48 58.98 27.48 59.1L27 61.73Q26.98 62 26.68 62H24.4Q24.05 62 24.13 61.67L27.83 44.77Q27.88 44.5 28.15 44.5H30.8Q31.08 44.5 31.13 44.77L34.83 61.67V61.77Q34.83 62 34.55 62H32.23Q31.93 62 31.9 61.73ZM28.05 56.7H30.83Q30.98 56.7 30.95 56.58L29.5 48.67Q29.48 48.6 29.43 48.6Q29.38 48.6 29.35 48.67L27.93 56.58Q27.9 56.7 28.05 56.7Z M49.12 61.75 47 54.58Q46.95 54.48 46.88 54.48H45.55Q45.42 54.48 45.42 54.6V61.7Q45.42 61.83 45.34 61.91Q45.25 62 45.12 62H42.82Q42.7 62 42.61 61.91Q42.52 61.83 42.52 61.7V44.8Q42.52 44.67 42.61 44.59Q42.7 44.5 42.82 44.5H47.52Q48.85 44.5 49.86 45.14Q50.88 45.77 51.44 46.94Q52 48.1 52 49.6Q52 51.15 51.4 52.27Q50.8 53.4 49.72 53.98Q49.62 54 49.65 54.12L52.1 61.65Q52.12 61.7 52.12 61.77Q52.12 62 51.85 62H49.45Q49.2 62 49.12 61.75ZM45.42 47.12V52.1Q45.42 52.23 45.55 52.23H47.07Q47.97 52.23 48.54 51.53Q49.1 50.83 49.1 49.62Q49.1 48.42 48.54 47.71Q47.97 47 47.07 47H45.55Q45.42 47 45.42 47.12Z M67.45 44.5H69.73Q69.85 44.5 69.94 44.59Q70.03 44.67 70.03 44.8V61.7Q70.03 61.83 69.94 61.91Q69.85 62 69.73 62H67.1Q66.85 62 66.78 61.75L63.05 51.15Q63.03 51.08 62.96 51.09Q62.9 51.1 62.9 51.17L62.93 61.7Q62.93 61.83 62.84 61.91Q62.75 62 62.62 62H60.35Q60.23 62 60.14 61.91Q60.05 61.83 60.05 61.7V44.8Q60.05 44.67 60.14 44.59Q60.23 44.5 60.35 44.5H62.93Q63.18 44.5 63.25 44.75L67 55.27Q67.03 55.35 67.09 55.34Q67.15 55.33 67.15 55.25V44.8Q67.15 44.67 67.24 44.59Q67.33 44.5 67.45 44.5Z M87.15 47H81.75Q81.62 47 81.62 47.12V51.85Q81.62 51.98 81.75 51.98H84.95Q85.08 51.98 85.16 52.06Q85.25 52.15 85.25 52.27V54.2Q85.25 54.33 85.16 54.41Q85.08 54.5 84.95 54.5H81.75Q81.62 54.5 81.62 54.62V59.38Q81.62 59.5 81.75 59.5H87.15Q87.28 59.5 87.36 59.59Q87.45 59.67 87.45 59.8V61.7Q87.45 61.83 87.36 61.91Q87.28 62 87.15 62H79.03Q78.9 62 78.81 61.91Q78.72 61.83 78.72 61.7V44.8Q78.72 44.67 78.81 44.59Q78.9 44.5 79.03 44.5H87.15Q87.28 44.5 87.36 44.59Q87.45 44.67 87.45 44.8V46.7Q87.45 46.83 87.36 46.91Q87.28 47 87.15 47Z M104.88 44.8V46.7Q104.88 46.83 104.79 46.91Q104.7 47 104.58 47H101.4Q101.28 47 101.28 47.12V61.7Q101.28 61.83 101.19 61.91Q101.1 62 100.97 62H98.67Q98.55 62 98.46 61.91Q98.38 61.83 98.38 61.7V47.12Q98.38 47 98.25 47H95.25Q95.12 47 95.04 46.91Q94.95 46.83 94.95 46.7V44.8Q94.95 44.67 95.04 44.59Q95.12 44.5 95.25 44.5H104.58Q104.7 44.5 104.79 44.59Q104.88 44.67 104.88 44.8Z M123.9 61.7V44.8Q123.9 44.67 123.99 44.59Q124.08 44.5 124.2 44.5H128.47Q130.62 44.5 131.91 45.8Q133.2 47.1 133.2 49.27V57.23Q133.2 59.4 131.91 60.7Q130.62 62 128.47 62H124.2Q124.08 62 123.99 61.91Q123.9 61.83 123.9 61.7ZM126.92 59.5 128.43 59.48Q129.25 59.48 129.76 58.81Q130.28 58.15 130.3 57.05V49.45Q130.3 48.33 129.79 47.66Q129.28 47 128.4 47H126.92Q126.8 47 126.8 47.12V59.38Q126.8 59.5 126.92 59.5Z M144.35 44.85 142.73 49.7Q142.65 49.95 142.4 49.95H140.68Q140.35 49.95 140.43 49.62L141.48 44.77Q141.53 44.5 141.8 44.5H144.13Q144.28 44.5 144.34 44.59Q144.4 44.67 144.35 44.85Z M160.25 47H154.85Q154.73 47 154.73 47.12V51.85Q154.73 51.98 154.85 51.98H158.05Q158.18 51.98 158.26 52.06Q158.35 52.15 158.35 52.27V54.2Q158.35 54.33 158.26 54.41Q158.18 54.5 158.05 54.5H154.85Q154.73 54.5 154.73 54.62V59.38Q154.73 59.5 154.85 59.5H160.25Q160.38 59.5 160.46 59.59Q160.55 59.67 160.55 59.8V61.7Q160.55 61.83 160.46 61.91Q160.38 62 160.25 62H152.13Q152 62 151.91 61.91Q151.83 61.83 151.83 61.7V44.8Q151.83 44.67 151.91 44.59Q152 44.5 152.13 44.5H160.25Q160.38 44.5 160.46 44.59Q160.55 44.67 160.55 44.8V46.7Q160.55 46.83 160.46 46.91Q160.38 47 160.25 47ZM154.83 42.55 156.3 39.97Q156.4 39.77 156.68 39.77H158.48Q158.68 39.77 158.73 39.89Q158.78 40 158.68 40.15L156.83 42.72Q156.7 42.9 156.48 42.9H155.05Q154.88 42.9 154.8 42.8Q154.73 42.7 154.83 42.55Z M168.4 57.5V48.98Q168.4 46.83 169.69 45.56Q170.98 44.3 173.1 44.3Q175.25 44.3 176.55 45.56Q177.85 46.83 177.85 48.98V49.27Q177.85 49.4 177.76 49.5Q177.68 49.6 177.55 49.6L175.23 49.7Q174.93 49.7 174.93 49.4V48.77Q174.93 47.9 174.43 47.35Q173.93 46.8 173.1 46.8Q172.3 46.8 171.8 47.35Q171.3 47.9 171.3 48.77V57.73Q171.3 58.6 171.8 59.15Q172.3 59.7 173.1 59.7Q173.93 59.7 174.43 59.15Q174.93 58.6 174.93 57.73V57.1Q174.93 56.98 175.01 56.89Q175.1 56.8 175.23 56.8L177.55 56.9Q177.68 56.9 177.76 56.99Q177.85 57.08 177.85 57.2V57.5Q177.85 59.62 176.55 60.91Q175.25 62.2 173.1 62.2Q170.98 62.2 169.69 60.91Q168.4 59.62 168.4 57.5Z M186.03 57.15V44.8Q186.03 44.67 186.11 44.59Q186.2 44.5 186.33 44.5H188.63Q188.75 44.5 188.84 44.59Q188.93 44.67 188.93 44.8V57.45Q188.93 58.45 189.43 59.08Q189.93 59.7 190.75 59.7Q191.58 59.7 192.08 59.08Q192.58 58.45 192.58 57.45V44.8Q192.58 44.67 192.66 44.59Q192.75 44.5 192.88 44.5H195.18Q195.3 44.5 195.39 44.59Q195.48 44.67 195.48 44.8V57.15Q195.48 59.42 194.18 60.81Q192.88 62.2 190.75 62.2Q188.6 62.2 187.31 60.81Q186.03 59.42 186.03 57.15Z M210.68 61.75 208.55 54.58Q208.5 54.48 208.43 54.48H207.1Q206.98 54.48 206.98 54.6V61.7Q206.98 61.83 206.89 61.91Q206.8 62 206.68 62H204.38Q204.25 62 204.16 61.91Q204.08 61.83 204.08 61.7V44.8Q204.08 44.67 204.16 44.59Q204.25 44.5 204.38 44.5H209.08Q210.4 44.5 211.41 45.14Q212.43 45.77 212.99 46.94Q213.55 48.1 213.55 49.6Q213.55 51.15 212.95 52.27Q212.35 53.4 211.28 53.98Q211.18 54 211.2 54.12L213.65 61.65Q213.68 61.7 213.68 61.77Q213.68 62 213.4 62H211Q210.75 62 210.68 61.75ZM206.98 47.12V52.1Q206.98 52.23 207.1 52.23H208.63Q209.53 52.23 210.09 51.53Q210.65 50.83 210.65 49.62Q210.65 48.42 210.09 47.71Q209.53 47 208.63 47H207.1Q206.98 47 206.98 47.12Z M221.6 61.7V44.8Q221.6 44.67 221.69 44.59Q221.78 44.5 221.9 44.5H224.2Q224.33 44.5 224.41 44.59Q224.5 44.67 224.5 44.8V61.7Q224.5 61.83 224.41 61.91Q224.33 62 224.2 62H221.9Q221.78 62 221.69 61.91Q221.6 61.83 221.6 61.7Z M241.63 47H236.23Q236.1 47 236.1 47.12V51.85Q236.1 51.98 236.23 51.98H239.43Q239.55 51.98 239.64 52.06Q239.73 52.15 239.73 52.27V54.2Q239.73 54.33 239.64 54.41Q239.55 54.5 239.43 54.5H236.23Q236.1 54.5 236.1 54.62V59.38Q236.1 59.5 236.23 59.5H241.63Q241.75 59.5 241.84 59.59Q241.93 59.67 241.93 59.8V61.7Q241.93 61.83 241.84 61.91Q241.75 62 241.63 62H233.5Q233.38 62 233.29 61.91Q233.2 61.83 233.2 61.7V44.8Q233.2 44.67 233.29 44.59Q233.38 44.5 233.5 44.5H241.63Q241.75 44.5 241.84 44.59Q241.93 44.67 241.93 44.8V46.7Q241.93 46.83 241.84 46.91Q241.75 47 241.63 47Z"]]
-};
-/* Symbole seul (en-tête) ; couleurs portées par le thème : --logo-ink et --logo-leaf */
-const brandMark = (cls = '') => `<svg class="brand-mark ${cls}" viewBox="${BRAND.markVB}" aria-hidden="true" focusable="false"><path class="lg-leaf" d="${BRAND.markLeaf}"/><path class="lg-ink" d="${BRAND.markHorse}"/></svg>`;
-/* Logo complet : symbole, EquiValdi, Carnet d'écurie */
-const brandLogo = (cls = '') => `<svg class="brand-logo ${cls}" viewBox="${BRAND.logoVB}" role="img" aria-label="EquiValdi, carnet d'écurie" focusable="false">${BRAND.logo.map(([k, d]) => `<path class="lg-${k}" d="${d}"/>`).join('')}</svg>`;
-/* Icône d'onglet « Chevaux » tirée du symbole */
-ICONS.horse = `<path class="i-leaf" d="${BRAND.markLeaf}"/><path d="${BRAND.markHorse}"/>`;
-ICON_VB.horse = BRAND.markVB;
+/* ---------- Identité EquiValdi : cheval entier façon dessin d'enfant (charte « Logo EquiValdi », variante C) ---------- */
+const BRAND = {"mark": {"vb": "-8 -8 118.01 116", "mane": "M60.98 40.41 54.88 38.59Q52.51 37.88 53.22 35.51Q53.46 34.69 54.16 34.2L57.25 32.03L55.37 31.15Q53.12 30.11 54.17 27.87Q54.53 27.09 55.29 26.7L59.16 24.75L57.03 22.93Q56.09 22.13 56.02 21.26Q55.95 20.39 56.75 19.45Q57.33 18.77 58.2 18.61L61.95 17.95L60.57 16.3Q58.98 14.4 60.88 12.82Q61.54 12.27 62.39 12.24L70.45 11.99Q71.68 11.95 72.32 12.55Q72.96 13.15 73 14.38Q73.07 16.85 70.6 16.93L67.63 17.02L68.49 18.05Q68.91 18.55 69.03 19.2Q69.46 21.64 67.03 22.07L64.23 22.57L65.2 23.39Q65.57 23.72 65.8 24.16Q66.91 26.36 64.71 27.48L62.08 28.81L63.22 29.34Q63.82 29.62 64.2 30.16Q64.91 31.17 64.76 32.04Q64.61 32.9 63.6 33.61L61.18 35.31L62.4 35.68Q64.77 36.39 64.06 38.75Q63.7 39.94 62.93 40.35Q62.16 40.77 60.98 40.41Z", "tail": "M17.61 59.34 12.55 59.64 12.82 65.05Q12.89 66.56 11.6 67.36L7.09 70.12L9.72 74.6Q10.62 76.13 9.51 77.51L6.15 81.69L10.06 84.97Q12.03 86.61 10.38 88.58Q9.56 89.56 8.66 89.64Q7.75 89.72 6.77 88.9L0.93 84.01Q-1 82.4 0.58 80.44L4.41 75.67L1.4 70.55Q0.12 68.38 2.27 67.06L7.62 63.78L7.31 57.36Q7.18 54.83 9.72 54.68L17.31 54.23Q19.87 54.07 20.02 56.63Q20.17 59.19 17.61 59.34Z", "body": "M19.92 49.18Q23.75 46.86 35.39 46.24Q38.07 46.09 43.16 46.75Q47.48 47.31 49.52 47.24Q51.51 47.17 55.93 46.26Q57.53 45.94 58.87 45.71Q57.91 40.39 57.91 37.69Q57.91 31.16 59.8 24.78Q60.72 21.65 63.45 17.55Q63.95 16.81 64.17 16.47Q65.26 14.76 67.62 12.06L66.97 4.27Q66.85 2.77 67.53 1.95Q68.22 1.14 69.72 1.02Q71.7 0.85 72.63 2.6L73.37 3.97L74.22 1.88Q75.35 -0.91 78.14 0.22Q79.68 0.84 79.98 2.47L81.56 11.09Q81.74 11.26 81.95 11.46Q85.09 14.56 86.48 16.01Q88.04 17.64 91.23 21.17Q91.8 21.81 92.06 22.1Q93.14 23.29 94.84 25.21Q95.66 26.15 96.1 26.64Q96.46 27.04 97.37 27.9Q99.79 30.19 100.59 31.87Q102.55 35.99 101.83 39.76Q101.03 43.96 97.49 46.25Q93.84 48.61 89.66 47.66Q87.6 47.19 84.26 44.59Q83.42 43.93 83.03 43.64Q81.75 42.72 79.25 40.6Q77.97 39.51 77.37 39.03Q76.82 38.58 75.63 37.72Q75.54 37.66 75.45 37.59Q75.59 38.64 75.77 39.88Q75.91 40.82 75.97 41.28Q76.25 43.22 76.97 47.69Q77.07 48.33 77.14 48.74Q82.47 52.6 82.78 58.64Q82.96 61.96 81.84 65.56Q80.42 70.12 77.56 72.26Q76.32 73.19 74.12 73.85L76.74 95.62Q77.1 98.61 74.1 98.97Q71.11 99.33 70.75 96.34L68.18 74.95Q66.16 75.17 63.75 75.29L64.2 96.92Q64.26 99.94 61.24 100Q58.23 100.06 58.17 97.05L57.72 75.29Q55.61 75.16 52.83 74.87Q47.83 74.34 45.65 74.37Q43.91 74.4 40.68 74.89L41.58 96.86Q41.64 98.37 40.92 99.15Q40.2 99.94 38.69 100Q35.68 100.12 35.56 97.11L34.68 75.75Q32.63 75.95 31.34 75.87Q30.77 75.84 30.22 75.79L28.51 97.23Q28.39 98.73 27.58 99.42Q26.76 100.11 25.26 99.99Q22.26 99.75 22.5 96.74L24.27 74.63Q21.5 73.73 19.6 72.2Q13.44 67.28 13.44 60.8Q13.44 57.66 15.1 54.48Q16.92 50.99 19.92 49.18ZM23.04 54.34Q19.47 56.5 19.47 60.8Q19.47 64.38 23.37 67.49Q24.49 68.4 26.31 68.97Q26.93 68.79 27.75 68.85Q29.16 68.97 29.86 69.69Q30.74 69.79 31.72 69.86Q33.49 69.97 38.05 69.2Q42.94 68.39 45.55 68.34Q48.1 68.3 53.47 68.87Q57.8 69.33 60.24 69.37Q60.42 69.35 60.62 69.35Q60.91 69.34 61.17 69.36Q61.36 69.36 61.53 69.35Q62.1 69.32 63.24 69.27Q66.07 69.15 68.19 68.91Q68.84 68.04 70.37 67.86Q71.62 67.71 72.41 68.14Q73.42 67.83 73.94 67.44Q75.24 66.47 76.08 63.77Q76.88 61.2 76.76 58.95Q76.58 55.56 73.09 53.27Q70.63 51.66 65.45 51.33Q64.89 52.48 63.12 52.73Q60.99 53.04 60.16 51.61Q58.84 51.82 57.14 52.17Q52.23 53.18 49.73 53.26Q47.2 53.36 42.38 52.73Q37.84 52.14 35.71 52.26Q25.59 52.8 23.04 54.34ZM64.92 45.26Q68.06 45.4 70.59 45.95Q70.2 43.47 70.01 42.14Q69.94 41.68 69.8 40.76Q69.13 36.1 68.93 33.94Q68.79 32.31 68.69 29.27Q68.66 29.22 68.65 29.19Q67.48 27.24 68.66 25.88Q68.97 23.73 71.5 23.62Q73.01 23.56 73.8 24.28Q74.58 25 74.65 26.5Q74.66 26.81 74.68 27.72Q75.84 29.91 76.5 30.66Q77.15 31.39 79.15 32.82Q80.48 33.78 81.17 34.34Q81.82 34.87 83.15 36Q85.48 37.97 86.57 38.77Q87.05 39.12 87.97 39.83Q90.25 41.61 91 41.78Q92.7 42.17 94.22 41.19Q95.59 40.3 95.91 38.63Q96.07 37.75 95.9 36.76C95.63 37.02 95.26 37.19 94.85 37.19C94.02 37.19 93.34 36.51 93.34 35.68C93.34 34.85 94.02 34.17 94.85 34.17C94.89 34.17 94.93 34.17 94.97 34.18Q94.52 33.51 93.23 32.29Q92.12 31.25 91.59 30.65Q91.15 30.15 90.31 29.2Q88.64 27.31 87.59 26.14Q87.32 25.85 86.75 25.21Q83.62 21.75 82.12 20.17Q80.79 18.79 77.72 15.76Q76.89 14.95 76.64 14.69Q76.02 14.08 75.83 13.24Q75.54 13.51 75.17 13.71Q74.28 14.19 73.53 14.21Q73.36 14.6 73.08 14.95Q72.86 15.22 72.23 15.95Q70.11 18.36 69.25 19.72Q68.99 20.11 68.47 20.9Q66.24 24.24 65.58 26.48Q63.94 32.03 63.94 37.69Q63.94 40.02 64.92 45.26ZM75.75 21.61C75.75 20.22 76.88 19.1 78.27 19.1C79.65 19.1 80.78 20.22 80.78 21.61C80.78 23 79.65 24.12 78.27 24.12C76.88 24.12 75.75 23 75.75 21.61Z"}, "vert": {"vb": "-220.55 -24 441.1 442", "mane": "M20.95 84.87 8.13 81.04Q3.16 79.55 4.64 74.57Q5.16 72.85 6.63 71.81L13.12 67.25L9.16 65.42Q4.45 63.23 6.64 58.52Q7.39 56.89 9 56.07L17.13 51.96L12.66 48.15Q10.68 46.47 10.54 44.64Q10.39 42.81 12.07 40.83Q13.28 39.42 15.12 39.09L22.99 37.69L20.09 34.23Q16.76 30.25 20.74 26.91Q22.11 25.76 23.91 25.7L40.83 25.18Q43.43 25.1 44.76 26.35Q46.1 27.61 46.18 30.21Q46.34 35.39 41.15 35.56L34.91 35.75L36.71 37.9Q37.6 38.96 37.85 40.33Q38.75 45.44 33.64 46.35L27.77 47.39L29.8 49.13Q30.59 49.8 31.06 50.73Q33.41 55.37 28.77 57.71L23.25 60.5L25.65 61.62Q26.91 62.2 27.71 63.34Q29.21 65.47 28.89 67.27Q28.57 69.08 26.45 70.58L21.36 74.16L23.92 74.92Q28.9 76.41 27.41 81.39Q26.67 83.87 25.05 84.74Q23.43 85.62 20.95 84.87Z", "tail": "M-70.12 124.62 -80.75 125.25 -80.19 136.6Q-80.03 139.78 -82.76 141.45L-92.22 147.25L-86.69 156.66Q-84.81 159.87 -87.14 162.76L-94.2 171.55L-85.98 178.44Q-81.85 181.89 -85.31 186.02Q-87.03 188.08 -88.93 188.25Q-90.83 188.42 -92.89 186.69L-105.16 176.42Q-109.21 173.03 -105.9 168.92L-97.85 158.91L-104.18 148.15Q-106.86 143.59 -102.35 140.83L-91.1 133.94L-91.76 120.46Q-92.02 115.13 -86.71 114.82L-70.76 113.87Q-65.39 113.56 -65.07 118.93Q-64.75 124.3 -70.12 124.62Z", "body": "M-65.28 103.28Q-57.23 98.4 -32.79 97.09Q-27.16 96.79 -16.48 98.18Q-7.41 99.35 -3.13 99.2Q1.06 99.05 10.35 97.15Q13.69 96.46 16.51 95.99Q14.51 84.81 14.51 79.15Q14.51 65.44 18.46 52.03Q20.4 45.47 26.14 36.86Q27.18 35.31 27.64 34.58Q29.94 30.99 34.89 25.32L33.53 8.97Q33.26 5.81 34.71 4.1Q36.16 2.4 39.31 2.13Q43.45 1.79 45.42 5.45L46.96 8.34L48.74 3.95Q51.13 -1.92 56.99 0.47Q60.21 1.77 60.84 5.18L64.17 23.28Q64.54 23.64 64.98 24.07Q71.57 30.57 74.49 33.61Q77.77 37.05 84.46 44.46Q85.66 45.8 86.22 46.41Q88.48 48.91 92.04 52.95Q93.77 54.91 94.7 55.94Q95.45 56.79 97.36 58.6Q102.44 63.4 104.12 66.93Q108.24 75.58 106.74 83.5Q105.06 92.31 97.62 97.12Q89.95 102.09 81.17 100.09Q76.84 99.11 69.83 93.63Q68.08 92.26 67.24 91.65Q64.56 89.7 59.32 85.25Q56.63 82.98 55.37 81.96Q54.22 81.02 51.71 79.21Q51.51 79.08 51.33 78.94Q51.63 81.15 52.01 83.76Q52.3 85.72 52.44 86.69Q53.02 90.76 54.53 100.15Q54.75 101.5 54.88 102.36Q66.07 110.46 66.74 123.13Q67.11 130.11 64.75 137.68Q61.76 147.25 55.77 151.75Q53.16 153.71 48.55 155.09L54.04 200.8Q54.79 207.09 48.51 207.84Q42.22 208.6 41.46 202.31L36.08 157.4Q31.82 157.87 26.77 158.1L27.7 203.54Q27.83 209.87 21.5 210Q15.17 210.13 15.04 203.8L14.11 158.12Q9.66 157.84 3.83 157.22Q-6.67 156.1 -11.24 156.18Q-14.9 156.24 -21.68 157.27L-19.79 203.41Q-19.66 206.57 -21.18 208.22Q-22.7 209.87 -25.86 209.99Q-32.19 210.25 -32.44 203.93L-34.28 159.08Q-38.59 159.5 -41.29 159.33Q-42.49 159.26 -43.64 159.15L-47.24 204.17Q-47.5 207.33 -49.2 208.78Q-50.9 210.23 -54.06 209.98Q-60.37 209.47 -59.87 203.16L-56.15 156.72Q-61.96 154.82 -65.95 151.63Q-78.88 141.28 -78.88 127.69Q-78.88 121.08 -75.39 114.4Q-71.57 107.09 -65.28 103.28ZM-58.72 114.11Q-66.22 118.65 -66.22 127.69Q-66.22 135.2 -58.04 141.74Q-55.67 143.63 -51.86 144.83Q-50.56 144.45 -48.83 144.59Q-45.87 144.83 -44.41 146.34Q-42.55 146.57 -40.5 146.7Q-36.79 146.93 -27.2 145.33Q-16.94 143.61 -11.45 143.52Q-6.1 143.43 5.17 144.63Q14.27 145.6 19.39 145.67Q19.77 145.64 20.18 145.63Q20.8 145.62 21.35 145.66Q21.75 145.65 22.11 145.64Q23.29 145.58 25.69 145.47Q31.63 145.21 36.08 144.72Q37.46 142.89 40.67 142.51Q43.28 142.19 44.94 143.1Q47.08 142.44 48.17 141.62Q50.89 139.58 52.65 133.92Q54.34 128.51 54.09 123.8Q53.72 116.69 46.39 111.88Q41.22 108.48 30.34 107.79Q29.15 110.2 25.45 110.74Q20.97 111.39 19.23 108.37Q16.45 108.83 12.89 109.56Q2.56 111.67 -2.68 111.86Q-8 112.05 -18.11 110.73Q-27.64 109.5 -32.11 109.74Q-53.38 110.88 -58.72 114.11ZM29.21 95.05Q35.81 95.35 41.12 96.5Q40.3 91.29 39.9 88.49Q39.76 87.53 39.48 85.59Q38.06 75.82 37.65 71.27Q37.34 67.85 37.14 61.47Q37.08 61.36 37.05 61.3Q34.59 57.2 37.07 54.34Q37.73 49.83 43.05 49.6Q46.21 49.47 47.86 50.98Q49.51 52.5 49.64 55.66Q49.67 56.31 49.72 58.2Q52.14 62.82 53.54 64.39Q54.9 65.91 59.09 68.93Q61.9 70.95 63.34 72.11Q64.72 73.23 67.51 75.6Q72.39 79.74 74.69 81.41Q75.7 82.15 77.63 83.65Q82.41 87.39 83.98 87.75Q87.55 88.56 90.74 86.49Q93.63 84.63 94.3 81.13Q94.65 79.28 94.29 77.19C93.72 77.75 92.94 78.09 92.07 78.09C90.32 78.09 88.91 76.67 88.91 74.92C88.91 73.18 90.32 71.76 92.07 71.76C92.16 71.76 92.25 71.76 92.33 71.77Q91.38 70.37 88.66 67.8Q86.35 65.62 85.23 64.36Q84.29 63.31 82.55 61.33Q79.04 57.35 76.82 54.9Q76.26 54.28 75.06 52.95Q68.49 45.67 65.34 42.37Q62.55 39.46 56.1 33.1Q54.36 31.39 53.83 30.86Q52.53 29.57 52.13 27.8Q51.52 28.38 50.74 28.8Q48.87 29.8 47.29 29.84Q46.95 30.66 46.36 31.39Q45.9 31.97 44.57 33.49Q40.13 38.56 38.31 41.4Q37.78 42.24 36.68 43.89Q32 50.9 30.61 55.61Q27.17 67.26 27.17 79.15Q27.17 84.04 29.21 95.05ZM51.97 45.38C51.97 42.46 54.33 40.1 57.25 40.1C60.16 40.1 62.53 42.46 62.53 45.38C62.53 48.29 60.16 50.65 57.25 50.65C54.33 50.65 51.97 48.29 51.97 45.38Z", "words": ["M-196.55 332V262H-185.05V332ZM-188.65 332V321.5H-149.45V332ZM-188.65 301.3V291.2H-152.85V301.3ZM-188.65 272.5V262H-149.95V272.5Z M-120.75 333Q-127.25 333 -132.5 329.7Q-137.75 326.4 -140.8 320.75Q-143.85 315.1 -143.85 308.1Q-143.85 301 -140.8 295.35Q-137.75 289.7 -132.5 286.35Q-127.25 283 -120.75 283Q-115.25 283 -111 285.35Q-106.75 287.7 -104.25 291.8Q-101.75 295.9 -101.75 301.1V314.9Q-101.75 320.1 -104.2 324.2Q-106.65 328.3 -110.95 330.65Q-115.25 333 -120.75 333ZM-118.95 322.6Q-112.85 322.6 -109.1 318.5Q-105.35 314.4 -105.35 308Q-105.35 303.7 -107.05 300.4Q-108.75 297.1 -111.8 295.25Q-114.85 293.4 -118.95 293.4Q-122.95 293.4 -126 295.25Q-129.05 297.1 -130.8 300.4Q-132.55 303.7 -132.55 308Q-132.55 312.3 -130.8 315.6Q-129.05 318.9 -126 320.75Q-122.95 322.6 -118.95 322.6ZM-106.05 352V320.2L-104.15 308.6L-106.05 296.9V284H-95.05V352Z M-64.15 333Q-70.25 333 -75 330.3Q-79.75 327.6 -82.4 322.85Q-85.05 318.1 -85.05 311.9V284H-74.05V311.4Q-74.05 314.9 -72.9 317.35Q-71.75 319.8 -69.5 321.1Q-67.25 322.4 -64.15 322.4Q-59.35 322.4 -56.8 319.55Q-54.25 316.7 -54.25 311.4V284H-43.25V311.9Q-43.25 318.2 -45.9 322.95Q-48.55 327.7 -53.25 330.35Q-57.95 333 -64.15 333Z M-33.05 332V284H-22.05V332ZM-27.55 275.2Q-30.35 275.2 -32.2 273.3Q-34.05 271.4 -34.05 268.6Q-34.05 265.8 -32.2 263.9Q-30.35 262 -27.55 262Q-24.65 262 -22.85 263.9Q-21.05 265.8 -21.05 268.6Q-21.05 271.4 -22.85 273.3Q-24.65 275.2 -27.55 275.2Z M13.85 332 -14.45 262H-1.95L20.15 318.7H15.75L38.05 262H50.35L21.85 332Z M68.35 333Q61.85 333 56.6 329.7Q51.35 326.4 48.3 320.75Q45.25 315.1 45.25 308.1Q45.25 301 48.3 295.35Q51.35 289.7 56.6 286.35Q61.85 283 68.35 283Q73.85 283 78.1 285.35Q82.35 287.7 84.85 291.8Q87.35 295.9 87.35 301.1V314.9Q87.35 320.1 84.9 324.2Q82.45 328.3 78.15 330.65Q73.85 333 68.35 333ZM70.15 322.6Q76.25 322.6 80 318.5Q83.75 314.4 83.75 308Q83.75 303.7 82.05 300.4Q80.35 297.1 77.3 295.25Q74.25 293.4 70.15 293.4Q66.15 293.4 63.1 295.25Q60.05 297.1 58.3 300.4Q56.55 303.7 56.55 308Q56.55 312.3 58.3 315.6Q60.05 318.9 63.1 320.75Q66.15 322.6 70.15 322.6ZM83.05 332V319.1L84.95 307.4L83.05 295.8V284H94.05V332Z M105.25 332V260H116.25V332Z M147.55 333Q141.05 333 135.8 329.7Q130.55 326.4 127.5 320.75Q124.45 315.1 124.45 308.1Q124.45 301 127.5 295.35Q130.55 289.7 135.8 286.35Q141.05 283 147.55 283Q153.05 283 157.3 285.35Q161.55 287.7 164.05 291.8Q166.55 295.9 166.55 301.1V314.9Q166.55 320.1 164.1 324.2Q161.65 328.3 157.35 330.65Q153.05 333 147.55 333ZM149.35 322.6Q153.45 322.6 156.5 320.75Q159.55 318.9 161.25 315.6Q162.95 312.3 162.95 308Q162.95 303.7 161.25 300.4Q159.55 297.1 156.5 295.25Q153.45 293.4 149.45 293.4Q145.35 293.4 142.3 295.25Q139.25 297.1 137.5 300.4Q135.75 303.7 135.75 308Q135.75 312.3 137.5 315.6Q139.25 318.9 142.3 320.75Q145.35 322.6 149.35 322.6ZM173.25 332H162.25V319.1L164.15 307.4L162.25 295.8V260H173.25Z M184.55 332V284H195.55V332ZM190.05 275.2Q187.25 275.2 185.4 273.3Q183.55 271.4 183.55 268.6Q183.55 265.8 185.4 263.9Q187.25 262 190.05 262Q192.95 262 194.75 263.9Q196.55 265.8 196.55 268.6Q196.55 271.4 194.75 273.3Q192.95 275.2 190.05 275.2Z", "M-117.16 389.5V380.98Q-117.16 378.82 -115.88 377.56Q-114.59 376.3 -112.46 376.3Q-110.31 376.3 -109.01 377.56Q-107.71 378.82 -107.71 380.98V381.27Q-107.71 381.4 -107.8 381.5Q-107.89 381.6 -108.01 381.6L-110.34 381.7Q-110.64 381.7 -110.64 381.4V380.77Q-110.64 379.9 -111.14 379.35Q-111.64 378.8 -112.46 378.8Q-113.26 378.8 -113.76 379.35Q-114.26 379.9 -114.26 380.77V389.73Q-114.26 390.6 -113.76 391.15Q-113.26 391.7 -112.46 391.7Q-111.64 391.7 -111.14 391.15Q-110.64 390.6 -110.64 389.73V389.1Q-110.64 388.98 -110.55 388.89Q-110.46 388.8 -110.34 388.8L-108.01 388.9Q-107.89 388.9 -107.8 388.99Q-107.71 389.07 -107.71 389.2V389.5Q-107.71 391.62 -109.01 392.91Q-110.31 394.2 -112.46 394.2Q-114.59 394.2 -115.88 392.91Q-117.16 391.62 -117.16 389.5Z M-92.86 393.73 -93.34 391.1Q-93.34 390.98 -93.49 390.98H-97.14Q-97.29 390.98 -97.29 391.1L-97.76 393.73Q-97.79 394 -98.09 394H-100.36Q-100.71 394 -100.64 393.68L-96.94 376.77Q-96.89 376.5 -96.61 376.5H-93.96Q-93.69 376.5 -93.64 376.77L-89.94 393.68V393.77Q-89.94 394 -90.21 394H-92.54Q-92.84 394 -92.86 393.73ZM-96.71 388.7H-93.94Q-93.79 388.7 -93.81 388.57L-95.26 380.68Q-95.29 380.6 -95.34 380.6Q-95.39 380.6 -95.41 380.68L-96.84 388.57Q-96.86 388.7 -96.71 388.7Z M-75.64 393.75 -77.76 386.57Q-77.81 386.48 -77.89 386.48H-79.21Q-79.34 386.48 -79.34 386.6V393.7Q-79.34 393.82 -79.43 393.91Q-79.51 394 -79.64 394H-81.94Q-82.06 394 -82.15 393.91Q-82.24 393.82 -82.24 393.7V376.8Q-82.24 376.68 -82.15 376.59Q-82.06 376.5 -81.94 376.5H-77.24Q-75.91 376.5 -74.9 377.14Q-73.89 377.77 -73.33 378.94Q-72.76 380.1 -72.76 381.6Q-72.76 383.15 -73.36 384.27Q-73.96 385.4 -75.04 385.98Q-75.14 386 -75.11 386.12L-72.66 393.65Q-72.64 393.7 -72.64 393.77Q-72.64 394 -72.91 394H-75.31Q-75.56 394 -75.64 393.75ZM-79.34 379.12V384.1Q-79.34 384.23 -79.21 384.23H-77.69Q-76.79 384.23 -76.23 383.52Q-75.66 382.82 -75.66 381.62Q-75.66 380.43 -76.23 379.71Q-76.79 379 -77.69 379H-79.21Q-79.34 379 -79.34 379.12Z M-57.31 376.5H-55.04Q-54.91 376.5 -54.83 376.59Q-54.74 376.68 -54.74 376.8V393.7Q-54.74 393.82 -54.83 393.91Q-54.91 394 -55.04 394H-57.66Q-57.91 394 -57.99 393.75L-61.71 383.15Q-61.74 383.07 -61.8 383.09Q-61.86 383.1 -61.86 383.18L-61.84 393.7Q-61.84 393.82 -61.92 393.91Q-62.01 394 -62.14 394H-64.41Q-64.54 394 -64.62 393.91Q-64.71 393.82 -64.71 393.7V376.8Q-64.71 376.68 -64.62 376.59Q-64.54 376.5 -64.41 376.5H-61.84Q-61.59 376.5 -61.51 376.75L-57.76 387.27Q-57.74 387.35 -57.67 387.34Q-57.61 387.32 -57.61 387.25V376.8Q-57.61 376.68 -57.52 376.59Q-57.44 376.5 -57.31 376.5Z M-37.61 379H-43.01Q-43.14 379 -43.14 379.12V383.85Q-43.14 383.98 -43.01 383.98H-39.81Q-39.69 383.98 -39.6 384.06Q-39.51 384.15 -39.51 384.27V386.2Q-39.51 386.32 -39.6 386.41Q-39.69 386.5 -39.81 386.5H-43.01Q-43.14 386.5 -43.14 386.62V391.38Q-43.14 391.5 -43.01 391.5H-37.61Q-37.49 391.5 -37.4 391.59Q-37.31 391.68 -37.31 391.8V393.7Q-37.31 393.82 -37.4 393.91Q-37.49 394 -37.61 394H-45.74Q-45.86 394 -45.95 393.91Q-46.04 393.82 -46.04 393.7V376.8Q-46.04 376.68 -45.95 376.59Q-45.86 376.5 -45.74 376.5H-37.61Q-37.49 376.5 -37.4 376.59Q-37.31 376.68 -37.31 376.8V378.7Q-37.31 378.82 -37.4 378.91Q-37.49 379 -37.61 379Z M-19.89 376.8V378.7Q-19.89 378.82 -19.98 378.91Q-20.06 379 -20.19 379H-23.36Q-23.49 379 -23.49 379.12V393.7Q-23.49 393.82 -23.58 393.91Q-23.66 394 -23.79 394H-26.09Q-26.21 394 -26.3 393.91Q-26.39 393.82 -26.39 393.7V379.12Q-26.39 379 -26.51 379H-29.51Q-29.64 379 -29.73 378.91Q-29.81 378.82 -29.81 378.7V376.8Q-29.81 376.68 -29.73 376.59Q-29.64 376.5 -29.51 376.5H-20.19Q-20.06 376.5 -19.98 376.59Q-19.89 376.68 -19.89 376.8Z M-0.86 393.7V376.8Q-0.86 376.68 -0.78 376.59Q-0.69 376.5 -0.56 376.5H3.71Q5.86 376.5 7.15 377.8Q8.44 379.1 8.44 381.27V389.23Q8.44 391.4 7.15 392.7Q5.86 394 3.71 394H-0.56Q-0.69 394 -0.78 393.91Q-0.86 393.82 -0.86 393.7ZM2.16 391.5 3.66 391.48Q4.49 391.48 5 390.81Q5.51 390.15 5.54 389.05V381.45Q5.54 380.32 5.02 379.66Q4.51 379 3.64 379H2.16Q2.04 379 2.04 379.12V391.38Q2.04 391.5 2.16 391.5Z M19.59 376.85 17.96 381.7Q17.89 381.95 17.64 381.95H15.91Q15.59 381.95 15.66 381.62L16.71 376.77Q16.76 376.5 17.04 376.5H19.36Q19.51 376.5 19.58 376.59Q19.64 376.68 19.59 376.85Z M35.49 379H30.09Q29.96 379 29.96 379.12V383.85Q29.96 383.98 30.09 383.98H33.29Q33.41 383.98 33.5 384.06Q33.59 384.15 33.59 384.27V386.2Q33.59 386.32 33.5 386.41Q33.41 386.5 33.29 386.5H30.09Q29.96 386.5 29.96 386.62V391.38Q29.96 391.5 30.09 391.5H35.49Q35.61 391.5 35.7 391.59Q35.79 391.68 35.79 391.8V393.7Q35.79 393.82 35.7 393.91Q35.61 394 35.49 394H27.36Q27.24 394 27.15 393.91Q27.06 393.82 27.06 393.7V376.8Q27.06 376.68 27.15 376.59Q27.24 376.5 27.36 376.5H35.49Q35.61 376.5 35.7 376.59Q35.79 376.68 35.79 376.8V378.7Q35.79 378.82 35.7 378.91Q35.61 379 35.49 379ZM30.06 374.55 31.54 371.97Q31.64 371.77 31.91 371.77H33.71Q33.91 371.77 33.96 371.89Q34.01 372 33.91 372.15L32.06 374.72Q31.94 374.9 31.71 374.9H30.29Q30.11 374.9 30.04 374.8Q29.96 374.7 30.06 374.55Z M43.64 389.5V380.98Q43.64 378.82 44.93 377.56Q46.21 376.3 48.34 376.3Q50.49 376.3 51.79 377.56Q53.09 378.82 53.09 380.98V381.27Q53.09 381.4 53 381.5Q52.91 381.6 52.79 381.6L50.46 381.7Q50.16 381.7 50.16 381.4V380.77Q50.16 379.9 49.66 379.35Q49.16 378.8 48.34 378.8Q47.54 378.8 47.04 379.35Q46.54 379.9 46.54 380.77V389.73Q46.54 390.6 47.04 391.15Q47.54 391.7 48.34 391.7Q49.16 391.7 49.66 391.15Q50.16 390.6 50.16 389.73V389.1Q50.16 388.98 50.25 388.89Q50.34 388.8 50.46 388.8L52.79 388.9Q52.91 388.9 53 388.99Q53.09 389.07 53.09 389.2V389.5Q53.09 391.62 51.79 392.91Q50.49 394.2 48.34 394.2Q46.21 394.2 44.93 392.91Q43.64 391.62 43.64 389.5Z M61.26 389.15V376.8Q61.26 376.68 61.35 376.59Q61.44 376.5 61.56 376.5H63.86Q63.99 376.5 64.08 376.59Q64.16 376.68 64.16 376.8V389.45Q64.16 390.45 64.66 391.07Q65.16 391.7 65.99 391.7Q66.81 391.7 67.31 391.07Q67.81 390.45 67.81 389.45V376.8Q67.81 376.68 67.9 376.59Q67.99 376.5 68.11 376.5H70.41Q70.54 376.5 70.63 376.59Q70.71 376.68 70.71 376.8V389.15Q70.71 391.43 69.41 392.81Q68.11 394.2 65.99 394.2Q63.84 394.2 62.55 392.81Q61.26 391.43 61.26 389.15Z M85.91 393.75 83.79 386.57Q83.74 386.48 83.66 386.48H82.34Q82.21 386.48 82.21 386.6V393.7Q82.21 393.82 82.12 393.91Q82.04 394 81.91 394H79.61Q79.49 394 79.4 393.91Q79.31 393.82 79.31 393.7V376.8Q79.31 376.68 79.4 376.59Q79.49 376.5 79.61 376.5H84.31Q85.64 376.5 86.65 377.14Q87.66 377.77 88.23 378.94Q88.79 380.1 88.79 381.6Q88.79 383.15 88.19 384.27Q87.59 385.4 86.51 385.98Q86.41 386 86.44 386.12L88.89 393.65Q88.91 393.7 88.91 393.77Q88.91 394 88.64 394H86.24Q85.99 394 85.91 393.75ZM82.21 379.12V384.1Q82.21 384.23 82.34 384.23H83.86Q84.76 384.23 85.33 383.52Q85.89 382.82 85.89 381.62Q85.89 380.43 85.33 379.71Q84.76 379 83.86 379H82.34Q82.21 379 82.21 379.12Z M96.84 393.7V376.8Q96.84 376.68 96.93 376.59Q97.01 376.5 97.14 376.5H99.44Q99.56 376.5 99.65 376.59Q99.74 376.68 99.74 376.8V393.7Q99.74 393.82 99.65 393.91Q99.56 394 99.44 394H97.14Q97.01 394 96.93 393.91Q96.84 393.82 96.84 393.7Z M116.86 379H111.46Q111.34 379 111.34 379.12V383.85Q111.34 383.98 111.46 383.98H114.66Q114.79 383.98 114.88 384.06Q114.96 384.15 114.96 384.27V386.2Q114.96 386.32 114.88 386.41Q114.79 386.5 114.66 386.5H111.46Q111.34 386.5 111.34 386.62V391.38Q111.34 391.5 111.46 391.5H116.86Q116.99 391.5 117.08 391.59Q117.16 391.68 117.16 391.8V393.7Q117.16 393.82 117.08 393.91Q116.99 394 116.86 394H108.74Q108.61 394 108.53 393.91Q108.44 393.82 108.44 393.7V376.8Q108.44 376.68 108.53 376.59Q108.61 376.5 108.74 376.5H116.86Q116.99 376.5 117.08 376.59Q117.16 376.68 117.16 376.8V378.7Q117.16 378.82 117.08 378.91Q116.99 379 116.86 379Z"]}};
+/* Le cheval en trois morceaux, pour l'animer : queue et crinière en vert prairie, corps en vert écurie */
+const chevalSvg = o => `<g class="lg-cheval"><path class="lg-leaf lg-queue" d="${o.tail}"/><path class="lg-leaf lg-criniere" d="${o.mane}"/><path class="lg-ink lg-corps" d="${o.body}"/></g>`;
+/* Symbole seul (en-tête, états vides) ; couleurs portées par le thème : --logo-ink et --logo-leaf */
+const brandMark = (cls = '') => `<svg class="brand-mark ${cls}" viewBox="${BRAND.mark.vb}" aria-hidden="true" focusable="false">${chevalSvg(BRAND.mark)}</svg>`;
+/* Logo complet, vertical : cheval, EquiValdi, Carnet d'écurie */
+const brandLogo = (cls = '') => `<svg class="brand-logo ${cls}" viewBox="${BRAND.vert.vb}" role="img" aria-label="EquiValdi, carnet d'écurie" focusable="false">${chevalSvg(BRAND.vert)}${BRAND.vert.words.map(d => `<path class="lg-ink" d="${d}"/>`).join('')}</svg>`;
+/* Icône d'onglet « Chevaux » : le symbole, crins en clair */
+ICONS.horse = `<path class="i-leaf" d="${BRAND.mark.mane} ${BRAND.mark.tail}"/><path d="${BRAND.mark.body}"/>`;
+ICON_VB.horse = BRAND.mark.vb;
 
 /* ---------- Données : copie locale + base de l'artifact ---------- */
 const COLS = ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches'];
@@ -1337,7 +1422,7 @@ const nomPre = id => (get('pres', id) || {}).nom || 'un pré';
 function filEquipe(fromT = 0, limit = 30, k = null) {
   const items = [];
   // une action sans auteur connu (saisie d'avant le prénom) n'apprend rien sur qui fait quoi
-  const push = (t, r, icon, quoi, objet, act) => { const pk = pKey(r); if (t && t >= fromT && pk && (!k || pk === k)) items.push({ t, r, icon, quoi, objet, act }); };
+  const push = (t, r, icon, quoi, objet, act) => { if (!t || t < fromT) return; const pk = pKey(r); if (pk && (!k || pk === k)) items.push({ t, r, icon, quoi, objet, act }); };
   taches().forEach(tk => faitsDe(tk).forEach(f => push(f.t, { uid: f.uid, nom: f.par }, 'tasks', 'Tâche cochée', tk.titre, `data-act="edit-tache" data-id="${tk.id}"`)));
   const crees = (coll, icon, fn, act) => list(coll).forEach(o => {
     const c = o.creePar;
@@ -1373,9 +1458,66 @@ const ACT = {};
 let currentFab = null;
 
 function renderTabs() {
-  $('#tabs').innerHTML = TABS.map(t =>
+  setHTML($('#tabs'), TABS.map(t =>
     `<button type="button" data-act="tab" data-tab="${t.id}"${nav.tab === t.id ? ' aria-current="page"' : ''}><span class="tab-ic">${ic(t.icon)}</span><span>${t.label}</span></button>`
-  ).join('');
+  ).join(''));
+}
+
+/* ---------- Mise à jour de l'écran ----------
+   À chaque navigation, l'écran est redessiné et entre en douceur. Quand seules les données changent,
+   on ne retouche que ce qui a changé : les animations en cours et la saisie ne sont pas interrompues. */
+const mouvementOk = () => !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+let entree = 'tab';        // animation du prochain rendu : tab, push, back, seg (null : simple mise à jour)
+let entreeTimer = null;
+const keyOf = n => (n.nodeType === 1 && n.getAttribute('data-key')) || null;
+function morphAttrs(a, b) {
+  for (const { name } of Array.from(a.attributes)) if (!b.hasAttribute(name) && name !== 'class') a.removeAttribute(name);
+  // les classes fx-… sont posées par les effets : on les garde jusqu'à la fin de leur animation
+  const fx = Array.from(a.classList).filter(c => c.startsWith('fx-'));
+  const cls = [b.getAttribute('class') || '', ...fx].join(' ').trim();
+  if ((a.getAttribute('class') || '') !== cls) { if (cls) a.setAttribute('class', cls); else a.removeAttribute('class'); }
+  for (const { name, value } of Array.from(b.attributes)) if (name !== 'class' && a.getAttribute(name) !== value) a.setAttribute(name, value);
+}
+function morphNode(a, b) {
+  if (a.nodeType !== 1) { if (a.nodeValue !== b.nodeValue) a.nodeValue = b.nodeValue; return; }
+  morphAttrs(a, b);
+  morphKids(a, b);
+}
+function morphKids(a, b) {
+  const keyed = new Map();
+  for (let c = a.firstChild; c; c = c.nextSibling) { const k = keyOf(c); if (k) keyed.set(k, c); }
+  let cur = a.firstChild, t = b.firstChild;
+  while (t) {
+    const next = t.nextSibling, k = keyOf(t);
+    let m = null;
+    if (k) { m = keyed.get(k) || null; if (m && m.tagName !== t.tagName) m = null; }
+    else if (cur && !keyOf(cur) && cur.nodeType === t.nodeType && (cur.nodeType !== 1 || cur.tagName === t.tagName)) m = cur;
+    if (m) {
+      if (k) keyed.delete(k);
+      if (m === cur) cur = cur.nextSibling; else a.insertBefore(m, cur);
+      morphNode(m, t);
+    } else a.insertBefore(t, cur);
+    t = next;
+  }
+  while (cur) { const n = cur.nextSibling; a.removeChild(cur); cur = n; }
+}
+function setHTML(el, html) {
+  const tpl = document.createElement('template');
+  tpl.innerHTML = html;
+  morphKids(el, tpl.content);
+}
+/* Les lignes repérées (data-key) qui changent de place glissent jusqu'à leur nouvelle position */
+function glisse(root, fn) {
+  if (!mouvementOk() || !Element.prototype.animate) { fn(); return; }
+  const avant = new Map();
+  root.querySelectorAll('[data-key]').forEach(el => avant.set(el.getAttribute('data-key'), el.getBoundingClientRect().top));
+  fn();
+  root.querySelectorAll('[data-key]').forEach(el => {
+    const y0 = avant.get(el.getAttribute('data-key'));
+    if (y0 == null) return;
+    const dy = y0 - el.getBoundingClientRect().top;
+    if (Math.abs(dy) > 2) el.animate([{ transform: `translateY(${dy}px)` }, { transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.2,.9,.25,1)' });
+  });
 }
 function render() {
   const top = nav.stack[nav.stack.length - 1];
@@ -1390,9 +1532,23 @@ function render() {
   $('#topEyebrow').textContent = v.eyebrow || dLong(todayISO());
   $('#backBtn').hidden = !top;
   $('#brandBtn').hidden = !!top;
-  $('#view').innerHTML = v.html;
-  const segA = $('#view .seg.scroll [aria-pressed="true"]');
-  if (segA) { const p = segA.parentElement; p.scrollLeft = Math.max(0, segA.offsetLeft - (p.clientWidth - segA.offsetWidth) / 2); }
+  const view = $('#view');
+  // fin du chargement : le vrai contenu entre en douceur
+  let anim = entree;
+  if (!anim && view.firstElementChild && view.firstElementChild.classList.contains('loading') && !/^<div class="loading"/.test(v.html)) anim = 'tab';
+  entree = null;
+  if (anim && anim !== 'seg') {
+    view.innerHTML = v.html;
+    const segA = $('#view .seg.scroll [aria-pressed="true"]');
+    if (segA) { const p = segA.parentElement; p.scrollLeft = Math.max(0, segA.offsetLeft - (p.clientWidth - segA.offsetWidth) / 2); }
+  } else glisse(view, () => setHTML(view, v.html));
+  if (anim && mouvementOk()) {
+    view.classList.remove('in-tab', 'in-push', 'in-back', 'in-seg');
+    void view.offsetWidth;
+    view.classList.add('in-' + anim);
+    clearTimeout(entreeTimer);
+    entreeTimer = setTimeout(() => view.classList.remove('in-tab', 'in-push', 'in-back', 'in-seg'), 900);
+  }
   currentFab = v.fab || null;
   const fab = $('#fab');
   fab.hidden = !currentFab || sync.readOnly;
@@ -1405,16 +1561,16 @@ function rerenderSoon() { clearTimeout(rrTimer); rrTimer = setTimeout(render, 40
 function go(tab) {
   if (nav.tab === tab && !nav.stack.length) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
   nav.tab = tab; nav.stack = []; ui.tab = tab; saveUi();
-  render(); window.scrollTo(0, 0);
+  entree = 'tab'; render(); window.scrollTo(0, 0);
 }
 function push(view, params = {}) {
   (nav.stack[nav.stack.length - 1] || nav).savedY = window.scrollY;
   nav.stack.push(Object.assign({ view }, params));
-  render(); window.scrollTo(0, 0);
+  entree = 'push'; render(); window.scrollTo(0, 0);
 }
 function back() {
   nav.stack.pop();
-  render();
+  entree = 'back'; render();
   window.scrollTo(0, (nav.stack[nav.stack.length - 1] || nav).savedY || 0);
 }
 const topView = () => nav.stack[nav.stack.length - 1] || null;
@@ -1478,13 +1634,60 @@ let toastTimer = null;
 function toast(msg, o = {}) {
   const el = $('#toast');
   if (!el) return;
-  el.className = 'toast' + (o.danger ? ' danger' : '');
-  el.innerHTML = `<span>${esc(msg)}</span>${o.undo ? '<button type="button" id="toastUndo">Annuler</button>' : ''}`;
+  el.className = 'toast' + (o.danger ? ' danger' : '') + (o.fete ? ' fete' : '');
+  el.innerHTML = `${o.fete ? brandMark('toast-cheval') : ''}<span>${esc(msg)}</span>${o.undo ? '<button type="button" id="toastUndo">Annuler</button>' : ''}`;
   el.hidden = false;
+  void el.offsetWidth;            // rejoue l'apparition, même si un message était déjà affiché
+  el.classList.add('pop');
   if (o.undo) $('#toastUndo').onclick = () => { el.hidden = true; o.undo(); toast('Annulé'); };
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => { el.hidden = true; }, o.undo ? 6000 : 3400);
 }
+
+/* ---------- Petits effets : rebond, confettis en crinière, galop de fête ---------- */
+const fx = { ordre: null, jusqua: 0 };
+/* Classe d'animation posée le temps de l'animation (gardée par les mises à jour d'écran) */
+function fxOnce(el, cls, ms) {
+  if (!el || !mouvementOk()) return;
+  el.classList.remove(cls);
+  void el.offsetWidth;
+  el.classList.add(cls);
+  setTimeout(() => el.classList.remove(cls), ms);
+}
+function fxLayer() {
+  let l = document.getElementById('fx');
+  if (!l) { l = document.createElement('div'); l.id = 'fx'; l.setAttribute('aria-hidden', 'true'); document.body.appendChild(l); }
+  return l;
+}
+/* Gerbe de petits zigzags, points et traits aux couleurs du logo, autour d'un élément */
+function confettis(el) {
+  if (!el || !mouvementOk() || !Element.prototype.animate) return;
+  const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2, L = fxLayer();
+  ['zz', 'pt', 'tr', 'zz', 'pt', 'zz', 'tr', 'pt', 'zz'].forEach((f, i, all) => {
+    const c = document.createElement('i');
+    c.className = `cf cf-${f} cc${i % 4}`;
+    c.style.left = cx + 'px'; c.style.top = cy + 'px';
+    L.appendChild(c);
+    const a = (i / all.length) * Math.PI * 2 + Math.random() * .6, d = 30 + Math.random() * 26, rot = Math.round(Math.random() * 220 - 110);
+    const x = Math.cos(a) * d, y = Math.sin(a) * d;
+    c.animate([
+      { transform: 'translate(0,0) scale(.3) rotate(0deg)', opacity: 1 },
+      { transform: `translate(${x}px,${y}px) scale(1) rotate(${rot}deg)`, opacity: 1, offset: .55 },
+      { transform: `translate(${x * 1.18}px,${y * 1.18 + 14}px) scale(.7) rotate(${rot * 1.4}deg)`, opacity: 0 }
+    ], { duration: 650 + Math.random() * 250, easing: 'cubic-bezier(.2,.75,.3,1)' }).onfinish = () => c.remove();
+  });
+}
+/* Le cheval du logo traverse l'écran au galop (fête : toutes les tâches du jour sont faites) */
+function galop() {
+  if (!mouvementOk() || !Element.prototype.animate) return;
+  const L = fxLayer(), h = document.createElement('div');
+  h.className = 'galop';
+  h.innerHTML = `<div class="galop-saut">${brandMark()}</div>`;
+  L.appendChild(h);
+  h.animate([{ transform: 'translateX(-90px)' }, { transform: `translateX(${window.innerWidth + 90}px)` }], { duration: 2600, easing: 'linear' }).onfinish = () => h.remove();
+  h.firstChild.animate([{ transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(-16px) rotate(-7deg)', offset: .45 }, { transform: 'translateY(0) rotate(2deg)' }], { duration: 340, iterations: 8, easing: 'ease-in-out' });
+}
+const vibre = ms => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) { /* sans vibreur */ } };
 
 /* ---------- Briques de formulaire ---------- */
 const fld = (label, inner, hint = '') => `<label class="field"><span>${label}</span>${inner}${hint ? `<small class="hint">${hint}</small>` : ''}</label>`;
@@ -1511,6 +1714,7 @@ function onChip(btn) {
   if (g.dataset.multi) btn.setAttribute('aria-pressed', String(!pressed));
   else if (pressed && g.dataset.opt) btn.setAttribute('aria-pressed', 'false');
   else $$('.chip', g).forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+  if (btn.getAttribute('aria-pressed') === 'true') fxOnce(btn, 'fx-pop', 450);
   g.dispatchEvent(new CustomEvent('chipchange', { bubbles: true, detail: { name: g.dataset.chips, v: btn.dataset.v } }));
 }
 const horseOpts = (hs, sub) => hs.map(h => ({
@@ -1580,6 +1784,8 @@ document.addEventListener('input', e => {
 /* ---------- Briques d'affichage ---------- */
 const section = (title, inner, action = '') => `<section class="sec"><div class="sec-h"><h2>${title}</h2>${action}</div>${inner}</section>`;
 const empty = (t, s) => `<div class="empty"><b>${t}</b>${s}</div>`;
+/* État vide illustré : le cheval du logo, qui balance la queue */
+const emptyH = (t, s, extra = '') => `<div class="empty illu">${brandMark()}<b>${t}</b>${s}${extra}</div>`;
 const segCtl = (key, opts, cur, cls = '') => `<div class="seg${cls ? ' ' + cls : ''}" role="group">${opts.map(([v, l]) =>
   `<button type="button" data-act="seg" data-k="${key}" data-v="${v}" aria-pressed="${v === cur}">${l}</button>`).join('')}</div>`;
 const lead = (icon, sev = '') => `<span class="lead">${ic(icon)}</span>`;
@@ -1620,7 +1826,7 @@ ACT.reglages = () => { const t = topView(); if (t && t.view === 'reglages') retu
 ACT.seg = d => {
   const t = topView();
   if (d.k === 'sub' && t) t.sub = d.v; else { ui[d.k] = d.v; saveUi(); }
-  render();
+  entree = 'seg'; render();
 };
 ACT['open-cheval'] = d => push('cheval', { id: d.id, sub: d.sub || 'fiche' });
 ACT['open-pre'] = d => push('pre', { id: d.id });
@@ -1938,12 +2144,13 @@ function quickHtml() {
   const nB = Object.values(st.by).reduce((n, x) => n + Math.max(0, x.n), 0);
   const t = todayISO();
   const n7 = list('seances').filter(s => s.statut !== 'prevu' && validISO(s.date) && s.date > addDays(t, -7) && s.date <= t).length;
-  const qa = (act, icon, t1, t2) => `<button type="button" class="qa" ${act}>${ic(icon)}<span>${t1}<small>${esc(t2)}</small></span></button>`;
+  // grosses touches « autocollant » : pastille de couleur irrégulière, comme dessinée à la main
+  const qa = (act, icon, tint, t1, t2) => `<button type="button" class="qa" ${act}><span class="qa-ic ${tint}">${ic(icon)}</span><span>${t1}<small>${esc(t2)}</small></span></button>`;
   return `<div class="quick">
-    ${qa('data-act="new" data-what="soin"', 'syringe', 'Soin / RDV', 'vaccin, maréchal, véto')}
-    ${qa('data-act="new" data-what="seance"', 'timer', 'Séance', n7 ? `${n7} ${pl(n7, 'séance')} sur 7 jours` : 'plat, saut, longe, cours')}
-    ${qa('data-act="new" data-what="move"', 'move', 'Déplacer', occN ? `${occN} ${pl(occN, 'pré occupé', 'prés occupés')}` : 'rotation des prés')}
-    ${qa('data-act="foin-out-pick"', 'bale', 'Balle entamée', `${nB} ${pl(nB, 'balle')} en stock`)}
+    ${qa('data-act="new" data-what="soin"', 'syringe', 'ciel', 'Soin / RDV', 'vaccin, maréchal, véto')}
+    ${qa('data-act="new" data-what="seance"', 'timer', 'menthe', 'Séance', n7 ? `${n7} ${pl(n7, 'séance')} sur 7 jours` : 'plat, saut, longe, cours')}
+    ${qa('data-act="new" data-what="move"', 'move', 'prairie', 'Déplacer', occN ? `${occN} ${pl(occN, 'pré occupé', 'prés occupés')}` : 'rotation des prés')}
+    ${qa('data-act="foin-out-pick"', 'bale', 'paille', 'Balle entamée', `${nB} ${pl(nB, 'balle')} en stock`)}
   </div>`;
 }
 function bienvenueHtml() {
@@ -1970,7 +2177,7 @@ VIEWS.accueil = () => {
   html.push(tachesSection());
   const al = alerts();
   html.push(section('À traiter', al.length ? `<div class="list">${al.map(rowAlert).join('')}</div>`
-    : empty("Rien d'urgent", "Les rappels de soins, les prés à changer et les concours à préparer s'afficheront ici.")));
+    : emptyH("Rien d'urgent", "Les rappels de soins, les prés à changer et les concours à préparer s'afficheront ici.")));
   html.push(section('Au pré', auPreHtml(), `<button type="button" class="link" data-act="go" data-tab="pres">Rotation ${ic('next', 'sm')}</button>`));
   html.push(section('Les 30 prochains jours', agendaHtml(agenda())));
   html.push(section('Foin', foinMini()));
@@ -2050,7 +2257,7 @@ VIEWS.chevaux = () => {
   const hs = chevaux();
   if (seg === 'rations') return { title: 'Chevaux', eyebrow: 'Rations du jour', html: html + rationsDuJour(), fab: null };
   html += hs.length ? `<div class="list">${hs.map(rowCheval).join('')}</div>`
-    : empty('Aucun cheval', 'Ajoute ta première fiche avec le bouton +. Âge, ration, soins et concours seront regroupés ici.');
+    : emptyH('Aucun cheval', 'Ajoute ta première fiche avec le bouton +. Âge, ration, soins et concours seront regroupés ici.');
   const arch = list('chevaux').filter(h => h.archive).sort(byName);
   if (arch.length) {
     html += `<div class="sec"><button type="button" class="link" data-act="toggle-arch" style="align-self:flex-start">${ui.showArch ? 'Masquer' : 'Afficher'} les chevaux archivés (${arch.length})</button>${ui.showArch ? `<div class="list">${arch.map(rowCheval).join('')}</div>` : ''}</div>`;
@@ -2160,7 +2367,7 @@ function rationHtml(h) {
   const lines = h.ration || [];
   const others = chevaux().some(x => x.id !== h.id && (x.ration || []).length);
   const actions = `<div class="btnrow"><button type="button" class="btn small primary" data-act="new" data-what="ration" data-hid="${h.id}">${ic('plus', 'sm')}Aliment</button>${others ? `<button type="button" class="btn small" data-act="copy-ration" data-hid="${h.id}">${ic('copy', 'sm')}Copier une autre ration</button>` : ''}</div>`;
-  if (!lines.length) return empty('Pas encore de ration', 'Ajoute chaque aliment avec sa quantité et les repas où il est donné : il apparaîtra dans les rations du jour.') + actions;
+  if (!lines.length) return emptyH('Pas encore de ration', 'Ajoute chaque aliment avec sa quantité et les repas où il est donné : il apparaîtra dans les rations du jour.') + actions;
   const rows = lines.map(l => {
     const repas = (l.repas || []).map(id => (REPAS.find(r => r.id === id) || {}).label).filter(Boolean).join(', ').toLowerCase();
     const tot = l.qte != null ? `${num(l.qte * nbRepas(l), 2)} ${esc(l.unite || '')}/j` : '';
@@ -2179,7 +2386,7 @@ function soinsHtml(h) {
     : `<p class="note">Les rappels apparaissent dès qu'un soin à intervalle (vaccin, vermifuge, maréchal, dentiste, ostéo) est enregistré. Les intervalles se règlent dans les réglages.</p>`;
   const cost = ss.filter(s => s.date.startsWith(yr) && s.statut !== 'prevu').reduce((a, s) => a + (Number(s.cout) || 0), 0);
   const hist = ss.length ? `<div class="list">${ss.map(rowSoin).join('')}</div>${cost ? `<p class="note">Dépenses de soins en ${yr} : <b>${num(cost, 2)} €</b></p>` : ''}`
-    : empty('Aucun soin enregistré', 'Utilise le bouton + pour noter un vaccin, un vermifuge, le passage du maréchal…');
+    : emptyH('Aucun soin enregistré', 'Utilise le bouton + pour noter un vaccin, un vermifuge, le passage du maréchal…');
   return section('Rappels', rap) + section('Historique', hist);
 }
 function rowSoin(s) {
@@ -2190,7 +2397,7 @@ function rowSoin(s) {
 function concoursCheval(h) {
   const t = todayISO(), st = statsConcours(h.id);
   const cs = list('concours').filter(c => c.horseId === h.id).sort((a, b) => b.date.localeCompare(a.date));
-  if (!cs.length) return empty('Aucun concours', 'Ajoute une sortie avec le bouton + : date, lieu, épreuve, puis le résultat.');
+  if (!cs.length) return emptyH('Aucun concours', 'Ajoute une sortie avec le bouton + : date, lieu, épreuve, puis le résultat.');
   const stats = `<div class="stats"><div class="stat"><b>${st.sorties}</b><span>${pl(st.sorties, 'sortie')}</span></div><div class="stat"><b>${st.podiums}</b><span>${pl(st.podiums, 'podium')}</span></div><div class="stat"><b>${st.best ? ordinal(st.best) : '–'}</b><span>meilleure place</span></div></div>`;
   const up = cs.filter(c => c.date >= t).reverse(), past = cs.filter(c => c.date < t);
   return stats + (up.length ? section('À venir', `<div class="list">${up.map(c => ccard(c, false)).join('')}</div>`) : '')
@@ -2454,7 +2661,7 @@ const col = html => `<div style="display:flex;flex-direction:column;gap:12px">${
 
 VIEWS.pres = () => {
   const ps = pres().map(p => ({ p, s: preStatus(p) }));
-  if (!ps.length) return { title: 'Prés', eyebrow: 'Rotation de pâture', html: empty('Aucun pré', 'Ajoute tes parcelles avec le bouton +. Le carnet comptera les jours de pâture et de repos de chacune.'), fab: () => formPre(null), fabLabel: 'Nouveau pré' };
+  if (!ps.length) return { title: 'Prés', eyebrow: 'Rotation de pâture', html: emptyH('Aucun pré', 'Ajoute tes parcelles avec le bouton +. Le carnet comptera les jours de pâture et de repos de chacune.'), fab: () => formPre(null), fabLabel: 'Nouveau pré' };
   const occ = ps.filter(x => x.s.occupe).sort((a, b) => b.s.days - a.s.days);
   const prets = ps.filter(x => !x.s.occupe && x.s.pret).sort((a, b) => (b.s.repos ?? -1) - (a.s.repos ?? -1));
   const repos = ps.filter(x => !x.s.occupe && !x.s.pret).sort((a, b) => (b.s.repos / b.s.cible) - (a.s.repos / a.s.cible));
@@ -2637,7 +2844,7 @@ VIEWS.foin = () => {
   const A = autonomie(), st = A.st, t = todayISO();
   const types = Object.values(st.by).filter(x => !x.orphan || x.n !== 0);
   let html = `<div class="hero"><div class="eyebrow">Stock estimé</div><div><span class="big">${num(st.kg / 1000, 1)}</span><span class="unit"> t de foin</span></div>
-    ${types.map(x => `<div class="bale-row"><div class="row-main"><div class="row-t">${esc(x.b.nom)}</div><div class="row-s">≈ ${num(x.poidsMoy, 0)} kg la balle</div></div>
+    ${types.map(x => `<div class="bale-row" data-key="b-${esc(x.b.id)}"><div class="row-main"><div class="row-t">${esc(x.b.nom)}</div><div class="row-s">≈ ${num(x.poidsMoy, 0)} kg la balle</div></div>
       <span class="big" aria-label="${x.n} en stock">${x.n}</span>
       <button type="button" class="stepbtn out" data-act="foin-out" data-balle="${esc(x.b.id)}" aria-label="Entamer une balle : ${esc(x.b.nom)}">${ic('minus')}</button>
       <button type="button" class="stepbtn" data-act="new" data-what="foin" data-balle="${esc(x.b.id)}" data-sens="in" aria-label="Entrée : ${esc(x.b.nom)}">${ic('plus')}</button></div>`).join('')}
@@ -2668,7 +2875,7 @@ VIEWS.foin = () => {
     html += section('Achats sur 12 mois', `<div class="stats"><div class="stat"><b>${num(eur, 0)} €</b><span>dépensés</span></div><div class="stat"><b>${kg ? num(eur / kg * 1000, 0) : '–'}</b><span>€ la tonne</span></div><div class="stat"><b>${num(kg / 1000, 1)}</b><span>t achetées</span></div></div>`);
   }
   const mv = list('foin').sort((a, b) => b.date.localeCompare(a.date) || (b.maj || 0) - (a.maj || 0)).slice(0, 40);
-  html += section('Mouvements', mv.length ? `<div class="list">${mv.map(rowFoin).join('')}</div>` : empty('Aucun mouvement', 'Ajoute ta première livraison ou récolte avec le bouton +.'),
+  html += section('Mouvements', mv.length ? `<div class="list">${mv.map(rowFoin).join('')}</div>` : emptyH('Aucun mouvement', 'Ajoute ta première livraison ou récolte avec le bouton +.'),
     `<button type="button" class="link" data-act="new" data-what="foin" data-sens="in">${ic('plus', 'sm')}Entrée</button>`);
   return { title: 'Foin', eyebrow: 'Stock et autonomie', html, fab: () => formFoin(null, { sens: 'in' }), fabLabel: 'Entrée de foin' };
 };
@@ -2677,6 +2884,9 @@ function quickOut(balle) {
   const x = stock().by[balle];
   if (!x || x.n <= 0) { toast('Plus de balle de ce type en stock.'); return; }
   const m = put('foin', { date: todayISO(), sens: 'out', balle, nb: 1 });
+  render();
+  // le compteur de balles fait un petit bond
+  $$(`.bale-row[data-key="b-${CSS.escape(balle)}"] .big`).forEach(el => fxOnce(el, 'fx-pop', 450));
   toast(`Sortie : 1 ${balleNom(balle)} · reste ${x.n - 1}`, { undo: () => del('foin', m.id) });
 }
 ACT['foin-out'] = d => { closeSheet(); quickOut(d.balle); };
@@ -2768,10 +2978,10 @@ VIEWS.concours = () => {
   let html = segCtl('concSeg', [['avenir', `À venir${up.length ? ' · ' + up.length : ''}`], ['resultats', 'Résultats']], seg);
   if (seg === 'avenir') {
     html += up.length ? `<div class="list">${up.map(c => ccard(c)).join('')}</div>`
-      : empty('Aucun concours prévu', "Ajoute une sortie avec le bouton + : date, lieu, épreuve. Le carnet te rappelle l'engagement et vérifie les vaccins.");
+      : emptyH('Aucun concours prévu', "Ajoute une sortie avec le bouton + : date, lieu, épreuve. Le carnet te rappelle l'engagement et vérifie les vaccins.");
     html += "<p class=\"note\">Vérification des vaccins : rappel grippe de moins de 12 mois (6 mois et 21 jours en FEI), rhinopneumonie en Amateur, Pro et SHF, aucune injection dans les 7 jours avant. La primo-vaccination n'est pas contrôlée.</p>";
   } else if (!past.length) {
-    html += empty('Aucun résultat', "Les concours passés et leurs classements s'afficheront ici.");
+    html += emptyH('Aucun résultat', "Les concours passés et leurs classements s'afficheront ici.");
   } else {
     const st = statsConcours();
     html += `<div class="stats"><div class="stat"><b>${st.sorties}</b><span>${pl(st.sorties, 'sortie')}</span></div><div class="stat"><b>${st.podiums}</b><span>${pl(st.podiums, 'podium')}</span></div><div class="stat"><b>${st.victoires}</b><span>${pl(st.victoires, 'victoire')}</span></div></div>`;
@@ -3082,13 +3292,18 @@ function tacheSub(tk, e) {
 function trow(tk) {
   const e = tacheEtat(tk);
   const late = !e.done && e.retard > 0;
-  return `<div class="trow${e.done ? ' done' : ''}${late ? ' late' : ''}">
-    <button type="button" class="tick" data-act="tick" data-id="${tk.id}" aria-pressed="${e.done}" aria-label="${esc(tk.titre)} : ${e.done ? 'fait, toucher pour annuler' : 'marquer comme fait'}">${ic('check')}</button>
+  return `<div class="trow${e.done ? ' done' : ''}${late ? ' late' : ''}" data-key="tk-${esc(tk.id)}">
+    <button type="button" class="tick" data-act="tick" data-id="${tk.id}" aria-pressed="${e.done}" aria-label="${esc(tk.titre)} : ${e.done ? 'fait, toucher pour annuler' : 'marquer comme fait'}"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path pathLength="1" d="M5.5 12.8 10 17.2 18.8 7.2"/></svg></button>
     <button type="button" class="trow-main" data-act="edit-tache" data-id="${tk.id}"><span class="row-t">${esc(tk.titre)}</span><span class="row-s">${esc(tacheSub(tk, e))}</span></button>
   </div>`;
 }
 function tachesTriees(filter) {
   const xs = taches().filter(filter || (() => true)).map(tk => ({ tk, e: tacheEtat(tk) })).filter(x => x.e.visible);
+  // juste après une coche, la liste garde son ordre le temps de l'animation, puis la ligne glisse à sa place
+  if (fx.ordre && Date.now() < fx.jusqua) {
+    const pos = new Map(fx.ordre.map((id, i) => [id, i]));
+    return xs.sort((a, b) => (pos.has(a.tk.id) ? pos.get(a.tk.id) : 999) - (pos.has(b.tk.id) ? pos.get(b.tk.id) : 999));
+  }
   return xs.sort((a, b) => (a.e.done - b.e.done)
     || (a.e.done ? ((b.e.last.t || 0) - (a.e.last.t || 0)) : ((b.e.retard || 0) - (a.e.retard || 0)))
     || String(a.tk.titre).localeCompare(String(b.tk.titre), 'fr'));
@@ -3101,7 +3316,7 @@ function tachesSection() {
     if (taches().length) return section('Tâches', empty('Rien en cours', 'Les tâches ponctuelles déjà faites sont rangées. Ajoute-en une nouvelle si besoin.'), add);
     const sugg = sync.readOnly ? '' : `<div class="sugg">${chips('sugg', TACHES_SUGG.map((s, i) => ({ v: String(i), l: s.titre })), [], { multi: true })}</div>
       <button type="button" class="btn primary small" data-act="add-sugg">${ic('plus', 'sm')}Ajouter ces tâches</button>`;
-    return section('Tâches', `<div class="empty"><b>Aucune tâche</b>Ajoute les gestes du quotidien : chacun coche quand c'est fait et tout le monde le voit, pour ne rien faire deux fois.${sugg}</div>`, add);
+    return section('Tâches', `<div class="empty illu">${brandMark()}<b>Aucune tâche</b>Ajoute les gestes du quotidien : chacun coche quand c'est fait et tout le monde le voit, pour ne rien faire deux fois.${sugg}</div>`, add);
   }
   const nDone = xs.filter(x => x.e.done).length;
   return section(`Tâches <span class="count">${nDone}/${xs.length}</span>`, tachesListe(xs), add);
@@ -3123,11 +3338,19 @@ function withName(cb) {
     }
   });
 }
+const toutFait = () => { const xs = tachesTriees(); return xs.length > 0 && xs.every(x => x.e.done); };
+/* Fige l'ordre des tâches un instant, puis laisse les lignes glisser à leur place */
+function figeOrdre() {
+  fx.ordre = tachesTriees().map(x => x.tk.id);
+  fx.jusqua = Date.now() + 1100;
+  setTimeout(rerenderSoon, 1150);
+}
 ACT.tick = d => {
   const tk = get('taches', d.id);
   if (!tk) return;
   if (tacheEtat(tk).done) {
     const prev = clone(tk);
+    figeOrdre();
     put('taches', Object.assign({}, tk, { fait: faitsDe(tk).slice(1) }));
     toast('Coche retirée', { undo: () => put('taches', prev) });
     return;
@@ -3135,10 +3358,18 @@ ACT.tick = d => {
   withName(nom => {
     const cur = get('taches', d.id);
     if (!cur) return;
-    const prev = clone(cur);
+    const prev = clone(cur), avant = toutFait();
     const f = { d: todayISO(), t: Date.now(), par: nom, uid: me.uid || null };
+    figeOrdre();
     put('taches', Object.assign({}, cur, { fait: [f, ...faitsDe(cur)].slice(0, 30) }));
-    toast(`${cur.titre} : fait`, { undo: () => put('taches', prev) });
+    render();
+    // la coche se dessine, rebondit et lâche une gerbe de crins
+    $$(`.tick[data-id="${CSS.escape(cur.id)}"]`).forEach(el => { fxOnce(el, 'fx-coche', 700); confettis(el); });
+    vibre(12);
+    if (!avant && toutFait()) {
+      setTimeout(galop, 350);
+      toast("Tout est fait pour aujourd'hui, bravo !", { fete: true, undo: () => put('taches', prev) });
+    } else toast(`${cur.titre} : fait`, { undo: () => put('taches', prev) });
   });
 };
 ACT['add-sugg'] = () => {
@@ -3214,7 +3445,7 @@ function seanceRow(s, showHorse = false) {
 }
 function entrainementHtml(h) {
   const t = todayISO(), st = statsSeances(h.id), ss = seancesDe(h.id);
-  if (!ss.length) return empty('Aucune séance', "Note le travail du jour ou prévois un cours avec ton coach : type, durée, intensité, cavalier, coach, ressenti.")
+  if (!ss.length) return emptyH('Aucune séance', "Note le travail du jour ou prévois un cours avec ton coach : type, durée, intensité, cavalier, coach, ressenti.")
     + (sync.readOnly ? '' : `<button type="button" class="btn primary" data-act="new" data-what="seance" data-hid="${h.id}">${ic('plus', 'sm')}Ajouter une séance</button>`);
   const repos = st.last ? diffDays(st.last.date, t) : null;
   const stats = `<div class="stats">
@@ -3367,7 +3598,7 @@ VIEWS.equipe = () => {
     if (ext.length) html += section('Hors équipe', `<div class="list">${ext.join('')}</div>`);
   } else {
     html += section('Les personnes', ext.length || naRow ? `<div class="list">${ext.join('')}${naRow}</div>`
-      : empty('Personne pour l\'instant', "Les prénoms apparaissent dès qu'une tâche est cochée, qu'une séance est notée ou qu'un propriétaire est indiqué."));
+      : emptyH('Personne pour l\'instant', "Les prénoms apparaissent dès qu'une tâche est cochée, qu'une séance est notée ou qu'un propriétaire est indiqué."));
   }
   const fil = filEquipe(debutT(P), 25);
   html += section("Ce qui s'est passé", fil.length ? `<div class="list">${fil.map(it => rowFil(it)).join('')}</div>`

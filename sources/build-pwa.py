@@ -23,8 +23,8 @@ html = f"""<!doctype html>
 <meta name="theme-color" content="#EEF1EB" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0D1611" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="./manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
-<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png?v=c">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png?v=c">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="EquiValdi">
@@ -51,9 +51,9 @@ manifest = {
     'start_url': './', 'scope': './', 'display': 'standalone', 'orientation': 'portrait',
     'background_color': '#EEF1EB', 'theme_color': '#2B6340',
     'icons': [
-        {'src': 'icons/icon-192.png', 'sizes': '192x192', 'type': 'image/png'},
-        {'src': 'icons/icon-512.png', 'sizes': '512x512', 'type': 'image/png'},
-        {'src': 'icons/icon-maskable-512.png', 'sizes': '512x512', 'type': 'image/png', 'purpose': 'maskable'}
+        {'src': 'icons/icon-192.png?v=c', 'sizes': '192x192', 'type': 'image/png'},
+        {'src': 'icons/icon-512.png?v=c', 'sizes': '512x512', 'type': 'image/png'},
+        {'src': 'icons/icon-maskable-512.png?v=c', 'sizes': '512x512', 'type': 'image/png', 'purpose': 'maskable'}
     ]
 }
 open(os.path.join(OUT, 'manifest.webmanifest'), 'w', encoding='utf-8').write(json.dumps(manifest, ensure_ascii=False, indent=2))

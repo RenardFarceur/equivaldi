@@ -1,5 +1,5 @@
 /* EquiValdi : garde l'appli disponible sans réseau. Les données passent par Firebase, qui a son propre cache. */
-const VERSION = 'equivaldi-20261023231448';
+const VERSION = 'equivaldi-20261023234823';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png', './icons/favicon-32.png'];
 
 self.addEventListener('install', e => {

@@ -29,7 +29,7 @@ const col = html => `<div style="display:flex;flex-direction:column;gap:12px">${
 
 VIEWS.pres = () => {
   const ps = pres().map(p => ({ p, s: preStatus(p) }));
-  if (!ps.length) return { title: 'Prés', eyebrow: 'Rotation de pâture', html: empty('Aucun pré', 'Ajoute tes parcelles avec le bouton +. Le carnet comptera les jours de pâture et de repos de chacune.'), fab: () => formPre(null), fabLabel: 'Nouveau pré' };
+  if (!ps.length) return { title: 'Prés', eyebrow: 'Rotation de pâture', html: emptyH('Aucun pré', 'Ajoute tes parcelles avec le bouton +. Le carnet comptera les jours de pâture et de repos de chacune.'), fab: () => formPre(null), fabLabel: 'Nouveau pré' };
   const occ = ps.filter(x => x.s.occupe).sort((a, b) => b.s.days - a.s.days);
   const prets = ps.filter(x => !x.s.occupe && x.s.pret).sort((a, b) => (b.s.repos ?? -1) - (a.s.repos ?? -1));
   const repos = ps.filter(x => !x.s.occupe && !x.s.pret).sort((a, b) => (b.s.repos / b.s.cible) - (a.s.repos / a.s.cible));

@@ -14,13 +14,18 @@ function tacheSub(tk, e) {
 function trow(tk) {
   const e = tacheEtat(tk);
   const late = !e.done && e.retard > 0;
-  return `<div class="trow${e.done ? ' done' : ''}${late ? ' late' : ''}">
-    <button type="button" class="tick" data-act="tick" data-id="${tk.id}" aria-pressed="${e.done}" aria-label="${esc(tk.titre)} : ${e.done ? 'fait, toucher pour annuler' : 'marquer comme fait'}">${ic('check')}</button>
+  return `<div class="trow${e.done ? ' done' : ''}${late ? ' late' : ''}" data-key="tk-${esc(tk.id)}">
+    <button type="button" class="tick" data-act="tick" data-id="${tk.id}" aria-pressed="${e.done}" aria-label="${esc(tk.titre)} : ${e.done ? 'fait, toucher pour annuler' : 'marquer comme fait'}"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path pathLength="1" d="M5.5 12.8 10 17.2 18.8 7.2"/></svg></button>
     <button type="button" class="trow-main" data-act="edit-tache" data-id="${tk.id}"><span class="row-t">${esc(tk.titre)}</span><span class="row-s">${esc(tacheSub(tk, e))}</span></button>
   </div>`;
 }
 function tachesTriees(filter) {
   const xs = taches().filter(filter || (() => true)).map(tk => ({ tk, e: tacheEtat(tk) })).filter(x => x.e.visible);
+  // juste après une coche, la liste garde son ordre le temps de l'animation, puis la ligne glisse à sa place
+  if (fx.ordre && Date.now() < fx.jusqua) {
+    const pos = new Map(fx.ordre.map((id, i) => [id, i]));
+    return xs.sort((a, b) => (pos.has(a.tk.id) ? pos.get(a.tk.id) : 999) - (pos.has(b.tk.id) ? pos.get(b.tk.id) : 999));
+  }
   return xs.sort((a, b) => (a.e.done - b.e.done)
     || (a.e.done ? ((b.e.last.t || 0) - (a.e.last.t || 0)) : ((b.e.retard || 0) - (a.e.retard || 0)))
     || String(a.tk.titre).localeCompare(String(b.tk.titre), 'fr'));
@@ -33,7 +38,7 @@ function tachesSection() {
     if (taches().length) return section('Tâches', empty('Rien en cours', 'Les tâches ponctuelles déjà faites sont rangées. Ajoute-en une nouvelle si besoin.'), add);
     const sugg = sync.readOnly ? '' : `<div class="sugg">${chips('sugg', TACHES_SUGG.map((s, i) => ({ v: String(i), l: s.titre })), [], { multi: true })}</div>
       <button type="button" class="btn primary small" data-act="add-sugg">${ic('plus', 'sm')}Ajouter ces tâches</button>`;
-    return section('Tâches', `<div class="empty"><b>Aucune tâche</b>Ajoute les gestes du quotidien : chacun coche quand c'est fait et tout le monde le voit, pour ne rien faire deux fois.${sugg}</div>`, add);
+    return section('Tâches', `<div class="empty illu">${brandMark()}<b>Aucune tâche</b>Ajoute les gestes du quotidien : chacun coche quand c'est fait et tout le monde le voit, pour ne rien faire deux fois.${sugg}</div>`, add);
   }
   const nDone = xs.filter(x => x.e.done).length;
   return section(`Tâches <span class="count">${nDone}/${xs.length}</span>`, tachesListe(xs), add);
@@ -55,11 +60,19 @@ function withName(cb) {
     }
   });
 }
+const toutFait = () => { const xs = tachesTriees(); return xs.length > 0 && xs.every(x => x.e.done); };
+/* Fige l'ordre des tâches un instant, puis laisse les lignes glisser à leur place */
+function figeOrdre() {
+  fx.ordre = tachesTriees().map(x => x.tk.id);
+  fx.jusqua = Date.now() + 1100;
+  setTimeout(rerenderSoon, 1150);
+}
 ACT.tick = d => {
   const tk = get('taches', d.id);
   if (!tk) return;
   if (tacheEtat(tk).done) {
     const prev = clone(tk);
+    figeOrdre();
     put('taches', Object.assign({}, tk, { fait: faitsDe(tk).slice(1) }));
     toast('Coche retirée', { undo: () => put('taches', prev) });
     return;
@@ -67,10 +80,18 @@ ACT.tick = d => {
   withName(nom => {
     const cur = get('taches', d.id);
     if (!cur) return;
-    const prev = clone(cur);
+    const prev = clone(cur), avant = toutFait();
     const f = { d: todayISO(), t: Date.now(), par: nom, uid: me.uid || null };
+    figeOrdre();
     put('taches', Object.assign({}, cur, { fait: [f, ...faitsDe(cur)].slice(0, 30) }));
-    toast(`${cur.titre} : fait`, { undo: () => put('taches', prev) });
+    render();
+    // la coche se dessine, rebondit et lâche une gerbe de crins
+    $$(`.tick[data-id="${CSS.escape(cur.id)}"]`).forEach(el => { fxOnce(el, 'fx-coche', 700); confettis(el); });
+    vibre(12);
+    if (!avant && toutFait()) {
+      setTimeout(galop, 350);
+      toast("Tout est fait pour aujourd'hui, bravo !", { fete: true, undo: () => put('taches', prev) });
+    } else toast(`${cur.titre} : fait`, { undo: () => put('taches', prev) });
   });
 };
 ACT['add-sugg'] = () => {

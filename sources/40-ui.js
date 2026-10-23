@@ -14,9 +14,66 @@ const ACT = {};
 let currentFab = null;
 
 function renderTabs() {
-  $('#tabs').innerHTML = TABS.map(t =>
+  setHTML($('#tabs'), TABS.map(t =>
     `<button type="button" data-act="tab" data-tab="${t.id}"${nav.tab === t.id ? ' aria-current="page"' : ''}><span class="tab-ic">${ic(t.icon)}</span><span>${t.label}</span></button>`
-  ).join('');
+  ).join(''));
+}
+
+/* ---------- Mise à jour de l'écran ----------
+   À chaque navigation, l'écran est redessiné et entre en douceur. Quand seules les données changent,
+   on ne retouche que ce qui a changé : les animations en cours et la saisie ne sont pas interrompues. */
+const mouvementOk = () => !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+let entree = 'tab';        // animation du prochain rendu : tab, push, back, seg (null : simple mise à jour)
+let entreeTimer = null;
+const keyOf = n => (n.nodeType === 1 && n.getAttribute('data-key')) || null;
+function morphAttrs(a, b) {
+  for (const { name } of Array.from(a.attributes)) if (!b.hasAttribute(name) && name !== 'class') a.removeAttribute(name);
+  // les classes fx-… sont posées par les effets : on les garde jusqu'à la fin de leur animation
+  const fx = Array.from(a.classList).filter(c => c.startsWith('fx-'));
+  const cls = [b.getAttribute('class') || '', ...fx].join(' ').trim();
+  if ((a.getAttribute('class') || '') !== cls) { if (cls) a.setAttribute('class', cls); else a.removeAttribute('class'); }
+  for (const { name, value } of Array.from(b.attributes)) if (name !== 'class' && a.getAttribute(name) !== value) a.setAttribute(name, value);
+}
+function morphNode(a, b) {
+  if (a.nodeType !== 1) { if (a.nodeValue !== b.nodeValue) a.nodeValue = b.nodeValue; return; }
+  morphAttrs(a, b);
+  morphKids(a, b);
+}
+function morphKids(a, b) {
+  const keyed = new Map();
+  for (let c = a.firstChild; c; c = c.nextSibling) { const k = keyOf(c); if (k) keyed.set(k, c); }
+  let cur = a.firstChild, t = b.firstChild;
+  while (t) {
+    const next = t.nextSibling, k = keyOf(t);
+    let m = null;
+    if (k) { m = keyed.get(k) || null; if (m && m.tagName !== t.tagName) m = null; }
+    else if (cur && !keyOf(cur) && cur.nodeType === t.nodeType && (cur.nodeType !== 1 || cur.tagName === t.tagName)) m = cur;
+    if (m) {
+      if (k) keyed.delete(k);
+      if (m === cur) cur = cur.nextSibling; else a.insertBefore(m, cur);
+      morphNode(m, t);
+    } else a.insertBefore(t, cur);
+    t = next;
+  }
+  while (cur) { const n = cur.nextSibling; a.removeChild(cur); cur = n; }
+}
+function setHTML(el, html) {
+  const tpl = document.createElement('template');
+  tpl.innerHTML = html;
+  morphKids(el, tpl.content);
+}
+/* Les lignes repérées (data-key) qui changent de place glissent jusqu'à leur nouvelle position */
+function glisse(root, fn) {
+  if (!mouvementOk() || !Element.prototype.animate) { fn(); return; }
+  const avant = new Map();
+  root.querySelectorAll('[data-key]').forEach(el => avant.set(el.getAttribute('data-key'), el.getBoundingClientRect().top));
+  fn();
+  root.querySelectorAll('[data-key]').forEach(el => {
+    const y0 = avant.get(el.getAttribute('data-key'));
+    if (y0 == null) return;
+    const dy = y0 - el.getBoundingClientRect().top;
+    if (Math.abs(dy) > 2) el.animate([{ transform: `translateY(${dy}px)` }, { transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.2,.9,.25,1)' });
+  });
 }
 function render() {
   const top = nav.stack[nav.stack.length - 1];
@@ -31,9 +88,23 @@ function render() {
   $('#topEyebrow').textContent = v.eyebrow || dLong(todayISO());
   $('#backBtn').hidden = !top;
   $('#brandBtn').hidden = !!top;
-  $('#view').innerHTML = v.html;
-  const segA = $('#view .seg.scroll [aria-pressed="true"]');
-  if (segA) { const p = segA.parentElement; p.scrollLeft = Math.max(0, segA.offsetLeft - (p.clientWidth - segA.offsetWidth) / 2); }
+  const view = $('#view');
+  // fin du chargement : le vrai contenu entre en douceur
+  let anim = entree;
+  if (!anim && view.firstElementChild && view.firstElementChild.classList.contains('loading') && !/^<div class="loading"/.test(v.html)) anim = 'tab';
+  entree = null;
+  if (anim && anim !== 'seg') {
+    view.innerHTML = v.html;
+    const segA = $('#view .seg.scroll [aria-pressed="true"]');
+    if (segA) { const p = segA.parentElement; p.scrollLeft = Math.max(0, segA.offsetLeft - (p.clientWidth - segA.offsetWidth) / 2); }
+  } else glisse(view, () => setHTML(view, v.html));
+  if (anim && mouvementOk()) {
+    view.classList.remove('in-tab', 'in-push', 'in-back', 'in-seg');
+    void view.offsetWidth;
+    view.classList.add('in-' + anim);
+    clearTimeout(entreeTimer);
+    entreeTimer = setTimeout(() => view.classList.remove('in-tab', 'in-push', 'in-back', 'in-seg'), 900);
+  }
   currentFab = v.fab || null;
   const fab = $('#fab');
   fab.hidden = !currentFab || sync.readOnly;
@@ -46,16 +117,16 @@ function rerenderSoon() { clearTimeout(rrTimer); rrTimer = setTimeout(render, 40
 function go(tab) {
   if (nav.tab === tab && !nav.stack.length) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
   nav.tab = tab; nav.stack = []; ui.tab = tab; saveUi();
-  render(); window.scrollTo(0, 0);
+  entree = 'tab'; render(); window.scrollTo(0, 0);
 }
 function push(view, params = {}) {
   (nav.stack[nav.stack.length - 1] || nav).savedY = window.scrollY;
   nav.stack.push(Object.assign({ view }, params));
-  render(); window.scrollTo(0, 0);
+  entree = 'push'; render(); window.scrollTo(0, 0);
 }
 function back() {
   nav.stack.pop();
-  render();
+  entree = 'back'; render();
   window.scrollTo(0, (nav.stack[nav.stack.length - 1] || nav).savedY || 0);
 }
 const topView = () => nav.stack[nav.stack.length - 1] || null;
@@ -119,13 +190,60 @@ let toastTimer = null;
 function toast(msg, o = {}) {
   const el = $('#toast');
   if (!el) return;
-  el.className = 'toast' + (o.danger ? ' danger' : '');
-  el.innerHTML = `<span>${esc(msg)}</span>${o.undo ? '<button type="button" id="toastUndo">Annuler</button>' : ''}`;
+  el.className = 'toast' + (o.danger ? ' danger' : '') + (o.fete ? ' fete' : '');
+  el.innerHTML = `${o.fete ? brandMark('toast-cheval') : ''}<span>${esc(msg)}</span>${o.undo ? '<button type="button" id="toastUndo">Annuler</button>' : ''}`;
   el.hidden = false;
+  void el.offsetWidth;            // rejoue l'apparition, même si un message était déjà affiché
+  el.classList.add('pop');
   if (o.undo) $('#toastUndo').onclick = () => { el.hidden = true; o.undo(); toast('Annulé'); };
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => { el.hidden = true; }, o.undo ? 6000 : 3400);
 }
+
+/* ---------- Petits effets : rebond, confettis en crinière, galop de fête ---------- */
+const fx = { ordre: null, jusqua: 0 };
+/* Classe d'animation posée le temps de l'animation (gardée par les mises à jour d'écran) */
+function fxOnce(el, cls, ms) {
+  if (!el || !mouvementOk()) return;
+  el.classList.remove(cls);
+  void el.offsetWidth;
+  el.classList.add(cls);
+  setTimeout(() => el.classList.remove(cls), ms);
+}
+function fxLayer() {
+  let l = document.getElementById('fx');
+  if (!l) { l = document.createElement('div'); l.id = 'fx'; l.setAttribute('aria-hidden', 'true'); document.body.appendChild(l); }
+  return l;
+}
+/* Gerbe de petits zigzags, points et traits aux couleurs du logo, autour d'un élément */
+function confettis(el) {
+  if (!el || !mouvementOk() || !Element.prototype.animate) return;
+  const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2, L = fxLayer();
+  ['zz', 'pt', 'tr', 'zz', 'pt', 'zz', 'tr', 'pt', 'zz'].forEach((f, i, all) => {
+    const c = document.createElement('i');
+    c.className = `cf cf-${f} cc${i % 4}`;
+    c.style.left = cx + 'px'; c.style.top = cy + 'px';
+    L.appendChild(c);
+    const a = (i / all.length) * Math.PI * 2 + Math.random() * .6, d = 30 + Math.random() * 26, rot = Math.round(Math.random() * 220 - 110);
+    const x = Math.cos(a) * d, y = Math.sin(a) * d;
+    c.animate([
+      { transform: 'translate(0,0) scale(.3) rotate(0deg)', opacity: 1 },
+      { transform: `translate(${x}px,${y}px) scale(1) rotate(${rot}deg)`, opacity: 1, offset: .55 },
+      { transform: `translate(${x * 1.18}px,${y * 1.18 + 14}px) scale(.7) rotate(${rot * 1.4}deg)`, opacity: 0 }
+    ], { duration: 650 + Math.random() * 250, easing: 'cubic-bezier(.2,.75,.3,1)' }).onfinish = () => c.remove();
+  });
+}
+/* Le cheval du logo traverse l'écran au galop (fête : toutes les tâches du jour sont faites) */
+function galop() {
+  if (!mouvementOk() || !Element.prototype.animate) return;
+  const L = fxLayer(), h = document.createElement('div');
+  h.className = 'galop';
+  h.innerHTML = `<div class="galop-saut">${brandMark()}</div>`;
+  L.appendChild(h);
+  h.animate([{ transform: 'translateX(-90px)' }, { transform: `translateX(${window.innerWidth + 90}px)` }], { duration: 2600, easing: 'linear' }).onfinish = () => h.remove();
+  h.firstChild.animate([{ transform: 'translateY(0) rotate(0deg)' }, { transform: 'translateY(-16px) rotate(-7deg)', offset: .45 }, { transform: 'translateY(0) rotate(2deg)' }], { duration: 340, iterations: 8, easing: 'ease-in-out' });
+}
+const vibre = ms => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) { /* sans vibreur */ } };
 
 /* ---------- Briques de formulaire ---------- */
 const fld = (label, inner, hint = '') => `<label class="field"><span>${label}</span>${inner}${hint ? `<small class="hint">${hint}</small>` : ''}</label>`;
@@ -152,6 +270,7 @@ function onChip(btn) {
   if (g.dataset.multi) btn.setAttribute('aria-pressed', String(!pressed));
   else if (pressed && g.dataset.opt) btn.setAttribute('aria-pressed', 'false');
   else $$('.chip', g).forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+  if (btn.getAttribute('aria-pressed') === 'true') fxOnce(btn, 'fx-pop', 450);
   g.dispatchEvent(new CustomEvent('chipchange', { bubbles: true, detail: { name: g.dataset.chips, v: btn.dataset.v } }));
 }
 const horseOpts = (hs, sub) => hs.map(h => ({
@@ -221,6 +340,8 @@ document.addEventListener('input', e => {
 /* ---------- Briques d'affichage ---------- */
 const section = (title, inner, action = '') => `<section class="sec"><div class="sec-h"><h2>${title}</h2>${action}</div>${inner}</section>`;
 const empty = (t, s) => `<div class="empty"><b>${t}</b>${s}</div>`;
+/* État vide illustré : le cheval du logo, qui balance la queue */
+const emptyH = (t, s, extra = '') => `<div class="empty illu">${brandMark()}<b>${t}</b>${s}${extra}</div>`;
 const segCtl = (key, opts, cur, cls = '') => `<div class="seg${cls ? ' ' + cls : ''}" role="group">${opts.map(([v, l]) =>
   `<button type="button" data-act="seg" data-k="${key}" data-v="${v}" aria-pressed="${v === cur}">${l}</button>`).join('')}</div>`;
 const lead = (icon, sev = '') => `<span class="lead">${ic(icon)}</span>`;
@@ -261,7 +382,7 @@ ACT.reglages = () => { const t = topView(); if (t && t.view === 'reglages') retu
 ACT.seg = d => {
   const t = topView();
   if (d.k === 'sub' && t) t.sub = d.v; else { ui[d.k] = d.v; saveUi(); }
-  render();
+  entree = 'seg'; render();
 };
 ACT['open-cheval'] = d => push('cheval', { id: d.id, sub: d.sub || 'fiche' });
 ACT['open-pre'] = d => push('pre', { id: d.id });

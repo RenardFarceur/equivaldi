@@ -62,7 +62,7 @@ VIEWS.equipe = () => {
     if (ext.length) html += section('Hors équipe', `<div class="list">${ext.join('')}</div>`);
   } else {
     html += section('Les personnes', ext.length || naRow ? `<div class="list">${ext.join('')}${naRow}</div>`
-      : empty('Personne pour l\'instant', "Les prénoms apparaissent dès qu'une tâche est cochée, qu'une séance est notée ou qu'un propriétaire est indiqué."));
+      : emptyH('Personne pour l\'instant', "Les prénoms apparaissent dès qu'une tâche est cochée, qu'une séance est notée ou qu'un propriétaire est indiqué."));
   }
   const fil = filEquipe(debutT(P), 25);
   html += section("Ce qui s'est passé", fil.length ? `<div class="list">${fil.map(it => rowFil(it)).join('')}</div>`
