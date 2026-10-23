@@ -3091,25 +3091,40 @@ function ecranPasInvite(u) {
   });
 }
 
+function ecranSouci(u, e) {
+  const regles = e && e.code === 'permission-denied';
+  show(`<div class="form">
+      <h2 class="auth-t">Accès au carnet impossible</h2>
+      <p>${regles ? "La base refuse l'accès : les règles d'accès de Firestore ne sont pas encore à jour. Recolle le fichier firestore.rules dans Firebase, onglet Règles, puis touche « Réessayer »." : "Le carnet n'a pas pu joindre la base. Vérifie ta connexion internet, puis touche « Réessayer »."}</p>
+      <p class="hint">Code : ${escH((e && e.code) || 'inconnu')}</p>
+      <button class="btn primary" id="aRetry">Réessayer</button>
+      <div class="auth-links"><button type="button" class="link" id="aOut">Se déconnecter</button></div>
+    </div>`, root => {
+    root.querySelector('#aRetry').addEventListener('click', () => entrer(u));
+    root.querySelector('#aOut').addEventListener('click', deconnexion);
+  });
+}
+
 /* ---------- Rôles ---------- */
 let ROLE = null, ME = null;
 async function entrer(u) {
   const mail = (u.email || '').toLowerCase();
-  let role = null;
+  let role = null, souci = null;
+  try { const c = JSON.parse(localStorage.getItem(ROLE_KEY) || 'null'); if (c && c.uid === u.uid) role = c.role; } catch (x) { /* rien en cache */ }
   try {
-    const m = await getDoc(doc(fs, 'membres', u.uid));
-    if (m.exists()) role = m.data().role;
+    const m = await getDoc(doc(fs, 'membres', u.uid)).catch(e => (e && e.code === 'permission-denied') ? null : Promise.reject(e));
+    if (m && m.exists()) role = m.data().role;
     else {
-      if (mail === GERANTE) role = 'gerante';
-      else {
+      let r = mail === GERANTE ? 'gerante' : null;
+      if (!r) {
         const inv = await getDoc(doc(fs, 'invitations', mail)).catch(() => null);
-        if (inv && inv.exists()) role = inv.data().role;
+        if (inv && inv.exists()) r = inv.data().role;
       }
-      if (role) await setDoc(doc(fs, 'membres', u.uid), { email: mail, role, nom: u.displayName || '', depuis: Date.now() });
+      if (r) { await setDoc(doc(fs, 'membres', u.uid), { email: mail, role: r, nom: u.displayName || '', depuis: Date.now() }); role = r; }
+      else role = null;
     }
-  } catch (e) {
-    try { const c = JSON.parse(localStorage.getItem(ROLE_KEY) || 'null'); if (c && c.uid === u.uid) role = c.role; } catch (x) { /* rien en cache */ }
-  }
+  } catch (e) { souci = e; }
+  if (!role && souci) { ecranSouci(u, souci); return; }
   if (!role) { ecranPasInvite(u); return; }
   try { localStorage.setItem(ROLE_KEY, JSON.stringify({ uid: u.uid, role })); } catch (x) { /* ignoré */ }
   ROLE = role;

@@ -13,7 +13,7 @@ service cloud.firestore {
 
     // Qui a accès : chacun crée sa propre fiche, avec le rôle de son invitation
     match /membres/{uid} {
-      allow read: if membre();
+      allow read: if membre() || (connecte() && request.auth.uid == uid);
       allow create: if connecte() && request.auth.uid == uid
         && request.resource.data.email == mail()
         && ((mail() == 'celiacourtois8@gmail.com' && request.resource.data.role == 'gerante')
