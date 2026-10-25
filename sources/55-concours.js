@@ -78,7 +78,7 @@ function formConcours(id, pre = {}) {
     ${grp('Discipline', chips('disc', DISCIPLINES.map(x => ({ v: x, l: x })), c.discipline ? [c.discipline] : [], { optional: true }))}
     ${grp('Niveau', chips('niv', NIVEAUX.map(n => ({ v: n.id, l: n.label })), c.niveau ? [c.niveau] : [], { optional: true }), 'Sert à vérifier les vaccins exigés.')}
     ${fld('Épreuve', inp('f_epr', c.epreuve, 'list="dl-epr" autocomplete="off" placeholder="ex. Club 2 Grand Prix"'))}
-    ${pickPerson('cav', 'Cavalier', cavRef, { moi: !cavRef, def: lastUsed('concours', 'cavalier') })}
+    ${pickPerson('cav', 'Cavalier', cavRef, { moi: !cavRef, def: lastUsed('concours', 'cavalier'), hint: `Le cavalier gagne ${CROT.concours} crottins par concours fait, et jusqu'à ${CROT.podium[1]} de plus pour un podium.` })}
     ${grp('Engagement', chips('eng', ENGAGEMENT.map(e => ({ v: e.id, l: e.label })), c.statut || 'a_engager'))}
     <div class="grid2">${fld('Clôture des engagements', inp('f_clot', c.cloture, 'type="date"'))}${fld('Frais (€)', inp('f_frais', c.frais != null ? String(c.frais).replace('.', ',') : '', numAttr))}</div>
     ${payeField(c.payePar, 'f_frais', Number(c.frais) || 0)}

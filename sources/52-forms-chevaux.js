@@ -183,6 +183,7 @@ function formSoin(id, pre = {}) {
     <div id="w_label"${(s.types || []).includes('autre') ? '' : ' hidden'}>${fld('Précision', inp('f_label', s.label, 'placeholder="ex. coproscopie, radio, échographie" autocomplete="off"'))}</div>
     <div class="grid2">${fld('Date', inp('f_date', s.date, 'type="date" required'))}${grp('Statut', chips('statut', [{ v: 'fait', l: 'Fait' }, { v: 'prevu', l: 'Prévu' }], statut0))}</div>
     ${ex && ex.statut === 'prevu' ? `<button type="button" class="btn" id="b_done">${ic('check', 'sm')}Marquer fait aujourd'hui</button>` : ''}
+    <div id="w_gere"${statut0 === 'fait' ? '' : ' hidden'}>${membres().length === 1 ? '' : pickPerson('gere', 'Géré par', s.gerePar || null, { moi: true, hint: 'La personne présente au rendez-vous ou qui a fait le soin.' })}<p class="note crot-note" id="w_gpts"></p></div>
     <div class="grid2">${fld('Praticien', inp('f_prat', s.praticien, 'list="dl-prat" autocomplete="off"'))}${fld('Produit', inp('f_prod', s.produit, 'list="dl-prod" autocomplete="off" placeholder="vaccin, vermifuge…"'))}</div>
     <div class="grid2">${fld('Coût (€)', inp('f_cout', s.cout != null ? String(s.cout).replace('.', ',') : '', numAttr))}${fld('Prochain rappel', inp('f_proch', s.prochain, 'type="date"'), 'Vide : calculé selon les réglages')}</div>
     ${payeField(s.payePar, 'f_cout', Number(s.cout) || 0)}
@@ -191,15 +192,25 @@ function formSoin(id, pre = {}) {
   openSheet(ex ? soinLabel(ex) : 'Soin ou rendez-vous', body, {
     onMount: f => {
       let touched = false;
+      // « Géré par » et les crottins qu'il rapporte, dès que le soin est fait
+      const majGere = () => {
+        const fait = (chipVal(f, 'statut') || auto(val('f_date'))) === 'fait', ts = chipVals(f, 'types');
+        $('#w_gere').hidden = !fait;
+        $('#w_gpts').innerHTML = ts.length ? `${crottinSvg('s')}Rapporte <b>${ptsSoin({ types: ts, planifie: !!(ex && (ex.planifie || ex.statut === 'prevu')) })} crottins</b> à la personne qui l'a géré.` : '';
+      };
       f.addEventListener('chipchange', e => {
         if (e.detail.name === 'statut') touched = true;
         if (e.detail.name === 'types') $('#w_label').hidden = !chipVals(f, 'types').includes('autre');
+        majGere();
       });
-      $('#f_date').addEventListener('change', () => { if (!touched && validISO(val('f_date'))) setChips(f, 'statut', [auto(val('f_date'))]); });
+      $('#f_date').addEventListener('change', () => { if (!touched && validISO(val('f_date'))) setChips(f, 'statut', [auto(val('f_date'))]); majGere(); });
+      majGere();
       const b = $('#b_done');
       if (b) b.addEventListener('click', () => {
         if (sync.readOnly) { toast(RO_MSG, { danger: true }); return; }
-        put('soins', Object.assign({}, ex, { date: todayISO(), statut: 'fait' })); closeSheet(); toast('Soin marqué comme fait');
+        const g = (hasPerson('gere') && readPerson('gere')) || moiRef();
+        put('soins', Object.assign({}, ex, { date: todayISO(), statut: 'fait', gerePar: g, faitLe: Date.now(), planifie: true }));
+        closeSheet(); toast('Rendez-vous honoré');
       });
     },
     onSubmit: f => {
@@ -215,7 +226,11 @@ function formSoin(id, pre = {}) {
       if (coutRaw && cout == null) return 'Le coût doit être un nombre, par exemple 45 ou 45,50.';
       const proch = val('f_proch');
       if (proch && proch <= date) return 'Le prochain rappel doit tomber après la date du soin.';
-      const base = { types, label: types.includes('autre') ? val('f_label') : '', date, statut, praticien: val('f_prat'), produit: val('f_prod'), cout, payePar: lirePaye(cout), prochain: proch || null, notes: val('f_notes') };
+      // qui a géré le soin (pour les crottins), quand il a été marqué fait, et s'il avait été prévu
+      const gerePar = statut === 'fait' ? ((hasPerson('gere') && readPerson('gere')) || moiRef()) : null;
+      const faitLe = statut === 'fait' ? (ex && ex.statut === 'fait' ? (ex.faitLe || null) : Date.now()) : null;
+      const planifie = statut === 'prevu' || !!(ex && (ex.planifie || ex.statut === 'prevu'));
+      const base = { types, label: types.includes('autre') ? val('f_label') : '', date, statut, praticien: val('f_prat'), produit: val('f_prod'), cout, payePar: lirePaye(cout), gerePar, faitLe, planifie, prochain: proch || null, notes: val('f_notes') };
       if (ex) { put('soins', Object.assign({}, ex, base, { horseId: hids[0] })); toast('Soin enregistré'); return; }
       const ids = hids.map(hid => put('soins', Object.assign({ horseId: hid }, base)).id);
       toast(`${statut === 'prevu' ? 'Rendez-vous noté' : 'Soin enregistré'}${ids.length > 1 ? ` pour ${ids.length} chevaux` : ''}`, { undo: () => ids.forEach(i => del('soins', i)) });

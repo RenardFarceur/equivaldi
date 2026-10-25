@@ -48,6 +48,7 @@ VIEWS.equipe = () => {
     <div class="stat"><b>${B.taches}</b><span>${pl(B.taches, 'tâche cochée', 'tâches cochées')}</span></div>
     <div class="stat"><b>${B.seances}</b><span>${pl(B.seances, 'séance', 'séances')} de travail</span></div>
     <div class="stat"><b>${eurRond(B.total)}</b><span>de dépenses</span></div></div>`;
+  html += section(`Crottins ${P.label}`, classementCrottins(P), `<button type="button" class="link" data-act="boutique">Boutique ${ic('next', 'sm')}</button>`);
   // les membres, puis les personnes hors équipe qui apparaissent dans le carnet (demi-pension, cavalier, payeur…)
   const keys = new Set(ms.map(m => 'u:' + m.id)), autres = new Set();
   const voir = k => { if (k && k !== '_' && !keys.has(k)) autres.add(k); };
@@ -88,6 +89,7 @@ VIEWS.membre = p => {
     <div class="row-s">${esc(m ? (ROLE_LABEL[m.role] || '') : 'Hors équipe')}</div>
     ${m && m.email ? `<div class="row-s trunc">${esc(m.email)}</div>` : ''}
     ${dispo ? `<div class="row-s">Jours de présence : ${esc(dispo)}</div>` : ''}
+    <div class="wrap crot-ligne">${crottinSvg('s')}<b>${num(soldeDe(pe.k), 0)}</b><span class="small muted">${pl(soldeDe(pe.k), 'crottin')} · ${esc(rangDe(crottinsDe(pe.k).gagnes).r.nom)}</span></div>
     ${btns ? `<div class="btnrow">${btns}</div>` : ''}</div></div>`;
   html += perSeg();
   html += `<div class="stats">

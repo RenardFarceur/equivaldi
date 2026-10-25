@@ -19,6 +19,7 @@ function fmt(iso, o) {
 const sameYear = iso => iso.slice(0, 4) === todayISO().slice(0, 4);
 const dShort = iso => validISO(iso) ? fmt(iso, { day: 'numeric', month: 'short' }) + (sameYear(iso) ? '' : ' ' + iso.slice(0, 4)) : '';
 const dLong = iso => fmt(iso, { weekday: 'long', day: 'numeric', month: 'long' });
+const dTete = iso => fmt(iso, { weekday: 'short', day: 'numeric', month: 'long' });
 const dFull = iso => validISO(iso) ? fmt(iso, { day: 'numeric', month: 'short', year: 'numeric' }) : '';
 const dDay = iso => fmt(iso, { day: 'numeric' });
 const dMon = iso => fmt(iso, { month: 'short' }).replace('.', '');

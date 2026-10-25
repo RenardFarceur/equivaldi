@@ -10,6 +10,7 @@ const OUTBOX_KEY = 'carnet-ecurie:outbox:v1';
 const UI_KEY = 'carnet-ecurie:ui:v1';
 let outbox = [];
 let DB = null;
+let dataV = 0;              // change à chaque modification des données (calculs mis en cache)
 const sync = { mode: 'loading', error: null, loaded: new Set(), readOnly: false };
 
 /* Qui utilise le carnet (partage à plusieurs) */
@@ -45,6 +46,7 @@ async function resync(op) {
       const s = await DB.collection(op.coll).doc(op.id).get();
       if (s.exists) { const o = clone(s.data()); o.id = s.id; S[op.coll][op.id] = o; } else delete S[op.coll][op.id];
     }
+    dataV++;
     saveCache();
     rerenderSoon();
   } catch (e) { /* on réessaiera au prochain chargement */ }
@@ -59,6 +61,7 @@ function loadCache() {
     [...COLS, ...EXTRA].forEach(k => { S[k] = (c[k] && typeof c[k] === 'object') ? c[k] : {}; });
     S.cfg = c.cfg || null;
   }
+  dataV++;
   const o = lsGet(OUTBOX_KEY);
   outbox = Array.isArray(o) ? o : [];
   // les modifications pas encore envoyées restent prioritaires
@@ -93,12 +96,14 @@ function put(coll, obj) {
   // qui a ajouté la fiche : sert au fil de l'équipe
   if (coll !== 'membres' && !restauration && !S[coll][o.id] && !o.creePar) o.creePar = Object.assign(moiRef(), { t: Date.now() });
   o.maj = Date.now();
+  crotAvant();
   S[coll][o.id] = o;
   queue(coll, o.id, 'set', o);
   return o;
 }
 function del(coll, id) {
   if (!S[coll][id]) return;
+  crotAvant();
   delete S[coll][id];
   queue(coll, id, 'del', null);
 }
@@ -107,6 +112,7 @@ function putCfg(c) {
   queue('config', 'reglages', 'set', S.cfg);
 }
 function queue(coll, id, op, data) {
+  dataV++;
   const k = coll + '/' + id;
   outbox = outbox.filter(o => o.k !== k);
   outbox.push({ k, coll, id, op, data: data ? clone(data) : null });
@@ -174,6 +180,7 @@ function onSnap(coll, snap) {
   const next = partial ? Object.assign({}, S[coll]) : {};
   snap.docs.forEach(d => { if (d.exists) { const o = clone(d.data()); o.id = d.id; next[d.id] = o; } });
   S[coll] = next;
+  dataV++;
   outbox.filter(o => o.coll === coll).forEach(applyOp);
   if (!partial) sync.loaded.add(coll);
   saveCache();
@@ -199,6 +206,7 @@ function subscribeCfg() {
         if (outbox.some(o => o.k === 'config/reglages')) return;
         if (snap.exists) S.cfg = clone(snap.data());
         else if (!(snap.metadata && snap.metadata.fromCache)) S.cfg = null;
+        dataV++;
         saveCache();
         rerenderSoon();
       }, e => onSnapErr(make, e));
@@ -226,7 +234,8 @@ function updateSync() {
   if (!b) return;
   const n = outbox.length;
   b.className = 'sync ' + (sync.mode === 'local' ? 'local' : n ? 'wait' : sync.mode === 'cloud' ? 'ok' : '');
-  b.setAttribute('aria-label', syncText());
+  const r = document.getElementById('settingsBtn');
+  if (r) r.setAttribute('aria-label', 'Réglages. ' + syncText());
 }
 function syncText() {
   const n = outbox.length;
@@ -252,5 +261,5 @@ function cfg() {
 }
 
 /* Préférences d'affichage (onglet choisi…), propres à ce téléphone */
-const ui = Object.assign({ chevSeg: 'fiches', concSeg: 'avenir', showArch: false }, lsGet(UI_KEY) || {});
+const ui = Object.assign({ chevSeg: 'fiches', concSeg: 'avenir', showArch: false, crotAnim: 'grand' }, lsGet(UI_KEY) || {});
 const saveUi = () => lsSet(UI_KEY, ui);

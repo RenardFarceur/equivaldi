@@ -85,7 +85,7 @@ function render() {
     v = { title: 'Carnet', html: empty("Cet écran n'a pas pu s'afficher", esc(e.message)) };
   }
   $('#topTitle').textContent = v.title;
-  $('#topEyebrow').textContent = v.eyebrow || dLong(todayISO());
+  $('#topEyebrow').textContent = v.eyebrow || dTete(todayISO());
   $('#backBtn').hidden = !top;
   $('#brandBtn').hidden = !!top;
   const view = $('#view');
@@ -111,6 +111,7 @@ function render() {
   fab.setAttribute('aria-label', v.fabLabel || 'Ajouter');
   renderTabs();
   updateSync();
+  majCrottins();
 }
 let rrTimer = null;
 function rerenderSoon() { clearTimeout(rrTimer); rrTimer = setTimeout(render, 40); }
@@ -286,7 +287,7 @@ function nomsConnus() {
   add(moiNom());
   list('seances').forEach(x => add(x.cavalier));
   list('concours').forEach(x => add(x.cavalier));
-  taches().forEach(tk => faitsDe(tk).forEach(f => add(f.par)));
+  toutesTaches().forEach(tk => faitsDe(tk).forEach(f => add(f.par)));
   chevaux(true).forEach(h => { add(h.proprietaire); dpsDe(h).forEach(x => add(x.qui.nom)); });
   return [...s.values()];
 }

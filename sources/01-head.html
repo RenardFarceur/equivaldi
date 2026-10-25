@@ -27,6 +27,7 @@
   --edge:#C3CDBE; --accent-edge:#1B4229; --danger-edge:#E3BDB2; --hay-edge:#E2CFA0; --prairie-soft:#CDEBD5;
   --wob:18px 22px 17px 23px / 22px 17px 23px 18px; --wob-s:14px 17px 13px 18px / 17px 13px 18px 14px; --blob:47% 53% 44% 56% / 56% 45% 55% 44%;
   --spring:cubic-bezier(.34,1.56,.64,1);
+  --crot:#8B5A2B; --crot-edge:#5A3818; --crot-lite:#C9965F; --crot-ink:#6B4321;
   --zz:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M3 1.6 7.6 4.6 3 8 7.6 11.4 3 14.4' fill='none' stroke='%235DB075' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzh:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 10'%3E%3Cpath d='M2 7 7.5 3 13 7 18.5 3 24 7 29.5 3 35 7 40.5 3' fill='none' stroke='%23C3CDBE' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzf:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 24'%3E%3Cpath d='M9 2 3.4 6.5 9 11 3.4 15.5 9 20' fill='none' stroke='%235DB075' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzm:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M3 1.6 7.6 4.6 3 8 7.6 11.4 3 14.4' fill='none' stroke='%23000000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
@@ -37,6 +38,7 @@
   --danger:#F28C76; --danger-soft:#3B1F19; --warn:#F0B45C; --warn-soft:#382A15; --info:#90BAE6; --info-soft:#1A2938;
   --h0:#3F8A5A; --h1:#9A6440; --h2:#B8693F; --h3:#6E7C85; --h4:#3F918C; --h5:#8A7638; --h6:#4E9A66; --h7:#5A524C; --on-h:#FFFFFF;
   --float:0 1px 2px rgba(0,0,0,.5),0 8px 20px rgba(0,0,0,.35); --scrim:rgba(0,0,0,.62); color-scheme:dark;
+  --crot:#A0703F; --crot-edge:#2B1A0B; --crot-lite:#D9A774; --crot-ink:#E4BC8C;
   --edge:#050A07; --accent-edge:#5DB075; --danger-edge:#2A1410; --hay-edge:#1C150B; --prairie-soft:#1C3A26;
   --zz:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M3 1.6 7.6 4.6 3 8 7.6 11.4 3 14.4' fill='none' stroke='%239FD6AE' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzh:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 10'%3E%3Cpath d='M2 7 7.5 3 13 7 18.5 3 24 7 29.5 3 35 7 40.5 3' fill='none' stroke='%23365040' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");}}
 :root[data-theme="dark"]{
@@ -47,6 +49,7 @@
   --danger:#F28C76; --danger-soft:#3B1F19; --warn:#F0B45C; --warn-soft:#382A15; --info:#90BAE6; --info-soft:#1A2938;
   --h0:#3F8A5A; --h1:#9A6440; --h2:#B8693F; --h3:#6E7C85; --h4:#3F918C; --h5:#8A7638; --h6:#4E9A66; --h7:#5A524C; --on-h:#FFFFFF;
   --float:0 1px 2px rgba(0,0,0,.5),0 8px 20px rgba(0,0,0,.35); --scrim:rgba(0,0,0,.62); color-scheme:dark;
+  --crot:#A0703F; --crot-edge:#2B1A0B; --crot-lite:#D9A774; --crot-ink:#E4BC8C;
   --edge:#050A07; --accent-edge:#5DB075; --danger-edge:#2A1410; --hay-edge:#1C150B; --prairie-soft:#1C3A26;
   --zz:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M3 1.6 7.6 4.6 3 8 7.6 11.4 3 14.4' fill='none' stroke='%239FD6AE' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzh:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 10'%3E%3Cpath d='M2 7 7.5 3 13 7 18.5 3 24 7 29.5 3 35 7 40.5 3' fill='none' stroke='%23365040' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");}
 
@@ -77,7 +80,7 @@ sup{font-size:.6em;line-height:0}
 .lg-leaf{fill:var(--logo-leaf)}
 .brand-mark{display:block;height:36px;width:auto;overflow:visible}
 .brand-logo{display:block;height:auto;max-width:100%;overflow:visible}
-.brand{width:48px;height:48px;display:grid;place-items:center;border:0;background:transparent;border-radius:var(--wob-s);flex:none;margin-left:-8px;padding:0}
+.brand{width:44px;height:48px;display:grid;place-items:center;border:0;background:transparent;border-radius:var(--wob-s);flex:none;margin-left:-8px;padding:0}
 .brand:active{background:var(--surface-2)}
 .loading,.welcome,.about{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
 .loading{padding:40px 0 0}
@@ -99,17 +102,39 @@ sup{font-size:.6em;line-height:0}
 /* Barre du haut */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:8px;border-bottom:1px solid transparent;transition:border-color .2s}
 .top.scrolled{border-bottom-color:var(--line)}
-.top-in{display:flex;align-items:center;gap:8px;max-width:720px;margin:0 auto}
-.top-title{flex:1;min-width:0}
+/* deux rangées : logo, date, crottins et réglages en haut ; le titre en grand dessous */
+.top-in{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;grid-template-areas:"marque sur crot reg" "titre titre titre titre";align-items:center;column-gap:8px;max-width:720px;margin:0 auto}
+#backBtn,#brandBtn{grid-area:marque}
+.top-title{display:contents}
+#topEyebrow{grid-area:sur;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;letter-spacing:.12em}
+#topTitle{grid-area:titre;margin-top:-1px}
+#crotBtn{grid-area:crot}
+#settingsBtn{grid-area:reg}
 .eyebrow{font-family:var(--f-display);font-weight:600;font-size:14px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);line-height:1.3}
 .top h1{font-family:var(--f-display);font-weight:600;font-size:32px;line-height:1.05;margin:0;letter-spacing:.005em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .iconbtn{width:44px;height:44px;display:grid;place-items:center;border:0;background:transparent;border-radius:12px;color:var(--ink);flex:none;transition:background .12s}
 .iconbtn:active{background:var(--surface-2)}
-.sync{width:40px;height:44px;display:grid;place-items:center;border:0;background:transparent;flex:none;border-radius:12px}
-.sync i{width:10px;height:10px;border-radius:50%;background:var(--ink-2);display:block}
-.sync.ok i{background:var(--pousse)}
-.sync.wait i{background:var(--warn)}
-.sync.local i{background:transparent;border:2px solid var(--ink-2)}
+/* Enregistrement : un point sur le bouton Réglages, seulement quand tout n'est pas encore envoyé */
+.reg{position:relative}
+.sync{position:absolute;right:5px;bottom:7px;display:none;pointer-events:none}
+.sync i{width:10px;height:10px;border-radius:50%;display:block;border:2px solid var(--bg)}
+.sync.wait{display:block}.sync.wait i{background:var(--warn)}
+.sync.local{display:block}.sync.local i{background:var(--bg);box-shadow:inset 0 0 0 2px var(--ink-2)}
+/* Compteur de crottins : ouvre la boutique */
+.crot{position:relative;display:inline-flex;align-items:center;gap:3px;height:40px;padding:0 11px 0 5px;border-radius:var(--wob-s);border:2px solid var(--line);background:var(--surface);box-shadow:0 2px 0 var(--edge);color:var(--crot-ink);font-family:var(--f-display);font-weight:600;font-size:20px;letter-spacing:.02em;font-variant-numeric:tabular-nums;flex:none;transition:transform .12s,box-shadow .12s}
+.crot .crottin{width:28px;height:28px}
+.crot:active{transform:translateY(2px);box-shadow:0 0 0 var(--edge)}
+.crot.fx-pop{animation:crotpop .6s var(--spring)}
+.crot.fx-secoue{animation:secoue .45s ease}
+.crot-dot{position:absolute;top:-5px;right:-5px;width:14px;height:14px;border-radius:50%;background:var(--hay);border:2.5px solid var(--bg);display:none}
+.crot.peut .crot-dot{display:block;animation:pouls 2.2s ease-in-out infinite}
+.crottin{display:block;flex:none;overflow:visible}
+.crottin .cr-b{fill:var(--crot);stroke:var(--crot-edge);stroke-width:1.9}
+.crottin .cr-l{fill:none;stroke:var(--crot-lite);stroke-width:1.6;stroke-linecap:round}
+.crottin .cr-fume{fill:none;stroke:var(--ctl);stroke-width:1.7;stroke-linecap:round;opacity:.7}
+.crot .cr-fume,.bq-hero .cr-fume{animation:fume 2.8s ease-in-out infinite}
+.crottin.s{width:18px;height:18px;display:inline-block;vertical-align:-3px}
+.crottin.xl{width:76px;height:76px}
 
 /* Contenu */
 .view{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:6px calc(var(--tab-h) + 100px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:24px}
@@ -406,8 +431,60 @@ label.btn{cursor:pointer}
 .toast button{background:transparent;border:0;color:inherit;text-decoration:underline;font-weight:600;min-height:40px;padding:0 10px;flex:none}
 body.lock .toast{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto}
 
-@media (max-width:370px){.tabs button{font-size:11px}.tab-ic{width:44px}}
+@media (max-width:370px){.tabs button{font-size:11px}.tab-ic{width:44px}.crot{font-size:18px;padding:0 8px 0 3px;height:38px}.crot .crottin{width:24px;height:24px}#topEyebrow{letter-spacing:.08em;font-size:12px}}
 @media (max-width:350px){.quick,.grid2{grid-template-columns:minmax(0,1fr)}.stat{padding:8px}.stat b{font-size:21px}.top h1{font-size:28px}.tab-ic{width:40px}.phead{flex-direction:column;align-items:flex-start}}
+/* ---------- Crottins : tâches, boutique, classement ---------- */
+.trow-pts{display:inline-flex;align-items:center;gap:2px;flex:none;padding:0 14px 0 2px;font-family:var(--f-display);font-weight:600;font-size:17px;color:var(--crot-ink)}
+.trow-pts .crottin{width:19px;height:19px}
+.crot-note{margin-top:8px}.crot-note .crottin{vertical-align:-4px;margin-right:5px}
+.crot-ligne{gap:6px;margin-top:2px}
+.crot-ligne b{font-family:var(--f-display);font-size:19px;color:var(--crot-ink)}
+.bq-hero{flex-direction:row;align-items:center;gap:14px}
+.bq-hero .row-main{gap:6px}
+.bq-solde{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.bq-solde b{font-family:var(--f-display);font-weight:600;font-size:46px;line-height:1;color:var(--crot-ink);font-variant-numeric:tabular-nums}
+.bq-solde span{font-weight:600}
+.bq-list{display:flex;flex-direction:column;gap:12px}
+.bq-item{display:flex;align-items:center;gap:12px;padding:14px 12px;background:var(--surface);border:2px solid var(--line);border-radius:var(--wob)}
+.bq-item.ok{border-color:var(--accent);box-shadow:0 3px 0 var(--accent-edge)}
+.bq-item .row-main{gap:5px}
+.bq-item .gauge>i{background:var(--crot)}
+.bq-item.ok .gauge>i{background:var(--pousse)}
+.bq-item .btn{flex:none}
+.bq-prix,.bq-pts{display:inline-flex;align-items:center;gap:4px;font-family:var(--f-display);font-weight:600;font-size:18px;color:var(--crot-ink)}
+.bq-confirm{display:flex;align-items:center;gap:14px}
+.bq-confirm p{margin:0;font-size:17px}
+.link .crottin{width:22px;height:22px}
+.podium{width:28px;height:28px;flex:none;display:grid;place-items:center;border-radius:var(--blob);font-family:var(--f-display);font-weight:600;font-size:16px;background:var(--surface-2);color:var(--ink-2)}
+.podium.p1{background:#F2D06B;color:#4F3A00}.podium.p2{background:#D7DDE3;color:#33404B}.podium.p3{background:#E6B489;color:#542F10}
+.row .gauge{margin-top:4px}
+/* Le spectacle : halo, rayons en crinière, cheval, crottins qui tombent puis filent au compteur */
+.crot-scene{position:absolute;inset:0}
+.crot-voile{position:absolute;left:0;right:0;bottom:0;background:var(--bg)}
+.crot-halo{position:absolute;width:310px;height:310px;margin:-155px 0 0 -155px;border-radius:50%;background:radial-gradient(circle,var(--surface) 0 55%,transparent 71%)}
+.crot-rayons{position:absolute;width:0;height:0}
+.crot-rayons i{position:absolute;left:-6px;top:-10px;width:12px;height:20px;background:var(--pousse);-webkit-mask:var(--zzm) center/contain no-repeat;mask:var(--zzm) center/contain no-repeat}
+.crot-rayons i:nth-child(even){background:var(--hay)}
+.crot-cheval{position:absolute;width:128px;height:126px;margin:-63px 0 0 -64px}
+.crot-cheval .brand-mark{width:128px;height:126px}
+.crot-txt{position:absolute;width:280px;transform:translate(-50%,0);display:flex;flex-direction:column;align-items:center;text-align:center}
+.crot-txt b{font-family:var(--f-display);font-weight:600;font-size:66px;line-height:.95;color:var(--crot-ink);text-shadow:0 3px 0 var(--surface),0 -3px 0 var(--surface),3px 0 0 var(--surface),-3px 0 0 var(--surface),0 6px 0 var(--edge)}
+.crot-txt span{font-family:var(--f-display);font-weight:600;font-size:20px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
+.crot-txt small{font-size:14px;font-weight:600;color:var(--ink-2);margin-top:4px;padding:2px 10px;border-radius:999px;background:var(--surface)}
+.crot-boule{position:absolute;width:22px;height:19px;margin:-9px 0 0 -11px;border-radius:52% 48% 46% 54% / 55% 52% 48% 45%;background:var(--crot);border:2px solid var(--crot-edge);box-shadow:inset 3px 3px 0 rgba(255,255,255,.22),inset -2px -3px 0 rgba(0,0,0,.15)}
+.crot-bulle{position:absolute;padding:5px 12px;border-radius:999px;background:var(--surface);border:2px solid var(--line);box-shadow:0 2px 0 var(--edge);font-family:var(--f-display);font-weight:600;font-size:17px;letter-spacing:.04em;color:var(--crot-ink);white-space:nowrap;animation:bulleup 2.2s ease both}
+.crot-bulle.perte{color:var(--danger)}
+.crot-rang{position:absolute;left:50%;top:40%;display:flex;align-items:center;gap:14px;padding:16px 24px 16px 16px;border-radius:var(--wob);background:var(--accent);color:var(--accent-ink);border:2px solid var(--accent-edge);box-shadow:0 5px 0 var(--accent-edge),var(--float);transform:translate(-50%,-50%);white-space:nowrap}
+.crot-rang .brand-mark{height:58px}
+.crot-rang .lg-ink{fill:currentColor}.crot-rang .lg-leaf{fill:var(--menthe)}
+.crot-rang small{display:block;font-family:var(--f-display);font-weight:600;font-size:14px;letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+.crot-rang b{display:block;font-family:var(--f-display);font-weight:600;font-size:32px;line-height:1.05}
+.bon-tampon{position:absolute;padding:4px 18px;border:3px solid var(--accent);border-radius:12px 9px 13px 10px;color:var(--accent);background:var(--surface);font-family:var(--f-display);font-weight:600;font-size:30px;letter-spacing:.2em;text-transform:uppercase}
+@keyframes crotpop{0%{transform:none}30%{transform:scale(1.24) rotate(-5deg)}60%{transform:scale(.95)}100%{transform:none}}
+@keyframes pouls{50%{transform:scale(1.25)}}
+@keyframes fume{0%,100%{transform:translateY(0);opacity:.7}50%{transform:translateY(-1.5px);opacity:.3}}
+@keyframes bulleup{0%{opacity:0;transform:translateY(-8px) scale(.8)}12%{opacity:1;transform:none}80%{opacity:1;transform:none}100%{opacity:0;transform:translateY(6px)}}
+
 /* ---------- Animations ---------- */
 /* Entrée des écrans : par onglet, vers une fiche, retour, changement de rubrique */
 .view.in-tab>*{animation:monte .42s cubic-bezier(.2,.8,.2,1) both}

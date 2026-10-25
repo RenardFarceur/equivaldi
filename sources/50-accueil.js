@@ -161,6 +161,8 @@ const NEW = {
 };
 ACT.new = d => { const f = NEW[d.what]; if (f) f(d); };
 ACT['clear-ex'] = () => {
+  crotSilence = true;
+  setTimeout(() => { crotSilence = false; }, 0);
   let n = 0;
   COLS.forEach(k => list(k).filter(o => o.ex).forEach(o => { del(k, o.id); n++; }));
   // ce qui avait été saisi sur les chevaux, prés ou balles d'exemple part avec eux

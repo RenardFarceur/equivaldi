@@ -17,6 +17,7 @@ function trow(tk) {
   return `<div class="trow${e.done ? ' done' : ''}${late ? ' late' : ''}" data-key="tk-${esc(tk.id)}">
     <button type="button" class="tick" data-act="tick" data-id="${tk.id}" aria-pressed="${e.done}" aria-label="${esc(tk.titre)} : ${e.done ? 'fait, toucher pour annuler' : 'marquer comme fait'}"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path pathLength="1" d="M5.5 12.8 10 17.2 18.8 7.2"/></svg></button>
     <button type="button" class="trow-main" data-act="edit-tache" data-id="${tk.id}"><span class="row-t">${esc(tk.titre)}</span><span class="row-s">${esc(tacheSub(tk, e))}</span></button>
+    ${e.done ? '' : `<span class="trow-pts" title="Rapporte ${ptsTache(tk)} crottins">+${ptsTache(tk)}${crottinSvg()}</span>`}
   </div>`;
 }
 function tachesTriees(filter) {
@@ -81,7 +82,7 @@ ACT.tick = d => {
     const cur = get('taches', d.id);
     if (!cur) return;
     const prev = clone(cur), avant = toutFait();
-    const f = { d: todayISO(), t: Date.now(), par: nom, uid: me.uid || null };
+    const f = { d: todayISO(), t: Date.now(), par: nom, uid: me.uid || null, pts: ptsTache(cur) };
     figeOrdre();
     put('taches', Object.assign({}, cur, { fait: [f, ...faitsDe(cur)].slice(0, 30) }));
     render();
@@ -89,7 +90,8 @@ ACT.tick = d => {
     $$(`.tick[data-id="${CSS.escape(cur.id)}"]`).forEach(el => { fxOnce(el, 'fx-coche', 700); confettis(el); });
     vibre(12);
     if (!avant && toutFait()) {
-      setTimeout(galop, 350);
+      // le galop de fête passe après la pluie de crottins
+      setTimeout(galop, ui.crotAnim === 'discret' || !mouvementOk() ? 350 : 2900);
       toast("Tout est fait pour aujourd'hui, bravo !", { fete: true, undo: () => put('taches', prev) });
     } else toast(`${cur.titre} : fait`, { undo: () => put('taches', prev) });
   });
@@ -118,16 +120,28 @@ function formTache(id, pre = {}) {
     ${ps.length ? grp('Pré', chips('pre', ps.map(p => ({ v: p.id, l: p.nom })), tk.preId ? [tk.preId] : [], { optional: true }), 'Facultatif.') : ''}
     ${hs.length ? grp('Cheval', chips('h', horseOpts(hs), tk.horseId ? [tk.horseId] : [], { optional: true }), 'Facultatif.') : ''}
     ${pickPerson('resp', "Qui s'en charge", tk.resp || null, { autre: false, hint: "Facultatif. Vide : toute l'équipe." })}
+    ${grp('Effort', chips('effort', EFFORTS.map(x => ({ v: x.id, l: x.label })), tk.effort || 'normal'), '<span id="w_pts"></span>')}
     ${fld('Consignes', area('f_notes', tk.notes, 'rows="2" placeholder="ex. 2 rounds dans le râtelier, vérifier le niveau d\'eau"'))}
     ${hist}`;
   openSheet(ex ? 'Tâche' : 'Nouvelle tâche', body, {
     focus: ex ? null : '#f_titre',
-    onMount: f => f.addEventListener('chipchange', e => {
-      if (e.detail.name !== 'freq') return;
-      const v = chipVal(f, 'freq');
-      $('#w_n').hidden = v !== 'jours';
-      $('#w_date').hidden = v !== 'une';
-    }),
+    onMount: f => {
+      // aperçu : ce que rapporte la tâche à chaque fois, selon la fréquence et l'effort
+      const apercu = () => {
+        const p = ptsTache({ freq: chipVal(f, 'freq') || 'jour', n: parseNum(val('f_n')), effort: chipVal(f, 'effort') || 'normal' });
+        $('#w_pts').innerHTML = `Rapporte <b>${p} crottins</b> à chaque fois.`;
+      };
+      f.addEventListener('chipchange', e => {
+        if (e.detail.name === 'freq') {
+          const v = chipVal(f, 'freq');
+          $('#w_n').hidden = v !== 'jours';
+          $('#w_date').hidden = v !== 'une';
+        }
+        apercu();
+      });
+      $('#f_n').addEventListener('input', apercu);
+      apercu();
+    },
     onSubmit: f => {
       const titre = val('f_titre');
       if (!titre) return 'Indique la tâche, par exemple « Foin du matin ».';
@@ -138,12 +152,17 @@ function formTache(id, pre = {}) {
         if (!Number.isInteger(n) || n < 1 || n > 365) return 'Indique un nombre de jours entre 1 et 365.';
       }
       const date = freq === 'une' ? val('f_date') : '';
-      Object.assign(tk, { titre, freq, n, date: validISO(date) ? date : null, preId: chipVal(f, 'pre'), horseId: chipVal(f, 'h'), resp: readPerson('resp'), notes: val('f_notes') });
+      Object.assign(tk, { titre, freq, n, date: validISO(date) ? date : null, preId: chipVal(f, 'pre'), horseId: chipVal(f, 'h'), resp: readPerson('resp'), effort: chipVal(f, 'effort') || 'normal', notes: val('f_notes') });
       if (!Array.isArray(tk.fait)) tk.fait = [];
       put('taches', tk);
       toast(ex ? 'Tâche enregistrée' : 'Tâche ajoutée');
     },
-    onDelete: ex ? () => { const prev = clone(ex); del('taches', ex.id); toast('Tâche supprimée', { undo: () => put('taches', prev) }); } : null
+    onDelete: ex ? () => {
+      const prev = clone(ex);
+      // déjà cochée : on la retire de la liste mais son historique (et les crottins gagnés) reste
+      if (faitsDe(ex).length) put('taches', Object.assign({}, ex, { retireLe: Date.now() })); else del('taches', ex.id);
+      toast('Tâche supprimée', { undo: () => put('taches', prev) });
+    } : null
   });
 }
 ACT['edit-tache'] = d => formTache(d.id);

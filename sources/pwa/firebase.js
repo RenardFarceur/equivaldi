@@ -239,6 +239,8 @@ window.EQ = {
     await deleteDoc(doc(fs, 'membres', uid));
     if (mail) await deleteDoc(doc(fs, 'invitations', mail)).catch(() => {});
   },
+  // bon de la boutique : écrit seul, sous sa clé, pour ne jamais écraser les autres bons de la fiche
+  bon: (uid, id, data) => setDoc(doc(fs, 'membres', uid), { bons: { [id]: data } }, { merge: true }),
   lien: () => location.origin + location.pathname
 };
 

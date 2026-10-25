@@ -283,7 +283,9 @@ function statsSeances(hid) {
 }
 
 /* ---------- Tâches partagées ---------- */
-const taches = () => list('taches').sort((a, b) => String(a.titre || '').localeCompare(String(b.titre || ''), 'fr'));
+/* Une tâche supprimée après avoir été cochée est seulement retirée (retireLe) : son historique et ses crottins restent */
+const toutesTaches = () => list('taches').sort((a, b) => String(a.titre || '').localeCompare(String(b.titre || ''), 'fr'));
+const taches = () => toutesTaches().filter(tk => !tk.retireLe);
 const faitsDe = tk => (Array.isArray(tk.fait) ? tk.fait : []).filter(f => f && validISO(f.d))
   .sort((a, b) => b.d.localeCompare(a.d) || (b.t || 0) - (a.t || 0));
 /* done = fait pour la période en cours ; retard = jours de retard (0 = à faire aujourd'hui) */
@@ -426,7 +428,7 @@ function periode(p) {
 function bilan(from) {
   const t = todayISO(), by = new Map();
   const acc = k => { if (!by.has(k)) by.set(k, { k, taches: 0, seances: 0, minutes: 0, dep: 0, cats: {}, items: [] }); return by.get(k); };
-  taches().forEach(tk => faitsDe(tk).forEach(f => {
+  toutesTaches().forEach(tk => faitsDe(tk).forEach(f => {
     if (from && f.d < from) return;
     const k = pKey({ uid: f.uid, nom: f.par });
     if (k) acc(k).taches++;
@@ -451,7 +453,7 @@ function filEquipe(fromT = 0, limit = 30, k = null) {
   const items = [];
   // une action sans auteur connu (saisie d'avant le prénom) n'apprend rien sur qui fait quoi
   const push = (t, r, icon, quoi, objet, act) => { if (!t || t < fromT) return; const pk = pKey(r); if (pk && (!k || pk === k)) items.push({ t, r, icon, quoi, objet, act }); };
-  taches().forEach(tk => faitsDe(tk).forEach(f => push(f.t, { uid: f.uid, nom: f.par }, 'tasks', 'Tâche cochée', tk.titre, `data-act="edit-tache" data-id="${tk.id}"`)));
+  toutesTaches().forEach(tk => faitsDe(tk).forEach(f => push(f.t, { uid: f.uid, nom: f.par }, 'tasks', 'Tâche cochée', tk.titre, tk.retireLe ? '' : `data-act="edit-tache" data-id="${tk.id}"`)));
   const crees = (coll, icon, fn, act) => list(coll).forEach(o => {
     const c = o.creePar;
     if (!c || !c.t) return;

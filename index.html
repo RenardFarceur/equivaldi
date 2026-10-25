@@ -43,6 +43,7 @@
   --edge:#C3CDBE; --accent-edge:#1B4229; --danger-edge:#E3BDB2; --hay-edge:#E2CFA0; --prairie-soft:#CDEBD5;
   --wob:18px 22px 17px 23px / 22px 17px 23px 18px; --wob-s:14px 17px 13px 18px / 17px 13px 18px 14px; --blob:47% 53% 44% 56% / 56% 45% 55% 44%;
   --spring:cubic-bezier(.34,1.56,.64,1);
+  --crot:#8B5A2B; --crot-edge:#5A3818; --crot-lite:#C9965F; --crot-ink:#6B4321;
   --zz:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M3 1.6 7.6 4.6 3 8 7.6 11.4 3 14.4' fill='none' stroke='%235DB075' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzh:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 10'%3E%3Cpath d='M2 7 7.5 3 13 7 18.5 3 24 7 29.5 3 35 7 40.5 3' fill='none' stroke='%23C3CDBE' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzf:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 24'%3E%3Cpath d='M9 2 3.4 6.5 9 11 3.4 15.5 9 20' fill='none' stroke='%235DB075' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzm:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M3 1.6 7.6 4.6 3 8 7.6 11.4 3 14.4' fill='none' stroke='%23000000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
@@ -53,6 +54,7 @@
   --danger:#F28C76; --danger-soft:#3B1F19; --warn:#F0B45C; --warn-soft:#382A15; --info:#90BAE6; --info-soft:#1A2938;
   --h0:#3F8A5A; --h1:#9A6440; --h2:#B8693F; --h3:#6E7C85; --h4:#3F918C; --h5:#8A7638; --h6:#4E9A66; --h7:#5A524C; --on-h:#FFFFFF;
   --float:0 1px 2px rgba(0,0,0,.5),0 8px 20px rgba(0,0,0,.35); --scrim:rgba(0,0,0,.62); color-scheme:dark;
+  --crot:#A0703F; --crot-edge:#2B1A0B; --crot-lite:#D9A774; --crot-ink:#E4BC8C;
   --edge:#050A07; --accent-edge:#5DB075; --danger-edge:#2A1410; --hay-edge:#1C150B; --prairie-soft:#1C3A26;
   --zz:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M3 1.6 7.6 4.6 3 8 7.6 11.4 3 14.4' fill='none' stroke='%239FD6AE' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzh:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 10'%3E%3Cpath d='M2 7 7.5 3 13 7 18.5 3 24 7 29.5 3 35 7 40.5 3' fill='none' stroke='%23365040' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");}}
 :root[data-theme="dark"]{
@@ -63,6 +65,7 @@
   --danger:#F28C76; --danger-soft:#3B1F19; --warn:#F0B45C; --warn-soft:#382A15; --info:#90BAE6; --info-soft:#1A2938;
   --h0:#3F8A5A; --h1:#9A6440; --h2:#B8693F; --h3:#6E7C85; --h4:#3F918C; --h5:#8A7638; --h6:#4E9A66; --h7:#5A524C; --on-h:#FFFFFF;
   --float:0 1px 2px rgba(0,0,0,.5),0 8px 20px rgba(0,0,0,.35); --scrim:rgba(0,0,0,.62); color-scheme:dark;
+  --crot:#A0703F; --crot-edge:#2B1A0B; --crot-lite:#D9A774; --crot-ink:#E4BC8C;
   --edge:#050A07; --accent-edge:#5DB075; --danger-edge:#2A1410; --hay-edge:#1C150B; --prairie-soft:#1C3A26;
   --zz:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M3 1.6 7.6 4.6 3 8 7.6 11.4 3 14.4' fill='none' stroke='%239FD6AE' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzh:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 10'%3E%3Cpath d='M2 7 7.5 3 13 7 18.5 3 24 7 29.5 3 35 7 40.5 3' fill='none' stroke='%23365040' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");}
 
@@ -93,7 +96,7 @@ sup{font-size:.6em;line-height:0}
 .lg-leaf{fill:var(--logo-leaf)}
 .brand-mark{display:block;height:36px;width:auto;overflow:visible}
 .brand-logo{display:block;height:auto;max-width:100%;overflow:visible}
-.brand{width:48px;height:48px;display:grid;place-items:center;border:0;background:transparent;border-radius:var(--wob-s);flex:none;margin-left:-8px;padding:0}
+.brand{width:44px;height:48px;display:grid;place-items:center;border:0;background:transparent;border-radius:var(--wob-s);flex:none;margin-left:-8px;padding:0}
 .brand:active{background:var(--surface-2)}
 .loading,.welcome,.about{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
 .loading{padding:40px 0 0}
@@ -115,17 +118,39 @@ sup{font-size:.6em;line-height:0}
 /* Barre du haut */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:8px;border-bottom:1px solid transparent;transition:border-color .2s}
 .top.scrolled{border-bottom-color:var(--line)}
-.top-in{display:flex;align-items:center;gap:8px;max-width:720px;margin:0 auto}
-.top-title{flex:1;min-width:0}
+/* deux rangées : logo, date, crottins et réglages en haut ; le titre en grand dessous */
+.top-in{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;grid-template-areas:"marque sur crot reg" "titre titre titre titre";align-items:center;column-gap:8px;max-width:720px;margin:0 auto}
+#backBtn,#brandBtn{grid-area:marque}
+.top-title{display:contents}
+#topEyebrow{grid-area:sur;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;letter-spacing:.12em}
+#topTitle{grid-area:titre;margin-top:-1px}
+#crotBtn{grid-area:crot}
+#settingsBtn{grid-area:reg}
 .eyebrow{font-family:var(--f-display);font-weight:600;font-size:14px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);line-height:1.3}
 .top h1{font-family:var(--f-display);font-weight:600;font-size:32px;line-height:1.05;margin:0;letter-spacing:.005em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .iconbtn{width:44px;height:44px;display:grid;place-items:center;border:0;background:transparent;border-radius:12px;color:var(--ink);flex:none;transition:background .12s}
 .iconbtn:active{background:var(--surface-2)}
-.sync{width:40px;height:44px;display:grid;place-items:center;border:0;background:transparent;flex:none;border-radius:12px}
-.sync i{width:10px;height:10px;border-radius:50%;background:var(--ink-2);display:block}
-.sync.ok i{background:var(--pousse)}
-.sync.wait i{background:var(--warn)}
-.sync.local i{background:transparent;border:2px solid var(--ink-2)}
+/* Enregistrement : un point sur le bouton Réglages, seulement quand tout n'est pas encore envoyé */
+.reg{position:relative}
+.sync{position:absolute;right:5px;bottom:7px;display:none;pointer-events:none}
+.sync i{width:10px;height:10px;border-radius:50%;display:block;border:2px solid var(--bg)}
+.sync.wait{display:block}.sync.wait i{background:var(--warn)}
+.sync.local{display:block}.sync.local i{background:var(--bg);box-shadow:inset 0 0 0 2px var(--ink-2)}
+/* Compteur de crottins : ouvre la boutique */
+.crot{position:relative;display:inline-flex;align-items:center;gap:3px;height:40px;padding:0 11px 0 5px;border-radius:var(--wob-s);border:2px solid var(--line);background:var(--surface);box-shadow:0 2px 0 var(--edge);color:var(--crot-ink);font-family:var(--f-display);font-weight:600;font-size:20px;letter-spacing:.02em;font-variant-numeric:tabular-nums;flex:none;transition:transform .12s,box-shadow .12s}
+.crot .crottin{width:28px;height:28px}
+.crot:active{transform:translateY(2px);box-shadow:0 0 0 var(--edge)}
+.crot.fx-pop{animation:crotpop .6s var(--spring)}
+.crot.fx-secoue{animation:secoue .45s ease}
+.crot-dot{position:absolute;top:-5px;right:-5px;width:14px;height:14px;border-radius:50%;background:var(--hay);border:2.5px solid var(--bg);display:none}
+.crot.peut .crot-dot{display:block;animation:pouls 2.2s ease-in-out infinite}
+.crottin{display:block;flex:none;overflow:visible}
+.crottin .cr-b{fill:var(--crot);stroke:var(--crot-edge);stroke-width:1.9}
+.crottin .cr-l{fill:none;stroke:var(--crot-lite);stroke-width:1.6;stroke-linecap:round}
+.crottin .cr-fume{fill:none;stroke:var(--ctl);stroke-width:1.7;stroke-linecap:round;opacity:.7}
+.crot .cr-fume,.bq-hero .cr-fume{animation:fume 2.8s ease-in-out infinite}
+.crottin.s{width:18px;height:18px;display:inline-block;vertical-align:-3px}
+.crottin.xl{width:76px;height:76px}
 
 /* Contenu */
 .view{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:6px calc(var(--tab-h) + 100px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:24px}
@@ -422,8 +447,60 @@ label.btn{cursor:pointer}
 .toast button{background:transparent;border:0;color:inherit;text-decoration:underline;font-weight:600;min-height:40px;padding:0 10px;flex:none}
 body.lock .toast{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto}
 
-@media (max-width:370px){.tabs button{font-size:11px}.tab-ic{width:44px}}
+@media (max-width:370px){.tabs button{font-size:11px}.tab-ic{width:44px}.crot{font-size:18px;padding:0 8px 0 3px;height:38px}.crot .crottin{width:24px;height:24px}#topEyebrow{letter-spacing:.08em;font-size:12px}}
 @media (max-width:350px){.quick,.grid2{grid-template-columns:minmax(0,1fr)}.stat{padding:8px}.stat b{font-size:21px}.top h1{font-size:28px}.tab-ic{width:40px}.phead{flex-direction:column;align-items:flex-start}}
+/* ---------- Crottins : tâches, boutique, classement ---------- */
+.trow-pts{display:inline-flex;align-items:center;gap:2px;flex:none;padding:0 14px 0 2px;font-family:var(--f-display);font-weight:600;font-size:17px;color:var(--crot-ink)}
+.trow-pts .crottin{width:19px;height:19px}
+.crot-note{margin-top:8px}.crot-note .crottin{vertical-align:-4px;margin-right:5px}
+.crot-ligne{gap:6px;margin-top:2px}
+.crot-ligne b{font-family:var(--f-display);font-size:19px;color:var(--crot-ink)}
+.bq-hero{flex-direction:row;align-items:center;gap:14px}
+.bq-hero .row-main{gap:6px}
+.bq-solde{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.bq-solde b{font-family:var(--f-display);font-weight:600;font-size:46px;line-height:1;color:var(--crot-ink);font-variant-numeric:tabular-nums}
+.bq-solde span{font-weight:600}
+.bq-list{display:flex;flex-direction:column;gap:12px}
+.bq-item{display:flex;align-items:center;gap:12px;padding:14px 12px;background:var(--surface);border:2px solid var(--line);border-radius:var(--wob)}
+.bq-item.ok{border-color:var(--accent);box-shadow:0 3px 0 var(--accent-edge)}
+.bq-item .row-main{gap:5px}
+.bq-item .gauge>i{background:var(--crot)}
+.bq-item.ok .gauge>i{background:var(--pousse)}
+.bq-item .btn{flex:none}
+.bq-prix,.bq-pts{display:inline-flex;align-items:center;gap:4px;font-family:var(--f-display);font-weight:600;font-size:18px;color:var(--crot-ink)}
+.bq-confirm{display:flex;align-items:center;gap:14px}
+.bq-confirm p{margin:0;font-size:17px}
+.link .crottin{width:22px;height:22px}
+.podium{width:28px;height:28px;flex:none;display:grid;place-items:center;border-radius:var(--blob);font-family:var(--f-display);font-weight:600;font-size:16px;background:var(--surface-2);color:var(--ink-2)}
+.podium.p1{background:#F2D06B;color:#4F3A00}.podium.p2{background:#D7DDE3;color:#33404B}.podium.p3{background:#E6B489;color:#542F10}
+.row .gauge{margin-top:4px}
+/* Le spectacle : halo, rayons en crinière, cheval, crottins qui tombent puis filent au compteur */
+.crot-scene{position:absolute;inset:0}
+.crot-voile{position:absolute;left:0;right:0;bottom:0;background:var(--bg)}
+.crot-halo{position:absolute;width:310px;height:310px;margin:-155px 0 0 -155px;border-radius:50%;background:radial-gradient(circle,var(--surface) 0 55%,transparent 71%)}
+.crot-rayons{position:absolute;width:0;height:0}
+.crot-rayons i{position:absolute;left:-6px;top:-10px;width:12px;height:20px;background:var(--pousse);-webkit-mask:var(--zzm) center/contain no-repeat;mask:var(--zzm) center/contain no-repeat}
+.crot-rayons i:nth-child(even){background:var(--hay)}
+.crot-cheval{position:absolute;width:128px;height:126px;margin:-63px 0 0 -64px}
+.crot-cheval .brand-mark{width:128px;height:126px}
+.crot-txt{position:absolute;width:280px;transform:translate(-50%,0);display:flex;flex-direction:column;align-items:center;text-align:center}
+.crot-txt b{font-family:var(--f-display);font-weight:600;font-size:66px;line-height:.95;color:var(--crot-ink);text-shadow:0 3px 0 var(--surface),0 -3px 0 var(--surface),3px 0 0 var(--surface),-3px 0 0 var(--surface),0 6px 0 var(--edge)}
+.crot-txt span{font-family:var(--f-display);font-weight:600;font-size:20px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
+.crot-txt small{font-size:14px;font-weight:600;color:var(--ink-2);margin-top:4px;padding:2px 10px;border-radius:999px;background:var(--surface)}
+.crot-boule{position:absolute;width:22px;height:19px;margin:-9px 0 0 -11px;border-radius:52% 48% 46% 54% / 55% 52% 48% 45%;background:var(--crot);border:2px solid var(--crot-edge);box-shadow:inset 3px 3px 0 rgba(255,255,255,.22),inset -2px -3px 0 rgba(0,0,0,.15)}
+.crot-bulle{position:absolute;padding:5px 12px;border-radius:999px;background:var(--surface);border:2px solid var(--line);box-shadow:0 2px 0 var(--edge);font-family:var(--f-display);font-weight:600;font-size:17px;letter-spacing:.04em;color:var(--crot-ink);white-space:nowrap;animation:bulleup 2.2s ease both}
+.crot-bulle.perte{color:var(--danger)}
+.crot-rang{position:absolute;left:50%;top:40%;display:flex;align-items:center;gap:14px;padding:16px 24px 16px 16px;border-radius:var(--wob);background:var(--accent);color:var(--accent-ink);border:2px solid var(--accent-edge);box-shadow:0 5px 0 var(--accent-edge),var(--float);transform:translate(-50%,-50%);white-space:nowrap}
+.crot-rang .brand-mark{height:58px}
+.crot-rang .lg-ink{fill:currentColor}.crot-rang .lg-leaf{fill:var(--menthe)}
+.crot-rang small{display:block;font-family:var(--f-display);font-weight:600;font-size:14px;letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+.crot-rang b{display:block;font-family:var(--f-display);font-weight:600;font-size:32px;line-height:1.05}
+.bon-tampon{position:absolute;padding:4px 18px;border:3px solid var(--accent);border-radius:12px 9px 13px 10px;color:var(--accent);background:var(--surface);font-family:var(--f-display);font-weight:600;font-size:30px;letter-spacing:.2em;text-transform:uppercase}
+@keyframes crotpop{0%{transform:none}30%{transform:scale(1.24) rotate(-5deg)}60%{transform:scale(.95)}100%{transform:none}}
+@keyframes pouls{50%{transform:scale(1.25)}}
+@keyframes fume{0%,100%{transform:translateY(0);opacity:.7}50%{transform:translateY(-1.5px);opacity:.3}}
+@keyframes bulleup{0%{opacity:0;transform:translateY(-8px) scale(.8)}12%{opacity:1;transform:none}80%{opacity:1;transform:none}100%{opacity:0;transform:translateY(6px)}}
+
 /* ---------- Animations ---------- */
 /* Entrée des écrans : par onglet, vers une fiche, retour, changement de rubrique */
 .view.in-tab>*{animation:monte .42s cubic-bezier(.2,.8,.2,1) both}
@@ -486,8 +563,8 @@ img{max-width:100%}
       <div class="eyebrow" id="topEyebrow">Carnet d'écurie</div>
       <h1 id="topTitle">EquiValdi</h1>
     </div>
-    <button class="sync" id="sync" data-act="sync-info" aria-label="État de l'enregistrement"><i></i></button>
-    <button class="iconbtn" id="settingsBtn" data-act="reglages" aria-label="Réglages"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></button>
+    <button class="crot" id="crotBtn" data-act="boutique" aria-label="Crottins : ouvrir la boutique" hidden><svg class="crottin" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path class="cr-fume" d="M12.8 7.6c-1.7-1.5-1.7-3 0-4.4M18.6 7.2c-1.5-1.4-1.5-2.8 0-4.1"/><ellipse class="cr-b" cx="10.5" cy="22.6" rx="7" ry="6"/><ellipse class="cr-b" cx="21.6" cy="23.1" rx="6.8" ry="5.8"/><ellipse class="cr-b" cx="16" cy="14.6" rx="6.2" ry="5.4"/><path class="cr-l" d="M7.4 20.6q1.5-2 3.6-2.1M18.5 21.2q1.5-2 3.5-2M12.9 12.6q1.4-1.8 3.4-1.9"/></svg><b id="crotN">0</b><i class="crot-dot" aria-hidden="true"></i></button>
+    <button class="iconbtn reg" id="settingsBtn" data-act="reglages" aria-label="Réglages"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg><span class="sync" id="sync" aria-hidden="true"><i></i></span></button>
   </div>
 </header>
 <main class="view" id="view" aria-live="polite">
@@ -552,6 +629,7 @@ function fmt(iso, o) {
 const sameYear = iso => iso.slice(0, 4) === todayISO().slice(0, 4);
 const dShort = iso => validISO(iso) ? fmt(iso, { day: 'numeric', month: 'short' }) + (sameYear(iso) ? '' : ' ' + iso.slice(0, 4)) : '';
 const dLong = iso => fmt(iso, { weekday: 'long', day: 'numeric', month: 'long' });
+const dTete = iso => fmt(iso, { weekday: 'short', day: 'numeric', month: 'long' });
 const dFull = iso => validISO(iso) ? fmt(iso, { day: 'numeric', month: 'short', year: 'numeric' }) : '';
 const dDay = iso => fmt(iso, { day: 'numeric' });
 const dMon = iso => fmt(iso, { month: 'short' }).replace('.', '');
@@ -726,6 +804,7 @@ const OUTBOX_KEY = 'carnet-ecurie:outbox:v1';
 const UI_KEY = 'carnet-ecurie:ui:v1';
 let outbox = [];
 let DB = null;
+let dataV = 0;              // change à chaque modification des données (calculs mis en cache)
 const sync = { mode: 'loading', error: null, loaded: new Set(), readOnly: false };
 
 /* Qui utilise le carnet (partage à plusieurs) */
@@ -761,6 +840,7 @@ async function resync(op) {
       const s = await DB.collection(op.coll).doc(op.id).get();
       if (s.exists) { const o = clone(s.data()); o.id = s.id; S[op.coll][op.id] = o; } else delete S[op.coll][op.id];
     }
+    dataV++;
     saveCache();
     rerenderSoon();
   } catch (e) { /* on réessaiera au prochain chargement */ }
@@ -775,6 +855,7 @@ function loadCache() {
     [...COLS, ...EXTRA].forEach(k => { S[k] = (c[k] && typeof c[k] === 'object') ? c[k] : {}; });
     S.cfg = c.cfg || null;
   }
+  dataV++;
   const o = lsGet(OUTBOX_KEY);
   outbox = Array.isArray(o) ? o : [];
   // les modifications pas encore envoyées restent prioritaires
@@ -809,12 +890,14 @@ function put(coll, obj) {
   // qui a ajouté la fiche : sert au fil de l'équipe
   if (coll !== 'membres' && !restauration && !S[coll][o.id] && !o.creePar) o.creePar = Object.assign(moiRef(), { t: Date.now() });
   o.maj = Date.now();
+  crotAvant();
   S[coll][o.id] = o;
   queue(coll, o.id, 'set', o);
   return o;
 }
 function del(coll, id) {
   if (!S[coll][id]) return;
+  crotAvant();
   delete S[coll][id];
   queue(coll, id, 'del', null);
 }
@@ -823,6 +906,7 @@ function putCfg(c) {
   queue('config', 'reglages', 'set', S.cfg);
 }
 function queue(coll, id, op, data) {
+  dataV++;
   const k = coll + '/' + id;
   outbox = outbox.filter(o => o.k !== k);
   outbox.push({ k, coll, id, op, data: data ? clone(data) : null });
@@ -890,6 +974,7 @@ function onSnap(coll, snap) {
   const next = partial ? Object.assign({}, S[coll]) : {};
   snap.docs.forEach(d => { if (d.exists) { const o = clone(d.data()); o.id = d.id; next[d.id] = o; } });
   S[coll] = next;
+  dataV++;
   outbox.filter(o => o.coll === coll).forEach(applyOp);
   if (!partial) sync.loaded.add(coll);
   saveCache();
@@ -915,6 +1000,7 @@ function subscribeCfg() {
         if (outbox.some(o => o.k === 'config/reglages')) return;
         if (snap.exists) S.cfg = clone(snap.data());
         else if (!(snap.metadata && snap.metadata.fromCache)) S.cfg = null;
+        dataV++;
         saveCache();
         rerenderSoon();
       }, e => onSnapErr(make, e));
@@ -942,7 +1028,8 @@ function updateSync() {
   if (!b) return;
   const n = outbox.length;
   b.className = 'sync ' + (sync.mode === 'local' ? 'local' : n ? 'wait' : sync.mode === 'cloud' ? 'ok' : '');
-  b.setAttribute('aria-label', syncText());
+  const r = document.getElementById('settingsBtn');
+  if (r) r.setAttribute('aria-label', 'Réglages. ' + syncText());
 }
 function syncText() {
   const n = outbox.length;
@@ -968,7 +1055,7 @@ function cfg() {
 }
 
 /* Préférences d'affichage (onglet choisi…), propres à ce téléphone */
-const ui = Object.assign({ chevSeg: 'fiches', concSeg: 'avenir', showArch: false }, lsGet(UI_KEY) || {});
+const ui = Object.assign({ chevSeg: 'fiches', concSeg: 'avenir', showArch: false, crotAnim: 'grand' }, lsGet(UI_KEY) || {});
 const saveUi = () => lsSet(UI_KEY, ui);
 
 /* ---------- Chevaux ---------- */
@@ -1255,7 +1342,9 @@ function statsSeances(hid) {
 }
 
 /* ---------- Tâches partagées ---------- */
-const taches = () => list('taches').sort((a, b) => String(a.titre || '').localeCompare(String(b.titre || ''), 'fr'));
+/* Une tâche supprimée après avoir été cochée est seulement retirée (retireLe) : son historique et ses crottins restent */
+const toutesTaches = () => list('taches').sort((a, b) => String(a.titre || '').localeCompare(String(b.titre || ''), 'fr'));
+const taches = () => toutesTaches().filter(tk => !tk.retireLe);
 const faitsDe = tk => (Array.isArray(tk.fait) ? tk.fait : []).filter(f => f && validISO(f.d))
   .sort((a, b) => b.d.localeCompare(a.d) || (b.t || 0) - (a.t || 0));
 /* done = fait pour la période en cours ; retard = jours de retard (0 = à faire aujourd'hui) */
@@ -1398,7 +1487,7 @@ function periode(p) {
 function bilan(from) {
   const t = todayISO(), by = new Map();
   const acc = k => { if (!by.has(k)) by.set(k, { k, taches: 0, seances: 0, minutes: 0, dep: 0, cats: {}, items: [] }); return by.get(k); };
-  taches().forEach(tk => faitsDe(tk).forEach(f => {
+  toutesTaches().forEach(tk => faitsDe(tk).forEach(f => {
     if (from && f.d < from) return;
     const k = pKey({ uid: f.uid, nom: f.par });
     if (k) acc(k).taches++;
@@ -1423,7 +1512,7 @@ function filEquipe(fromT = 0, limit = 30, k = null) {
   const items = [];
   // une action sans auteur connu (saisie d'avant le prénom) n'apprend rien sur qui fait quoi
   const push = (t, r, icon, quoi, objet, act) => { if (!t || t < fromT) return; const pk = pKey(r); if (pk && (!k || pk === k)) items.push({ t, r, icon, quoi, objet, act }); };
-  taches().forEach(tk => faitsDe(tk).forEach(f => push(f.t, { uid: f.uid, nom: f.par }, 'tasks', 'Tâche cochée', tk.titre, `data-act="edit-tache" data-id="${tk.id}"`)));
+  toutesTaches().forEach(tk => faitsDe(tk).forEach(f => push(f.t, { uid: f.uid, nom: f.par }, 'tasks', 'Tâche cochée', tk.titre, tk.retireLe ? '' : `data-act="edit-tache" data-id="${tk.id}"`)));
   const crees = (coll, icon, fn, act) => list(coll).forEach(o => {
     const c = o.creePar;
     if (!c || !c.t) return;
@@ -1529,7 +1618,7 @@ function render() {
     v = { title: 'Carnet', html: empty("Cet écran n'a pas pu s'afficher", esc(e.message)) };
   }
   $('#topTitle').textContent = v.title;
-  $('#topEyebrow').textContent = v.eyebrow || dLong(todayISO());
+  $('#topEyebrow').textContent = v.eyebrow || dTete(todayISO());
   $('#backBtn').hidden = !top;
   $('#brandBtn').hidden = !!top;
   const view = $('#view');
@@ -1555,6 +1644,7 @@ function render() {
   fab.setAttribute('aria-label', v.fabLabel || 'Ajouter');
   renderTabs();
   updateSync();
+  majCrottins();
 }
 let rrTimer = null;
 function rerenderSoon() { clearTimeout(rrTimer); rrTimer = setTimeout(render, 40); }
@@ -1730,7 +1820,7 @@ function nomsConnus() {
   add(moiNom());
   list('seances').forEach(x => add(x.cavalier));
   list('concours').forEach(x => add(x.cavalier));
-  taches().forEach(tk => faitsDe(tk).forEach(f => add(f.par)));
+  toutesTaches().forEach(tk => faitsDe(tk).forEach(f => add(f.par)));
   chevaux(true).forEach(h => { add(h.proprietaire); dpsDe(h).forEach(x => add(x.qui.nom)); });
   return [...s.values()];
 }
@@ -2213,6 +2303,8 @@ const NEW = {
 };
 ACT.new = d => { const f = NEW[d.what]; if (f) f(d); };
 ACT['clear-ex'] = () => {
+  crotSilence = true;
+  setTimeout(() => { crotSilence = false; }, 0);
   let n = 0;
   COLS.forEach(k => list(k).filter(o => o.ex).forEach(o => { del(k, o.id); n++; }));
   // ce qui avait été saisi sur les chevaux, prés ou balles d'exemple part avec eux
@@ -2588,6 +2680,7 @@ function formSoin(id, pre = {}) {
     <div id="w_label"${(s.types || []).includes('autre') ? '' : ' hidden'}>${fld('Précision', inp('f_label', s.label, 'placeholder="ex. coproscopie, radio, échographie" autocomplete="off"'))}</div>
     <div class="grid2">${fld('Date', inp('f_date', s.date, 'type="date" required'))}${grp('Statut', chips('statut', [{ v: 'fait', l: 'Fait' }, { v: 'prevu', l: 'Prévu' }], statut0))}</div>
     ${ex && ex.statut === 'prevu' ? `<button type="button" class="btn" id="b_done">${ic('check', 'sm')}Marquer fait aujourd'hui</button>` : ''}
+    <div id="w_gere"${statut0 === 'fait' ? '' : ' hidden'}>${membres().length === 1 ? '' : pickPerson('gere', 'Géré par', s.gerePar || null, { moi: true, hint: 'La personne présente au rendez-vous ou qui a fait le soin.' })}<p class="note crot-note" id="w_gpts"></p></div>
     <div class="grid2">${fld('Praticien', inp('f_prat', s.praticien, 'list="dl-prat" autocomplete="off"'))}${fld('Produit', inp('f_prod', s.produit, 'list="dl-prod" autocomplete="off" placeholder="vaccin, vermifuge…"'))}</div>
     <div class="grid2">${fld('Coût (€)', inp('f_cout', s.cout != null ? String(s.cout).replace('.', ',') : '', numAttr))}${fld('Prochain rappel', inp('f_proch', s.prochain, 'type="date"'), 'Vide : calculé selon les réglages')}</div>
     ${payeField(s.payePar, 'f_cout', Number(s.cout) || 0)}
@@ -2596,15 +2689,25 @@ function formSoin(id, pre = {}) {
   openSheet(ex ? soinLabel(ex) : 'Soin ou rendez-vous', body, {
     onMount: f => {
       let touched = false;
+      // « Géré par » et les crottins qu'il rapporte, dès que le soin est fait
+      const majGere = () => {
+        const fait = (chipVal(f, 'statut') || auto(val('f_date'))) === 'fait', ts = chipVals(f, 'types');
+        $('#w_gere').hidden = !fait;
+        $('#w_gpts').innerHTML = ts.length ? `${crottinSvg('s')}Rapporte <b>${ptsSoin({ types: ts, planifie: !!(ex && (ex.planifie || ex.statut === 'prevu')) })} crottins</b> à la personne qui l'a géré.` : '';
+      };
       f.addEventListener('chipchange', e => {
         if (e.detail.name === 'statut') touched = true;
         if (e.detail.name === 'types') $('#w_label').hidden = !chipVals(f, 'types').includes('autre');
+        majGere();
       });
-      $('#f_date').addEventListener('change', () => { if (!touched && validISO(val('f_date'))) setChips(f, 'statut', [auto(val('f_date'))]); });
+      $('#f_date').addEventListener('change', () => { if (!touched && validISO(val('f_date'))) setChips(f, 'statut', [auto(val('f_date'))]); majGere(); });
+      majGere();
       const b = $('#b_done');
       if (b) b.addEventListener('click', () => {
         if (sync.readOnly) { toast(RO_MSG, { danger: true }); return; }
-        put('soins', Object.assign({}, ex, { date: todayISO(), statut: 'fait' })); closeSheet(); toast('Soin marqué comme fait');
+        const g = (hasPerson('gere') && readPerson('gere')) || moiRef();
+        put('soins', Object.assign({}, ex, { date: todayISO(), statut: 'fait', gerePar: g, faitLe: Date.now(), planifie: true }));
+        closeSheet(); toast('Rendez-vous honoré');
       });
     },
     onSubmit: f => {
@@ -2620,7 +2723,11 @@ function formSoin(id, pre = {}) {
       if (coutRaw && cout == null) return 'Le coût doit être un nombre, par exemple 45 ou 45,50.';
       const proch = val('f_proch');
       if (proch && proch <= date) return 'Le prochain rappel doit tomber après la date du soin.';
-      const base = { types, label: types.includes('autre') ? val('f_label') : '', date, statut, praticien: val('f_prat'), produit: val('f_prod'), cout, payePar: lirePaye(cout), prochain: proch || null, notes: val('f_notes') };
+      // qui a géré le soin (pour les crottins), quand il a été marqué fait, et s'il avait été prévu
+      const gerePar = statut === 'fait' ? ((hasPerson('gere') && readPerson('gere')) || moiRef()) : null;
+      const faitLe = statut === 'fait' ? (ex && ex.statut === 'fait' ? (ex.faitLe || null) : Date.now()) : null;
+      const planifie = statut === 'prevu' || !!(ex && (ex.planifie || ex.statut === 'prevu'));
+      const base = { types, label: types.includes('autre') ? val('f_label') : '', date, statut, praticien: val('f_prat'), produit: val('f_prod'), cout, payePar: lirePaye(cout), gerePar, faitLe, planifie, prochain: proch || null, notes: val('f_notes') };
       if (ex) { put('soins', Object.assign({}, ex, base, { horseId: hids[0] })); toast('Soin enregistré'); return; }
       const ids = hids.map(hid => put('soins', Object.assign({ horseId: hid }, base)).id);
       toast(`${statut === 'prevu' ? 'Rendez-vous noté' : 'Soin enregistré'}${ids.length > 1 ? ` pour ${ids.length} chevaux` : ''}`, { undo: () => ids.forEach(i => del('soins', i)) });
@@ -3029,7 +3136,7 @@ function formConcours(id, pre = {}) {
     ${grp('Discipline', chips('disc', DISCIPLINES.map(x => ({ v: x, l: x })), c.discipline ? [c.discipline] : [], { optional: true }))}
     ${grp('Niveau', chips('niv', NIVEAUX.map(n => ({ v: n.id, l: n.label })), c.niveau ? [c.niveau] : [], { optional: true }), 'Sert à vérifier les vaccins exigés.')}
     ${fld('Épreuve', inp('f_epr', c.epreuve, 'list="dl-epr" autocomplete="off" placeholder="ex. Club 2 Grand Prix"'))}
-    ${pickPerson('cav', 'Cavalier', cavRef, { moi: !cavRef, def: lastUsed('concours', 'cavalier') })}
+    ${pickPerson('cav', 'Cavalier', cavRef, { moi: !cavRef, def: lastUsed('concours', 'cavalier'), hint: `Le cavalier gagne ${CROT.concours} crottins par concours fait, et jusqu'à ${CROT.podium[1]} de plus pour un podium.` })}
     ${grp('Engagement', chips('eng', ENGAGEMENT.map(e => ({ v: e.id, l: e.label })), c.statut || 'a_engager'))}
     <div class="grid2">${fld('Clôture des engagements', inp('f_clot', c.cloture, 'type="date"'))}${fld('Frais (€)', inp('f_frais', c.frais != null ? String(c.frais).replace('.', ',') : '', numAttr))}</div>
     ${payeField(c.payePar, 'f_frais', Number(c.frais) || 0)}
@@ -3091,7 +3198,9 @@ VIEWS.reglages = () => {
   if (!validISO(fin) || fin <= t) fin = `${+t.slice(0, 4) + 1}-${C.finSaison}`;
   const rap = SOINS.filter(T => T.id !== 'autre').map(T =>
     `<div class="row"><div class="row-main"><div class="row-t">${T.label}</div><div class="row-s">${dureeTxt(C.rappels[T.id])}</div></div>${rinp('r_' + T.id, C.rappels[T.id] || '', 'Intervalle en jours : ' + T.label)}</div>`).join('');
-  let html = equipeHtml() + section('Rappels de soins', `<div class="list">${rap}</div><p class="note">Nombre de jours entre deux soins. 0 ou vide : pas de rappel. Un soin peut aussi porter sa propre date de rappel. Ces réglages sont communs à toutes les personnes du carnet.</p>`);
+  let html = equipeHtml() + section('Crottins', `${segCtl('crotAnim', [['grand', 'Grande animation'], ['discret', 'Discrète']], ui.crotAnim === 'discret' ? 'discret' : 'grand')}
+    <p class="note">Ce que montre l'appli quand tu gagnes des crottins, sur ce téléphone.</p>
+    <button type="button" class="link" data-act="boutique" style="align-self:flex-start">${crottinSvg('s')}Ouvrir la boutique</button>`) + section('Rappels de soins', `<div class="list">${rap}</div><p class="note">Nombre de jours entre deux soins. 0 ou vide : pas de rappel. Un soin peut aussi porter sa propre date de rappel. Ces réglages sont communs à toutes les personnes du carnet.</p>`);
   html += section('Alertes et prés', `<div class="list">
     <div class="row"><div class="row-main"><div class="row-t">Prévenir avant l'échéance</div><div class="row-s">Soins à prévoir sur l'accueil</div></div>${rinp('c_alerte', C.alerte, "Jours d'avance")}</div>
     <div class="row"><div class="row-main"><div class="row-t">Repos visé d'un pré</div><div class="row-s">Avant d'y remettre des chevaux</div></div>${rinp('c_repos', C.repos, 'Jours de repos visés')}</div>
@@ -3196,7 +3305,9 @@ function doImport(d) {
   toast('Sauvegarde restaurée');
 }
 ACT.wipe = () => {
+  crotSilence = true;
   COLS.forEach(k => list(k).forEach(o => del(k, o.id)));
+  crotSilence = false;
   nav.stack = [];
   nav.tab = 'accueil';
   render();
@@ -3295,6 +3406,7 @@ function trow(tk) {
   return `<div class="trow${e.done ? ' done' : ''}${late ? ' late' : ''}" data-key="tk-${esc(tk.id)}">
     <button type="button" class="tick" data-act="tick" data-id="${tk.id}" aria-pressed="${e.done}" aria-label="${esc(tk.titre)} : ${e.done ? 'fait, toucher pour annuler' : 'marquer comme fait'}"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path pathLength="1" d="M5.5 12.8 10 17.2 18.8 7.2"/></svg></button>
     <button type="button" class="trow-main" data-act="edit-tache" data-id="${tk.id}"><span class="row-t">${esc(tk.titre)}</span><span class="row-s">${esc(tacheSub(tk, e))}</span></button>
+    ${e.done ? '' : `<span class="trow-pts" title="Rapporte ${ptsTache(tk)} crottins">+${ptsTache(tk)}${crottinSvg()}</span>`}
   </div>`;
 }
 function tachesTriees(filter) {
@@ -3359,7 +3471,7 @@ ACT.tick = d => {
     const cur = get('taches', d.id);
     if (!cur) return;
     const prev = clone(cur), avant = toutFait();
-    const f = { d: todayISO(), t: Date.now(), par: nom, uid: me.uid || null };
+    const f = { d: todayISO(), t: Date.now(), par: nom, uid: me.uid || null, pts: ptsTache(cur) };
     figeOrdre();
     put('taches', Object.assign({}, cur, { fait: [f, ...faitsDe(cur)].slice(0, 30) }));
     render();
@@ -3367,7 +3479,8 @@ ACT.tick = d => {
     $$(`.tick[data-id="${CSS.escape(cur.id)}"]`).forEach(el => { fxOnce(el, 'fx-coche', 700); confettis(el); });
     vibre(12);
     if (!avant && toutFait()) {
-      setTimeout(galop, 350);
+      // le galop de fête passe après la pluie de crottins
+      setTimeout(galop, ui.crotAnim === 'discret' || !mouvementOk() ? 350 : 2900);
       toast("Tout est fait pour aujourd'hui, bravo !", { fete: true, undo: () => put('taches', prev) });
     } else toast(`${cur.titre} : fait`, { undo: () => put('taches', prev) });
   });
@@ -3396,16 +3509,28 @@ function formTache(id, pre = {}) {
     ${ps.length ? grp('Pré', chips('pre', ps.map(p => ({ v: p.id, l: p.nom })), tk.preId ? [tk.preId] : [], { optional: true }), 'Facultatif.') : ''}
     ${hs.length ? grp('Cheval', chips('h', horseOpts(hs), tk.horseId ? [tk.horseId] : [], { optional: true }), 'Facultatif.') : ''}
     ${pickPerson('resp', "Qui s'en charge", tk.resp || null, { autre: false, hint: "Facultatif. Vide : toute l'équipe." })}
+    ${grp('Effort', chips('effort', EFFORTS.map(x => ({ v: x.id, l: x.label })), tk.effort || 'normal'), '<span id="w_pts"></span>')}
     ${fld('Consignes', area('f_notes', tk.notes, 'rows="2" placeholder="ex. 2 rounds dans le râtelier, vérifier le niveau d\'eau"'))}
     ${hist}`;
   openSheet(ex ? 'Tâche' : 'Nouvelle tâche', body, {
     focus: ex ? null : '#f_titre',
-    onMount: f => f.addEventListener('chipchange', e => {
-      if (e.detail.name !== 'freq') return;
-      const v = chipVal(f, 'freq');
-      $('#w_n').hidden = v !== 'jours';
-      $('#w_date').hidden = v !== 'une';
-    }),
+    onMount: f => {
+      // aperçu : ce que rapporte la tâche à chaque fois, selon la fréquence et l'effort
+      const apercu = () => {
+        const p = ptsTache({ freq: chipVal(f, 'freq') || 'jour', n: parseNum(val('f_n')), effort: chipVal(f, 'effort') || 'normal' });
+        $('#w_pts').innerHTML = `Rapporte <b>${p} crottins</b> à chaque fois.`;
+      };
+      f.addEventListener('chipchange', e => {
+        if (e.detail.name === 'freq') {
+          const v = chipVal(f, 'freq');
+          $('#w_n').hidden = v !== 'jours';
+          $('#w_date').hidden = v !== 'une';
+        }
+        apercu();
+      });
+      $('#f_n').addEventListener('input', apercu);
+      apercu();
+    },
     onSubmit: f => {
       const titre = val('f_titre');
       if (!titre) return 'Indique la tâche, par exemple « Foin du matin ».';
@@ -3416,12 +3541,17 @@ function formTache(id, pre = {}) {
         if (!Number.isInteger(n) || n < 1 || n > 365) return 'Indique un nombre de jours entre 1 et 365.';
       }
       const date = freq === 'une' ? val('f_date') : '';
-      Object.assign(tk, { titre, freq, n, date: validISO(date) ? date : null, preId: chipVal(f, 'pre'), horseId: chipVal(f, 'h'), resp: readPerson('resp'), notes: val('f_notes') });
+      Object.assign(tk, { titre, freq, n, date: validISO(date) ? date : null, preId: chipVal(f, 'pre'), horseId: chipVal(f, 'h'), resp: readPerson('resp'), effort: chipVal(f, 'effort') || 'normal', notes: val('f_notes') });
       if (!Array.isArray(tk.fait)) tk.fait = [];
       put('taches', tk);
       toast(ex ? 'Tâche enregistrée' : 'Tâche ajoutée');
     },
-    onDelete: ex ? () => { const prev = clone(ex); del('taches', ex.id); toast('Tâche supprimée', { undo: () => put('taches', prev) }); } : null
+    onDelete: ex ? () => {
+      const prev = clone(ex);
+      // déjà cochée : on la retire de la liste mais son historique (et les crottins gagnés) reste
+      if (faitsDe(ex).length) put('taches', Object.assign({}, ex, { retireLe: Date.now() })); else del('taches', ex.id);
+      toast('Tâche supprimée', { undo: () => put('taches', prev) });
+    } : null
   });
 }
 ACT['edit-tache'] = d => formTache(d.id);
@@ -3584,6 +3714,7 @@ VIEWS.equipe = () => {
     <div class="stat"><b>${B.taches}</b><span>${pl(B.taches, 'tâche cochée', 'tâches cochées')}</span></div>
     <div class="stat"><b>${B.seances}</b><span>${pl(B.seances, 'séance', 'séances')} de travail</span></div>
     <div class="stat"><b>${eurRond(B.total)}</b><span>de dépenses</span></div></div>`;
+  html += section(`Crottins ${P.label}`, classementCrottins(P), `<button type="button" class="link" data-act="boutique">Boutique ${ic('next', 'sm')}</button>`);
   // les membres, puis les personnes hors équipe qui apparaissent dans le carnet (demi-pension, cavalier, payeur…)
   const keys = new Set(ms.map(m => 'u:' + m.id)), autres = new Set();
   const voir = k => { if (k && k !== '_' && !keys.has(k)) autres.add(k); };
@@ -3624,6 +3755,7 @@ VIEWS.membre = p => {
     <div class="row-s">${esc(m ? (ROLE_LABEL[m.role] || '') : 'Hors équipe')}</div>
     ${m && m.email ? `<div class="row-s trunc">${esc(m.email)}</div>` : ''}
     ${dispo ? `<div class="row-s">Jours de présence : ${esc(dispo)}</div>` : ''}
+    <div class="wrap crot-ligne">${crottinSvg('s')}<b>${num(soldeDe(pe.k), 0)}</b><span class="small muted">${pl(soldeDe(pe.k), 'crottin')} · ${esc(rangDe(crottinsDe(pe.k).gagnes).r.nom)}</span></div>
     ${btns ? `<div class="btnrow">${btns}</div>` : ''}</div></div>`;
   html += perSeg();
   html += `<div class="stats">
@@ -3759,6 +3891,496 @@ function presentsHtml() {
   const ps = presentsAujourdhui();
   if (!ps.length) return '';
   return section("Aujourd'hui à l'écurie", `<div class="list">${ps.map(x => `<button type="button" class="row" data-act="open-membre" data-k="${esc(x.k)}">${pav(x.ref)}<div class="row-main"><div class="row-t">${esc(nomDe(x.ref))}${estMoi(x.k) ? ' <span class="pill ok">Toi</span>' : ''}</div><div class="row-s">${esc(x.chevaux.length ? 'Demi-pension · ' + x.chevaux.map(h => h.nom).join(', ') : 'Jour de présence')}</div></div><span class="row-end">${ic('next', 'sm')}</span></button>`).join('')}</div>`);
+}
+
+/* ---------- Points crottins : chaque action rapporte, la boutique récompense ----------
+   Les points ne sont pas stockés : ils se déduisent de ce qui a été fait (tâches cochées, soins gérés,
+   concours…). Annuler l'action fait donc disparaître ses crottins, sur tous les téléphones. */
+const CROT = {
+  debut: '2026-10-25',                        // les actions comptent à partir du lancement du jeu
+  tache: { base: 5, exp: .55, max: 40, une: 15 },
+  tachesJour: 60,                             // plafond des tâches par personne et par jour : pas de crottins à la chaîne
+  soins: { marechal: 20, dentiste: 20, osteo: 20, veto: 20, grippe: 15, tetanos: 15, rhino: 15, vermifuge: 8, autre: 10 },
+  rdv: 5,                                     // bonus : rendez-vous prévu à l'avance puis honoré
+  delai: 7,                                   // une saisie de plus d'une semaine après les faits ne rapporte rien
+  seance: 5, concours: 40, podium: [0, 50, 35, 25],
+  entretien: 15, deplacement: 3, balle: 3, ballesJour: 3, livraison: [10, 1, 30]
+};
+const EFFORTS = [{ id: 'leger', label: 'Léger', x: .6 }, { id: 'normal', label: 'Normal', x: 1 }, { id: 'costaud', label: 'Costaud', x: 2 }];
+/* Du moins cher au plus cher : il faut plusieurs mois de coups de main pour le tapis */
+const BOUTIQUE = [
+  { id: 'biere', nom: 'Une bière offerte', prix: 150, ic: 'biere', tint: 'paille' },
+  { id: 'apero', nom: 'Un apéro offert', prix: 300, ic: 'apero', tint: 'ciel' },
+  { id: 'repas', nom: 'Un repas offert', prix: 550, ic: 'repas', tint: 'menthe' },
+  { id: 'collectif', nom: 'Un cours collectif offert', prix: 800, ic: 'collectif', tint: 'prairie' },
+  { id: 'tapis', nom: 'Un tapis offert', prix: 1200, ic: 'tapis', tint: 'ciel' },
+  { id: 'particulier', nom: 'Un cours particulier offert', prix: 1500, ic: 'particulier', tint: 'paille' }
+];
+const RANGS = [
+  { min: 0, nom: 'Poulain' }, { min: 200, nom: 'Yearling' }, { min: 600, nom: 'Cheval de club' },
+  { min: 1500, nom: 'Cheval de concours' }, { min: 3000, nom: 'Crack' }, { min: 6000, nom: "Légende de l'écurie" }
+];
+Object.assign(ICONS, {
+  biere: '<path d="M6 9.5h9V19a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2Z"/><path d="M15 11.5h2.3a2.2 2.2 0 0 1 2.2 2.2v1.6a2.2 2.2 0 0 1-2.2 2.2H15"/><path d="M5.6 9.5a2.6 2.6 0 0 1 2.7-3.6 3.1 3.1 0 0 1 5.3.3 2.4 2.4 0 0 1 1.9 3.3"/><path d="M9.3 13v5M12 13v5"/>',
+  apero: '<path d="M4.5 4.5h15L12 13Z"/><path d="M12 13v7M8 20.5h8"/><circle cx="14.6" cy="7.4" r="1.4"/><path d="M15.6 6.4 18 3.5"/>',
+  repas: '<circle cx="13" cy="12.5" r="6.5"/><circle cx="13" cy="12.5" r="3.2"/><path d="M3.5 3.5v5a1.6 1.6 0 0 0 3.2 0v-5M5.1 8.5v12"/>',
+  collectif: '<circle cx="6.5" cy="9.5" r="2.4"/><circle cx="17.5" cy="9.5" r="2.4"/><circle cx="12" cy="7" r="2.7"/><path d="M2.5 19c.4-2.9 2-4.5 4.2-4.5M21.5 19c-.4-2.9-2-4.5-4.2-4.5M7.2 20c.6-3.4 2.4-5.2 4.8-5.2s4.2 1.8 4.8 5.2"/>',
+  tapis: '<path d="M4 7c0-1.5 1-2.5 2.5-2.5h9c3 0 5 2.6 5 6V15c0 2.6-1.7 4.5-4.2 4.5H8.2C5.6 19.5 4 17.6 4 15Z"/><path d="M8.6 12.6l1.5-1.6 1.5 1.6 1.5-1.6 1.5 1.6 1.5-1.6"/>',
+  particulier: '<path d="M12 3.4l2.2 4.5 4.9.7-3.6 3.5.9 4.9-4.4-2.3-4.4 2.3.9-4.9-3.6-3.5 4.9-.7Z"/><path d="M8.5 20.5h7"/>'
+});
+/* Le crottin : trois boules dessinées à la main, qui fument un peu */
+const crottinSvg = (cls = '') => `<svg class="crottin ${cls}" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path class="cr-fume" d="M12.8 7.6c-1.7-1.5-1.7-3 0-4.4M18.6 7.2c-1.5-1.4-1.5-2.8 0-4.1"/><ellipse class="cr-b" cx="10.5" cy="22.6" rx="7" ry="6"/><ellipse class="cr-b" cx="21.6" cy="23.1" rx="6.8" ry="5.8"/><ellipse class="cr-b" cx="16" cy="14.6" rx="6.2" ry="5.4"/><path class="cr-l" d="M7.4 20.6q1.5-2 3.6-2.1M18.5 21.2q1.5-2 3.5-2M12.9 12.6q1.4-1.8 3.4-1.9"/></svg>`;
+
+/* ---------- Barème ---------- */
+function ptsTache(tk) {
+  const ef = (EFFORTS.find(e => e.id === tk.effort) || EFFORTS[1]).x;
+  const n = tk.freq === 'jours' ? Math.max(1, Math.round(Number(tk.n) || 1)) : 1;
+  const base = tk.freq === 'une' ? CROT.tache.une : Math.min(CROT.tache.max, CROT.tache.base * Math.pow(n, CROT.tache.exp));
+  return Math.max(2, Math.round(base * ef));
+}
+const ptsSoin = s => Math.max(...soinTypes(s).map(x => CROT.soins[x] || CROT.soins.autre)) + (s.planifie ? CROT.rdv : 0);
+
+/* ---------- Moteur : qui a gagné quoi (recalculé à chaque changement de données) ---------- */
+let crotMemo = null;
+function crottinsEntrees() {
+  if (crotMemo && crotMemo.v === dataV && crotMemo.j === todayISO()) return crotMemo.by;
+  const D = CROT.debut, t = todayISO(), by = new Map(), vus = new Set();
+  const jourT = ms => isoOf(new Date(ms));
+  const recent = (o, d, j) => !!(o.creePar && o.creePar.t) && diffDays(d, jourT(o.creePar.t)) <= j;
+  const auteur = o => o.creePar ? { uid: o.creePar.uid || null, nom: o.creePar.nom || '' } : null;
+  const parT = (a, b) => ((a.creePar && a.creePar.t) || 0) - ((b.creePar && b.creePar.t) || 0);
+  const add = (r, e) => {
+    if (!(e.pts > 0)) return;
+    const k = pKey(r);
+    if (!k) return;
+    if (!by.has(k)) by.set(k, []);
+    by.get(k).push(e);
+  };
+  // tâches cochées : la valeur est fixée au moment de la coche, dans la limite du plafond du jour
+  const coches = [], plafond = new Map();
+  toutesTaches().forEach(tk => faitsDe(tk).forEach(f => { if (f.d >= D) coches.push({ tk, f, t: f.t || toUTC(f.d) }); }));
+  coches.sort((a, b) => a.t - b.t).forEach(({ tk, f, t: T }) => {
+    const r = { uid: f.uid || null, nom: f.par || '' }, u = `${pKey(r)}|${f.d}`, deja = plafond.get(u) || 0;
+    const pts = Math.min(Number.isFinite(f.pts) ? f.pts : ptsTache(tk), CROT.tachesJour - deja);
+    if (pts <= 0) return;
+    plafond.set(u, deja + pts);
+    add(r, { k: `tk:${tk.id}:${f.t || f.d}`, pts, d: f.d, t: T, quoi: 'Tâche', objet: tk.titre, icon: 'tasks' });
+  });
+  // soins et rendez-vous : pour la personne qui les a gérés (un même soin noté deux fois ne compte qu'une fois)
+  list('soins').filter(s => s.statut === 'fait' && s.gerePar && s.faitLe && validISO(s.date) && s.date >= D && s.date <= t)
+    .sort((a, b) => a.faitLe - b.faitLe).forEach(s => {
+    if (diffDays(s.date, jourT(s.faitLe)) > CROT.delai) return;
+    const u = `so|${s.horseId}|${s.date}|${soinTypes(s).slice().sort().join('+')}`;
+    if (vus.has(u)) return;
+    vus.add(u);
+    add(s.gerePar, { k: 'so:' + s.id, pts: ptsSoin(s), d: s.date, t: s.faitLe, quoi: s.planifie ? 'Rendez-vous honoré' : 'Soin géré', objet: `${soinLabel(s)} · ${hNom(s.horseId)}`, icon: soinIcon(s) });
+  });
+  // concours faits, et le podium en plus
+  list('concours').forEach(c => {
+    if (!validISO(c.date) || c.date < D || c.date > t || c.statut === 'forfait' || !(c.statut === 'engage' || hasResult(c))) return;
+    const r = { uid: c.cavalierUid || null, nom: c.cavalier || '' }, rang = Number(c.rang), T0 = toUTC(c.date) + 12 * 36e5;
+    add(r, { k: 'co:' + c.id, pts: CROT.concours, d: c.date, t: T0, quoi: 'Concours', objet: `${c.lieu || 'Concours'} · ${hNom(c.horseId)}`, icon: 'rosette' });
+    if (rang >= 1 && rang <= 3) add(r, { k: 'po:' + c.id, pts: CROT.podium[rang], d: c.date, t: T0 + 1, quoi: rang === 1 ? 'Victoire' : 'Podium', objet: `${ordTxt(rang)} · ${c.lieu || 'Concours'}`, icon: 'rosette' });
+  });
+  // séances faites : une par cheval et par jour
+  list('seances').filter(s => s.statut !== 'prevu' && validISO(s.date) && s.date >= D && s.date <= t && recent(s, s.date, CROT.delai)).sort(parT).forEach(s => {
+    const r = { uid: s.cavalierUid || null, nom: s.cavalier || '' }, u = `se|${pKey(r)}|${s.horseId}|${s.date}`;
+    if (vus.has(u)) return;
+    vus.add(u);
+    add(r, { k: 'se:' + s.id, pts: CROT.seance, d: s.date, t: s.creePar.t, quoi: 'Séance', objet: `${s.type || 'Séance'} · ${hNom(s.horseId)}`, icon: 'timer' });
+  });
+  // entretien des prés
+  list('entretiens').filter(e => validISO(e.date) && e.date >= D && recent(e, e.date, CROT.delai)).sort(parT).forEach(e => {
+    const r = auteur(e), u = `en|${pKey(r)}|${e.preId}|${e.type}|${e.date}`;
+    if (vus.has(u)) return;
+    vus.add(u);
+    add(r, { k: 'en:' + e.id, pts: CROT.entretien, d: e.date, t: e.creePar.t, quoi: 'Entretien', objet: `${e.type || 'Travail'} · ${nomPre(e.preId)}`, icon: 'tool' });
+  });
+  // chevaux déplacés : un par cheval et par jour
+  list('places').filter(p => validISO(p.debut) && p.debut >= D && recent(p, p.debut, 2)).sort(parT).forEach(p => {
+    const r = auteur(p), u = `pl|${pKey(r)}|${p.horseId}|${p.debut}`;
+    if (vus.has(u)) return;
+    vus.add(u);
+    add(r, { k: 'pl:' + p.id, pts: CROT.deplacement, d: p.debut, t: p.creePar.t, quoi: 'Déplacement', objet: `${hNom(p.horseId)} → ${nomPre(p.preId)}`, icon: 'move' });
+  });
+  // foin : balles entamées (trois par jour au plus), livraisons et récoltes
+  const jour = new Map();
+  list('foin').filter(m => validISO(m.date) && m.date >= D && m.creePar && m.creePar.t).sort(parT).forEach(m => {
+    const r = auteur(m);
+    if (m.sens === 'out') {
+      if (!recent(m, m.date, 2)) return;
+      const u = `${pKey(r)}|${m.date}`, deja = jour.get(u) || 0, nb = Math.min(Math.max(1, Number(m.nb) || 1), CROT.ballesJour - deja);
+      if (nb <= 0) return;
+      jour.set(u, deja + nb);
+      add(r, { k: 'fo:' + m.id, pts: CROT.balle * nb, d: m.date, t: m.creePar.t, quoi: nb > 1 ? 'Balles entamées' : 'Balle entamée', objet: `${m.nb} ${balleNom(m.balle, m.nb)}`, icon: 'bale' });
+    } else if (recent(m, m.date, CROT.delai)) {
+      const [b, parB, max] = CROT.livraison;
+      add(r, { k: 'fo:' + m.id, pts: Math.min(max, b + parB * (Number(m.nb) || 0)), d: m.date, t: m.creePar.t, quoi: 'Foin rentré', objet: `${m.nb} ${balleNom(m.balle, m.nb)}`, icon: 'bale' });
+    }
+  });
+  crotMemo = { v: dataV, j: t, by };
+  return by;
+}
+function crottinsDe(k, from = null) {
+  const es = (k && crottinsEntrees().get(k)) || [];
+  const xs = from ? es.filter(e => e.d >= from) : es;
+  return { entrees: xs, gagnes: xs.reduce((s, e) => s + e.pts, 0) };
+}
+/* Bons de la boutique : rangés dans la fiche d'équipe de chacun, un par clé */
+function bonsDe(k) {
+  const p = personne(k), b = p && p.m && p.m.bons;
+  if (!b || typeof b !== 'object') return [];
+  return Object.entries(b).map(([id, x]) => Object.assign({ id }, x)).filter(x => x && x.item && Number(x.prix) > 0);
+}
+const depensesCrottins = k => bonsDe(k).filter(b => b.statut !== 'annule').reduce((s, b) => s + Number(b.prix), 0);
+const soldeDe = k => crottinsDe(k).gagnes - depensesCrottins(k);
+function rangDe(total) {
+  let i = 0;
+  RANGS.forEach((r, j) => { if (total >= r.min) i = j; });
+  return { i, r: RANGS[i], next: RANGS[i + 1] || null };
+}
+/* Rythme récent : crottins par semaine sur les quatre dernières semaines (ou depuis le lancement) */
+function rythmeDe(k) {
+  const t = todayISO(), from = addDays(t, -27), debut = from > CROT.debut ? from : CROT.debut;
+  const jours = Math.max(7, diffDays(debut, t) + 1);
+  return crottinsDe(k, debut).gagnes / jours * 7;
+}
+const delaiTxt = sem => sem <= 1 ? 'moins d’une semaine à ton rythme' : sem < 8.5 ? `environ ${Math.ceil(sem)} semaines à ton rythme` : `environ ${Math.round(sem / 4.35)} mois à ton rythme`;
+/* L'estimation n'a de sens qu'après une première semaine de jeu */
+const rythmeFiable = () => diffDays(CROT.debut, todayISO()) >= 6;
+
+/* ---------- Compteur de l'en-tête ---------- */
+let crotVu = null, crotRaf = 0, crotTenu = 0;
+function compteVers(v) {
+  const el = document.getElementById('crotN');
+  if (!el) return;
+  if (crotVu === null || !mouvementOk()) { crotVu = v; el.textContent = num(v, 0); return; }
+  if (v === crotVu) return;
+  const de = crotVu, t0 = performance.now(), dur = Math.min(1000, 300 + Math.abs(v - de) * 15);
+  crotVu = v;
+  cancelAnimationFrame(crotRaf);
+  const pas = now => {
+    const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+    el.textContent = num(Math.round(de + (v - de) * e), 0);
+    if (p < 1) crotRaf = requestAnimationFrame(pas);
+  };
+  crotRaf = requestAnimationFrame(pas);
+}
+/* Pendant une animation, le compteur attend l'arrivée des crottins (avec une limite de sécurité) */
+function tenirCompteur(ms) { crotTenu = Date.now() + ms; setTimeout(majCrottins, ms + 30); }
+function lacherCompteur() { crotTenu = 0; majCrottins(); }
+function majCrottins() {
+  const b = document.getElementById('crotBtn');
+  if (!b) return;
+  const k = kMoi();
+  b.hidden = !k;
+  if (!k) return;
+  const v = soldeDe(k);
+  b.classList.toggle('peut', BOUTIQUE.some(it => v >= it.prix));
+  b.setAttribute('aria-label', `${num(v, 0)} ${pl(v, 'crottin')} : ouvrir la boutique`);
+  if (Date.now() >= crotTenu) compteVers(v);
+}
+
+/* ---------- Gains et pertes pendant une action ---------- */
+let crotPhoto = null, crotT = null, crotSilence = false, crotScene = false;
+const photoCrottins = () => { const m = new Map(); crottinsEntrees().forEach((es, k) => m.set(k, new Map(es.map(e => [e.k, e])))); return m; };
+/* Appelé juste avant chaque enregistrement fait sur ce téléphone */
+function crotAvant() {
+  if (crotSilence || restauration) return;
+  if (!crotPhoto) { crotPhoto = photoCrottins(); tenirCompteur(400); }
+  clearTimeout(crotT);
+  crotT = setTimeout(crotApres, 90);
+}
+function crotApres() {
+  const avant = crotPhoto;
+  crotPhoto = null;
+  if (!avant) return;
+  const apres = photoCrottins(), moi = kMoi(), total = m => m ? [...m.values()].reduce((s, e) => s + e.pts, 0) : 0;
+  let mien = null;
+  const autres = [];
+  new Set([...avant.keys(), ...apres.keys()]).forEach(k => {
+    const a = avant.get(k) || new Map(), b = apres.get(k) || new Map(), plus = [];
+    let d = 0;
+    b.forEach((e, ek) => { const o = a.get(ek); if (!o) { d += e.pts; plus.push(e); } else d += e.pts - o.pts; });
+    a.forEach((e, ek) => { if (!b.has(ek)) d -= e.pts; });
+    if (!d) return;
+    if (k === moi) mien = { d, plus }; else autres.push({ k, d });
+  });
+  if (mien && mien.d > 0) {
+    const e = mien.plus[0], label = mien.plus.length === 1 ? `${e.quoi} · ${e.objet}` : mien.plus.length > 1 ? `${mien.plus.length} actions récompensées` : 'Crottins gagnés';
+    crotGain(mien.d, label, total(avant.get(moi)), total(apres.get(moi)));
+  } else {
+    if (mien) crotPerte(mien.d);
+    lacherCompteur();
+  }
+  autres.forEach((x, i) => setTimeout(() => crotBulle(`${x.d > 0 ? '+' : '−'}${num(Math.abs(x.d), 0)} pour ${nomCourt(personne(x.k) || {})}`, x.d < 0), 300 + i * 500));
+}
+
+/* ---------- Animations ---------- */
+const pillRect = () => { const b = document.getElementById('crotBtn'); return b && !b.hidden ? b.getBoundingClientRect() : { left: window.innerWidth - 90, top: 8, width: 70, height: 38 }; };
+function crotGain(d, label, avant, apres) {
+  const fin = () => {
+    lacherCompteur();
+    fxOnce(document.getElementById('crotBtn'), 'fx-pop', 600);
+    const r0 = rangDe(avant), r1 = rangDe(apres);
+    if (r1.i > r0.i) setTimeout(() => crotRang(r1.r), 500);
+  };
+  if (!mouvementOk() || !Element.prototype.animate) { lacherCompteur(); crotBulle(`+${num(d, 0)} ${pl(d, 'crottin')}`); return; }
+  vibre(15);
+  if (ui.crotAnim !== 'discret' && !crotScene) crotSpectacle(d, label, fin);
+  else crotMini(d, fin);
+}
+const boule = (x, y) => { const b = document.createElement('i'); b.className = 'crot-boule'; b.style.left = x + 'px'; b.style.top = y + 'px'; return b; };
+/* Vol d'une boule jusqu'au compteur, en arc */
+function volVersCompteur(b, x0, y0, delai, fin) {
+  const p = pillRect(), tx = p.left + 20 - x0, ty = p.top + p.height / 2 - y0, mx = tx * .45 - 30, my = Math.min(0, ty) - 70;
+  const a = b.animate([
+    { transform: 'translate(0,0) scale(1)' },
+    { transform: `translate(${mx}px,${my}px) scale(.85)`, offset: .45 },
+    { transform: `translate(${tx}px,${ty}px) scale(.35)`, opacity: .85 }
+  ], { duration: 620, delay: delai, easing: 'cubic-bezier(.45,0,.4,1)', fill: 'forwards' });
+  a.onfinish = () => { b.remove(); if (fin) fin(); };
+}
+/* Le grand spectacle : le cheval du logo arrive, lève la queue, fait ses crottins, qui filent au compteur */
+function crotSpectacle(d, label, fin) {
+  crotScene = true;
+  tenirCompteur(3200);
+  const L = fxLayer(), W = window.innerWidth, H = window.innerHeight;
+  const cx = W / 2, cy = Math.max(170, Math.min(H * .38, 320));
+  const sc = document.createElement('div');
+  sc.className = 'crot-scene';
+  sc.innerHTML = `<div class="crot-voile"></div><div class="crot-halo"></div><div class="crot-rayons">${Array.from({ length: 10 }, (_, i) => `<i style="transform:rotate(${i * 36}deg) translateY(-118px)"></i>`).join('')}</div>
+    <div class="crot-cheval">${brandMark()}</div>
+    <div class="crot-txt"><b>+${num(d, 0)}</b><span>${pl(d, 'crottin')}</span><small>${esc(label)}</small></div>`;
+  L.appendChild(sc);
+  const [voile, halo, rayons, cheval, txt] = sc.children;
+  // voile sur l'écran, sous l'en-tête : le compteur reste bien visible
+  const haut = document.getElementById('top');
+  voile.style.top = (haut ? Math.max(0, haut.getBoundingClientRect().bottom) : 0) + 'px';
+  voile.animate([{ opacity: 0, easing: 'ease-out' }, { opacity: .86, offset: .08 }, { opacity: .86, offset: .84, easing: 'ease-in' }, { opacity: 0 }], { duration: 2800, fill: 'forwards' });
+  halo.style.left = rayons.style.left = cx + 'px';
+  halo.style.top = rayons.style.top = (cy + 18) + 'px';
+  cheval.style.left = (cx + 18) + 'px'; cheval.style.top = cy + 'px';
+  txt.style.left = cx + 'px'; txt.style.top = (cy + 112) + 'px';
+  const ease = 'cubic-bezier(.34,1.56,.64,1)';
+  halo.animate([{ transform: 'scale(.2)', opacity: 0, easing: 'ease-out' }, { transform: 'scale(1)', opacity: 1, offset: .14 }, { transform: 'scale(1)', opacity: 1, offset: .8, easing: 'ease-in' }, { transform: 'scale(1.15)', opacity: 0 }], { duration: 2700, fill: 'forwards' });
+  rayons.animate([{ transform: 'scale(.3) rotate(0deg)', opacity: 0 }, { transform: 'scale(1) rotate(25deg)', opacity: 1, offset: .2 }, { transform: 'scale(1.05) rotate(70deg)', opacity: 1, offset: .8 }, { transform: 'scale(1.2) rotate(90deg)', opacity: 0 }], { duration: 2700, fill: 'forwards' });
+  cheval.animate([{ transform: 'translateX(-46px) translateY(20px) scale(.55)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 420, easing: ease, fill: 'backwards' });
+  const queue = cheval.querySelector('.lg-queue');
+  if (queue) queue.animate([{ transform: 'none' }, { transform: 'rotate(42deg)', offset: .22 }, { transform: 'rotate(36deg)', offset: .5 }, { transform: 'rotate(42deg)', offset: .78 }, { transform: 'none' }], { duration: 1150, delay: 380, easing: 'ease-in-out' });
+  // les crottins tombent sous la queue, rebondissent et restent posés un instant
+  // géométrie du cheval (128 × 126, centré sur cx + 18, cy) : la queue est à gauche, les sabots en bas
+  const n = Math.min(7, 2 + Math.ceil(d / 10)), bw = 128, bh = 126, bl = cx + 18 - bw / 2, bt = cy - bh / 2;
+  const x0 = bl + bw * .21, y0 = bt + bh * .56, sol = bt + bh * .9;
+  const boules = [];
+  for (let i = 0; i < n; i++) {
+    const b = boule(x0, y0), dx = -12 - i * 13 + (i % 2 ? 6 : -4), dy = sol - y0 - (i % 3) * 3;
+    sc.appendChild(b);
+    b.animate([
+      { transform: 'translate(0,0) scale(.4)', opacity: 0 },
+      { transform: `translate(${dx * .3}px,${dy * .1}px) scale(.9)`, opacity: 1, offset: .15 },
+      { transform: `translate(${dx}px,${dy}px) scale(1.05,.9)`, offset: .62, easing: 'ease-out' },
+      { transform: `translate(${dx}px,${dy - 13}px) scale(.96,1.04)`, offset: .8, easing: 'ease-in' },
+      { transform: `translate(${dx}px,${dy}px) scale(1)` }
+    ], { duration: 560, delay: 520 + i * 110, easing: 'ease-in', fill: 'both' });
+    boules.push({ b, x: x0 + dx, y: y0 + dy });
+  }
+  txt.animate([{ transform: 'translate(-50%,0) scale(.3)', opacity: 0 }, { transform: 'translate(-50%,0) scale(1.12)', opacity: 1, offset: .6 }, { transform: 'translate(-50%,0) scale(1)', opacity: 1 }], { duration: 520, delay: 640, easing: 'ease-out', fill: 'backwards' });
+  // envol vers le compteur
+  setTimeout(() => {
+    let arrives = 0;
+    boules.forEach(({ b, x, y }, i) => {
+      b.getAnimations().forEach(a => { try { a.commitStyles(); } catch (e) { /* ancien navigateur */ } a.cancel(); });
+      b.style.transform = '';
+      b.style.left = x + 'px'; b.style.top = y + 'px';
+      volVersCompteur(b, x, y, i * 70, () => { if (++arrives === 1 && fin) fin(); });
+    });
+  }, 1650);
+  setTimeout(() => cheval.animate([{ transform: 'none', opacity: 1 }, { transform: 'translate(40px,-26px) rotate(8deg)', opacity: 1, offset: .4 }, { transform: 'translate(120px,0) rotate(0deg)', opacity: 0 }], { duration: 560, easing: 'ease-in', fill: 'forwards' }), 1850);
+  setTimeout(() => txt.animate([{ opacity: 1 }, { opacity: 0, transform: 'translate(-50%,-14px)' }], { duration: 380, fill: 'forwards' }), 2150);
+  setTimeout(() => { sc.remove(); crotScene = false; }, 2900);
+}
+/* Version discrète : un « +5 » près du compteur et deux crottins qui y filent */
+function crotMini(d, fin) {
+  tenirCompteur(1400);
+  const L = fxLayer(), W = window.innerWidth, H = window.innerHeight;
+  let arrives = 0;
+  for (let i = 0; i < 2; i++) {
+    const x = W / 2 + (i ? 16 : -16), y = H * .55, b = boule(x, y);
+    L.appendChild(b);
+    b.animate([{ transform: 'scale(0)' }, { transform: 'scale(1)' }], { duration: 220, easing: 'ease-out' });
+    volVersCompteur(b, x, y, 180 + i * 90, () => { if (++arrives === 1 && fin) fin(); });
+  }
+  crotBulle(`+${num(d, 0)}`);
+}
+/* Perte : le compteur sursaute et un crottin tombe */
+function crotPerte(d) {
+  const p = pillRect(), b = boule(p.left + 20, p.top + p.height / 2);
+  fxLayer().appendChild(b);
+  if (Element.prototype.animate && mouvementOk()) {
+    b.animate([{ transform: 'translate(0,0)', opacity: 1 }, { transform: 'translate(-14px,46px) rotate(-40deg)', opacity: 1, offset: .5 }, { transform: 'translate(-26px,150px) rotate(-90deg)', opacity: 0 }], { duration: 800, easing: 'ease-in' }).onfinish = () => b.remove();
+  } else b.remove();
+  fxOnce(document.getElementById('crotBtn'), 'fx-secoue', 500);
+  crotBulle(`−${num(Math.abs(d), 0)} ${pl(Math.abs(d), 'crottin')}`, true);
+}
+/* Petite étiquette sous le compteur */
+function crotBulle(txt, perte = false) {
+  const p = pillRect(), el = document.createElement('div');
+  el.className = 'crot-bulle' + (perte ? ' perte' : '');
+  el.textContent = txt;
+  el.style.right = Math.max(8, window.innerWidth - (p.left + p.width)) + 'px';
+  el.style.top = (p.top + p.height + 8) + 'px';
+  fxLayer().appendChild(el);
+  setTimeout(() => el.remove(), 2200);
+}
+/* Nouveau rang : bannière, saut du cheval et gerbe de crins */
+function crotRang(r) {
+  if (!mouvementOk()) { toast(`Nouveau rang : ${r.nom} !`, { fete: true }); return; }
+  vibre([30, 60, 30]);
+  const el = document.createElement('div');
+  el.className = 'crot-rang';
+  el.innerHTML = `${brandMark()}<div><small>Nouveau rang</small><b>${esc(r.nom)}</b></div>`;
+  fxLayer().appendChild(el);
+  el.animate([{ transform: 'translate(-50%,-50%) scale(.3) rotate(-8deg)', opacity: 0 }, { transform: 'translate(-50%,-50%) scale(1.08) rotate(2deg)', opacity: 1, offset: .35 }, { transform: 'translate(-50%,-50%) scale(1)', opacity: 1, offset: .85 }, { transform: 'translate(-50%,-50%) scale(.9)', opacity: 0 }], { duration: 2600, easing: 'ease-out' }).onfinish = () => el.remove();
+  setTimeout(() => confettis(el), 450);
+  setTimeout(() => confettis(el), 900);
+}
+/* Achat : les crottins quittent le compteur pour la récompense, qui reçoit son tampon */
+function crotAchat(card) {
+  if (!card || !mouvementOk() || !Element.prototype.animate) return;
+  const p = pillRect(), r = card.getBoundingClientRect(), L = fxLayer();
+  for (let i = 0; i < 5; i++) {
+    const x = p.left + 20, y = p.top + p.height / 2, b = boule(x, y);
+    L.appendChild(b);
+    const tx = r.left + r.width * (.3 + i * .1) - x, ty = r.top + r.height / 2 - y;
+    b.animate([{ transform: 'translate(0,0) scale(.4)' }, { transform: `translate(${tx * .5}px,${ty * .5 - 50}px) scale(.9)`, offset: .45 }, { transform: `translate(${tx}px,${ty}px) scale(.8)`, opacity: 0 }], { duration: 650, delay: i * 80, easing: 'cubic-bezier(.45,0,.4,1)' }).onfinish = () => b.remove();
+  }
+  setTimeout(() => {
+    const st = document.createElement('div');
+    st.className = 'bon-tampon';
+    st.textContent = 'Bon';
+    st.style.left = (r.left + r.width / 2) + 'px'; st.style.top = (r.top + r.height / 2) + 'px';
+    L.appendChild(st);
+    st.animate([{ transform: 'translate(-50%,-50%) scale(2.6) rotate(-4deg)', opacity: 0 }, { transform: 'translate(-50%,-50%) scale(.95) rotate(-12deg)', opacity: 1, offset: .3 }, { transform: 'translate(-50%,-50%) scale(1) rotate(-12deg)', opacity: 1, offset: .8 }, { transform: 'translate(-50%,-50%) scale(1) rotate(-12deg)', opacity: 0 }], { duration: 1600, easing: 'ease-out' }).onfinish = () => st.remove();
+    confettis(st);
+    vibre(20);
+  }, 650);
+}
+
+/* ---------- Boutique ---------- */
+function carteRecompense(it, solde, rythme, peutAcheter) {
+  const ok = solde >= it.prix, pct = Math.max(0, Math.min(100, Math.round(solde / it.prix * 100)));
+  const reste = it.prix - solde;
+  const quand = ok ? 'Tu peux l’échanger dès maintenant' : `Encore ${num(reste, 0)} ${pl(reste, 'crottin')}${rythmeFiable() && rythme > 0.5 ? ` · ${delaiTxt(reste / rythme)}` : ''}`;
+  return `<div class="bq-item${ok ? ' ok' : ''}" data-key="bq-${it.id}">
+    <span class="qa-ic ${it.tint}">${ic(it.ic)}</span>
+    <div class="row-main"><div class="row-t">${esc(it.nom)}</div>
+      <div class="bq-prix">${num(it.prix, 0)} ${crottinSvg('s')}</div>
+      <div class="gauge"><i style="width:${pct}%"></i></div>
+      <div class="row-s">${esc(quand)}</div></div>
+    ${ok && peutAcheter ? `<button type="button" class="btn small primary" data-act="echanger" data-id="${it.id}">Échanger</button>` : ''}
+  </div>`;
+}
+const itemDe = id => BOUTIQUE.find(x => x.id === id) || null;
+VIEWS.boutique = () => {
+  const k = kMoi(), solde = k ? soldeDe(k) : 0, tot = k ? crottinsDe(k).gagnes : 0, R = rangDe(tot), rythme = k ? rythmeDe(k) : 0;
+  const peutAcheter = !!(window.EQ_MODE && window.EQ && me.uid && get('membres', me.uid));
+  const pctR = R.next ? Math.round((tot - R.r.min) / (R.next.min - R.r.min) * 100) : 100;
+  let html = `<div class="card bq-hero">${crottinSvg('xl')}<div class="row-main">
+      <div class="bq-solde"><b id="bqSolde">${num(solde, 0)}</b><span>${pl(solde, 'crottin')} à dépenser</span></div>
+      <div class="row-s">${num(tot, 0)} ${pl(tot, 'gagné')} en tout${rythmeFiable() && rythme > 0.5 ? ` · environ ${num(rythme, 0)} par semaine en ce moment` : ''}</div>
+      <div class="wrap"><span class="pill ok">${esc(R.r.nom)}</span>${R.next ? `<span class="small muted">encore ${num(R.next.min - tot, 0)} pour devenir ${esc(R.next.nom)}</span>` : ''}</div>
+      ${R.next ? `<div class="gauge"><i style="width:${pctR}%"></i></div>` : ''}
+    </div></div>
+    <button type="button" class="link" data-act="crot-regles" style="align-self:flex-start">${crottinSvg('s')}Comment gagner des crottins ?</button>`;
+  html += section('Récompenses', `<div class="bq-list">${BOUTIQUE.map(it => carteRecompense(it, solde, rythme, peutAcheter)).join('')}</div>
+    ${peutAcheter ? '' : '<p class="note">Les échanges se font dans l’appli installable, avec ton compte de l’équipe.</p>'}`);
+  // mes bons
+  const mes = k ? bonsDe(k).filter(b => b.statut !== 'annule').sort((a, b) => (b.t || 0) - (a.t || 0)) : [];
+  if (mes.length) html += section('Mes bons', `<div class="list">${mes.map(b => {
+    const it = itemDe(b.item) || { nom: b.nom || 'Récompense', ic: 'particulier', tint: 'paille' };
+    const etat = b.statut === 'offert' ? `<span class="pill ok">${ic('check')}Offert ${b.offertLe ? dRel(isoOf(new Date(b.offertLe))) : ''}</span>` : '<span class="pill info">À recevoir</span>';
+    return `<div class="row"><span class="qa-ic ${it.tint}">${ic(it.ic)}</span><div class="row-main"><div class="row-t">${esc(it.nom)}</div><div class="row-s">${num(Number(b.prix), 0)} crottins · le ${dShort(isoOf(new Date(b.t || Date.now())))}</div><div class="wrap" style="margin-top:4px">${etat}</div></div>${b.statut === 'attente' ? `<button type="button" class="btn small" data-act="bon-annuler" data-id="${esc(b.id)}" data-confirm="Rembourser ?">Annuler</button>` : ''}</div>`;
+  }).join('')}</div>`);
+  // la gérante voit les bons à offrir de toute l'équipe
+  if (estGerante()) {
+    const att = [];
+    membres().forEach(m => bonsDe('u:' + m.id).filter(b => b.statut === 'attente').forEach(b => att.push({ m, b })));
+    att.sort((a, b) => (a.b.t || 0) - (b.b.t || 0));
+    html += section(`Bons à offrir${att.length ? ` <span class="count">${att.length}</span>` : ''}`, att.length ? `<div class="list">${att.map(({ m, b }) => {
+      const it = itemDe(b.item) || { nom: b.nom || 'Récompense' };
+      return `<div class="row">${pav({ uid: m.id })}<div class="row-main"><div class="row-t">${esc(nomCourt({ uid: m.id }))} · ${esc(it.nom)}</div><div class="row-s">Demandé ${esc(dRel(isoOf(new Date(b.t || Date.now()))))}</div></div><button type="button" class="btn small primary" data-act="bon-offert" data-uid="${esc(m.id)}" data-id="${esc(b.id)}">C’est offert</button></div>`;
+    }).join('')}</div>` : '<p class="note">Quand quelqu’un échange ses crottins, son bon apparaît ici : tu le marques offert une fois la récompense donnée.</p>');
+  }
+  return { title: 'Boutique', eyebrow: 'Points crottins', html, fab: null };
+};
+ACT.boutique = () => { const t = topView(); if (t && t.view === 'boutique') return; push('boutique'); };
+ACT['crot-regles'] = () => {
+  const tl = (f, n) => ptsTache({ freq: f, n });
+  const ligne = (icon, t, s, p) => `<div class="row">${lead(icon)}<div class="row-main"><div class="row-t">${t}</div>${s ? `<div class="row-s">${s}</div>` : ''}</div><span class="row-end bq-pts">${p}</span></div>`;
+  openSheet('Gagner des crottins', `<div class="list">
+    ${ligne('tasks', 'Tâche quotidienne', 'Foin, eau, tour des chevaux…', `+${tl('jour')}`)}
+    ${ligne('tasks', 'Tâche tous les 3 jours', 'Plus la tâche est rare, plus elle rapporte', `+${tl('jours', 3)}`)}
+    ${ligne('tasks', 'Tâche hebdomadaire', 'Ou ponctuelle : +' + CROT.tache.une, `+${tl('jours', 7)}`)}
+    ${ligne('tool', 'Effort de la tâche', 'Léger ×0,6 · Costaud ×2', '')}
+    ${ligne('tasks', 'Plafond des tâches', 'Par personne et par jour', `${CROT.tachesJour} max`)}
+    ${ligne('shoe', 'Rendez-vous géré', 'Maréchal, véto, dentiste, ostéo · vaccin +15 · vermifuge +8', `+${CROT.soins.marechal}`)}
+    ${ligne('cal', 'Rendez-vous prévu puis honoré', 'En plus du soin', `+${CROT.rdv}`)}
+    ${ligne('rosette', 'Concours fait', 'Pour le cavalier', `+${CROT.concours}`)}
+    ${ligne('rosette', 'Podium', `3e +${CROT.podium[3]} · 2e +${CROT.podium[2]}`, `+${CROT.podium[1]}`)}
+    ${ligne('timer', 'Séance de travail', 'Une par cheval et par jour', `+${CROT.seance}`)}
+    ${ligne('tool', 'Entretien de pré', 'Hersage, clôtures, fauche…', `+${CROT.entretien}`)}
+    ${ligne('bale', 'Foin rentré', 'Livraison ou récolte', `+${CROT.livraison[0]} à ${CROT.livraison[2]}`)}
+    ${ligne('bale', 'Balle entamée', `${CROT.ballesJour} par jour au plus`, `+${CROT.balle}`)}
+    ${ligne('move', 'Chevaux déplacés', 'Un par cheval et par jour', `+${CROT.deplacement}`)}
+  </div>
+  <p class="note">Annuler une action retire ses crottins. Ce qui est noté trop tard ne rapporte rien : une semaine au plus après coup, deux jours pour les déplacements et les balles entamées. Le compteur part du ${dFull(CROT.debut)}.</p>`);
+};
+ACT.echanger = d => {
+  const it = itemDe(d.id), k = kMoi();
+  if (!it || !k || !window.EQ || !me.uid) return;
+  if (soldeDe(k) < it.prix) { toast('Pas encore assez de crottins.', { danger: true }); return; }
+  openSheet(it.nom, `<div class="bq-confirm"><span class="qa-ic ${it.tint}">${ic(it.ic)}</span><p>Échanger <b>${num(it.prix, 0)} crottins</b> contre ${esc(it.nom.charAt(0).toLowerCase() + it.nom.slice(1))} ?</p></div>
+    <p class="note">Ton bon apparaît chez la gérante, qui le marque offert une fois la récompense donnée. Tu peux l’annuler tant qu’il n’est pas offert.</p>`, {
+    submit: `Échanger ${num(it.prix, 0)} crottins`, local: true,
+    onSubmit: () => {
+      const id = 'b' + uid();
+      EQ.bon(me.uid, id, { item: it.id, nom: it.nom, prix: it.prix, t: Date.now(), statut: 'attente' })
+        .catch(() => toast("L'échange n'a pas pu être enregistré.", { danger: true }));
+      setTimeout(() => crotAchat(document.querySelector(`[data-key="bq-${it.id}"]`)), 320);
+      toast(`Bon pour ${it.nom.charAt(0).toLowerCase() + it.nom.slice(1)} !`, { fete: true, undo: () => EQ.bon(me.uid, id, { statut: 'annule', annuleLe: Date.now() }) });
+    }
+  });
+};
+ACT['bon-annuler'] = d => {
+  if (!window.EQ || !me.uid) return;
+  EQ.bon(me.uid, d.id, { statut: 'annule', annuleLe: Date.now() }).catch(() => toast("L'annulation n'a pas pu être enregistrée.", { danger: true }));
+  toast('Bon annulé : tes crottins te sont rendus');
+};
+ACT['bon-offert'] = (d, el) => {
+  if (!window.EQ || !estGerante()) return;
+  EQ.bon(d.uid, d.id, { statut: 'offert', offertLe: Date.now(), offertPar: moiRef() }).catch(() => toast("La modification n'a pas pu être enregistrée.", { danger: true }));
+  confettis(el);
+  toast('Récompense marquée offerte');
+};
+
+/* ---------- Classement de l'équipe ---------- */
+function classementCrottins(P) {
+  const rows = [];
+  crottinsEntrees().forEach((es, k) => {
+    const p = personne(k);
+    if (!p) return;
+    const pts = es.filter(e => !P.from || e.d >= P.from).reduce((s, e) => s + e.pts, 0);
+    if (pts > 0) rows.push({ p, pts, tot: es.reduce((s, e) => s + e.pts, 0) });
+  });
+  rows.sort((a, b) => b.pts - a.pts || byName(a.p, b.p));
+  if (!rows.length) return `<p class="note">Personne n’a encore gagné de crottins ${P.label}. Coche une tâche pour ouvrir le bal !</p>`;
+  const max = rows[0].pts;
+  return `<div class="list">${rows.map((x, i) => `<button type="button" class="row" data-act="open-membre" data-k="${esc(x.p.k)}">
+    <span class="podium p${i < 3 ? i + 1 : 0}">${i + 1}</span>${pav(x.p)}
+    <div class="row-main"><div class="row-t">${esc(x.p.nom)}${estMoi(x.p.k) ? ' <span class="pill ok">Toi</span>' : ''}</div><div class="row-s">${esc(rangDe(x.tot).r.nom)}</div>
+      <div class="gauge"><i style="width:${Math.round(x.pts / max * 100)}%"></i></div></div>
+    <span class="row-end bq-pts">${num(x.pts, 0)} ${crottinSvg('s')}</span></button>`).join('')}</div>`;
 }
 
 /* ---------- Démarrage ---------- */
@@ -4009,6 +4631,8 @@ window.EQ = {
     await deleteDoc(doc(fs, 'membres', uid));
     if (mail) await deleteDoc(doc(fs, 'invitations', mail)).catch(() => {});
   },
+  // bon de la boutique : écrit seul, sous sa clé, pour ne jamais écraser les autres bons de la fiche
+  bon: (uid, id, data) => setDoc(doc(fs, 'membres', uid), { bons: { [id]: data } }, { merge: true }),
   lien: () => location.origin + location.pathname
 };
 
