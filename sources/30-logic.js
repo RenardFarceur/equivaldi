@@ -433,6 +433,8 @@ function bilan(from) {
     const k = pKey({ uid: f.uid, nom: f.par });
     if (k) acc(k).taches++;
   }));
+  // coches anciennes sorties de l'historique de la tâche (voir garderFaits)
+  if (!from) toutesTaches().forEach(tk => Object.entries(tk.acquis || {}).forEach(([k, a]) => { if (a && a.n > 0) acc(k).taches += a.n; }));
   list('seances').forEach(s => {
     if (s.statut === 'prevu' || !validISO(s.date) || (from && s.date < from) || s.date > t) return;
     const k = pKey({ uid: s.cavalierUid, nom: s.cavalier });

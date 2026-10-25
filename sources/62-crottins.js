@@ -6,6 +6,7 @@ const CROT = {
   debut: '2026-10-25',                        // les actions comptent à partir du lancement du jeu
   tache: { base: 5, exp: .55, max: 40, une: 15 },
   tachesJour: 60,                             // plafond des tâches par personne et par jour : pas de crottins à la chaîne
+  faitsMax: 400,                              // coches gardées par tâche (plus d'un an au quotidien)
   soins: { marechal: 20, dentiste: 20, osteo: 20, veto: 20, grippe: 15, tetanos: 15, rhino: 15, vermifuge: 8, autre: 10 },
   rdv: 5,                                     // bonus : rendez-vous prévu à l'avance puis honoré
   delai: 7,                                   // une saisie de plus d'une semaine après les faits ne rapporte rien
@@ -72,6 +73,10 @@ function crottinsEntrees() {
     plafond.set(u, deja + pts);
     add(r, { k: `tk:${tk.id}:${f.t || f.d}`, pts, d: f.d, t: T, quoi: 'Tâche', objet: tk.titre, icon: 'tasks' });
   });
+  // coches anciennes sorties de l'historique : leurs crottins restent acquis
+  toutesTaches().forEach(tk => Object.values(tk.acquis || {}).forEach(a => {
+    if (a && a.pts > 0) add({ uid: a.uid || null, nom: a.nom || '' }, { k: `tk:${tk.id}:acquis`, pts: a.pts, d: D, t: toUTC(D), quoi: 'Tâches', objet: tk.titre, icon: 'tasks' });
+  }));
   // soins et rendez-vous : pour la personne qui les a gérés (un même soin noté deux fois ne compte qu'une fois)
   list('soins').filter(s => s.statut === 'fait' && s.gerePar && s.faitLe && validISO(s.date) && s.date >= D && s.date <= t)
     .sort((a, b) => a.faitLe - b.faitLe).forEach(s => {
@@ -126,6 +131,22 @@ function crottinsEntrees() {
   });
   crotMemo = { v: dataV, j: t, by };
   return by;
+}
+/* Historique des coches d'une tâche : les plus anciennes au-delà de faitsMax sont mises de côté par personne,
+   avec les crottins qu'elles valaient, pour que le document reste léger sans que personne ne perde rien */
+function garderFaits(tk, fs) {
+  if (fs.length <= CROT.faitsMax) return { fait: fs };
+  const by = crottinsEntrees(), acquis = Object.assign({}, tk.acquis || {});
+  fs.slice(CROT.faitsMax).forEach(f => {
+    const r = { uid: f.uid || null, nom: f.par || '' }, pk = pKey(r);
+    if (!pk) return;
+    const e = (by.get(pk) || []).find(x => x.k === `tk:${tk.id}:${f.t || f.d}`);
+    const a = Object.assign({ uid: r.uid, nom: r.nom, pts: 0, n: 0 }, acquis[pk]);
+    a.n += 1;
+    if (e) a.pts += e.pts;
+    acquis[pk] = a;
+  });
+  return { fait: fs.slice(0, CROT.faitsMax), acquis };
 }
 function crottinsDe(k, from = null) {
   const es = (k && crottinsEntrees().get(k)) || [];

@@ -84,7 +84,7 @@ ACT.tick = d => {
     const prev = clone(cur), avant = toutFait();
     const f = { d: todayISO(), t: Date.now(), par: nom, uid: me.uid || null, pts: ptsTache(cur) };
     figeOrdre();
-    put('taches', Object.assign({}, cur, { fait: [f, ...faitsDe(cur)].slice(0, 30) }));
+    put('taches', Object.assign({}, cur, garderFaits(cur, [f, ...faitsDe(cur)])));
     render();
     // la coche se dessine, rebondit et lâche une gerbe de crins
     $$(`.tick[data-id="${CSS.escape(cur.id)}"]`).forEach(el => { fxOnce(el, 'fx-coche', 700); confettis(el); });
