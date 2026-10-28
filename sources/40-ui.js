@@ -287,7 +287,7 @@ function nomsConnus() {
   add(moiNom());
   list('seances').forEach(x => add(x.cavalier));
   list('concours').forEach(x => add(x.cavalier));
-  toutesTaches().forEach(tk => faitsDe(tk).forEach(f => add(f.par)));
+  toutesTaches().forEach(tk => faitsDe(tk).forEach(f => faitPar(f).forEach(r => add(r.nom))));
   chevaux(true).forEach(h => { add(h.proprietaire); dpsDe(h).forEach(x => add(x.qui.nom)); });
   return [...s.values()];
 }
@@ -352,7 +352,7 @@ const crow = (act, inner, tel, who) => `<div class="crow"><button type="button" 
 
 /* ---------- Évènements ---------- */
 /* Actions qui écrivent directement : bloquées en lecture seule */
-const WRITE_ACTS = new Set(['tick', 'add-sugg', 'new', 'fab', 'photo', 'move-from', 'move-to', 'foin-out', 'foin-out-pick', 'copy-ration', 'clear-ex', 'wipe', 'save-cfg', 'add-balle', 'del-balle']);
+const WRITE_ACTS = new Set(['tick', 'tache-qui', 'add-sugg', 'new', 'fab', 'photo', 'move-from', 'move-to', 'foin-out', 'foin-out-pick', 'copy-ration', 'clear-ex', 'wipe', 'save-cfg', 'add-balle', 'del-balle']);
 function arm(t) {
   const orig = t.innerHTML;
   t.classList.add('armed');

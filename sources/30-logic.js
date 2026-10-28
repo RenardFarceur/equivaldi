@@ -288,6 +288,17 @@ const toutesTaches = () => list('taches').sort((a, b) => String(a.titre || '').l
 const taches = () => toutesTaches().filter(tk => !tk.retireLe);
 const faitsDe = tk => (Array.isArray(tk.fait) ? tk.fait : []).filter(f => f && validISO(f.d))
   .sort((a, b) => b.d.localeCompare(a.d) || (b.t || 0) - (a.t || 0));
+/* Qui a fait une coche : la personne qui a coché (par, uid), puis celles qui l'ont faite avec elle (avec) */
+function faitPar(f) {
+  const vus = new Set();
+  return [{ uid: f.uid || null, nom: f.par || '' }, ...(Array.isArray(f.avec) ? f.avec : [])].filter(r => {
+    const k = r && pKey(r);
+    if (!k || vus.has(k)) return false;
+    vus.add(k);
+    return true;
+  });
+}
+const nomsFait = f => etListe(faitPar(f).map(r => nomCourt(r)));
 /* done = fait pour la période en cours ; retard = jours de retard (0 = à faire aujourd'hui) */
 function tacheEtat(tk) {
   const t = todayISO(), fs = faitsDe(tk), last = fs[0] || null;
@@ -309,7 +320,7 @@ const freqLabel = tk => tk.freq === 'une'
     ? (Math.round(Number(tk.n)) === 7 ? 'Chaque semaine' : `Tous les ${Math.max(1, Math.round(Number(tk.n) || 1))} jours`)
     : 'Chaque jour';
 function faitTxt(f) {
-  const qui = f.par ? ` par ${f.par}` : '';
+  const n = nomsFait(f), qui = n ? ` par ${n}` : '';
   if (f.d === todayISO()) return `Fait${qui}${f.t ? ' à ' + hTxt(f.t) : " aujourd'hui"}`;
   return `Fait${qui} ${dRel(f.d)}`;
 }
@@ -428,13 +439,16 @@ function periode(p) {
 function bilan(from) {
   const t = todayISO(), by = new Map();
   const acc = k => { if (!by.has(k)) by.set(k, { k, taches: 0, seances: 0, minutes: 0, dep: 0, cats: {}, items: [] }); return by.get(k); };
+  // une tâche faite à plusieurs compte pour chacun, et une seule fois pour l'équipe
+  let nCoches = 0;
   toutesTaches().forEach(tk => faitsDe(tk).forEach(f => {
     if (from && f.d < from) return;
-    const k = pKey({ uid: f.uid, nom: f.par });
-    if (k) acc(k).taches++;
+    const qui = faitPar(f);
+    if (qui.length) nCoches++;
+    qui.forEach(r => acc(pKey(r)).taches++);
   }));
   // coches anciennes sorties de l'historique de la tâche (voir garderFaits)
-  if (!from) toutesTaches().forEach(tk => Object.entries(tk.acquis || {}).forEach(([k, a]) => { if (a && a.n > 0) acc(k).taches += a.n; }));
+  if (!from) toutesTaches().forEach(tk => Object.entries(tk.acquis || {}).forEach(([k, a]) => { if (a && a.n > 0) { acc(k).taches += a.n; nCoches += a.n; } }));
   list('seances').forEach(s => {
     if (s.statut === 'prevu' || !validISO(s.date) || (from && s.date < from) || s.date > t) return;
     const k = pKey({ uid: s.cavalierUid, nom: s.cavalier });
@@ -445,7 +459,7 @@ function bilan(from) {
   const vals = [...by.values()].filter(a => a.k !== '_');
   return {
     by, deps, total: deps.reduce((s, e) => s + e.v, 0),
-    taches: vals.reduce((s, a) => s + a.taches, 0), seances: vals.reduce((s, a) => s + a.seances, 0)
+    taches: nCoches, seances: vals.reduce((s, a) => s + a.seances, 0)
   };
 }
 const nomPre = id => (get('pres', id) || {}).nom || 'un pré';
@@ -455,7 +469,10 @@ function filEquipe(fromT = 0, limit = 30, k = null) {
   const items = [];
   // une action sans auteur connu (saisie d'avant le prénom) n'apprend rien sur qui fait quoi
   const push = (t, r, icon, quoi, objet, act) => { if (!t || t < fromT) return; const pk = pKey(r); if (pk && (!k || pk === k)) items.push({ t, r, icon, quoi, objet, act }); };
-  toutesTaches().forEach(tk => faitsDe(tk).forEach(f => push(f.t, { uid: f.uid, nom: f.par }, 'tasks', 'Tâche cochée', tk.titre, tk.retireLe ? '' : `data-act="edit-tache" data-id="${tk.id}"`)));
+  toutesTaches().forEach(tk => faitsDe(tk).forEach(f => {
+    const qui = faitPar(f), act = tk.retireLe ? '' : `data-act="edit-tache" data-id="${tk.id}"`;
+    qui.forEach(r => push(f.t, r, 'tasks', qui.length > 1 ? `Tâche faite avec ${etListe(qui.filter(x => x !== r).map(x => nomCourt(x)))}` : 'Tâche cochée', tk.titre, act));
+  }));
   const crees = (coll, icon, fn, act) => list(coll).forEach(o => {
     const c = o.creePar;
     if (!c || !c.t) return;

@@ -45,6 +45,8 @@ function ptsTache(tk) {
   const base = tk.freq === 'une' ? CROT.tache.une : Math.min(CROT.tache.max, CROT.tache.base * Math.pow(n, CROT.tache.exp));
   return Math.max(2, Math.round(base * ef));
 }
+/* Tâche faite à plusieurs : les crottins se partagent à parts égales, arrondis au-dessus */
+const partTache = (pot, n) => n > 1 ? Math.ceil(pot / n) : pot;
 const ptsSoin = s => Math.max(...soinTypes(s).map(x => CROT.soins[x] || CROT.soins.autre)) + (s.planifie ? CROT.rdv : 0);
 
 /* ---------- Moteur : qui a gagné quoi (recalculé à chaque changement de données) ---------- */
@@ -63,15 +65,20 @@ function crottinsEntrees() {
     if (!by.has(k)) by.set(k, []);
     by.get(k).push(e);
   };
-  // tâches cochées : la valeur est fixée au moment de la coche, dans la limite du plafond du jour
+  // tâches cochées : la valeur est fixée au moment de la coche et partagée entre ceux qui l'ont faite,
+  // dans la limite du plafond du jour de chacun
   const coches = [], plafond = new Map();
   toutesTaches().forEach(tk => faitsDe(tk).forEach(f => { if (f.d >= D) coches.push({ tk, f, t: f.t || toUTC(f.d) }); }));
   coches.sort((a, b) => a.t - b.t).forEach(({ tk, f, t: T }) => {
-    const r = { uid: f.uid || null, nom: f.par || '' }, u = `${pKey(r)}|${f.d}`, deja = plafond.get(u) || 0;
-    const pts = Math.min(Number.isFinite(f.pts) ? f.pts : ptsTache(tk), CROT.tachesJour - deja);
-    if (pts <= 0) return;
-    plafond.set(u, deja + pts);
-    add(r, { k: `tk:${tk.id}:${f.t || f.d}`, pts, d: f.d, t: T, quoi: 'Tâche', objet: tk.titre, icon: 'tasks' });
+    const qui = faitPar(f);
+    if (!qui.length) return;
+    const part = partTache(Number.isFinite(f.pts) ? f.pts : ptsTache(tk), qui.length);
+    qui.forEach(r => {
+      const u = `${pKey(r)}|${f.d}`, deja = plafond.get(u) || 0, pts = Math.min(part, CROT.tachesJour - deja);
+      if (pts <= 0) return;
+      plafond.set(u, deja + pts);
+      add(r, { k: `tk:${tk.id}:${f.t || f.d}`, pts, d: f.d, t: T, quoi: qui.length > 1 ? 'Tâche à plusieurs' : 'Tâche', objet: tk.titre, icon: 'tasks' });
+    });
   });
   // coches anciennes sorties de l'historique : leurs crottins restent acquis
   toutesTaches().forEach(tk => Object.values(tk.acquis || {}).forEach(a => {
@@ -137,15 +144,13 @@ function crottinsEntrees() {
 function garderFaits(tk, fs) {
   if (fs.length <= CROT.faitsMax) return { fait: fs };
   const by = crottinsEntrees(), acquis = Object.assign({}, tk.acquis || {});
-  fs.slice(CROT.faitsMax).forEach(f => {
-    const r = { uid: f.uid || null, nom: f.par || '' }, pk = pKey(r);
-    if (!pk) return;
-    const e = (by.get(pk) || []).find(x => x.k === `tk:${tk.id}:${f.t || f.d}`);
-    const a = Object.assign({ uid: r.uid, nom: r.nom, pts: 0, n: 0 }, acquis[pk]);
+  fs.slice(CROT.faitsMax).forEach(f => faitPar(f).forEach(r => {
+    const pk = pKey(r), e = (by.get(pk) || []).find(x => x.k === `tk:${tk.id}:${f.t || f.d}`);
+    const a = Object.assign({ uid: r.uid || null, nom: r.nom, pts: 0, n: 0 }, acquis[pk]);
     a.n += 1;
     if (e) a.pts += e.pts;
     acquis[pk] = a;
-  });
+  }));
   return { fait: fs.slice(0, CROT.faitsMax), acquis };
 }
 function crottinsDe(k, from = null) {
@@ -210,6 +215,8 @@ function majCrottins() {
 
 /* ---------- Gains et pertes pendant une action ---------- */
 let crotPhoto = null, crotT = null, crotSilence = false, crotScene = false;
+/* Partage d'une tâche déjà comptée : on ajuste en douceur (pas de grand spectacle ni de perte en rouge) */
+let crotDoux = false;
 const photoCrottins = () => { const m = new Map(); crottinsEntrees().forEach((es, k) => m.set(k, new Map(es.map(e => [e.k, e])))); return m; };
 /* Appelé juste avant chaque enregistrement fait sur ce téléphone */
 function crotAvant() {
@@ -221,6 +228,8 @@ function crotAvant() {
 function crotApres() {
   const avant = crotPhoto;
   crotPhoto = null;
+  const doux = crotDoux;
+  crotDoux = false;
   if (!avant) return;
   const apres = photoCrottins(), moi = kMoi(), total = m => m ? [...m.values()].reduce((s, e) => s + e.pts, 0) : 0;
   let mien = null;
@@ -235,17 +244,17 @@ function crotApres() {
   });
   if (mien && mien.d > 0) {
     const e = mien.plus[0], label = mien.plus.length === 1 ? `${e.quoi} · ${e.objet}` : mien.plus.length > 1 ? `${mien.plus.length} actions récompensées` : 'Crottins gagnés';
-    crotGain(mien.d, label, total(avant.get(moi)), total(apres.get(moi)));
+    crotGain(mien.d, label, total(avant.get(moi)), total(apres.get(moi)), doux);
   } else {
-    if (mien) crotPerte(mien.d);
+    if (mien) { if (doux) crotBulle(`−${num(Math.abs(mien.d), 0)} · tâche partagée`); else crotPerte(mien.d); }
     lacherCompteur();
   }
-  autres.forEach((x, i) => setTimeout(() => crotBulle(`${x.d > 0 ? '+' : '−'}${num(Math.abs(x.d), 0)} pour ${nomCourt(personne(x.k) || {})}`, x.d < 0), 300 + i * 500));
+  autres.forEach((x, i) => setTimeout(() => crotBulle(`${x.d > 0 ? '+' : '−'}${num(Math.abs(x.d), 0)} pour ${nomCourt(personne(x.k) || {})}${doux && x.d < 0 ? ' · partage' : ''}`, x.d < 0 && !doux), 300 + i * 500));
 }
 
 /* ---------- Animations ---------- */
 const pillRect = () => { const b = document.getElementById('crotBtn'); return b && !b.hidden ? b.getBoundingClientRect() : { left: window.innerWidth - 90, top: 8, width: 70, height: 38 }; };
-function crotGain(d, label, avant, apres) {
+function crotGain(d, label, avant, apres, doux = false) {
   const fin = () => {
     lacherCompteur();
     fxOnce(document.getElementById('crotBtn'), 'fx-pop', 600);
@@ -254,7 +263,7 @@ function crotGain(d, label, avant, apres) {
   };
   if (!mouvementOk() || !Element.prototype.animate) { lacherCompteur(); crotBulle(`+${num(d, 0)} ${pl(d, 'crottin')}`); return; }
   vibre(15);
-  if (ui.crotAnim !== 'discret' && !crotScene) crotSpectacle(d, label, fin);
+  if (ui.crotAnim !== 'discret' && !crotScene && !doux) crotSpectacle(d, label, fin);
   else crotMini(d, fin);
 }
 const boule = (x, y) => { const b = document.createElement('i'); b.className = 'crot-boule'; b.style.left = x + 'px'; b.style.top = y + 'px'; return b; };
@@ -356,7 +365,9 @@ function crotBulle(txt, perte = false) {
   el.className = 'crot-bulle' + (perte ? ' perte' : '');
   el.textContent = txt;
   el.style.right = Math.max(8, window.innerWidth - (p.left + p.width)) + 'px';
-  el.style.top = (p.top + p.height + 8) + 'px';
+  // les étiquettes s'empilent sous le compteur au lieu de se recouvrir
+  const deja = [...fxLayer().querySelectorAll('.crot-bulle')].map(b => b.getBoundingClientRect().bottom);
+  el.style.top = (deja.length ? Math.max(...deja) + 6 : p.top + p.height + 8) + 'px';
   fxLayer().appendChild(el);
   setTimeout(() => el.remove(), 2200);
 }
@@ -451,6 +462,7 @@ ACT['crot-regles'] = () => {
     ${ligne('tasks', 'Tâche hebdomadaire', 'Ou ponctuelle : +' + CROT.tache.une, `+${tl('jours', 7)}`)}
     ${ligne('tool', 'Effort de la tâche', 'Léger ×0,6 · Costaud ×2', '')}
     ${ligne('tasks', 'Plafond des tâches', 'Par personne et par jour', `${CROT.tachesJour} max`)}
+    ${ligne('avec', 'Tâche à plusieurs', 'Appui long sur la case, ou le bouton à droite d’une tâche cochée : les crottins se partagent à parts égales', '')}
     ${ligne('shoe', 'Rendez-vous géré', 'Maréchal, véto, dentiste, ostéo · vaccin +15 · vermifuge +8', `+${CROT.soins.marechal}`)}
     ${ligne('cal', 'Rendez-vous prévu puis honoré', 'En plus du soin', `+${CROT.rdv}`)}
     ${ligne('rosette', 'Concours fait', 'Pour le cavalier', `+${CROT.concours}`)}

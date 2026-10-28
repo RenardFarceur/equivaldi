@@ -452,6 +452,16 @@ body.lock .toast{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto}
 /* ---------- Crottins : tâches, boutique, classement ---------- */
 .trow-pts{display:inline-flex;align-items:center;gap:2px;flex:none;padding:0 14px 0 2px;font-family:var(--f-display);font-weight:600;font-size:17px;color:var(--crot-ink)}
 .trow-pts .crottin{width:19px;height:19px}
+/* tâche faite à plusieurs : pastilles de ceux qui l'ont faite, ou bouton pour ajouter quelqu'un */
+.tick{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.trow-avec{flex:none;align-self:stretch;display:flex;align-items:center;border:0;background:transparent;padding:0 14px 0 4px;color:var(--ink-2)}
+.trow-avec .av.s{width:28px;height:28px;font-size:13px;box-shadow:0 0 0 2.5px var(--surface);transition:transform .15s}
+.trow-avec .av.s+.av.s{margin-left:-10px}
+.trow-avec .av.plus{background:var(--surface-2);color:var(--ink-2)}
+.trow-avec.seul .ic{width:34px;height:34px;padding:6px;border:2px dashed var(--ctl);border-radius:var(--blob);transition:transform .15s,border-color .2s,color .2s}
+.trow-avec.seul:hover .ic{border-color:var(--accent);color:var(--accent)}
+.trow-avec:active .ic,.trow-avec:active .av{transform:scale(.9)}
+.qui-autre{margin-top:10px}
 .crot-note{margin-top:8px}.crot-note .crottin{vertical-align:-4px;margin-right:5px}
 .crot-ligne{gap:6px;margin-top:2px}
 .crot-ligne b{font-family:var(--f-display);font-size:19px;color:var(--crot-ink)}
@@ -662,6 +672,8 @@ const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 
 const clone = o => JSON.parse(JSON.stringify(o));
 const byName = (a, b) => String(a.nom || '').localeCompare(String(b.nom || ''), 'fr', { sensitivity: 'base' });
 const pl = (n, s, p) => (Math.abs(n) >= 2 ? (p || s + 's') : s);
+/* « Célia », « Célia et Marie », « Célia, Marie et Léa » */
+const etListe = ns => ns.length < 2 ? ns.join('') : `${ns.slice(0, -1).join(', ')} et ${ns[ns.length - 1]}`;
 const nJ = n => `${n} ${pl(n, 'jour')}`;
 const ordinal = n => n === 1 ? '1<sup>er</sup>' : `${n}<sup>e</sup>`;
 const ordTxt = n => n === 1 ? '1er' : `${n}e`;
@@ -712,6 +724,7 @@ const ICONS = {
   timer: '<circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.5 1.5M9.5 2.5h5M12 2.5V6M18.2 7.3l1.3-1.3"/>',
   tasks: '<path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="m3.5 6.5 1.3 1.3 2.5-2.5M3.5 12l1.3 1.3 2.5-2.5M3.5 17.5l1.3 1.3 2.5-2.5"/>',
   user: '<circle cx="12" cy="8" r="3.8"/><path d="M4.5 20.5c.6-3.9 3.6-6.3 7.5-6.3s6.9 2.4 7.5 6.3"/>',
+  avec: '<circle cx="9.5" cy="8.6" r="3.4"/><path d="M3.2 19.6c.5-3.5 3-5.6 6.3-5.6s5.8 2.1 6.3 5.6"/><path d="M18.6 6.4v6M15.6 9.4h6"/>',
   users: '<circle cx="9" cy="8.5" r="3.3"/><path d="M2.8 19.5c.5-3.4 3-5.5 6.2-5.5s5.7 2.1 6.2 5.5"/><path d="M15.5 5.6a3.2 3.2 0 0 1 0 5.8M17.5 14.3c2.1.7 3.5 2.5 3.8 5.2"/>',
   lock: '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>',
   phone: '<path d="M6.6 3.5h3l1.6 4.4-2.1 1.4a11.5 11.5 0 0 0 5.6 5.6l1.4-2.1 4.4 1.6v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z"/>',
@@ -1347,6 +1360,17 @@ const toutesTaches = () => list('taches').sort((a, b) => String(a.titre || '').l
 const taches = () => toutesTaches().filter(tk => !tk.retireLe);
 const faitsDe = tk => (Array.isArray(tk.fait) ? tk.fait : []).filter(f => f && validISO(f.d))
   .sort((a, b) => b.d.localeCompare(a.d) || (b.t || 0) - (a.t || 0));
+/* Qui a fait une coche : la personne qui a coché (par, uid), puis celles qui l'ont faite avec elle (avec) */
+function faitPar(f) {
+  const vus = new Set();
+  return [{ uid: f.uid || null, nom: f.par || '' }, ...(Array.isArray(f.avec) ? f.avec : [])].filter(r => {
+    const k = r && pKey(r);
+    if (!k || vus.has(k)) return false;
+    vus.add(k);
+    return true;
+  });
+}
+const nomsFait = f => etListe(faitPar(f).map(r => nomCourt(r)));
 /* done = fait pour la période en cours ; retard = jours de retard (0 = à faire aujourd'hui) */
 function tacheEtat(tk) {
   const t = todayISO(), fs = faitsDe(tk), last = fs[0] || null;
@@ -1368,7 +1392,7 @@ const freqLabel = tk => tk.freq === 'une'
     ? (Math.round(Number(tk.n)) === 7 ? 'Chaque semaine' : `Tous les ${Math.max(1, Math.round(Number(tk.n) || 1))} jours`)
     : 'Chaque jour';
 function faitTxt(f) {
-  const qui = f.par ? ` par ${f.par}` : '';
+  const n = nomsFait(f), qui = n ? ` par ${n}` : '';
   if (f.d === todayISO()) return `Fait${qui}${f.t ? ' à ' + hTxt(f.t) : " aujourd'hui"}`;
   return `Fait${qui} ${dRel(f.d)}`;
 }
@@ -1487,13 +1511,16 @@ function periode(p) {
 function bilan(from) {
   const t = todayISO(), by = new Map();
   const acc = k => { if (!by.has(k)) by.set(k, { k, taches: 0, seances: 0, minutes: 0, dep: 0, cats: {}, items: [] }); return by.get(k); };
+  // une tâche faite à plusieurs compte pour chacun, et une seule fois pour l'équipe
+  let nCoches = 0;
   toutesTaches().forEach(tk => faitsDe(tk).forEach(f => {
     if (from && f.d < from) return;
-    const k = pKey({ uid: f.uid, nom: f.par });
-    if (k) acc(k).taches++;
+    const qui = faitPar(f);
+    if (qui.length) nCoches++;
+    qui.forEach(r => acc(pKey(r)).taches++);
   }));
   // coches anciennes sorties de l'historique de la tâche (voir garderFaits)
-  if (!from) toutesTaches().forEach(tk => Object.entries(tk.acquis || {}).forEach(([k, a]) => { if (a && a.n > 0) acc(k).taches += a.n; }));
+  if (!from) toutesTaches().forEach(tk => Object.entries(tk.acquis || {}).forEach(([k, a]) => { if (a && a.n > 0) { acc(k).taches += a.n; nCoches += a.n; } }));
   list('seances').forEach(s => {
     if (s.statut === 'prevu' || !validISO(s.date) || (from && s.date < from) || s.date > t) return;
     const k = pKey({ uid: s.cavalierUid, nom: s.cavalier });
@@ -1504,7 +1531,7 @@ function bilan(from) {
   const vals = [...by.values()].filter(a => a.k !== '_');
   return {
     by, deps, total: deps.reduce((s, e) => s + e.v, 0),
-    taches: vals.reduce((s, a) => s + a.taches, 0), seances: vals.reduce((s, a) => s + a.seances, 0)
+    taches: nCoches, seances: vals.reduce((s, a) => s + a.seances, 0)
   };
 }
 const nomPre = id => (get('pres', id) || {}).nom || 'un pré';
@@ -1514,7 +1541,10 @@ function filEquipe(fromT = 0, limit = 30, k = null) {
   const items = [];
   // une action sans auteur connu (saisie d'avant le prénom) n'apprend rien sur qui fait quoi
   const push = (t, r, icon, quoi, objet, act) => { if (!t || t < fromT) return; const pk = pKey(r); if (pk && (!k || pk === k)) items.push({ t, r, icon, quoi, objet, act }); };
-  toutesTaches().forEach(tk => faitsDe(tk).forEach(f => push(f.t, { uid: f.uid, nom: f.par }, 'tasks', 'Tâche cochée', tk.titre, tk.retireLe ? '' : `data-act="edit-tache" data-id="${tk.id}"`)));
+  toutesTaches().forEach(tk => faitsDe(tk).forEach(f => {
+    const qui = faitPar(f), act = tk.retireLe ? '' : `data-act="edit-tache" data-id="${tk.id}"`;
+    qui.forEach(r => push(f.t, r, 'tasks', qui.length > 1 ? `Tâche faite avec ${etListe(qui.filter(x => x !== r).map(x => nomCourt(x)))}` : 'Tâche cochée', tk.titre, act));
+  }));
   const crees = (coll, icon, fn, act) => list(coll).forEach(o => {
     const c = o.creePar;
     if (!c || !c.t) return;
@@ -1822,7 +1852,7 @@ function nomsConnus() {
   add(moiNom());
   list('seances').forEach(x => add(x.cavalier));
   list('concours').forEach(x => add(x.cavalier));
-  toutesTaches().forEach(tk => faitsDe(tk).forEach(f => add(f.par)));
+  toutesTaches().forEach(tk => faitsDe(tk).forEach(f => faitPar(f).forEach(r => add(r.nom))));
   chevaux(true).forEach(h => { add(h.proprietaire); dpsDe(h).forEach(x => add(x.qui.nom)); });
   return [...s.values()];
 }
@@ -1887,7 +1917,7 @@ const crow = (act, inner, tel, who) => `<div class="crow"><button type="button" 
 
 /* ---------- Évènements ---------- */
 /* Actions qui écrivent directement : bloquées en lecture seule */
-const WRITE_ACTS = new Set(['tick', 'add-sugg', 'new', 'fab', 'photo', 'move-from', 'move-to', 'foin-out', 'foin-out-pick', 'copy-ration', 'clear-ex', 'wipe', 'save-cfg', 'add-balle', 'del-balle']);
+const WRITE_ACTS = new Set(['tick', 'tache-qui', 'add-sugg', 'new', 'fab', 'photo', 'move-from', 'move-to', 'foin-out', 'foin-out-pick', 'copy-ration', 'clear-ex', 'wipe', 'save-cfg', 'add-balle', 'del-balle']);
 function arm(t) {
   const orig = t.innerHTML;
   t.classList.add('armed');
@@ -3398,7 +3428,7 @@ function tacheSub(tk, e) {
   let st;
   if (e.done) st = faitTxt(e.last) + (e.n > 1 && e.next ? ` · à refaire ${dRel(e.next)}` : '');
   else if (tk.freq === 'une') st = e.due ? (e.days < 0 ? `En retard de ${nJ(-e.days)}` : `À faire ${dRel(e.due)}`) : 'À faire';
-  else if (e.last) st = (e.retard > 0 ? `En retard de ${nJ(e.retard)} · ` : '') + `Dernière fois ${dRel(e.last.d)}${e.last.par ? ', ' + e.last.par : ''}`;
+  else if (e.last) st = (e.retard > 0 ? `En retard de ${nJ(e.retard)} · ` : '') + `Dernière fois ${dRel(e.last.d)}${nomsFait(e.last) ? ', ' + nomsFait(e.last) : ''}`;
   else st = freqLabel(tk);
   return [where, st].filter(Boolean).join(' · ');
 }
@@ -3408,8 +3438,20 @@ function trow(tk) {
   return `<div class="trow${e.done ? ' done' : ''}${late ? ' late' : ''}" data-key="tk-${esc(tk.id)}">
     <button type="button" class="tick" data-act="tick" data-id="${tk.id}" aria-pressed="${e.done}" aria-label="${esc(tk.titre)} : ${e.done ? 'fait, toucher pour annuler' : 'marquer comme fait'}"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path pathLength="1" d="M5.5 12.8 10 17.2 18.8 7.2"/></svg></button>
     <button type="button" class="trow-main" data-act="edit-tache" data-id="${tk.id}"><span class="row-t">${esc(tk.titre)}</span><span class="row-s">${esc(tacheSub(tk, e))}</span></button>
-    ${e.done ? '' : `<span class="trow-pts" title="Rapporte ${ptsTache(tk)} crottins">+${ptsTache(tk)}${crottinSvg()}</span>`}
+    ${trowFin(tk, e)}
   </div>`;
+}
+/* À droite : ce que rapporte la tâche ; une fois faite, qui l'a faite (toucher pour ajouter quelqu'un) */
+function trowFin(tk, e) {
+  if (!e.done) return `<span class="trow-pts" title="Rapporte ${ptsTache(tk)} crottins, partagés si vous la faites à plusieurs">+${ptsTache(tk)}${crottinSvg()}</span>`;
+  const qui = faitPar(e.last), noms = esc(nomsFait(e.last));
+  if (qui.length > 1) {
+    const avs = qui.slice(0, 3).map(r => pav(r, 's')).join('') + (qui.length > 3 ? `<span class="av pp s plus" aria-hidden="true">+${qui.length - 3}</span>` : '');
+    return sync.readOnly ? `<span class="trow-avec" role="img" aria-label="Faite par ${noms}">${avs}</span>`
+      : `<button type="button" class="trow-avec" data-act="tache-qui" data-id="${tk.id}" aria-label="Faite par ${noms} : modifier">${avs}</button>`;
+  }
+  if (sync.readOnly || membres().length === 1) return '';
+  return `<button type="button" class="trow-avec seul" data-act="tache-qui" data-id="${tk.id}" aria-label="Faite à plusieurs ? Ajouter quelqu'un">${ic('avec')}</button>`;
 }
 function tachesTriees(filter) {
   const xs = taches().filter(filter || (() => true)).map(tk => ({ tk, e: tacheEtat(tk) })).filter(x => x.e.visible);
@@ -3459,21 +3501,16 @@ function figeOrdre() {
   fx.jusqua = Date.now() + 1100;
   setTimeout(rerenderSoon, 1150);
 }
-ACT.tick = d => {
-  const tk = get('taches', d.id);
-  if (!tk) return;
-  if (tacheEtat(tk).done) {
-    const prev = clone(tk);
-    figeOrdre();
-    put('taches', Object.assign({}, tk, { fait: faitsDe(tk).slice(1) }));
-    toast('Coche retirée', { undo: () => put('taches', prev) });
-    return;
-  }
-  withName(nom => {
-    const cur = get('taches', d.id);
-    if (!cur) return;
+const aN = n => ({ 2: 'deux', 3: 'trois', 4: 'quatre', 5: 'cinq', 6: 'six' })[n] || String(n);
+/* Cocher : par défaut au nom de la personne du téléphone ; « qui » quand la tâche a été faite à plusieurs
+   (la première personne est enregistrée dans par/uid, les autres dans avec) */
+function cocher(id, qui = null) {
+  const go = refs => {
+    const cur = get('taches', id);
+    if (!cur || !refs.length) return;
     const prev = clone(cur), avant = toutFait();
-    const f = { d: todayISO(), t: Date.now(), par: nom, uid: me.uid || null, pts: ptsTache(cur) };
+    const f = { d: todayISO(), t: Date.now(), par: refs[0].nom, uid: refs[0].uid || null, pts: ptsTache(cur) };
+    if (refs.length > 1) f.avec = refs.slice(1).map(r => ({ uid: r.uid || null, nom: r.nom }));
     figeOrdre();
     put('taches', Object.assign({}, cur, garderFaits(cur, [f, ...faitsDe(cur)])));
     render();
@@ -3484,9 +3521,110 @@ ACT.tick = d => {
       // le galop de fête passe après la pluie de crottins
       setTimeout(galop, ui.crotAnim === 'discret' || !mouvementOk() ? 350 : 2900);
       toast("Tout est fait pour aujourd'hui, bravo !", { fete: true, undo: () => put('taches', prev) });
-    } else toast(`${cur.titre} : fait`, { undo: () => put('taches', prev) });
-  });
+    } else toast(refs.length > 1 ? `${cur.titre} : fait à ${aN(refs.length)}` : `${cur.titre} : fait`, { undo: () => put('taches', prev) });
+  };
+  if (qui) go(qui); else withName(nom => go([{ uid: me.uid || null, nom }]));
+}
+ACT.tick = d => {
+  if (Date.now() - appuiLong < 900) return;   // l'appui long vient d'ouvrir « Qui l'a faite ? »
+  const tk = get('taches', d.id);
+  if (!tk) return;
+  if (tacheEtat(tk).done) {
+    const prev = clone(tk);
+    figeOrdre();
+    put('taches', Object.assign({}, tk, { fait: faitsDe(tk).slice(1) }));
+    toast('Coche retirée', { undo: () => put('taches', prev) });
+    return;
+  }
+  cocher(d.id);
 };
+/* Appui long sur une case : choisir qui a fait la tâche (à plusieurs, les crottins se partagent) */
+let appuiLong = 0;
+document.addEventListener('pointerdown', ev => {
+  const b = ev.target.closest && ev.target.closest('.tick[data-act="tick"]');
+  if (!b || ev.button > 0 || sync.readOnly) return;
+  const x0 = ev.clientX, y0 = ev.clientY;
+  function fin() {
+    clearTimeout(t);
+    document.removeEventListener('pointerup', fin, true);
+    document.removeEventListener('pointercancel', fin, true);
+    document.removeEventListener('pointermove', bouge, true);
+  }
+  function bouge(e) { if (Math.hypot(e.clientX - x0, e.clientY - y0) > 10) fin(); }
+  const t = setTimeout(() => { fin(); appuiLong = Date.now(); vibre(18); formQui(b.dataset.id); }, 480);
+  document.addEventListener('pointerup', fin, true);
+  document.addEventListener('pointercancel', fin, true);
+  document.addEventListener('pointermove', bouge, true);
+});
+document.addEventListener('contextmenu', e => { if (e.target.closest && e.target.closest('.tick')) e.preventDefault(); });
+
+/* « Qui l'a faite ? » : avant de cocher (appui long) ou après coup (bouton à droite de la tâche faite) */
+function formQui(id) {
+  const tk = get('taches', id);
+  if (!tk) return;
+  if (sync.readOnly) { toast(RO_MSG, { danger: true }); return; }
+  const e = tacheEtat(tk), f0 = e.done ? e.last : null;
+  const moi = { uid: me.uid || null, nom: moiNom() };
+  const qui0 = f0 ? faitPar(f0) : (pKey(moi) ? [moi] : []);
+  const pot = f0 && Number.isFinite(f0.pts) ? f0.pts : ptsTache(tk);
+  // les personnes proposées : l'équipe (ou les prénoms déjà connus), plus celles déjà notées sur la coche
+  const opts = [], vus = new Set();
+  const ajoute = r => { const k = pKey(r); if (k && !vus.has(k)) { vus.add(k); opts.push({ k, r }); } };
+  const ms = membres();
+  if (ms.length) ms.forEach(m => ajoute({ uid: m.id, nom: mNom(m) })); else nomsConnus().forEach(n => ajoute({ uid: null, nom: n }));
+  qui0.forEach(ajoute);
+  const body = `<div class="bq-confirm"><span class="qa-ic menthe">${ic('avec')}</span><p><b>${esc(tk.titre)}</b><br><small>${esc(f0 ? faitTxt(f0) : freqLabel(tk))}</small></p></div>
+    ${grp('Qui l’a faite ?', chips('qui', opts.map(o => ({ v: o.k, html: `${pav(o.r, 's')}<span>${esc(nomCourt(o.r))}</span>` })), qui0.map(r => pKey(r)), { multi: true })
+      + `<div class="qui-autre">${inp('f_qui_autre', '', 'autocomplete="off" autocapitalize="words" placeholder="Quelqu’un d’autre ? Son prénom" aria-label="Ajouter une autre personne"')}</div>`)}
+    <p class="note crot-note" id="w_part"></p>
+    ${f0 ? '<p class="note">Astuce : un appui long sur la case permet de choisir qui l’a faite avant de cocher.</p>' : ''}`;
+  const lire = f => {
+    const ks = new Set(chipVals(f, 'qui')), refs = [];
+    const prend = r => { const k = pKey(r); if (k && ks.has(k) && !refs.some(x => pKey(x) === k)) refs.push(r); };
+    qui0.forEach(prend);              // ceux déjà notés gardent leur place (la personne qui a coché en tête)
+    opts.forEach(o => prend(o.r));
+    const autre = val('f_qui_autre').replace(/\s+/g, ' ').trim();
+    if (autre) {
+      const m = refMembre({ nom: autre }), r = m ? { uid: m.id, nom: mNom(m) } : { uid: null, nom: autre };
+      if (!refs.some(x => pKey(x) === pKey(r))) refs.push(r);
+    }
+    return refs;
+  };
+  openSheet(f0 ? 'Qui l’a faite ?' : 'Cocher à plusieurs', body, {
+    submit: f0 ? 'Enregistrer' : 'C’est fait', local: true,
+    onMount: f => {
+      const maj = () => {
+        const n = lire(f).length;
+        $('#w_part').innerHTML = !n ? 'Choisis au moins une personne.'
+          : n === 1 ? `${crottinSvg('s')}<b>${pot} ${pl(pot, 'crottin')}</b> pour cette personne.`
+          : `${crottinSvg('s')}Les ${pot} crottins se partagent : <b>${partTache(pot, n)} chacun</b>.`;
+      };
+      f.addEventListener('chipchange', maj);
+      $('#f_qui_autre').addEventListener('input', maj);
+      maj();
+    },
+    onSubmit: f => {
+      const refs = lire(f);
+      if (!refs.length) return 'Choisis au moins une personne.';
+      if (!f0) { setTimeout(() => cocher(id, refs), 0); return; }
+      if (refs.map(r => pKey(r)).join('|') === qui0.map(r => pKey(r)).join('|')) return;
+      const cur = get('taches', id), fs = cur ? faitsDe(cur) : [];
+      const i = fs.findIndex(x => x.d === f0.d && (x.t || 0) === (f0.t || 0));
+      if (i < 0) return 'Cette coche a changé entre-temps : rouvre la tâche.';
+      const nf = Object.assign({}, fs[i], { par: refs[0].nom, uid: refs[0].uid || null });
+      if (refs.length > 1) nf.avec = refs.slice(1).map(r => ({ uid: r.uid || null, nom: r.nom })); else delete nf.avec;
+      const prev = clone(cur), nfs = fs.slice();
+      nfs[i] = nf;
+      // déjà compté pour moi : on ajuste en douceur ; si je me rajoute, c'est un vrai gain
+      const dedans = rs => rs.some(r => estMoi(r));
+      crotDoux = dedans(qui0);
+      put('taches', Object.assign({}, cur, { fait: nfs }));
+      toast(refs.length > 1 ? `${cur.titre} : fait à ${aN(refs.length)}, ${partTache(pot, refs.length)} crottins chacun` : `${cur.titre} : fait par ${nomCourt(refs[0])}`,
+        { undo: () => { crotDoux = dedans(refs); put('taches', prev); } });
+    }
+  });
+}
+ACT['tache-qui'] = d => formQui(d.id);
 ACT['add-sugg'] = () => {
   const sel = chipVals(document, 'sugg').map(Number).filter(i => TACHES_SUGG[i]);
   if (!sel.length) { toast('Touche une ou plusieurs tâches pour les choisir.'); return; }
@@ -3501,7 +3639,7 @@ function formTache(id, pre = {}) {
   const ps = pres(), hs = chevaux();
   const fs = ex ? faitsDe(ex).slice(0, 10) : [];
   const hist = fs.length ? grp('Dernières fois', `<div class="list">${fs.map(f =>
-    `<div class="row"><div class="row-main"><div class="row-t">${esc(f.par || "Quelqu'un")}</div><div class="row-s">${esc(dFull(f.d))}${f.t ? ' · ' + hTxt(f.t) : ''}</div></div></div>`).join('')}</div>`) : '';
+    `<div class="row"><div class="row-main"><div class="row-t">${esc(nomsFait(f) || "Quelqu'un")}</div><div class="row-s">${esc(dFull(f.d))}${f.t ? ' · ' + hTxt(f.t) : ''}</div></div></div>`).join('')}</div>`) : '';
   const body = `
     ${fld('Tâche', inp('f_titre', tk.titre, 'required autocomplete="off" autocapitalize="sentences" placeholder="ex. Foin du matin"'))}
     ${ex ? '' : `<div class="wrap">${TACHES_SUGG.map(s => `<button type="button" class="chip" data-act="fill" data-target="f_titre" data-fill="${esc(s.titre)}">${esc(s.titre)}</button>`).join('')}</div>`}
@@ -3941,6 +4079,8 @@ function ptsTache(tk) {
   const base = tk.freq === 'une' ? CROT.tache.une : Math.min(CROT.tache.max, CROT.tache.base * Math.pow(n, CROT.tache.exp));
   return Math.max(2, Math.round(base * ef));
 }
+/* Tâche faite à plusieurs : les crottins se partagent à parts égales, arrondis au-dessus */
+const partTache = (pot, n) => n > 1 ? Math.ceil(pot / n) : pot;
 const ptsSoin = s => Math.max(...soinTypes(s).map(x => CROT.soins[x] || CROT.soins.autre)) + (s.planifie ? CROT.rdv : 0);
 
 /* ---------- Moteur : qui a gagné quoi (recalculé à chaque changement de données) ---------- */
@@ -3959,15 +4099,20 @@ function crottinsEntrees() {
     if (!by.has(k)) by.set(k, []);
     by.get(k).push(e);
   };
-  // tâches cochées : la valeur est fixée au moment de la coche, dans la limite du plafond du jour
+  // tâches cochées : la valeur est fixée au moment de la coche et partagée entre ceux qui l'ont faite,
+  // dans la limite du plafond du jour de chacun
   const coches = [], plafond = new Map();
   toutesTaches().forEach(tk => faitsDe(tk).forEach(f => { if (f.d >= D) coches.push({ tk, f, t: f.t || toUTC(f.d) }); }));
   coches.sort((a, b) => a.t - b.t).forEach(({ tk, f, t: T }) => {
-    const r = { uid: f.uid || null, nom: f.par || '' }, u = `${pKey(r)}|${f.d}`, deja = plafond.get(u) || 0;
-    const pts = Math.min(Number.isFinite(f.pts) ? f.pts : ptsTache(tk), CROT.tachesJour - deja);
-    if (pts <= 0) return;
-    plafond.set(u, deja + pts);
-    add(r, { k: `tk:${tk.id}:${f.t || f.d}`, pts, d: f.d, t: T, quoi: 'Tâche', objet: tk.titre, icon: 'tasks' });
+    const qui = faitPar(f);
+    if (!qui.length) return;
+    const part = partTache(Number.isFinite(f.pts) ? f.pts : ptsTache(tk), qui.length);
+    qui.forEach(r => {
+      const u = `${pKey(r)}|${f.d}`, deja = plafond.get(u) || 0, pts = Math.min(part, CROT.tachesJour - deja);
+      if (pts <= 0) return;
+      plafond.set(u, deja + pts);
+      add(r, { k: `tk:${tk.id}:${f.t || f.d}`, pts, d: f.d, t: T, quoi: qui.length > 1 ? 'Tâche à plusieurs' : 'Tâche', objet: tk.titre, icon: 'tasks' });
+    });
   });
   // coches anciennes sorties de l'historique : leurs crottins restent acquis
   toutesTaches().forEach(tk => Object.values(tk.acquis || {}).forEach(a => {
@@ -4033,15 +4178,13 @@ function crottinsEntrees() {
 function garderFaits(tk, fs) {
   if (fs.length <= CROT.faitsMax) return { fait: fs };
   const by = crottinsEntrees(), acquis = Object.assign({}, tk.acquis || {});
-  fs.slice(CROT.faitsMax).forEach(f => {
-    const r = { uid: f.uid || null, nom: f.par || '' }, pk = pKey(r);
-    if (!pk) return;
-    const e = (by.get(pk) || []).find(x => x.k === `tk:${tk.id}:${f.t || f.d}`);
-    const a = Object.assign({ uid: r.uid, nom: r.nom, pts: 0, n: 0 }, acquis[pk]);
+  fs.slice(CROT.faitsMax).forEach(f => faitPar(f).forEach(r => {
+    const pk = pKey(r), e = (by.get(pk) || []).find(x => x.k === `tk:${tk.id}:${f.t || f.d}`);
+    const a = Object.assign({ uid: r.uid || null, nom: r.nom, pts: 0, n: 0 }, acquis[pk]);
     a.n += 1;
     if (e) a.pts += e.pts;
     acquis[pk] = a;
-  });
+  }));
   return { fait: fs.slice(0, CROT.faitsMax), acquis };
 }
 function crottinsDe(k, from = null) {
@@ -4106,6 +4249,8 @@ function majCrottins() {
 
 /* ---------- Gains et pertes pendant une action ---------- */
 let crotPhoto = null, crotT = null, crotSilence = false, crotScene = false;
+/* Partage d'une tâche déjà comptée : on ajuste en douceur (pas de grand spectacle ni de perte en rouge) */
+let crotDoux = false;
 const photoCrottins = () => { const m = new Map(); crottinsEntrees().forEach((es, k) => m.set(k, new Map(es.map(e => [e.k, e])))); return m; };
 /* Appelé juste avant chaque enregistrement fait sur ce téléphone */
 function crotAvant() {
@@ -4117,6 +4262,8 @@ function crotAvant() {
 function crotApres() {
   const avant = crotPhoto;
   crotPhoto = null;
+  const doux = crotDoux;
+  crotDoux = false;
   if (!avant) return;
   const apres = photoCrottins(), moi = kMoi(), total = m => m ? [...m.values()].reduce((s, e) => s + e.pts, 0) : 0;
   let mien = null;
@@ -4131,17 +4278,17 @@ function crotApres() {
   });
   if (mien && mien.d > 0) {
     const e = mien.plus[0], label = mien.plus.length === 1 ? `${e.quoi} · ${e.objet}` : mien.plus.length > 1 ? `${mien.plus.length} actions récompensées` : 'Crottins gagnés';
-    crotGain(mien.d, label, total(avant.get(moi)), total(apres.get(moi)));
+    crotGain(mien.d, label, total(avant.get(moi)), total(apres.get(moi)), doux);
   } else {
-    if (mien) crotPerte(mien.d);
+    if (mien) { if (doux) crotBulle(`−${num(Math.abs(mien.d), 0)} · tâche partagée`); else crotPerte(mien.d); }
     lacherCompteur();
   }
-  autres.forEach((x, i) => setTimeout(() => crotBulle(`${x.d > 0 ? '+' : '−'}${num(Math.abs(x.d), 0)} pour ${nomCourt(personne(x.k) || {})}`, x.d < 0), 300 + i * 500));
+  autres.forEach((x, i) => setTimeout(() => crotBulle(`${x.d > 0 ? '+' : '−'}${num(Math.abs(x.d), 0)} pour ${nomCourt(personne(x.k) || {})}${doux && x.d < 0 ? ' · partage' : ''}`, x.d < 0 && !doux), 300 + i * 500));
 }
 
 /* ---------- Animations ---------- */
 const pillRect = () => { const b = document.getElementById('crotBtn'); return b && !b.hidden ? b.getBoundingClientRect() : { left: window.innerWidth - 90, top: 8, width: 70, height: 38 }; };
-function crotGain(d, label, avant, apres) {
+function crotGain(d, label, avant, apres, doux = false) {
   const fin = () => {
     lacherCompteur();
     fxOnce(document.getElementById('crotBtn'), 'fx-pop', 600);
@@ -4150,7 +4297,7 @@ function crotGain(d, label, avant, apres) {
   };
   if (!mouvementOk() || !Element.prototype.animate) { lacherCompteur(); crotBulle(`+${num(d, 0)} ${pl(d, 'crottin')}`); return; }
   vibre(15);
-  if (ui.crotAnim !== 'discret' && !crotScene) crotSpectacle(d, label, fin);
+  if (ui.crotAnim !== 'discret' && !crotScene && !doux) crotSpectacle(d, label, fin);
   else crotMini(d, fin);
 }
 const boule = (x, y) => { const b = document.createElement('i'); b.className = 'crot-boule'; b.style.left = x + 'px'; b.style.top = y + 'px'; return b; };
@@ -4252,7 +4399,9 @@ function crotBulle(txt, perte = false) {
   el.className = 'crot-bulle' + (perte ? ' perte' : '');
   el.textContent = txt;
   el.style.right = Math.max(8, window.innerWidth - (p.left + p.width)) + 'px';
-  el.style.top = (p.top + p.height + 8) + 'px';
+  // les étiquettes s'empilent sous le compteur au lieu de se recouvrir
+  const deja = [...fxLayer().querySelectorAll('.crot-bulle')].map(b => b.getBoundingClientRect().bottom);
+  el.style.top = (deja.length ? Math.max(...deja) + 6 : p.top + p.height + 8) + 'px';
   fxLayer().appendChild(el);
   setTimeout(() => el.remove(), 2200);
 }
@@ -4347,6 +4496,7 @@ ACT['crot-regles'] = () => {
     ${ligne('tasks', 'Tâche hebdomadaire', 'Ou ponctuelle : +' + CROT.tache.une, `+${tl('jours', 7)}`)}
     ${ligne('tool', 'Effort de la tâche', 'Léger ×0,6 · Costaud ×2', '')}
     ${ligne('tasks', 'Plafond des tâches', 'Par personne et par jour', `${CROT.tachesJour} max`)}
+    ${ligne('avec', 'Tâche à plusieurs', 'Appui long sur la case, ou le bouton à droite d’une tâche cochée : les crottins se partagent à parts égales', '')}
     ${ligne('shoe', 'Rendez-vous géré', 'Maréchal, véto, dentiste, ostéo · vaccin +15 · vermifuge +8', `+${CROT.soins.marechal}`)}
     ${ligne('cal', 'Rendez-vous prévu puis honoré', 'En plus du soin', `+${CROT.rdv}`)}
     ${ligne('rosette', 'Concours fait', 'Pour le cavalier', `+${CROT.concours}`)}

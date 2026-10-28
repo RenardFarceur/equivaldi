@@ -52,6 +52,8 @@ const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 
 const clone = o => JSON.parse(JSON.stringify(o));
 const byName = (a, b) => String(a.nom || '').localeCompare(String(b.nom || ''), 'fr', { sensitivity: 'base' });
 const pl = (n, s, p) => (Math.abs(n) >= 2 ? (p || s + 's') : s);
+/* « Célia », « Célia et Marie », « Célia, Marie et Léa » */
+const etListe = ns => ns.length < 2 ? ns.join('') : `${ns.slice(0, -1).join(', ')} et ${ns[ns.length - 1]}`;
 const nJ = n => `${n} ${pl(n, 'jour')}`;
 const ordinal = n => n === 1 ? '1<sup>er</sup>' : `${n}<sup>e</sup>`;
 const ordTxt = n => n === 1 ? '1er' : `${n}e`;
@@ -102,6 +104,7 @@ const ICONS = {
   timer: '<circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.5 1.5M9.5 2.5h5M12 2.5V6M18.2 7.3l1.3-1.3"/>',
   tasks: '<path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="m3.5 6.5 1.3 1.3 2.5-2.5M3.5 12l1.3 1.3 2.5-2.5M3.5 17.5l1.3 1.3 2.5-2.5"/>',
   user: '<circle cx="12" cy="8" r="3.8"/><path d="M4.5 20.5c.6-3.9 3.6-6.3 7.5-6.3s6.9 2.4 7.5 6.3"/>',
+  avec: '<circle cx="9.5" cy="8.6" r="3.4"/><path d="M3.2 19.6c.5-3.5 3-5.6 6.3-5.6s5.8 2.1 6.3 5.6"/><path d="M18.6 6.4v6M15.6 9.4h6"/>',
   users: '<circle cx="9" cy="8.5" r="3.3"/><path d="M2.8 19.5c.5-3.4 3-5.5 6.2-5.5s5.7 2.1 6.2 5.5"/><path d="M15.5 5.6a3.2 3.2 0 0 1 0 5.8M17.5 14.3c2.1.7 3.5 2.5 3.8 5.2"/>',
   lock: '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>',
   phone: '<path d="M6.6 3.5h3l1.6 4.4-2.1 1.4a11.5 11.5 0 0 0 5.6 5.6l1.4-2.1 4.4 1.6v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z"/>',
