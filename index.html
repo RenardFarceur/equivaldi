@@ -44,6 +44,7 @@
   --wob:18px 22px 17px 23px / 22px 17px 23px 18px; --wob-s:14px 17px 13px 18px / 17px 13px 18px 14px; --blob:47% 53% 44% 56% / 56% 45% 55% 44%;
   --spring:cubic-bezier(.34,1.56,.64,1);
   --crot:#8B5A2B; --crot-edge:#5A3818; --crot-lite:#C9965F; --crot-ink:#6B4321;
+  --sable:#E2C28E; --sable-soft:#F3E6CC; --sable-ink:#86602B;
   --zz:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M3 1.6 7.6 4.6 3 8 7.6 11.4 3 14.4' fill='none' stroke='%235DB075' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzh:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 10'%3E%3Cpath d='M2 7 7.5 3 13 7 18.5 3 24 7 29.5 3 35 7 40.5 3' fill='none' stroke='%23C3CDBE' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzf:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 24'%3E%3Cpath d='M9 2 3.4 6.5 9 11 3.4 15.5 9 20' fill='none' stroke='%235DB075' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzm:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M3 1.6 7.6 4.6 3 8 7.6 11.4 3 14.4' fill='none' stroke='%23000000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
@@ -55,6 +56,7 @@
   --h0:#3F8A5A; --h1:#9A6440; --h2:#B8693F; --h3:#6E7C85; --h4:#3F918C; --h5:#8A7638; --h6:#4E9A66; --h7:#5A524C; --on-h:#FFFFFF;
   --float:0 1px 2px rgba(0,0,0,.5),0 8px 20px rgba(0,0,0,.35); --scrim:rgba(0,0,0,.62); color-scheme:dark;
   --crot:#A0703F; --crot-edge:#2B1A0B; --crot-lite:#D9A774; --crot-ink:#E4BC8C;
+  --sable:#B8935A; --sable-soft:#3A2F1E; --sable-ink:#E8C990;
   --edge:#050A07; --accent-edge:#5DB075; --danger-edge:#2A1410; --hay-edge:#1C150B; --prairie-soft:#1C3A26;
   --zz:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M3 1.6 7.6 4.6 3 8 7.6 11.4 3 14.4' fill='none' stroke='%239FD6AE' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzh:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 10'%3E%3Cpath d='M2 7 7.5 3 13 7 18.5 3 24 7 29.5 3 35 7 40.5 3' fill='none' stroke='%23365040' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");}}
 :root[data-theme="dark"]{
@@ -66,6 +68,7 @@
   --h0:#3F8A5A; --h1:#9A6440; --h2:#B8693F; --h3:#6E7C85; --h4:#3F918C; --h5:#8A7638; --h6:#4E9A66; --h7:#5A524C; --on-h:#FFFFFF;
   --float:0 1px 2px rgba(0,0,0,.5),0 8px 20px rgba(0,0,0,.35); --scrim:rgba(0,0,0,.62); color-scheme:dark;
   --crot:#A0703F; --crot-edge:#2B1A0B; --crot-lite:#D9A774; --crot-ink:#E4BC8C;
+  --sable:#B8935A; --sable-soft:#3A2F1E; --sable-ink:#E8C990;
   --edge:#050A07; --accent-edge:#5DB075; --danger-edge:#2A1410; --hay-edge:#1C150B; --prairie-soft:#1C3A26;
   --zz:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 16'%3E%3Cpath d='M3 1.6 7.6 4.6 3 8 7.6 11.4 3 14.4' fill='none' stroke='%239FD6AE' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --zzh:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 10'%3E%3Cpath d='M2 7 7.5 3 13 7 18.5 3 24 7 29.5 3 35 7 40.5 3' fill='none' stroke='%23365040' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");}
 
@@ -191,6 +194,142 @@ button.row:active{background:var(--surface-2)}
 .pill.ok{background:var(--accent-soft);color:var(--accent-strong)}
 .pill.info{background:var(--info-soft);color:var(--info)}
 .pill.hay{background:var(--hay-soft);color:var(--hay-ink)}
+.pill.sable{background:var(--sable-soft);color:var(--sable-ink)}
+/* ---------- Carte des prés (3D isométrique ou vue de dessus) ---------- */
+:root{
+  --c-fond:#DDE7D4; --c-fond-2:#CBD9C0; --c-socle:#A6BC90; --c-terre:#8F6C4A; --c-terre-y:#71543A; --c-ombre:rgba(43,60,40,.17); --c-halo:rgba(255,255,255,.93);
+  --c-sable:#E6CB97; --c-sable-l:#C8A66C; --c-sable-t:#B08C52; --c-car:#F0E0B8; --c-car-c:#D3BA88;
+  --c-bois:#7B5B3B; --c-blanc:#FBF8F1; --c-toit:#B5543A; --c-toit-r:#8C3D29; --c-mur:#B38559; --c-mur-y:#8F6642; --c-trou:#4A3423;
+  --c-eau:#4A9AD5; --c-eau-c:#A3AEB0; --c-eau-cy:#828D8F; --c-feuille:#4E9A55; --c-feuille-l:#86C783; --c-tronc:#6E4D30; --c-pomme:#D9483B;
+  --e-pature:#4E9C65; --e-pature-c:#3D7F50; --e-pature-h:#2F6A41;
+  --e-bientot:#E4AF47; --e-bientot-c:#BE8D2D; --e-bientot-h:#A57722;
+  --e-changer:#DD6B51; --e-changer-c:#B65039; --e-changer-h:#9B4330;
+  --e-repos:#D8D1A0; --e-repos-c:#B5AE79; --e-repos-h:#9C9563;
+  --e-pret:#93D79E; --e-pret-c:#6CB57A; --e-pret-h:#4F9C60;
+  --e-relier:#C9CFC1; --e-relier-c:#A6AE9E; --e-relier-h:#8E9887;
+  --e-verger:#B0D196; --e-verger-c:#8BB071; --e-verger-h:#6F9659;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --c-fond:#0F1913; --c-fond-2:#14231A; --c-socle:#2C4030; --c-terre:#4D3C2B; --c-terre-y:#3B2E21; --c-ombre:rgba(0,0,0,.38); --c-halo:rgba(13,22,17,.9);
+  --c-sable:#A88E62; --c-sable-l:#8B7349; --c-sable-t:#75603B; --c-car:#B9A77F; --c-car-c:#988762;
+  --c-bois:#B08E6A; --c-blanc:#E9E3D5; --c-toit:#9E4B36; --c-toit-r:#7B3829; --c-mur:#8F6B49; --c-mur-y:#72543A; --c-trou:#22180F;
+  --c-eau:#3F87BE; --c-eau-c:#7D888B; --c-eau-cy:#636D70; --c-feuille:#3F8047; --c-feuille-l:#62A466; --c-tronc:#5A4029; --c-pomme:#CB493C;
+  --e-pature:#3C8052; --e-pature-c:#2F6641; --e-pature-h:#245331;
+  --e-bientot:#B68831; --e-bientot-c:#946D24; --e-bientot-h:#7B5B1E;
+  --e-changer:#B65640; --e-changer-c:#934432; --e-changer-h:#7B392A;
+  --e-repos:#8E8962; --e-repos-c:#736F4D; --e-repos-h:#5F5B3F;
+  --e-pret:#60B070; --e-pret-c:#4B925A; --e-pret-h:#3C7B49;
+  --e-relier:#58624F; --e-relier-c:#465040; --e-relier-h:#3B4336;
+  --e-verger:#5F8953; --e-verger-c:#4D7043; --e-verger-h:#3F5D37;}}
+:root[data-theme="dark"]{
+  --c-fond:#0F1913; --c-fond-2:#14231A; --c-socle:#2C4030; --c-terre:#4D3C2B; --c-terre-y:#3B2E21; --c-ombre:rgba(0,0,0,.38); --c-halo:rgba(13,22,17,.9);
+  --c-sable:#A88E62; --c-sable-l:#8B7349; --c-sable-t:#75603B; --c-car:#B9A77F; --c-car-c:#988762;
+  --c-bois:#B08E6A; --c-blanc:#E9E3D5; --c-toit:#9E4B36; --c-toit-r:#7B3829; --c-mur:#8F6B49; --c-mur-y:#72543A; --c-trou:#22180F;
+  --c-eau:#3F87BE; --c-eau-c:#7D888B; --c-eau-cy:#636D70; --c-feuille:#3F8047; --c-feuille-l:#62A466; --c-tronc:#5A4029; --c-pomme:#CB493C;
+  --e-pature:#3C8052; --e-pature-c:#2F6641; --e-pature-h:#245331;
+  --e-bientot:#B68831; --e-bientot-c:#946D24; --e-bientot-h:#7B5B1E;
+  --e-changer:#B65640; --e-changer-c:#934432; --e-changer-h:#7B392A;
+  --e-repos:#8E8962; --e-repos-c:#736F4D; --e-repos-h:#5F5B3F;
+  --e-pret:#60B070; --e-pret-c:#4B925A; --e-pret-h:#3C7B49;
+  --e-relier:#58624F; --e-relier-c:#465040; --e-relier-h:#3B4336;
+  --e-verger:#5F8953; --e-verger-c:#4D7043; --e-verger-h:#3F5D37;}
+.carte{position:relative;height:clamp(320px,56vh,600px);border-radius:var(--wob);background:radial-gradient(120% 90% at 50% 40%,var(--c-fond),var(--c-fond-2));overflow:hidden;border:2px solid var(--line);box-shadow:0 3px 0 var(--edge)}
+.carte.plein{position:fixed;inset:0;z-index:60;height:auto;border-radius:0;border:0;box-shadow:none;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.c-svg{display:block;width:100%;height:100%;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;cursor:grab;--trait:.8px}
+.c-svg:active{cursor:grabbing}
+.c-outils{position:absolute;top:calc(10px + env(safe-area-inset-top,0px) * 0);right:10px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;pointer-events:none}
+.c-outils>*{pointer-events:auto}
+.c-seg,.c-zoom,.c-plein{background:var(--surface);border:2px solid var(--line);box-shadow:0 3px 0 var(--edge)}
+.c-seg{display:flex;border-radius:var(--wob-s);padding:3px;gap:2px}
+.c-seg button{border:0;background:transparent;border-radius:10px 12px 9px 13px / 12px 9px 13px 10px;min-width:44px;min-height:36px;padding:0 10px;font-family:var(--f-display);font-weight:600;font-size:17px;letter-spacing:.04em;color:var(--ink-2);transition:background .2s,color .2s}
+.c-seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.c-zoom{display:flex;flex-direction:column;border-radius:var(--wob-s);overflow:hidden}
+.c-zoom button{width:42px;height:42px;border:0;background:transparent;display:grid;place-items:center;color:var(--ink)}
+.c-zoom button+button{border-top:1.5px solid var(--line)}
+.c-zoom button:active,.c-plein:active,.c-seg button:active{transform:scale(.92)}
+.c-zoom-pct{font-family:var(--f-display);font-weight:600;font-size:14px;color:var(--ink-2);background:var(--c-halo);border-radius:8px;padding:0 6px}
+.c-zoom-pct:empty{display:none}
+.c-plein{position:absolute;left:10px;top:10px;width:44px;height:44px;border-radius:var(--wob-s);display:grid;place-items:center;color:var(--ink)}
+.carte.plein .c-plein,.carte.plein .c-outils{top:calc(10px + env(safe-area-inset-top,0px))}
+.c-svg .c-socle{fill:var(--c-socle)}
+.c-svg .c-terre.fx{fill:var(--c-terre)}.c-svg .c-terre.fy{fill:var(--c-terre-y)}
+.c-svg .c-ombre{fill:var(--c-ombre)}
+.c-svg .z{--zc:var(--e-relier);--zs:var(--e-relier-c);--zh:var(--e-relier-h);transition:opacity .25s}
+.c-svg .z-pature{--zc:var(--e-pature);--zs:var(--e-pature-c);--zh:var(--e-pature-h)}
+.c-svg .z-bientot{--zc:var(--e-bientot);--zs:var(--e-bientot-c);--zh:var(--e-bientot-h)}
+.c-svg .z-changer{--zc:var(--e-changer);--zs:var(--e-changer-c);--zh:var(--e-changer-h)}
+.c-svg .z-repos{--zc:var(--e-repos);--zs:var(--e-repos-c);--zh:var(--e-repos-h)}
+.c-svg .z-pret{--zc:var(--e-pret);--zs:var(--e-pret-c);--zh:var(--e-pret-h)}
+.c-svg .z-verger{--zc:var(--e-verger);--zs:var(--e-verger-c);--zh:var(--e-verger-h)}
+.c-svg .zt-piste{--zc:var(--c-sable);--zs:var(--c-sable-l);--zh:var(--c-sable-l)}
+.c-svg .zt-carriere{--zc:var(--c-car);--zs:var(--c-car-c);--zh:var(--c-car-c)}
+.c-svg .z-top{fill:var(--zc);stroke:var(--zs);stroke-width:var(--trait);vector-effect:non-scaling-stroke;stroke-linejoin:round;transition:fill .35s}
+.c-svg .z-cote.fx{fill:var(--zs)}.c-svg .z-cote.fy{fill:var(--zh)}
+.c-svg .c-herbe{fill:none;stroke:var(--zh);stroke-width:var(--trait);stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;opacity:.75}
+.c-svg .c-traces{stroke:var(--c-sable-t);stroke-width:var(--trait);stroke-linecap:round;vector-effect:non-scaling-stroke;opacity:.55}
+.c-svg .z.z-relier .z-top{stroke-dasharray:5 4;stroke-width:calc(var(--trait) * 1.4)}
+.c-svg .z.sel .z-top{stroke:var(--ink);stroke-width:calc(var(--trait) * 2.6);stroke-dasharray:none}
+.c-svg .z.cible .z-top{stroke:var(--accent);stroke-width:4px;stroke-dasharray:none}
+.c-svg.filtre .z.terne{opacity:.28}
+.c-svg:not(.d3) .z-top{stroke:var(--zh);stroke-width:calc(var(--trait) * 1.6)}
+.c-svg .c-cl{fill:none;stroke:var(--c-bois);stroke-width:var(--trait);stroke-linecap:round;vector-effect:non-scaling-stroke}
+.c-svg .c-cl.blanc{stroke:var(--c-blanc)}
+.c-svg .ab-mur.fx{fill:var(--c-mur)}.c-svg .ab-mur.fy{fill:var(--c-mur-y)}.c-svg .ab-trou{fill:var(--c-trou)}
+.c-svg .ab-toit{fill:var(--c-toit);stroke:var(--c-toit-r);stroke-width:var(--trait);vector-effect:non-scaling-stroke}.c-svg .ab-rive{fill:var(--c-toit-r)}
+.c-svg .ab-fait{stroke:var(--c-toit-r);stroke-width:calc(var(--trait) * 1.5);vector-effect:non-scaling-stroke}
+.c-svg .eau-bord.fx,.c-svg .eau-haut,.c-svg:not(.d3) .eau-bord{fill:var(--c-eau-c)}.c-svg .eau-bord.fy{fill:var(--c-eau-cy)}.c-svg .eau-o{fill:var(--c-eau)}
+.c-svg .arb-ombre{fill:var(--c-ombre)}.c-svg .arb-tronc{stroke:var(--c-tronc);stroke-width:.75;stroke-linecap:round}
+.c-svg .arb-h{fill:var(--c-feuille)}.c-svg .arb-l{fill:var(--c-feuille-l);opacity:.85}.c-svg .pomme{fill:var(--c-pomme)}
+.c-svg .obst-ch{stroke:var(--c-blanc);stroke-width:.5;stroke-linecap:round}
+.c-svg .c-barre{stroke:#D9483B;stroke-width:.55;stroke-dasharray:.9 .9}
+.c-svg .c-lab,.c-svg .c-objets{pointer-events:none}
+.c-svg .c-lab text{font-family:var(--f-display);font-weight:600;text-anchor:middle;fill:var(--ink);paint-order:stroke;stroke:var(--c-halo);stroke-width:3.5px;stroke-linejoin:round}
+.c-svg .lab-rond{fill:var(--surface);stroke:var(--e-relier-h);stroke-width:2.5px}
+.c-svg .l-pature .lab-rond{stroke:var(--e-pature-h)}.c-svg .l-bientot .lab-rond{stroke:var(--e-bientot-h)}.c-svg .l-changer .lab-rond{stroke:var(--e-changer-h);fill:var(--e-changer)}.c-svg .l-repos .lab-rond{stroke:var(--e-repos-h)}.c-svg .l-pret .lab-rond{stroke:var(--e-pret-h)}
+.c-svg .c-lab .lab-n{font-size:14px;stroke:none}
+.c-svg .l-changer .lab-n{fill:#fff}
+.c-svg .c-lab .lab-t{font-size:14px}
+.c-svg .c-lab .lab-s{font-size:12px;font-weight:500;fill:var(--ink-2)}
+.c-svg .c-lab:not(.detail) .lab-t,.c-svg .c-lab:not(.detail) .lab-s{display:none}
+.c-svg .c-pion{cursor:grab}
+.c-svg .pion-bord{fill:none;stroke:#fff;stroke-width:2.6px}
+.c-svg .pion-i{font-family:var(--f-display);font-weight:600;font-size:13px;fill:#fff;text-anchor:middle}
+.c-svg .pion-ombre{fill:rgba(0,0,0,.24)}
+.c-svg .pion-tige{stroke:#fff;stroke-width:2.2px;stroke-linecap:round}
+.c-svg .c-pion.parti{opacity:.25}
+.c-svg.glisse .c-pions{pointer-events:none}
+.c-svg.bascule .c-objets,.c-svg.bascule .c-labs,.c-svg.bascule .c-pions,.c-svg.bascule .c-cotes,.c-svg.bascule .c-herbe,.c-svg.bascule .c-ombre{opacity:0;transition:opacity .16s}
+.c-svg .c-arrive>*{transform-box:fill-box;transform-origin:50% 100%;animation:cpousse .55s var(--spring) both}
+.c-svg .c-arrive>*:nth-child(3n+1){animation-delay:.06s}.c-svg .c-arrive>*:nth-child(3n+2){animation-delay:.12s}
+@keyframes cpousse{from{transform:scaleY(.05);opacity:0}to{transform:none;opacity:1}}
+.c-legende{display:flex;flex-wrap:wrap;gap:6px}
+.c-leg{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:0 11px 0 7px;border:1.5px solid var(--line);background:var(--surface);border-radius:999px;font-size:14px;color:var(--ink-2);transition:border-color .15s,box-shadow .15s}
+.c-leg[aria-pressed="true"]{border-color:var(--accent);color:var(--ink);box-shadow:0 2px 0 var(--edge);font-weight:500}
+.c-sw{width:17px;height:17px;flex:none;border-radius:5px 6px 4px 7px / 6px 4px 7px 5px;background:var(--e-relier);box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.14)}
+.c-sw-pature{background:var(--e-pature)}.c-sw-bientot{background:var(--e-bientot)}.c-sw-changer{background:var(--e-changer)}.c-sw-repos{background:var(--e-repos)}.c-sw-pret{background:var(--e-pret)}.c-sw-espace{background:var(--c-sable)}.c-sw-relier{background:repeating-linear-gradient(45deg,var(--e-relier) 0 3px,var(--surface) 3px 5px)}
+.c-boxo{position:absolute;left:10px;bottom:10px;display:flex;align-items:center;gap:4px;max-width:calc(100% - 20px);min-height:44px;padding:4px 10px 4px 8px;background:var(--surface);border:2px dashed var(--ctl);border-radius:var(--wob-s);box-shadow:0 3px 0 var(--edge);transition:border-color .15s,background .15s,transform .15s}
+.c-boxo.cible{border-color:var(--accent);border-style:solid;background:var(--accent-soft);transform:scale(1.06)}
+.c-boxo-t{display:inline-flex;align-items:center;gap:5px;margin-right:2px;font-family:var(--f-display);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:15px;color:var(--ink-2)}
+.c-boxo-n{font-family:var(--f-display);font-weight:600;color:var(--ink-2)}
+.c-bpion{display:inline-flex;touch-action:none;-webkit-touch-callout:none;cursor:grab;-webkit-user-select:none;user-select:none;border-radius:999px;transition:transform .15s}
+.c-bpion .av{box-shadow:0 0 0 2px var(--surface)}
+.c-bpion+.c-bpion{margin-left:-6px}
+.c-bpion:active{transform:scale(1.12)}
+.c-bpion.parti{opacity:.3}
+.carte.plein .c-boxo{bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+.c-info{position:absolute;left:10px;right:10px;bottom:calc(66px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border:2px solid var(--line);border-radius:var(--wob-s);box-shadow:0 3px 0 var(--edge),var(--float);animation:pop .3s var(--spring)}
+.c-info[hidden]{display:none}
+.c-info-t{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25}
+.c-info-t span{font-size:14px;color:var(--ink-2)}
+@media (prefers-reduced-motion:reduce){.c-svg .c-arrive>*{animation:none}.c-info{animation:none}}
+.c-fantome{position:fixed;left:0;top:0;z-index:90;pointer-events:none;filter:drop-shadow(0 10px 12px rgba(0,0,0,.32))}
+.c-fantome .av{box-shadow:0 0 0 3px #fff;transform:scale(1.08)}
+.c-fiche{display:flex;flex-direction:column;gap:8px}
+.c-zfiche-h{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 2px}
+.c-zfiche-h .iconbtn{width:40px;height:40px}
+.c-aide{padding:0 4px}
+.chip.pris{opacity:.55}
+
 .tag-ex{font-family:var(--f-display);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--info);border:1.5px solid currentColor;border-radius:6px;padding:0 5px;line-height:1.5}
 .count{font-family:var(--f-display);font-size:14px;font-weight:600;letter-spacing:.06em;background:var(--accent-soft);color:var(--accent-strong);border-radius:999px;padding:1px 9px;margin-left:6px;vertical-align:1px}
 
@@ -724,6 +863,9 @@ const ICONS = {
   timer: '<circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.5 1.5M9.5 2.5h5M12 2.5V6M18.2 7.3l1.3-1.3"/>',
   tasks: '<path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="m3.5 6.5 1.3 1.3 2.5-2.5M3.5 12l1.3 1.3 2.5-2.5M3.5 17.5l1.3 1.3 2.5-2.5"/>',
   user: '<circle cx="12" cy="8" r="3.8"/><path d="M4.5 20.5c.6-3.9 3.6-6.3 7.5-6.3s6.9 2.4 7.5 6.3"/>',
+  close: '<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
+  cible: '<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/>',
+  agrandir: '<path d="M14 4h6v6M10 20H4v-6M20 4l-6.5 6.5M4 20l6.5-6.5"/>',
   avec: '<circle cx="9.5" cy="8.6" r="3.4"/><path d="M3.2 19.6c.5-3.5 3-5.6 6.3-5.6s5.8 2.1 6.3 5.6"/><path d="M18.6 6.4v6M15.6 9.4h6"/>',
   users: '<circle cx="9" cy="8.5" r="3.3"/><path d="M2.8 19.5c.5-3.4 3-5.5 6.2-5.5s5.7 2.1 6.2 5.5"/><path d="M15.5 5.6a3.2 3.2 0 0 1 0 5.8M17.5 14.3c2.1.7 3.5 2.5 3.8 5.2"/>',
   lock: '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>',
@@ -1144,6 +1286,11 @@ function rappelPill(r) {
 
 /* ---------- Prés & rotation ---------- */
 const pres = (all = false) => list('pres').filter(p => all || !p.archive).sort(byName);
+/* Espaces sans rotation : la piste et la carrière accueillent des chevaux sans temps de repos ni de pâture */
+const TYPES_ESPACE = [{ id: 'pre', label: 'Pré' }, { id: 'piste', label: 'Piste' }, { id: 'carriere', label: 'Carrière' }];
+const typeEspace = p => (p && TYPES_ESPACE.find(t => t.id === p.type)) || TYPES_ESPACE[0];
+const sansRotation = p => !!p && (p.type === 'piste' || p.type === 'carriere');
+const paturages = (all = false) => pres(all).filter(p => !sansRotation(p));
 const openPlace = hid => list('places').find(p => p.horseId === hid && !p.fin) || null;
 function horseWhere(hid) {
   const o = openPlace(hid);
@@ -1170,6 +1317,11 @@ function segments(preId) {
 }
 function preStatus(p) {
   const C = cfg(), t = todayISO();
+  if (sansRotation(p)) {
+    const horses = list('places').filter(x => x.preId === p.id && !x.fin).map(x => x.horseId);
+    const segs = segments(p.id), last = segs[segs.length - 1], ouvert = !!(last && last.open);
+    return { sansRotation: true, occupe: horses.length > 0, horses, depuis: ouvert ? last.a : null, days: ouvert ? diffDays(last.a, t) : 0, over: false, pret: false, jamais: !segs.length, cible: null, max: null };
+  }
   const cible = p.repos || C.repos, max = p.paturage || C.paturage;
   const segs = segments(p.id);
   const last = segs[segs.length - 1];
@@ -1190,7 +1342,7 @@ function joursPatures(preId, depuis) {
 }
 /* Pré conseillé : le plus reposé, de préférence ayant atteint sa cible */
 function prePret(exclude) {
-  const c = pres().filter(p => p.id !== exclude).map(p => ({ p, s: preStatus(p) })).filter(x => !x.s.occupe);
+  const c = paturages().filter(p => p.id !== exclude).map(p => ({ p, s: preStatus(p) })).filter(x => !x.s.occupe);
   c.sort((a, b) => (b.s.pret - a.s.pret) || ((b.s.repos ?? 9999) - (a.s.repos ?? 9999)));
   return c[0] || null;
 }
@@ -1601,6 +1753,8 @@ function morphAttrs(a, b) {
 }
 function morphNode(a, b) {
   if (a.nodeType !== 1) { if (a.nodeValue !== b.nodeValue) a.nodeValue = b.nodeValue; return; }
+  // data-garde : contenu tenu à jour par son propre code (la carte des prés), on n'y touche pas
+  if (a.hasAttribute('data-garde') && b.hasAttribute('data-garde')) return;
   morphAttrs(a, b);
   morphKids(a, b);
 }
@@ -1677,6 +1831,7 @@ function render() {
   renderTabs();
   updateSync();
   majCrottins();
+  majCarte();
 }
 let rrTimer = null;
 function rerenderSoon() { clearTimeout(rrTimer); rrTimer = setTimeout(render, 40); }
@@ -1917,7 +2072,7 @@ const crow = (act, inner, tel, who) => `<div class="crow"><button type="button" 
 
 /* ---------- Évènements ---------- */
 /* Actions qui écrivent directement : bloquées en lecture seule */
-const WRITE_ACTS = new Set(['tick', 'tache-qui', 'add-sugg', 'new', 'fab', 'photo', 'move-from', 'move-to', 'foin-out', 'foin-out-pick', 'copy-ration', 'clear-ex', 'wipe', 'save-cfg', 'add-balle', 'del-balle']);
+const WRITE_ACTS = new Set(['tick', 'tache-qui', 'carte-relier', 'carte-creer', 'add-sugg', 'new', 'fab', 'photo', 'move-from', 'move-to', 'foin-out', 'foin-out-pick', 'copy-ration', 'clear-ex', 'wipe', 'save-cfg', 'add-balle', 'del-balle']);
 function arm(t) {
   const orig = t.innerHTML;
   t.classList.add('armed');
@@ -2247,7 +2402,7 @@ function auPreHtml() {
   const ready = ps.filter(x => !x.s.occupe && x.s.pret).sort((a, b) => (b.s.repos ?? -1) - (a.s.repos ?? -1));
   const box = chevaux().filter(h => !openPlace(h.id));
   const rows = [];
-  occ.forEach(({ p, s }) => rows.push(`<button type="button" class="row" data-act="open-pre" data-id="${p.id}">${lead('leaf')}<div class="row-main"><div class="row-t">${esc(p.nom)}</div><div class="row-s">${esc(s.horses.map(hNom).join(', '))}</div></div><span class="pill ${s.over ? 'warn' : 'hay'}">${s.days === 0 ? "Aujourd'hui" : nJ(s.days)}</span></button>`));
+  occ.forEach(({ p, s }) => rows.push(`<button type="button" class="row" data-act="open-pre" data-id="${p.id}">${lead('leaf')}<div class="row-main"><div class="row-t">${esc(p.nom)}</div><div class="row-s">${esc(s.horses.map(hNom).join(', '))}</div></div>${s.sansRotation ? `<span class="pill sable">${typeEspace(p).label}</span>` : `<span class="pill ${s.over ? 'warn' : 'hay'}">${s.days === 0 ? "Aujourd'hui" : nJ(s.days)}</span>`}</button>`));
   ready.slice(0, 2).forEach(({ p, s }) => rows.push(`<button type="button" class="row" data-act="move-to" data-id="${p.id}">${lead('check')}<div class="row-main"><div class="row-t">${esc(p.nom)}</div><div class="row-s">${s.jamais ? 'Libre' : `Prêt · ${nJ(s.repos)} de repos`}</div></div><span class="pill ok">Prêt</span></button>`));
   if (box.length) rows.push(`<button type="button" class="row" data-act="new" data-what="move">${lead('barn')}<div class="row-main"><div class="row-t">Au box</div><div class="row-s">${esc(box.map(h => h.nom).join(', '))}</div></div><span class="row-end">${ic('move', 'sm')}</span></button>`);
   return rows.length ? `<div class="list">${rows.join('')}</div>` : empty('Tous les prés se reposent', 'Utilise « Déplacer » pour mettre des chevaux au pré.');
@@ -2261,7 +2416,7 @@ function foinMini() {
   return `<div class="list"><button type="button" class="row" data-act="go" data-tab="foin">${lead('bale')}<div class="row-main"><div class="row-t">${t}</div><div class="row-s">${esc(s)}</div></div><span class="row-end">${ic('next', 'sm')}</span></button></div>`;
 }
 function quickHtml() {
-  const occN = pres().filter(p => preStatus(p).occupe).length;
+  const occN = paturages().filter(p => preStatus(p).occupe).length;
   const st = stock();
   const nB = Object.values(st.by).reduce((n, x) => n + Math.max(0, x.n), 0);
   const t = todayISO();
@@ -2772,15 +2927,25 @@ ACT['all-h'] = () => { const f = $('#sf'); if (f) setChips(f, 'h', chevaux().map
 
 /* ---------- Prés : rotation, repos, entretien ---------- */
 function statusPill(s) {
+  if (s.sansRotation) return `<span class="pill sable">${s.occupe ? 'Occupée' : 'Libre'}</span>`;
   if (s.occupe) return s.over ? '<span class="pill warn">À changer</span>' : '<span class="pill hay">En pâture</span>';
   if (s.jamais) return '<span class="pill info">Libre</span>';
   return s.pret ? '<span class="pill ok">Prêt</span>' : '<span class="pill">Au repos</span>';
 }
 function pcard({ p, s }, detail = false) {
-  const sub = (p.surface ? `${num(p.surface, 2)} ha` : 'Surface non renseignée')
-    + (s.occupe && p.surface ? ` · ${num(s.horses.length / p.surface, 1)} cheval/ha` : '');
+  const sub = s.sansRotation ? [typeEspace(p).label, p.surface ? `${num(p.surface, 2)} ha` : ''].filter(Boolean).join(' · ')
+    : (p.surface ? `${num(p.surface, 2)} ha` : 'Surface non renseignée') + (s.occupe && p.surface ? ` · ${num(s.horses.length / p.surface, 1)} cheval/ha` : '');
   const inner = `<div class="row-main"><div class="row-t">${esc(p.nom)} ${exTag(p)}</div><div class="row-s">${sub}</div></div>${statusPill(s)}`;
   const head = detail ? `<div class="pcard-h">${inner}</div>` : `<button type="button" class="pcard-h" data-act="open-pre" data-id="${p.id}">${inner}</button>`;
+  if (s.sansRotation) {
+    // piste, carrière : on suit seulement qui y est, sans repos ni durée de pâture
+    if (s.occupe) return `<article class="pcard">${head}
+      <div class="pnums"><span class="big">${s.days}</span><span class="unit">${pl(s.days, 'jour')} ${p.type === 'piste' ? 'sur la piste' : 'en carrière'}</span></div>
+      <div class="wrap">${s.horses.map(id => hchip(cheval(id))).join('')}</div>
+      <button type="button" class="btn small" data-act="move-from" data-id="${p.id}">${ic('move', 'sm')}Déplacer</button></article>`;
+    return `<article class="pcard">${head}<p class="note">Pas de temps de repos ni de pâture à suivre ici.</p>
+      <button type="button" class="btn small" data-act="move-to" data-id="${p.id}">${ic('plus', 'sm')}Y mettre des chevaux</button></article>`;
+  }
   if (s.occupe) {
     const pct = Math.min(100, Math.round(s.days / s.max * 100));
     return `<article class="pcard">${head}
@@ -2799,8 +2964,17 @@ function pcard({ p, s }, detail = false) {
 const col = html => `<div style="display:flex;flex-direction:column;gap:12px">${html}</div>`;
 
 VIEWS.pres = () => {
-  const ps = pres().map(p => ({ p, s: preStatus(p) }));
-  if (!ps.length) return { title: 'Prés', eyebrow: 'Rotation de pâture', html: emptyH('Aucun pré', 'Ajoute tes parcelles avec le bouton +. Le carnet comptera les jours de pâture et de repos de chacune.'), fab: () => formPre(null), fabLabel: 'Nouveau pré' };
+  // la carte du plan (3D ou vue de dessus), ou la liste des prés
+  const vue = (ui.presVue || (window.EQ_MODE ? 'carte' : 'liste')) === 'carte' ? 'carte' : 'liste';
+  const seg = segCtl('presVue', [['carte', 'Carte'], ['liste', 'Liste']], vue);
+  if (vue === 'carte') return { title: 'Prés', eyebrow: 'Carte des prés', html: seg + carteHtml(), fab: menuPres, fabLabel: 'Ajouter' };
+  if (!pres().length) return { title: 'Prés', eyebrow: 'Rotation de pâture', html: seg + emptyH('Aucun pré', 'Ajoute tes parcelles avec le bouton +, ou relie-les depuis la carte. Le carnet comptera les jours de pâture et de repos de chacune.'), fab: () => formPre(null), fabLabel: 'Nouveau pré' };
+  return { title: 'Prés', eyebrow: 'Rotation de pâture', html: seg + presListe(), fab: menuPres, fabLabel: 'Ajouter' };
+};
+/* La liste : prés en rotation (pâture, prêts, repos), puis piste et carrière, puis le box */
+function presListe() {
+  const ps = paturages().map(p => ({ p, s: preStatus(p) }));
+  const esp = pres().filter(sansRotation).map(p => ({ p, s: preStatus(p) }));
   const occ = ps.filter(x => x.s.occupe).sort((a, b) => b.s.days - a.s.days);
   const prets = ps.filter(x => !x.s.occupe && x.s.pret).sort((a, b) => (b.s.repos ?? -1) - (a.s.repos ?? -1));
   const repos = ps.filter(x => !x.s.occupe && !x.s.pret).sort((a, b) => (b.s.repos / b.s.cible) - (a.s.repos / a.s.cible));
@@ -2812,12 +2986,16 @@ VIEWS.pres = () => {
   if (occ.length) html += section('En pâture', col(occ.map(x => pcard(x)).join('')));
   if (prets.length) html += section('Prêts à pâturer', col(prets.map(x => pcard(x)).join('')));
   if (repos.length) html += section('Au repos', col(repos.map(x => pcard(x)).join('')));
+  if (esp.length) {
+    const types = new Set(esp.map(x => x.p.type));
+    html += section(types.size > 1 ? 'Piste et carrière' : typeEspace(esp[0].p).label, col(esp.map(x => pcard(x)).join('')));
+  }
   const box = chevaux().filter(h => !openPlace(h.id));
   if (box.length) html += section('Au box', `<div class="list"><div class="row">${lead('barn')}<div class="row-main"><div class="wrap">${box.map(hchip).join('')}</div></div><button type="button" class="btn small" data-act="new" data-what="move">Placer</button></div></div>`);
   const arch = list('pres').filter(p => p.archive).sort(byName);
   if (arch.length) html += `<div class="sec"><button type="button" class="link" data-act="toggle-arch-pres" style="align-self:flex-start">${ui.showArchPres ? 'Masquer' : 'Afficher'} les prés archivés (${arch.length})</button>${ui.showArchPres ? `<div class="list">${arch.map(p => `<button type="button" class="row" data-act="open-pre" data-id="${p.id}">${lead('fence')}<div class="row-main"><div class="row-t">${esc(p.nom)}</div></div></button>`).join('')}</div>` : ''}</div>`;
-  return { title: 'Prés', eyebrow: 'Rotation de pâture', html, fab: menuPres, fabLabel: 'Ajouter' };
-};
+  return html;
+}
 ACT['toggle-arch-pres'] = () => { ui.showArchPres = !ui.showArchPres; saveUi(); render(); };
 
 VIEWS.pre = p => {
@@ -2826,7 +3004,9 @@ VIEWS.pre = p => {
   const s = preStatus(pre), t = todayISO(), yr = t.slice(0, 4);
   const segs = segments(pre.id).slice().reverse();
   let html = pcard({ p: pre, s }, true);
-  html += `<div class="stats">
+  html += s.sansRotation ? `<div class="stats">
+    <div class="stat"><b>${joursPatures(pre.id, yr + '-01-01')}</b><span>jours occupés en ${yr}</span></div></div>`
+    : `<div class="stats">
     <div class="stat"><b>${joursPatures(pre.id, yr + '-01-01')}</b><span>jours pâturés en ${yr}</span></div>
     <div class="stat"><b>${s.cible}</b><span>jours de repos visés</span></div>
     <div class="stat"><b>${s.max}</b><span>jours de pâture max</span></div></div>`;
@@ -2843,7 +3023,7 @@ VIEWS.pre = p => {
     : "<p class=\"note\">Aucun passage enregistré pour l'instant.</p>");
   if (pre.notes) html += `<div class="card"><div class="eyebrow">Notes</div><div style="white-space:pre-wrap">${esc(pre.notes)}</div></div>`;
   html += `<div class="btnrow"><button type="button" class="btn" data-act="edit-pre" data-id="${pre.id}">${ic('edit', 'sm')}Modifier le pré</button></div>`;
-  const eyebrow = [pre.surface ? `${num(pre.surface, 2)} ha` : '', pre.archive ? 'archivé' : ''].filter(Boolean).join(' · ') || 'Pré';
+  const eyebrow = [sansRotation(pre) ? typeEspace(pre).label : '', pre.surface ? `${num(pre.surface, 2)} ha` : '', pre.archive ? 'archivé' : ''].filter(Boolean).join(' · ') || 'Pré';
   return { title: pre.nom, eyebrow, html, fab: () => formEntretien(null, { pid: pre.id }), fabLabel: 'Ajouter un entretien' };
 };
 
@@ -2868,7 +3048,8 @@ function formMove(pre = {}) {
   if (pre.hid) sel = [pre.hid];
   const destOpts = ps.filter(p => p.id !== pre.from).map(p => {
     const s = preStatus(p);
-    const sub = s.occupe ? `occupé · ${nJ(s.days)}` : s.jamais ? 'libre' : `repos ${nJ(s.repos)}${s.pret ? ' · prêt' : ''}`;
+    const sub = s.sansRotation ? `${typeEspace(p).label.toLowerCase()} · ${s.occupe ? 'occupée' : 'libre'}`
+      : s.occupe ? `occupé · ${nJ(s.days)}` : s.jamais ? 'libre' : `repos ${nJ(s.repos)}${s.pret ? ' · prêt' : ''}`;
     return { v: p.id, html: `<span class="two"><span>${esc(p.nom)}</span><small>${esc(sub)}</small></span>` };
   });
   destOpts.push({ v: '__box', html: `${ic('barn', 'sm')}<span>Box / écurie</span>` });
@@ -2899,31 +3080,41 @@ function formMove(pre = {}) {
 ACT['move-from'] = d => formMove({ from: d.id });
 ACT['move-to'] = d => formMove({ to: d.id });
 
-function formPre(id) {
+function formPre(id, pre = {}, opts = {}) {
   const ex = id ? get('pres', id) : null;
   if (id && !ex) return;
-  const p = ex ? clone(ex) : { nom: '' };
+  const p = ex ? clone(ex) : Object.assign({ nom: '' }, pre);
   const C = cfg();
   const body = `
+    ${grp('Type', chips('type', TYPES_ESPACE.map(t => ({ v: t.id, l: t.label })), p.type || 'pre'), 'Piste et carrière : on suit qui y est, sans temps de repos ni de pâture.')}
     ${fld('Nom', inp('f_nom', p.nom, 'required autocomplete="off" autocapitalize="sentences" placeholder="ex. Pré du bas"'))}
     ${fld('Surface (ha)', inp('f_surf', p.surface != null ? String(p.surface).replace('.', ',') : '', numAttr + ' placeholder="ex. 1,5"'))}
-    <div class="grid2">${fld('Repos visé (jours)', inp('f_repos', p.repos, `inputmode="numeric" autocomplete="off" placeholder="${C.repos}"`))}${fld('Pâture max (jours)', inp('f_pat', p.paturage, `inputmode="numeric" autocomplete="off" placeholder="${C.paturage}"`))}</div>
-    <p class="hint">Laisse vide pour garder les valeurs des réglages : ${C.repos} jours de repos, ${C.paturage} jours de pâture.</p>
+    <div id="w_rot"${sansRotation(p) ? ' hidden' : ''}><div class="grid2">${fld('Repos visé (jours)', inp('f_repos', p.repos, `inputmode="numeric" autocomplete="off" placeholder="${C.repos}"`))}${fld('Pâture max (jours)', inp('f_pat', p.paturage, `inputmode="numeric" autocomplete="off" placeholder="${C.paturage}"`))}</div>
+    <p class="hint">Laisse vide pour garder les valeurs des réglages : ${C.repos} jours de repos, ${C.paturage} jours de pâture.</p></div>
+    ${grp('Sur la carte', chips('carte', zonesOpts(p), (p.carte || (p.id && zoneDuPre(p))) ? [p.carte || zoneDuPre(p)] : [], { optional: true }), "Le numéro de la parcelle sur le plan (ou la piste, la carrière).")}
     ${fld('Notes', area('f_notes', p.notes, 'rows="3" placeholder="Abreuvoir, abri, type d\'herbe, clôture…"'))}
     ${ex ? `<label class="check"><input type="checkbox" id="f_arch"${p.archive ? ' checked' : ''}> Archiver ce pré</label>` : ''}`;
-  openSheet(ex ? 'Modifier le pré' : 'Nouveau pré', body, {
-    focus: ex ? null : '#f_nom',
-    onSubmit: () => {
+  openSheet(ex ? 'Modifier' : 'Nouveau pré', body, {
+    focus: ex || p.nom ? null : '#f_nom',
+    onMount: f => f.addEventListener('chipchange', e => { if (e.detail.name === 'type') $('#w_rot').hidden = (chipVal(f, 'type') || 'pre') !== 'pre'; }),
+    onSubmit: f => {
       const nom = val('f_nom');
       if (!nom) return 'Indique le nom du pré.';
       const surface = parseNum(val('f_surf'));
       if (val('f_surf') && (surface == null || surface <= 0)) return 'La surface doit être un nombre positif, en hectares.';
       const repos = parseNum(val('f_repos')), pat = parseNum(val('f_pat'));
       if ((val('f_repos') && (repos == null || repos < 1)) || (val('f_pat') && (pat == null || pat < 1))) return "Les durées doivent être d'au moins 1 jour.";
-      Object.assign(p, { nom, surface, repos: repos ? Math.round(repos) : null, paturage: pat ? Math.round(pat) : null, notes: val('f_notes') });
+      const type = chipVal(f, 'type') || 'pre';
+      Object.assign(p, { type, nom, surface, repos: type === 'pre' && repos ? Math.round(repos) : null, paturage: type === 'pre' && pat ? Math.round(pat) : null, notes: val('f_notes') });
+      if (document.querySelector('[data-chips="carte"]')) {
+        p.carte = chipVal(f, 'carte');
+        // une parcelle du plan ne va qu'à un seul espace
+        if (p.carte) list('pres').filter(o => o.id !== p.id && o.carte === p.carte).forEach(o => put('pres', Object.assign({}, o, { carte: null })));
+      }
       if (ex) p.archive = $('#f_arch').checked;
-      put('pres', p);
-      toast(ex ? 'Pré enregistré' : `${nom} ajouté`);
+      const saved = put('pres', p);
+      toast(ex ? `${nom} enregistré${type === 'pre' ? '' : 'e'}` : `${nom} ajouté${type === 'pre' ? '' : 'e'}`);
+      if (opts.apres) opts.apres(saved);
     },
     onDelete: ex ? () => deletePre(id) : null,
     delConfirm: 'Supprimer aussi son historique ?'
@@ -4555,6 +4746,660 @@ function classementCrottins(P) {
       <div class="gauge"><i style="width:${Math.round(x.pts / max * 100)}%"></i></div></div>
     <span class="row-end bq-pts">${num(x.pts, 0)} ${crottinSvg('s')}</span></button>`).join('')}</div>`;
 }
+
+/* ---------- Carte des prés ----------
+   Le plan dessiné par Célia sur la vue aérienne, relevé en mètres : 13 parcelles, la carrière (2), le verger,
+   la piste, trois abris et deux abreuvoirs. Vue en 3D isométrique façon maquette, ou vue de dessus.
+   Chaque parcelle se relie à un pré du carnet : sa couleur dit où en est la rotation, les chevaux y sont posés
+   et changent de pré quand on les fait glisser. Repère : x le long du parcellaire, y en travers (mètres). */
+const PLAN = {"beta":23.59,"zones":[{"id":"p1","type":"pre","pts":[[72.7,-32.4],[62.7,-41.0],[38.6,-41.5],[34.8,-42.5],[21.9,-40.8],[20.5,-34.4],[20.5,-23.2],[23.8,-22.2],[70.6,-21.0],[72.9,-21.6],[73.5,-23.0]],"lab":[52.0,-31.4],"n":1,"aire":985},{"id":"p3","type":"pre","pts":[[82.0,10.0],[76.9,10.1],[74.3,9.0],[31.7,11.6],[30.2,21.7],[26.5,26.9],[34.3,27.3],[74.5,22.4],[81.5,22.4],[83.0,19.5]],"lab":[38.2,18.9],"n":3,"aire":754},{"id":"p4","type":"pre","pts":[[121.4,26.9],[120.1,26.1],[104.8,26.5],[94.9,25.0],[74.8,25.1],[43.2,27.2],[23.3,30.4],[13.3,30.9],[11.3,32.9],[11.0,42.6],[12.9,43.6],[43.3,41.9],[48.1,42.7],[76.5,41.5],[114.6,41.5],[120.1,40.2],[121.1,37.8]],"lab":[80.3,33.3],"n":4,"aire":1658},{"id":"p5","type":"pre","pts":[[123.9,-48.4],[111.7,-50.5],[106.6,-49.0],[99.1,-49.4],[93.4,-48.2],[92.9,-38.4],[90.9,-35.5],[85.2,-32.1],[84.9,-27.6],[90.4,-26.8],[103.9,-28.9],[119.7,-28.5],[124.5,-29.9],[125.4,-31.4],[125.5,-37.5]],"lab":[112.6,-39.6],"n":5,"aire":720},{"id":"p6","type":"pre","pts":[[123.5,-27.6],[106.0,-27.7],[93.0,-25.7],[84.5,-25.7],[85.7,-6.9],[88.5,-5.2],[89.3,0.8],[122.0,1.5],[124.0,-7.3]],"lab":[109.0,-13.1],"n":6,"aire":1052},{"id":"p7","type":"pre","pts":[[121.2,3.4],[118.5,2.5],[89.9,2.7],[88.4,5.7],[83.3,11.0],[83.7,22.2],[108.6,24.2],[121.8,23.4],[122.6,19.5]],"lab":[109.8,13.4],"n":7,"aire":768},{"id":"p8","type":"pre","pts":[[-9.4,13.8],[-10.1,17.5],[-8.1,60.6],[-6.6,62.5],[2.3,61.4],[4.4,58.2],[5.1,36.7],[7.4,25.6],[6.2,20.4],[3.9,17.0],[-2.6,13.7]],"lab":[-1.1,25.8],"n":8,"aire":677},{"id":"p9","type":"pre","pts":[[-12.4,13.6],[-26.5,13.8],[-27.1,15.2],[-26.2,34.5],[-26.9,56.0],[-26.1,57.3],[-26.3,62.7],[-25.1,63.5],[-9.7,62.7],[-9.1,61.4],[-11.2,14.2]],"lab":[-18.1,51.4],"n":9,"aire":811},{"id":"p10","type":"pre","pts":[[-29.9,13.5],[-45.3,13.5],[-45.8,14.7],[-44.9,50.2],[-43.9,62.8],[-42.1,63.6],[-28.8,63.5],[-28.2,62.2],[-27.3,32.9],[-28.5,21.6],[-28.1,14.3]],"lab":[-36.4,32.2],"n":10,"aire":860},{"id":"p11","type":"pre","pts":[[-50.5,13.1],[-53.3,14.7],[-65.6,15.6],[-66.6,17.3],[-64.1,60.8],[-65.1,63.1],[-63.9,63.6],[-45.3,63.3],[-44.6,61.8],[-46.3,48.4],[-47.0,14.7]],"lab":[-56.7,25.2],"n":11,"aire":930},{"id":"p12","type":"pre","pts":[[-53.9,9.1],[-55.5,8.4],[-78.1,9.3],[-83.7,27.4],[-88.2,51.9],[-92.5,62.2],[-69.7,63.0],[-66.1,61.7],[-65.3,59.8],[-67.9,25.2],[-67.7,15.5],[-66.6,14.5],[-52.7,13.3],[-52.1,12.0]],"lab":[-77.0,51.2],"n":12,"aire":1052},{"id":"p13","type":"pre","pts":[[5.9,-40.1],[-18.4,-41.1],[-23.3,-36.3],[-26.1,-36.3],[-26.8,-30.0],[-29.2,-27.6],[-33.9,-26.6],[-39.5,-28.1],[-40.2,-24.9],[-39.4,-8.7],[-40.6,2.7],[-14.2,3.8],[-2.0,2.1],[6.5,3.0],[7.4,-1.6],[5.6,-15.7],[6.6,-25.5]],"lab":[-13.7,-16.1],"n":13,"aire":1821},{"id":"p14","type":"pre","pts":[[-53.5,-38.4],[-83.1,-40.2],[-83.9,-36.3],[-83.1,-18.9],[-81.3,-6.9],[-82.2,4.9],[-73.9,6.2],[-54.5,5.6],[-53.8,4.0],[-54.7,-14.2],[-53.1,-22.8]],"lab":[-68.1,-22.1],"n":14,"aire":1301},{"id":"p15","type":"pre","pts":[[-87.2,-39.4],[-93.2,-41.3],[-118.5,-43.7],[-123.0,-28.1],[-135.9,6.2],[-125.5,6.6],[-108.4,4.2],[-94.3,5.7],[-86.0,5.4],[-85.1,2.5],[-85.2,-15.6],[-87.5,-31.8]],"lab":[-106.1,-16.0],"n":15,"aire":1943},{"id":"carriere","type":"carriere","pts":[[60.8,-17.5],[36.2,-19.9],[18.7,-20.0],[17.8,-18.5],[18.8,-17.6],[17.7,-11.8],[18.3,0.2],[24.1,2.4],[38.0,2.2],[60.5,-0.1],[61.4,-5.8]],"lab":[30.1,-8.7],"n":2,"aire":889},{"id":"verger","type":"verger","pts":[[73.8,-16.6],[72.0,-17.3],[63.9,-16.9],[63.4,-4.0],[70.1,-3.4],[73.7,-5.8],[74.7,-8.4]],"lab":[68.8,-9.6],"aire":137},{"id":"piste","type":"piste","pts":[[91.3,-42.8],[82.5,-46.2],[78.8,-50.1],[77.1,-50.9],[66.3,-50.2],[45.5,-51.6],[25.6,-50.9],[19.6,-51.6],[9.9,-50.8],[8.5,-49.2],[7.7,-38.8],[8.4,-25.4],[7.5,-14.8],[9.0,-1.1],[7.0,3.6],[-13.7,5.4],[-37.3,4.9],[-41.2,3.2],[-42.3,0.1],[-42.0,-24.1],[-39.9,-28.8],[-31.9,-29.0],[-29.5,-30.3],[-27.5,-35.8],[-22.9,-38.9],[-21.6,-45.1],[-22.7,-53.8],[-24.0,-56.2],[-27.1,-57.1],[-29.9,-55.5],[-30.8,-53.3],[-29.9,-45.4],[-30.8,-42.8],[-32.4,-41.2],[-36.3,-40.3],[-43.2,-42.6],[-47.1,-42.9],[-50.0,-41.6],[-51.1,-39.7],[-51.8,8.6],[-50.7,10.9],[-49.2,11.6],[-0.5,12.1],[3.8,14.2],[6.9,17.2],[8.9,21.8],[9.1,28.2],[11.1,29.5],[20.0,27.8],[25.2,24.5],[31.3,10.5],[33.6,9.6],[49.1,8.2],[61.9,8.4],[73.1,7.0],[78.8,8.3],[81.6,7.2],[83.6,7.4],[85.8,5.8],[87.6,1.6],[87.8,-1.5],[84.2,-7.8],[82.7,-19.9],[83.5,-24.9],[83.0,-27.0],[84.8,-32.8],[90.4,-37.6]],"lab":[-8.5,8.4],"trous":[[[73.8,-33.4],[76.1,-24.6],[77.2,-7.8],[76.2,-5.0],[72.3,-1.5],[70.1,-0.6],[61.5,-0.8],[60.1,0.9],[37.6,3.0],[23.5,3.1],[17.6,0.6],[16.9,-11.7],[18.0,-17.5],[17.0,-18.4],[17.8,-20.2],[17.2,-24.6],[18.0,-37.6],[18.9,-41.0],[20.6,-42.6],[34.5,-44.9],[62.8,-43.3],[67.1,-40.5]]],"aire":3588}],"abris":[{"c":[84.6,-47.3],"w":13.6,"h":7.2},{"c":[-33.3,-44.1],"w":6.9,"h":13.9},{"c":[-24.6,-33.8],"w":3.5,"h":4.0}],"eau":[{"c":[73.1,-45.3]},{"c":[-43.1,-38.1]}],"arbres":[[66.6,-14.5],[72.9,-11.8],[68.3,-10.0],[63.9,-8.5],[70.2,-5.7]],"obstacles":[[29.9,-8.7],[48.3,-8.6]],"socle":[[129.8,-45.2],[127.2,-52.2],[121.1,-54.3],[112.2,-55.4],[102.8,-53.7],[98.2,-54.3],[91.5,-52.8],[88.2,-49.1],[77.6,-55.8],[40.0,-56.5],[10.3,-56.0],[4.9,-53.2],[3.2,-45.7],[-16.5,-46.1],[-19.0,-57.5],[-20.7,-59.9],[-25.8,-62.1],[-30.5,-61.1],[-34.1,-58.3],[-36.1,-52.1],[-35.5,-45.3],[-46.6,-47.8],[-54.8,-43.9],[-82.6,-45.1],[-86.0,-44.2],[-92.7,-46.2],[-119.2,-48.7],[-121.2,-47.9],[-127.0,-34.5],[-140.9,6.9],[-139.2,10.0],[-135.2,11.7],[-108.2,9.2],[-94.8,10.6],[-84.0,10.0],[-88.5,26.2],[-92.6,48.3],[-97.8,60.8],[-95.8,65.9],[-91.8,67.6],[-25.6,68.5],[3.2,66.3],[6.7,64.1],[9.3,59.4],[9.7,47.6],[12.4,48.5],[43.0,47.0],[118.4,45.7],[126.4,27.3],[127.3,22.5],[126.2,7.5],[129.0,-6.9],[128.5,-26.8],[130.5,-31.8]]};
+const ZONES = new Map(PLAN.zones.map(z => [z.id, z]));
+const zoneDe = id => ZONES.get(id) || null;
+const zoneNom = z => z.type === 'pre' ? `Parcelle ${z.n}` : z.type === 'carriere' ? 'Carrière' : z.type === 'piste' ? 'Piste' : 'Verger';
+const zoneCourt = z => z.type === 'pre' ? String(z.n) : zoneNom(z);
+const zoneHa = z => Math.round(z.aire / 100) / 100;
+
+/* ---------- Parcelles du plan ↔ prés du carnet ----------
+   Un lien enregistré sur le pré (carte) passe en premier ; à défaut, la piste et la carrière se trouvent par leur type,
+   les parcelles par le numéro du nom (« Pré 5 », « P5 »). */
+const numNom = s => { const r = String(s || '').match(/(?:^|\D)(\d{1,2})(?!\d)/); return r ? Number(r[1]) : null; };
+let lienMemo = null;
+function liensCarte() {
+  if (lienMemo && lienMemo.v === dataV) return lienMemo.m;
+  const m = new Map(), pris = new Set(), ps = pres();
+  ps.forEach(p => { if (p.carte && ZONES.has(p.carte) && !m.has(p.carte)) { m.set(p.carte, p); pris.add(p.id); } });
+  PLAN.zones.forEach(z => {
+    if (m.has(z.id) || z.type === 'verger') return;
+    const c = ps.filter(p => !pris.has(p.id) && !p.carte && (z.type === 'pre'
+      ? !sansRotation(p) && numNom(p.nom) === z.n
+      : p.type === z.type || normNom(p.nom) === normNom(zoneNom(z))));
+    if (c.length === 1) { m.set(z.id, c[0]); pris.add(c[0].id); }
+  });
+  lienMemo = { v: dataV, m };
+  return m;
+}
+const zoneDuPre = p => { for (const [k, v] of liensCarte()) if (v.id === p.id) return k; return null; };
+/* Choix de la parcelle dans la fiche d'un pré */
+function zonesOpts(p) {
+  const L = liensCarte();
+  return PLAN.zones.filter(z => z.type !== 'verger').map(z => {
+    const o = L.get(z.id), autre = o && (!p || o.id !== p.id);
+    return { v: z.id, l: zoneCourt(z), cls: autre ? 'pris' : '', aria: autre ? `${zoneNom(z)}, reliée à ${o.nom}` : zoneNom(z) };
+  });
+}
+
+/* ---------- Code couleur ---------- */
+const ETATS_CARTE = [
+  ['pature', 'En pâture'], ['bientot', 'Bientôt à changer'], ['changer', 'À changer'],
+  ['repos', 'Au repos'], ['pret', 'Prêt'], ['espace', 'Piste, carrière'], ['relier', 'À relier']
+];
+function etatZone(z) {
+  if (z.type === 'verger') return 'verger';
+  const p = liensCarte().get(z.id);
+  if (!p) return 'relier';
+  const s = preStatus(p);
+  if (s.sansRotation) return 'espace';
+  if (s.occupe) return s.over ? 'changer' : s.days >= Math.max(1, s.max * 0.8) ? 'bientot' : 'pature';
+  return s.pret || s.jamais ? 'pret' : 'repos';
+}
+function etatTxt(z) {
+  const p = liensCarte().get(z.id);
+  if (!p) return z.type === 'verger' ? '' : 'à relier';
+  const s = preStatus(p);
+  if (s.sansRotation) return s.occupe ? `${s.horses.length} ${pl(s.horses.length, 'cheval', 'chevaux')}` : 'libre';
+  if (s.occupe) return `${s.days} j sur ${s.max}`;
+  return s.jamais ? 'libre' : s.pret ? `prêt · ${s.repos} j de repos` : `repos ${s.repos} j sur ${s.cible}`;
+}
+
+/* ---------- Projection ----------
+   Vue de dessus : orientée comme le plan (nord en haut). 3D : isométrique, le parcellaire dans les axes.
+   X = a·x + b·y ; Y = c·x + d·y − z */
+const ISO_C = Math.cos(Math.PI / 6);
+const PLAN_B = PLAN.beta * Math.PI / 180;
+const MATS = { '3d': [ISO_C, -ISO_C, .5, .5], '2d': [Math.cos(PLAN_B), Math.sin(PLAN_B), -Math.sin(PLAN_B), Math.cos(PLAN_B)] };
+const PJ = (mode, x, y, z = 0) => { const m = MATS[mode]; return [m[0] * x + m[1] * y, m[2] * x + m[3] * y - (mode === '3d' ? z : 0)]; };
+const f1 = v => Math.round(v * 10) / 10;
+const pt = (mode, x, y, z) => PJ(mode, x, y, z).map(f1).join(' ');
+const chemin = (mode, pts, z = 0) => 'M' + pts.map(p => pt(mode, p[0], p[1], z)).join('L') + 'Z';
+/* Hauteurs de maquette (exagérées pour qu'on voie le relief même de loin) */
+const HAUT = { socle: 7, tuile: 1.2, carriere: .5, piquet: 2.5, lisse1: 1.15, lisse2: 2.1, mur: 4.2, toit: 5.8, auge: 1.3, tronc: 2.4, houppier: 2.9, barre: 1.7 };
+const hautZone = z => z.type === 'carriere' ? HAUT.carriere : z.type === 'piste' ? 0 : HAUT.tuile;
+
+function dansPoly(x, y, pts) {
+  let c = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    const [xi, yi] = pts[i], [xj, yj] = pts[j];
+    if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c;
+  }
+  return c;
+}
+const dansZone = (z, x, y) => dansPoly(x, y, z.pts) && !(z.trous || []).some(t => dansPoly(x, y, t));
+function alea(seed) {
+  let a = seed >>> 0;
+  return () => { a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+}
+function boite(pts) {
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  pts.forEach(([x, y]) => { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); });
+  return { x0, y0, x1, y1 };
+}
+/* Des points au hasard (mais toujours les mêmes) dans une zone, à distance des bords */
+function semis(z, n, seed, marge = 1.2) {
+  const r = alea(seed), b = boite(z.pts), out = [];
+  for (let i = 0; i < n * 8 && out.length < n; i++) {
+    const x = b.x0 + r() * (b.x1 - b.x0), y = b.y0 + r() * (b.y1 - b.y0);
+    if (dansZone(z, x, y) && dansZone(z, x + marge, y) && dansZone(z, x - marge, y) && dansZone(z, x, y + marge) && dansZone(z, x, y - marge)) out.push([x, y]);
+  }
+  return out;
+}
+/* Faces verticales tournées vers le spectateur (qui regarde depuis +x +y) */
+function cotes(pts, zh, zb, cls) {
+  const out = [];
+  for (let i = 0; i < pts.length; i++) {
+    const a = pts[i], b = pts[(i + 1) % pts.length];
+    let nx = b[1] - a[1], ny = a[0] - b[0];
+    const L = Math.hypot(nx, ny) || 1;
+    nx /= L; ny /= L;
+    const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+    if (dansPoly(mx + nx * .4, my + ny * .4, pts)) { nx = -nx; ny = -ny; }
+    if (nx + ny <= .03) continue;
+    out.push({ p: mx + my, h: `<path class="${cls} ${nx > ny ? 'fx' : 'fy'}" d="M${pt('3d', a[0], a[1], zh)}L${pt('3d', b[0], b[1], zh)}L${pt('3d', b[0], b[1], zb)}L${pt('3d', a[0], a[1], zb)}Z"/>` });
+  }
+  return out.sort((u, v) => u.p - v.p).map(o => o.h).join('');
+}
+
+/* ---------- Dessin ---------- */
+function dessinSol(mode) {
+  const d3 = mode === '3d';
+  let h = '';
+  // le socle de la maquette : terre en 3D, une ombre douce dessous
+  if (d3) {
+    h += `<path class="c-ombre" d="${chemin('3d', PLAN.socle.map(([x, y]) => [x + 3, y + 3]), -HAUT.socle - 1.5)}"/>`;
+    h += `<g class="c-cotes">${cotes(PLAN.socle, 0, -HAUT.socle, 'c-terre')}</g>`;
+  }
+  h += `<path class="c-socle" d="${chemin(mode, PLAN.socle)}"/>`;
+  // la piste, en sable, avec des traces de sabots
+  const pi = zoneDe('piste');
+  const traces = semis(pi, 140, 7, .6).map(([x, y]) => { const [X, Y] = PJ(mode, x, y); return `M${f1(X - .45)} ${f1(Y)}h.9`; }).join('');
+  h += `<g class="z zt-piste" data-zone="piste"><path class="z-top" fill-rule="evenodd" d="${chemin(mode, pi.pts)}${(pi.trous || []).map(t => chemin(mode, t)).join('')}"/><path class="c-traces" d="${traces}"/></g>`;
+  // les parcelles, la carrière et le verger : des dalles d'herbe (ou de sable) un peu en relief
+  const zs = PLAN.zones.filter(z => z.type !== 'piste').map(z => ({ z, p: d3 ? Math.max(...z.pts.map(([x, y]) => x + y)) : 0 })).sort((a, b) => a.p - b.p);
+  zs.forEach(({ z }, i) => {
+    const zh = hautZone(z);
+    const herbe = z.type === 'carriere' ? '' : semis(z, Math.min(70, Math.round(z.aire / 32)), 31 + i * 17).map(([x, y]) => {
+      const [X, Y] = PJ(mode, x, y, zh);
+      return `M${f1(X - .55)} ${f1(Y - 1.05)}L${f1(X)} ${f1(Y)}L${f1(X + .55)} ${f1(Y - 1.05)}`;
+    }).join('');
+    h += `<g class="z zt-${z.type}" data-zone="${z.id}">${d3 ? `<g class="c-cotes">${cotes(z.pts, zh, 0, 'z-cote')}</g>` : ''}<path class="z-top" d="${chemin(mode, z.pts, zh)}"/>${herbe ? `<path class="c-herbe" d="${herbe}"/>` : ''}</g>`;
+  });
+  return h;
+}
+function dessinObjets(mode) {
+  const d3 = mode === '3d', items = [];
+  const prof = (x, y) => d3 ? x + y : PJ('2d', x, y)[1];
+  const add = (x, y, h) => items.push({ p: prof(x, y), h });
+  if (d3) {
+    // clôtures : piquets et deux lisses le long de chaque bord (blanches autour de la carrière)
+    PLAN.zones.filter(z => z.type !== 'piste').forEach(z => {
+      const zh = hautZone(z), cls = z.type === 'carriere' ? 'c-cl blanc' : 'c-cl';
+      z.pts.forEach((a, i) => {
+        const b = z.pts[(i + 1) % z.pts.length], L = Math.hypot(b[0] - a[0], b[1] - a[1]), n = Math.max(1, Math.round(L / 3.4));
+        let d = `M${pt('3d', a[0], a[1], zh + HAUT.lisse1)}L${pt('3d', b[0], b[1], zh + HAUT.lisse1)}M${pt('3d', a[0], a[1], zh + HAUT.lisse2)}L${pt('3d', b[0], b[1], zh + HAUT.lisse2)}`;
+        for (let k = 0; k < n; k++) {
+          const x = a[0] + (b[0] - a[0]) * k / n, y = a[1] + (b[1] - a[1]) * k / n;
+          d += `M${pt('3d', x, y, zh)}L${pt('3d', x, y, zh + HAUT.piquet)}`;
+        }
+        add((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, `<path class="${cls}" d="${d}"/>`);
+      });
+    });
+  }
+  // abris : murs en bois, toit en pente, ouverts devant
+  PLAN.abris.forEach(({ c: [cx, cy], w, h }) => {
+    const x0 = cx - w / 2, x1 = cx + w / 2, y0 = cy - h / 2, y1 = cy + h / 2;
+    if (!d3) {
+      const P = (x, y) => pt('2d', x, y);
+      add(cx, cy, `<g class="c-abri"><path class="ab-toit" d="M${P(x0, y0)}L${P(x1, y0)}L${P(x1, y1)}L${P(x0, y1)}Z"/><path class="ab-fait" d="M${P(x0, cy)}L${P(x1, cy)}"/></g>`);
+      return;
+    }
+    const P = (x, y, z) => pt('3d', x, y, z), m = HAUT.mur, t = HAUT.toit, o = .5;
+    add(x1, y1, `<g class="c-abri">
+      <path class="ab-mur fx" d="M${P(x1, y0, 0)}L${P(x1, y1, 0)}L${P(x1, y1, m)}L${P(x1, y0, t)}Z"/>
+      <path class="ab-mur fy" d="M${P(x0, y1, 0)}L${P(x1, y1, 0)}L${P(x1, y1, m)}L${P(x0, y1, m)}Z"/>
+      <path class="ab-trou" d="M${P(x0 + .7, y1, 0)}L${P(x1 - .7, y1, 0)}L${P(x1 - .7, y1, m - .8)}L${P(x0 + .7, y1, m - .8)}Z"/>
+      <path class="ab-toit" d="M${P(x0 - o, y0 - o, t + .15)}L${P(x1 + o, y0 - o, t + .15)}L${P(x1 + o, y1 + o, m - .15)}L${P(x0 - o, y1 + o, m - .15)}Z"/>
+      <path class="ab-rive" d="M${P(x1 + o, y0 - o, t + .15)}L${P(x1 + o, y1 + o, m - .15)}L${P(x1 + o, y1 + o, m - .55)}L${P(x1 + o, y0 - o, t - .25)}Z"/></g>`);
+  });
+  // abreuvoirs : un bac galvanisé plein d'eau
+  PLAN.eau.forEach(({ c: [cx, cy] }) => {
+    const x0 = cx - 1.3, x1 = cx + 1.3, y0 = cy - .55, y1 = cy + .55, a = HAUT.auge;
+    if (!d3) {
+      const P = (x, y) => pt('2d', x, y);
+      add(cx, cy, `<g class="c-eau"><path class="eau-bord" d="M${P(x0, y0)}L${P(x1, y0)}L${P(x1, y1)}L${P(x0, y1)}Z"/><path class="eau-o" d="M${P(x0 + .3, y0 + .25)}L${P(x1 - .3, y0 + .25)}L${P(x1 - .3, y1 - .25)}L${P(x0 + .3, y1 - .25)}Z"/></g>`);
+      return;
+    }
+    const P = (x, y, z) => pt('3d', x, y, z);
+    add(x1, y1, `<g class="c-eau">
+      <path class="eau-bord fx" d="M${P(x1, y0, 0)}L${P(x1, y1, 0)}L${P(x1, y1, a)}L${P(x1, y0, a)}Z"/>
+      <path class="eau-bord fy" d="M${P(x0, y1, 0)}L${P(x1, y1, 0)}L${P(x1, y1, a)}L${P(x0, y1, a)}Z"/>
+      <path class="eau-haut" d="M${P(x0, y0, a)}L${P(x1, y0, a)}L${P(x1, y1, a)}L${P(x0, y1, a)}Z"/>
+      <path class="eau-o" d="M${P(x0 + .25, y0 + .2, a)}L${P(x1 - .25, y0 + .2, a)}L${P(x1 - .25, y1 - .2, a)}L${P(x0 + .25, y1 - .2, a)}Z"/></g>`);
+  });
+  // verger : des pommiers
+  const zv = zoneDe('verger'), hv = hautZone(zv);
+  PLAN.arbres.forEach(([x, y], i) => {
+    const r = HAUT.houppier;
+    const pommes = [[-.9, -.4], [.8, .3], [-.1, 1]].map(([dx, dy]) => `<circle class="pomme" cx="${f1(dx * r * .55)}" cy="${f1(dy * r * .55)}" r=".42"/>`).join('');
+    if (!d3) {
+      const [X, Y] = PJ('2d', x, y);
+      add(x, y, `<g class="c-arbre" transform="translate(${f1(X)} ${f1(Y)})"><circle class="arb-ombre" cx=".9" cy=".9" r="${r}"/><circle class="arb-h" r="${r}"/><circle class="arb-l" cx="-.8" cy="-.8" r="${f1(r * .45)}"/>${pommes}</g>`);
+      return;
+    }
+    const [X, Y] = PJ('3d', x, y, hv), hc = HAUT.tronc + r * .8;
+    add(x, y, `<g class="c-arbre" transform="translate(${f1(X)} ${f1(Y)})"><ellipse class="arb-ombre" cx=".6" cy=".3" rx="${f1(r * 1.1)}" ry="${f1(r * .55)}"/><path class="arb-tronc" d="M0 0V${f1(-hc)}"/><g transform="translate(0 ${f1(-hc)})"><circle class="arb-h" r="${r}"/><circle class="arb-l" cx="-.9" cy="-.9" r="${f1(r * .45)}"/>${pommes}</g></g>`);
+  });
+  // carrière : deux obstacles
+  const zc = zoneDe('carriere'), hc = hautZone(zc);
+  PLAN.obstacles.forEach(([x, y]) => {
+    if (!d3) { add(x, y, `<path class="c-barre" d="M${pt('2d', x, y - 2)}L${pt('2d', x, y + 2)}"/>`); return; }
+    add(x, y + 2, `<g class="c-obst"><path class="obst-ch" d="M${pt('3d', x, y - 2, hc)}L${pt('3d', x, y - 2, hc + HAUT.barre + .4)}M${pt('3d', x, y + 2, hc)}L${pt('3d', x, y + 2, hc + HAUT.barre + .4)}"/><path class="c-barre" d="M${pt('3d', x, y - 2, hc + HAUT.barre)}L${pt('3d', x, y + 2, hc + HAUT.barre)}"/></g>`);
+  });
+  // chaque objet dans son groupe : l'animation d'arrivée (CSS) ne doit pas écraser leur position (attribut transform)
+  return items.sort((a, b) => a.p - b.p).map(o => `<g>${o.h}</g>`).join('');
+}
+
+/* ---------- La carte : état, vue, montage ---------- */
+const carte = { mode: null, sel: null, filtre: null, plein: false, vues: { '3d': null, '2d': null }, host: null, svg: null, W: 0, H: 0, sig: '', boites: {} };
+const modeCarte = () => ui.carte3d === false ? '2d' : '3d';
+/* Boîte englobante du dessin (avec le relief en 3D) */
+function boiteCarte(mode) {
+  if (carte.boites[mode]) return carte.boites[mode];
+  const ps = PLAN.socle.map(([x, y]) => PJ(mode, x, y));
+  if (mode === '3d') PLAN.socle.forEach(([x, y]) => { ps.push(PJ('3d', x, y, 9)); ps.push(PJ('3d', x + 3, y + 3, -HAUT.socle - 1.5)); });
+  const b = boite(ps), m = 6;
+  return (carte.boites[mode] = { x: b.x0 - m, y: b.y0 - m, w: b.x1 - b.x0 + 2 * m, h: b.y1 - b.y0 + 2 * m });
+}
+const fitK = mode => { const b = boiteCarte(mode); return Math.min(carte.W / b.w, carte.H / b.h); };
+function vueDe(mode) {
+  if (!carte.vues[mode]) { const b = boiteCarte(mode); carte.vues[mode] = { k: 1, cx: b.x + b.w / 2, cy: b.y + b.h / 2 }; }
+  return carte.vues[mode];
+}
+const kpx = () => fitK(carte.mode) * vueDe(carte.mode).k;
+function borneVue(v, mode) {
+  const b = boiteCarte(mode);
+  v.k = Math.min(9, Math.max(1, v.k));
+  v.cx = Math.min(b.x + b.w, Math.max(b.x, v.cx));
+  v.cy = Math.min(b.y + b.h, Math.max(b.y, v.cy));
+  return v;
+}
+function viewBoxDe(mode, v) {
+  const k = fitK(mode) * v.k, w = carte.W / k, h = carte.H / k;
+  return { x: v.cx - w / 2, y: v.cy - h / 2, w, h, k };
+}
+function appliqueVue() {
+  if (!carte.svg || !carte.W) return;
+  const v = borneVue(vueDe(carte.mode), carte.mode), vb = viewBoxDe(carte.mode, v);
+  carte.svg.setAttribute('viewBox', `${vb.x.toFixed(2)} ${vb.y.toFixed(2)} ${vb.w.toFixed(2)} ${vb.h.toFixed(2)}`);
+  carte.svg.style.setProperty('--trait', `${Math.min(2.2, .55 + .28 * v.k).toFixed(2)}px`);
+  // pastilles, noms et chevaux gardent leur taille à l'écran ; les noms apparaissent quand on s'approche
+  const s = Math.min(1, .66 + .17 * v.k) / vb.k;
+  carte.svg.querySelectorAll('[data-ancre]').forEach(g => {
+    g.setAttribute('transform', `translate(${g.getAttribute('data-ancre')}) scale(${s.toFixed(4)})`);
+  });
+  carte.svg.querySelectorAll('.c-lab').forEach(g => {
+    const z = zoneDe(g.getAttribute('data-lz')), b = boite(z.pts);
+    const taille = Math.min(b.x1 - b.x0, b.y1 - b.y0) * vb.k;
+    g.classList.toggle('detail', taille > 64 || (z.type !== 'pre' && taille > 30));
+  });
+  const pz = carte.host && carte.host.querySelector('.c-zoom-pct');
+  if (pz) pz.textContent = v.k > 1.05 ? `×${num(v.k, 1)}` : '';
+}
+function monteCarte(host) {
+  carte.host = host;
+  carte.mode = modeCarte();
+  host.innerHTML = `<svg class="c-svg" role="img" aria-label="Carte des prés" preserveAspectRatio="xMidYMid meet"></svg>
+    <div class="c-outils">
+      <div class="c-seg" role="group" aria-label="Vue de la carte"><button type="button" data-vue="3d">3D</button><button type="button" data-vue="2d">2D</button></div>
+      <div class="c-zoom"><button type="button" data-zoom="1" aria-label="Rapprocher">${ic('plus', 'sm')}</button><button type="button" data-zoom="-1" aria-label="Éloigner">${ic('minus', 'sm')}</button><button type="button" data-zoom="0" aria-label="Tout voir">${ic('cible', 'sm')}</button></div>
+      <span class="c-zoom-pct" aria-hidden="true"></span>
+    </div>
+    <button type="button" class="c-plein" aria-label="Agrandir la carte">${ic('agrandir', 'sm')}</button>
+    <div class="c-boxo" data-box="1" aria-label="Au box"></div>
+    <div class="c-info" hidden></div>`;
+  carte.svg = host.querySelector('svg');
+  host.querySelectorAll('[data-vue]').forEach(b => b.addEventListener('click', () => basculeVue(b.dataset.vue)));
+  host.querySelectorAll('[data-zoom]').forEach(b => b.addEventListener('click', () => {
+    const z = Number(b.dataset.zoom), v = vueDe(carte.mode);
+    if (!z) { const bb = boiteCarte(carte.mode); Object.assign(v, { k: 1, cx: bb.x + bb.w / 2, cy: bb.y + bb.h / 2 }); }
+    else zoomA(carte.W / 2, carte.H / 2, z > 0 ? 1.6 : 1 / 1.6);
+    appliqueVue();
+  }));
+  host.querySelector('.c-plein').addEventListener('click', () => pleinEcran(!carte.plein));
+  gestes(host);
+  if (carte.ro) carte.ro.disconnect();
+  if (window.ResizeObserver) { carte.ro = new ResizeObserver(() => { if (carte.host === host && host.isConnected && taille()) appliqueVue(); }); carte.ro.observe(host); }
+  taille();
+  dessine();
+}
+function pleinEcran(on) {
+  const host = carte.host;
+  carte.plein = on;
+  if (!host) return;
+  host.classList.toggle('plein', on);
+  document.body.classList.toggle('lock', on);
+  host.querySelector('.c-plein').setAttribute('aria-label', on ? 'Réduire la carte' : 'Agrandir la carte');
+  host.querySelector('.c-plein').innerHTML = ic(on ? 'close' : 'agrandir', 'sm');
+  carte.sig = '';
+  requestAnimationFrame(() => { taille(); majCarteDyn(); });
+}
+function taille() {
+  if (!carte.host) return false;
+  const r = carte.host.getBoundingClientRect(), W = Math.round(r.width), H = Math.round(r.height);
+  if (!W || !H || (W === carte.W && H === carte.H)) return false;
+  carte.W = W; carte.H = H;
+  return true;
+}
+/* Tout redessiner (changement de vue) */
+function dessine(arrivee = false) {
+  const mode = carte.mode;
+  carte.svg.classList.remove('bascule');
+  carte.svg.classList.toggle('d3', mode === '3d');
+  carte.svg.innerHTML = `<defs><clipPath id="cRond" clipPathUnits="objectBoundingBox"><circle cx=".5" cy=".5" r=".5"/></clipPath></defs>
+    <g class="c-sol">${dessinSol(mode)}</g><g class="c-objets${arrivee ? ' c-arrive' : ''}">${dessinObjets(mode)}</g><g class="c-labs"></g><g class="c-pions"></g>`;
+  carte.host.querySelectorAll('[data-vue]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.vue === mode)));
+  carte.sig = '';
+  majCarteDyn();
+}
+/* Appelé après chaque rendu de l'écran */
+function majCarte() {
+  const host = document.querySelector('#view .carte');
+  if (!host) {
+    if (carte.plein) { carte.plein = false; document.body.classList.remove('lock'); }
+    if (carte.ro) { carte.ro.disconnect(); carte.ro = null; }
+    carte.host = null; carte.svg = null;
+    return;
+  }
+  if (host !== carte.host || !host.querySelector('svg')) { monteCarte(host); return; }
+  majCarteDyn();
+}
+/* Ce qui bouge avec les données : couleurs, noms, chevaux */
+function majCarteDyn() {
+  if (!carte.svg) return;
+  const L = liensCarte();
+  const sig = [carte.mode, carte.sel, carte.filtre, carte.plein, dataV].join('|');
+  if (sig === carte.sig) { appliqueVue(); return; }
+  carte.sig = sig;
+  carte.svg.querySelectorAll('.z').forEach(g => {
+    const z = zoneDe(g.getAttribute('data-zone')), e = etatZone(z);
+    g.setAttribute('class', `z zt-${z.type} z-${e}${carte.sel === z.id ? ' sel' : ''}${carte.filtre && carte.filtre !== e ? ' terne' : ''}`);
+  });
+  carte.svg.classList.toggle('filtre', !!carte.filtre);
+  // pastilles : numéro (et nom, état quand on s'approche)
+  const mode = carte.mode;
+  carte.svg.querySelector('.c-labs').innerHTML = PLAN.zones.map(z => {
+    const p = L.get(z.id), [X, Y] = PJ(mode, z.lab[0], z.lab[1], hautZone(z));
+    const nom = p ? p.nom : zoneNom(z), e = etatZone(z), st = etatTxt(z);
+    const badge = z.type === 'pre' ? `<circle class="lab-rond" r="10.5"/><text class="lab-n" y="4.2">${z.n}</text>` : '';
+    const ty = z.type === 'pre' ? 24 : 4;
+    return `<g class="c-lab l-${e}${z.type === 'pre' ? '' : ' l-nom'}" data-lz="${z.id}" data-ancre="${f1(X)} ${f1(Y)}">${badge}
+      <text class="lab-t" y="${ty}">${esc(nom)}</text>${st ? `<text class="lab-s" y="${ty + 13}">${esc(st)}</text>` : ''}</g>`;
+  }).join('');
+  // les chevaux, posés dans leur pré
+  const parZone = new Map();
+  chevaux().forEach(h => {
+    const o = openPlace(h.id);
+    if (!o) return;
+    for (const [zid, p] of L) if (p.id === o.preId) { if (!parZone.has(zid)) parZone.set(zid, []); parZone.get(zid).push(h); break; }
+  });
+  let pions = '';
+  parZone.forEach((hs, zid) => {
+    const z = zoneDe(zid), [X, Y] = PJ(mode, z.lab[0], z.lab[1], hautZone(z));
+    const cols = Math.min(hs.length, 3), y0 = mode === '3d' ? -12 : -30;
+    hs.forEach((h, i) => {
+      const dx = (i % cols - (cols - 1) / 2) * 30, dy = y0 - Math.floor(i / cols) * 33;
+      pions += `<g class="c-pion" data-pion="${h.id}" data-ancre="${f1(X)} ${f1(Y)}" aria-label="${esc(h.nom)}">${pionSvg(h, dx, dy, mode)}</g>`;
+    });
+  });
+  carte.svg.querySelector('.c-pions').innerHTML = pions;
+  // le box, dans un coin de la carte : on y glisse un cheval pour le rentrer, on l'en sort pour le mettre au pré
+  const box = chevaux().filter(h => !openPlace(h.id)), bo = carte.host.querySelector('.c-boxo');
+  // en plein écran, la fiche sous la carte est cachée : un petit encart la résume
+  const inf = carte.host.querySelector('.c-info'), zs = carte.plein && carte.sel && zoneDe(carte.sel);
+  if (inf) {
+    inf.hidden = !zs;
+    if (zs) {
+      const p = L.get(zs.id), st = etatTxt(zs);
+      inf.innerHTML = `<div class="c-info-t"><b>${esc(p ? p.nom : zoneNom(zs))}</b>${st ? `<span>${esc(st)}</span>` : ''}</div>`
+        + (p ? `<button type="button" class="btn small" data-act="open-pre" data-id="${p.id}">Ouvrir</button>`
+          : zs.type === 'verger' ? '' : `<button type="button" class="btn small" data-act="carte-reduire">Relier</button>`);
+    }
+  }
+  if (bo) bo.innerHTML = `<span class="c-boxo-t">${ic('barn', 'sm')}Box</span>${box.slice(0, 6).map(h => `<span class="c-bpion" data-pion="${h.id}" title="${esc(h.nom)}" aria-label="${esc(h.nom)}, au box">${av(h, 's')}</span>`).join('')}${box.length > 6 ? `<span class="c-boxo-n">+${box.length - 6}</span>` : ''}`;
+  appliqueVue();
+}
+function pionSvg(h, dx, dy, mode) {
+  const c = hColor(h), r = 13, tige = mode === '3d' ? 11 : 0, cy = dy - tige - (mode === '3d' ? r : 0);
+  const fond = hasPhoto(h) && PHOTO_RE.test(h.photo)
+    ? `<circle r="${r}" cx="${dx}" cy="${cy}" style="fill:var(--h${c})"/><image href="${esc(h.photo)}" x="${dx - r}" y="${cy - r}" width="${2 * r}" height="${2 * r}" clip-path="url(#cRond)" preserveAspectRatio="xMidYMid slice"/>`
+    : `<circle r="${r}" cx="${dx}" cy="${cy}" style="fill:var(--h${c})"/><text class="pion-i" x="${dx}" y="${cy + 4.6}">${esc(initials(h.nom))}</text>`;
+  return (mode === '3d' ? `<ellipse class="pion-ombre" cx="${dx}" cy="${dy}" rx="9" ry="4"/><path class="pion-tige" d="M${dx} ${dy}V${dy - tige}"/>` : `<ellipse class="pion-ombre" cx="${dx + 1}" cy="${cy + r - 1}" rx="10" ry="4"/>`)
+    + fond + `<circle class="pion-bord" r="${r}" cx="${dx}" cy="${cy}"/>`;
+}
+
+/* ---------- 3D ⇄ 2D : le plan pivote et se couche (ou se redresse), puis la maquette se monte ---------- */
+function decompose(a, b, c, d) {
+  const sx = Math.hypot(a, b), th = Math.atan2(b, a);
+  return { th, sx, sh: (a * c + b * d) / sx, sy: (a * d - b * c) / sx };
+}
+function basculeVue(mode) {
+  if (!carte.svg || mode === carte.mode) return;
+  ui.carte3d = mode === '3d'; saveUi();
+  const ancien = carte.mode, vo = viewBoxDe(ancien, vueDe(ancien));
+  // garder le même endroit au centre, au même zoom
+  const A = MATS[ancien], B = MATS[mode], det = A[0] * A[3] - A[1] * A[2];
+  const v0 = vueDe(ancien), wx = (A[3] * v0.cx - A[1] * v0.cy) / det, wy = (-A[2] * v0.cx + A[0] * v0.cy) / det;
+  const [ncx, ncy] = PJ(mode, wx, wy);
+  carte.vues[mode] = borneVue({ k: v0.k, cx: ncx, cy: ncy }, mode);
+  const vn = viewBoxDe(mode, carte.vues[mode]);
+  const fin = () => { carte.mode = mode; dessine(true); };
+  const sol = carte.svg.querySelector('.c-sol');
+  if (!mouvementOk() || !sol) { fin(); return; }
+  carte.host.querySelectorAll('[data-vue]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.vue === mode)));
+  carte.svg.classList.add('bascule');
+  // M = r · B · A⁻¹ ; t = vo.o − r · vn.o
+  const r = vn.k / vo.k, inv = [A[3] / det, -A[1] / det, -A[2] / det, A[0] / det];
+  const M = [r * (B[0] * inv[0] + B[1] * inv[2]), r * (B[0] * inv[1] + B[1] * inv[3]), r * (B[2] * inv[0] + B[3] * inv[2]), r * (B[2] * inv[1] + B[3] * inv[3])];
+  const D = decompose(M[0], M[2], M[1], M[3]), tx = vo.x - r * vn.x, ty = vo.y - r * vn.y;
+  const t0 = performance.now(), dur = 620;
+  const pas = now => {
+    const u = Math.min(1, (now - t0) / dur), e = u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+    const th = D.th * e, sx = 1 + (D.sx - 1) * e, sy = 1 + (D.sy - 1) * e, sh = D.sh * e, co = Math.cos(th), si = Math.sin(th);
+    sol.setAttribute('transform', `matrix(${co * sx} ${si * sx} ${co * sh - si * sy} ${si * sh + co * sy} ${tx * e} ${ty * e})`);
+    if (u < 1) requestAnimationFrame(pas); else fin();
+  };
+  requestAnimationFrame(pas);
+}
+
+/* ---------- Gestes : glisser pour se déplacer, pincer pour zoomer, toucher une parcelle, glisser un cheval ---------- */
+function zoomA(sx, sy, f) {
+  const v = vueDe(carte.mode), vb = viewBoxDe(carte.mode, v);
+  const ux = vb.x + sx / vb.k, uy = vb.y + sy / vb.k;
+  v.k = Math.min(9, Math.max(1, v.k * f));
+  const k2 = fitK(carte.mode) * v.k;
+  v.cx = ux - sx / k2 + carte.W / k2 / 2;
+  v.cy = uy - sy / k2 + carte.H / k2 / 2;
+  borneVue(v, carte.mode);
+}
+function gestes(host) {
+  const svg = carte.svg, pts = new Map();
+  let geste = null, dernierTap = 0, tapXY = null;
+  const loc = e => { const r = svg.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  svg.addEventListener('pointerdown', e => {
+    if (e.button > 0) return;
+    svg.setPointerCapture(e.pointerId);
+    pts.set(e.pointerId, loc(e));
+    if (pts.size === 2) {
+      const [a, b] = [...pts.values()], v = vueDe(carte.mode);
+      geste = { type: 'pince', d0: Math.hypot(a[0] - b[0], a[1] - b[1]), k0: v.k, m: [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2] };
+      annuleDrag();
+      return;
+    }
+    const pion = e.target.closest && e.target.closest('[data-pion]');
+    geste = { type: 'attente', x0: e.clientX, y0: e.clientY, t0: Date.now(), last: loc(e), pion: pion && !sync.readOnly ? pion.getAttribute('data-pion') : null, cible: e.target };
+  });
+  svg.addEventListener('pointermove', e => {
+    if (!pts.has(e.pointerId)) return;
+    const p = loc(e);
+    pts.set(e.pointerId, p);
+    if (!geste) return;
+    if (geste.type === 'pince' && pts.size >= 2) {
+      const [a, b] = [...pts.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]), m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+      const v = vueDe(carte.mode), k1 = fitK(carte.mode) * v.k;
+      v.cx -= (m[0] - geste.m[0]) / k1; v.cy -= (m[1] - geste.m[1]) / k1;
+      geste.m = m;
+      zoomA(m[0], m[1], geste.k0 * d / geste.d0 / v.k);
+      appliqueVue();
+      return;
+    }
+    const moved = Math.hypot(e.clientX - geste.x0, e.clientY - geste.y0);
+    if (geste.type === 'attente' && moved > 7) {
+      if (geste.pion) { geste.type = 'cheval'; debutDrag(geste.pion, e); }
+      else geste.type = 'pan';
+    }
+    if (geste.type === 'pan') {
+      const v = vueDe(carte.mode), k = fitK(carte.mode) * v.k;
+      v.cx -= (p[0] - geste.last[0]) / k; v.cy -= (p[1] - geste.last[1]) / k;
+      borneVue(v, carte.mode);
+      appliqueVue();
+    } else if (geste.type === 'cheval') suitDrag(e);
+    geste.last = p;
+  });
+  const fin = e => {
+    if (!pts.has(e.pointerId)) return;
+    pts.delete(e.pointerId);
+    if (!geste) return;
+    if (geste.type === 'cheval') { lacheDrag(e); geste = null; return; }
+    if (geste.type === 'pince') { if (!pts.size) geste = null; return; }
+    if (geste.type === 'attente' && e.type === 'pointerup' && Date.now() - geste.t0 < 600) {
+      const now = Date.now(), p = loc(e);
+      if (now - dernierTap < 320 && tapXY && Math.hypot(p[0] - tapXY[0], p[1] - tapXY[1]) < 30) { zoomA(p[0], p[1], 1.8); appliqueVue(); dernierTap = 0; }
+      else { dernierTap = now; tapXY = p; toucheCarte(geste.cible); }
+    }
+    geste = null;
+  };
+  svg.addEventListener('pointerup', fin);
+  svg.addEventListener('pointercancel', fin);
+  svg.addEventListener('wheel', e => { e.preventDefault(); const p = loc(e); zoomA(p[0], p[1], Math.exp(-e.deltaY * .0022)); appliqueVue(); }, { passive: false });
+}
+function toucheCarte(t) {
+  const pion = t && t.closest && t.closest('[data-pion]');
+  let zid = null;
+  if (pion) {
+    const o = openPlace(pion.getAttribute('data-pion'));
+    if (o) for (const [k, p] of liensCarte()) if (p.id === o.preId) zid = k;
+  } else {
+    const g = t && t.closest && t.closest('[data-zone]');
+    zid = g ? g.getAttribute('data-zone') : null;
+  }
+  carte.sel = zid === carte.sel && !pion ? null : zid;
+  vibre(8);
+  render();
+  if (carte.sel) { const f = document.querySelector('.c-fiche'); if (f && f.getBoundingClientRect().top > window.innerHeight - 120) f.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+}
+
+/* ---------- Glisser un cheval (depuis la carte ou depuis le box) ---------- */
+let drag = null;
+function debutDrag(hid, e) {
+  const h = cheval(hid);
+  if (!h) return;
+  const g = document.createElement('div');
+  g.className = 'c-fantome';
+  g.innerHTML = av(h, 'm');
+  document.body.appendChild(g);
+  drag = { hid, g, cible: null };
+  if (carte.svg) carte.svg.classList.add('glisse');
+  document.querySelectorAll(`[data-pion="${CSS.escape(hid)}"]`).forEach(el => el.classList.add('parti'));
+  vibre(12);
+  suitDrag(e);
+}
+function suitDrag(e) {
+  if (!drag) return;
+  drag.g.style.transform = `translate(${e.clientX - 24}px, ${e.clientY - 62}px)`;
+  const el = document.elementFromPoint(e.clientX, e.clientY);
+  const z = el && el.closest && el.closest('[data-zone]'), bx = el && el.closest && el.closest('[data-box]');
+  const cible = z ? z.getAttribute('data-zone') : bx ? 'box' : null;
+  if (cible === drag.cible) return;
+  drag.cible = cible;
+  document.querySelectorAll('.c-svg .z.cible, .c-boxo.cible').forEach(x => x.classList.remove('cible'));
+  if (z) z.classList.add('cible'); else if (bx) bx.classList.add('cible');
+}
+function annuleDrag() {
+  if (!drag) return;
+  drag.g.remove();
+  if (carte.svg) carte.svg.classList.remove('glisse');
+  document.querySelectorAll('.parti').forEach(el => el.classList.remove('parti'));
+  document.querySelectorAll('.c-svg .z.cible, .c-boxo.cible').forEach(x => x.classList.remove('cible'));
+  drag = null;
+}
+function lacheDrag(e) {
+  if (!drag) return;
+  const { hid, cible } = drag;
+  annuleDrag();
+  if (cible) deplaceVers(hid, cible);
+}
+function deplaceVers(hid, cible) {
+  const h = cheval(hid);
+  if (!h || sync.readOnly) return;
+  const o = openPlace(hid);
+  if (cible === 'box') {
+    if (!o) return;
+    const r = moveHorses([hid], null, todayISO());
+    if (r.err) { toast(r.err, { danger: true }); return; }
+    toast(`${h.nom} → au box`, { undo: r.undo });
+    return;
+  }
+  const z = zoneDe(cible), p = liensCarte().get(cible);
+  if (z.type === 'verger') { toast('Le verger n’accueille pas de chevaux.'); return; }
+  if (!p) { carte.sel = cible; render(); toast(`${zoneNom(z)} n’est reliée à aucun pré : choisis-le ci-dessous.`); return; }
+  if (o && o.preId === p.id) return;
+  const r = moveHorses([hid], p.id, todayISO());
+  if (r.err) { toast(r.err, { danger: true }); return; }
+  carte.sel = cible;
+  toast(`${h.nom} → ${p.nom}`, { undo: r.undo });
+}
+/* Depuis le box (sous la carte) */
+document.addEventListener('pointerdown', e => {
+  const b = e.target.closest && e.target.closest('.c-boxo [data-pion]');
+  if (!b || sync.readOnly || e.button > 0) return;
+  const hid = b.getAttribute('data-pion'), x0 = e.clientX, y0 = e.clientY;
+  let parti = false;
+  const bouge = ev => {
+    if (!parti && Math.hypot(ev.clientX - x0, ev.clientY - y0) > 7) { parti = true; debutDrag(hid, ev); }
+    if (parti) { ev.preventDefault(); suitDrag(ev); }
+  };
+  const fin = ev => {
+    document.removeEventListener('pointermove', bouge);
+    document.removeEventListener('pointerup', fin);
+    document.removeEventListener('pointercancel', fin);
+    if (parti) { if (ev.type === 'pointerup') lacheDrag(ev); else annuleDrag(); }
+    else if (ev.type === 'pointerup') { const h = cheval(hid); if (h) toast(`Fais glisser ${h.nom} sur une parcelle pour le mettre au pré.`); }
+  };
+  document.addEventListener('pointermove', bouge, { passive: false });
+  document.addEventListener('pointerup', fin);
+  document.addEventListener('pointercancel', fin);
+});
+
+/* ---------- Autour de la carte : légende, box, fiche de la parcelle choisie ---------- */
+function carteHtml() {
+  return `<div class="carte" data-key="carte" data-garde></div>${legendeHtml()}${horsCarteHtml()}<div class="c-fiche" data-key="c-fiche">${ficheZone()}</div>`;
+}
+function legendeHtml() {
+  const presents = new Set(PLAN.zones.map(etatZone));
+  const items = ETATS_CARTE.filter(([k]) => presents.has(k) || ['pature', 'repos', 'pret'].includes(k))
+    .map(([k, l]) => `<button type="button" class="c-leg" data-act="carte-filtre" data-etat="${k}" aria-pressed="${carte.filtre === k}"><i class="c-sw c-sw-${k}"></i>${l}</button>`);
+  return `<div class="c-legende" data-key="c-leg" role="group" aria-label="Code couleur">${items.join('')}</div>`;
+}
+/* Chevaux dans un pré qui n'est pas sur le plan */
+function horsCarteHtml() {
+  const L = liensCarte(), sur = new Set([...L.values()].map(p => p.id));
+  const ailleurs = chevaux().filter(h => { const o = openPlace(h.id); return o && !sur.has(o.preId); });
+  return ailleurs.length ? `<p class="note c-ailleurs" data-key="c-hors">Hors carte : ${ailleurs.map(h => `${esc(h.nom)} (${esc(horseWhere(h.id).txt)})`).join(', ')}</p>` : '';
+}
+function ficheZone() {
+  const z = carte.sel && zoneDe(carte.sel);
+  if (!z) return `<p class="note c-aide">Touche une parcelle pour voir où elle en est. Fais glisser un cheval d’une parcelle à l’autre pour le déplacer.</p>`;
+  const p = liensCarte().get(z.id);
+  const tete = `<div class="c-zfiche-h"><span class="eyebrow">${zoneNom(z)} · ≈ ${num(zoneHa(z), 2)} ha</span><button type="button" class="iconbtn" data-act="carte-sel" data-zone="" aria-label="Fermer">${ic('close', 'sm')}</button></div>`;
+  if (z.type === 'verger') return tete + `<article class="pcard"><div class="pcard-h"><div class="row-main"><div class="row-t">Verger</div><div class="row-s">Les pommiers, au bout de la carrière</div></div></div><p class="note">Pas de chevaux ici.</p></article>`;
+  if (!p) {
+    const libres = pres().filter(x => !zoneDuPre(x) && (z.type === 'pre' ? !sansRotation(x) : true));
+    const nouveau = z.type === 'pre' ? `Pré ${z.n}` : zoneNom(z);
+    return tete + `<article class="pcard"><div class="pcard-h"><div class="row-main"><div class="row-t">${zoneNom(z)}</div><div class="row-s">Pas encore reliée au carnet</div></div><span class="pill">À relier</span></div>
+      ${libres.length ? `<p class="note">C’est lequel de tes espaces ?</p><div class="wrap">${libres.map(x => `<button type="button" class="chip" data-act="carte-relier" data-zone="${z.id}" data-id="${x.id}">${esc(x.nom)}</button>`).join('')}</div>` : ''}
+      ${sync.readOnly ? '' : `<button type="button" class="btn small" data-act="carte-creer" data-zone="${z.id}">${ic('plus', 'sm')}Créer « ${esc(nouveau)} »</button>`}</article>`;
+  }
+  return tete + pcard({ p, s: preStatus(p) });
+}
+ACT['carte-filtre'] = d => { carte.filtre = carte.filtre === d.etat ? null : d.etat; render(); };
+ACT['carte-sel'] = d => { carte.sel = d.zone || null; render(); };
+/* Quitter le plein écran pour voir la fiche de la parcelle choisie */
+ACT['carte-reduire'] = () => {
+  pleinEcran(false);
+  setTimeout(() => { const f = document.querySelector('.c-fiche'); if (f) f.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
+};
+ACT['carte-relier'] = d => {
+  const z = zoneDe(d.zone), p = get('pres', d.id);
+  if (!z || !p) return;
+  list('pres').filter(o => o.id !== p.id && o.carte === z.id).forEach(o => put('pres', Object.assign({}, o, { carte: null })));
+  const maj = Object.assign({}, p, { carte: z.id });
+  if (!p.surface) maj.surface = zoneHa(z);
+  put('pres', maj);
+  toast(`${p.nom} → ${zoneNom(z)}${p.surface ? '' : ` · surface estimée ${num(zoneHa(z), 2)} ha`}`);
+};
+ACT['carte-creer'] = d => {
+  const z = zoneDe(d.zone);
+  if (!z) return;
+  formPre(null, { nom: z.type === 'pre' ? `Pré ${z.n}` : zoneNom(z), type: z.type === 'pre' ? 'pre' : z.type, carte: z.id, surface: zoneHa(z) });
+};
 
 /* ---------- Démarrage ---------- */
 loadCache();

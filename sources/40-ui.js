@@ -36,6 +36,8 @@ function morphAttrs(a, b) {
 }
 function morphNode(a, b) {
   if (a.nodeType !== 1) { if (a.nodeValue !== b.nodeValue) a.nodeValue = b.nodeValue; return; }
+  // data-garde : contenu tenu à jour par son propre code (la carte des prés), on n'y touche pas
+  if (a.hasAttribute('data-garde') && b.hasAttribute('data-garde')) return;
   morphAttrs(a, b);
   morphKids(a, b);
 }
@@ -112,6 +114,7 @@ function render() {
   renderTabs();
   updateSync();
   majCrottins();
+  majCarte();
 }
 let rrTimer = null;
 function rerenderSoon() { clearTimeout(rrTimer); rrTimer = setTimeout(render, 40); }
@@ -352,7 +355,7 @@ const crow = (act, inner, tel, who) => `<div class="crow"><button type="button" 
 
 /* ---------- Évènements ---------- */
 /* Actions qui écrivent directement : bloquées en lecture seule */
-const WRITE_ACTS = new Set(['tick', 'tache-qui', 'add-sugg', 'new', 'fab', 'photo', 'move-from', 'move-to', 'foin-out', 'foin-out-pick', 'copy-ration', 'clear-ex', 'wipe', 'save-cfg', 'add-balle', 'del-balle']);
+const WRITE_ACTS = new Set(['tick', 'tache-qui', 'carte-relier', 'carte-creer', 'add-sugg', 'new', 'fab', 'photo', 'move-from', 'move-to', 'foin-out', 'foin-out-pick', 'copy-ration', 'clear-ex', 'wipe', 'save-cfg', 'add-balle', 'del-balle']);
 function arm(t) {
   const orig = t.innerHTML;
   t.classList.add('armed');

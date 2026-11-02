@@ -22,6 +22,10 @@ Onglet *Équipe* › *Inviter, gérer les accès* (ou *Réglages* › *Gérer l'
 
 Dans l'onglet *Équipe*, chacun tient sa fiche (téléphone, jours de présence, matériel) et voit qui a fait quoi : tâches cochées, séances, dépenses de soins, de cours et d'engagements. Le propriétaire et les demi-pensions se notent dans la fiche de chaque cheval, rubrique *Propriété*.
 
+## Carte des prés
+
+Onglet *Prés* › *Carte* : le plan des prés (13 parcelles, la carrière, le verger, la piste, les abris et les abreuvoirs), en 3D isométrique ou en vue de dessus (bouton 3D / 2D, gardé sur chaque téléphone). La couleur de chaque parcelle dit où en est la rotation ; les chevaux y sont posés et changent de pré quand on les fait glisser (ou vont au box). Une parcelle se relie à un pré du carnet en la touchant (ou dans la fiche du pré, *Sur la carte*). La piste et la carrière sont des espaces sans temps de repos ni de pâture.
+
 ## Points crottins
 
 Chaque coup de main rapporte des crottins (compteur en haut de l'écran, qui ouvre la boutique) : tâches cochées (une tâche rare rapporte plus qu'une quotidienne), rendez-vous gérés, concours et podiums, séances, entretien des prés, foin. Annuler une action retire ses crottins. Les récompenses (de la bière offerte au cours particulier) s'échangent dans la boutique ; la gérante marque le bon *offert* une fois la récompense donnée. Les points se recalculent à partir du carnet : rien à configurer dans Firebase.

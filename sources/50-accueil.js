@@ -73,7 +73,7 @@ function auPreHtml() {
   const ready = ps.filter(x => !x.s.occupe && x.s.pret).sort((a, b) => (b.s.repos ?? -1) - (a.s.repos ?? -1));
   const box = chevaux().filter(h => !openPlace(h.id));
   const rows = [];
-  occ.forEach(({ p, s }) => rows.push(`<button type="button" class="row" data-act="open-pre" data-id="${p.id}">${lead('leaf')}<div class="row-main"><div class="row-t">${esc(p.nom)}</div><div class="row-s">${esc(s.horses.map(hNom).join(', '))}</div></div><span class="pill ${s.over ? 'warn' : 'hay'}">${s.days === 0 ? "Aujourd'hui" : nJ(s.days)}</span></button>`));
+  occ.forEach(({ p, s }) => rows.push(`<button type="button" class="row" data-act="open-pre" data-id="${p.id}">${lead('leaf')}<div class="row-main"><div class="row-t">${esc(p.nom)}</div><div class="row-s">${esc(s.horses.map(hNom).join(', '))}</div></div>${s.sansRotation ? `<span class="pill sable">${typeEspace(p).label}</span>` : `<span class="pill ${s.over ? 'warn' : 'hay'}">${s.days === 0 ? "Aujourd'hui" : nJ(s.days)}</span>`}</button>`));
   ready.slice(0, 2).forEach(({ p, s }) => rows.push(`<button type="button" class="row" data-act="move-to" data-id="${p.id}">${lead('check')}<div class="row-main"><div class="row-t">${esc(p.nom)}</div><div class="row-s">${s.jamais ? 'Libre' : `Prêt · ${nJ(s.repos)} de repos`}</div></div><span class="pill ok">Prêt</span></button>`));
   if (box.length) rows.push(`<button type="button" class="row" data-act="new" data-what="move">${lead('barn')}<div class="row-main"><div class="row-t">Au box</div><div class="row-s">${esc(box.map(h => h.nom).join(', '))}</div></div><span class="row-end">${ic('move', 'sm')}</span></button>`);
   return rows.length ? `<div class="list">${rows.join('')}</div>` : empty('Tous les prés se reposent', 'Utilise « Déplacer » pour mettre des chevaux au pré.');
@@ -87,7 +87,7 @@ function foinMini() {
   return `<div class="list"><button type="button" class="row" data-act="go" data-tab="foin">${lead('bale')}<div class="row-main"><div class="row-t">${t}</div><div class="row-s">${esc(s)}</div></div><span class="row-end">${ic('next', 'sm')}</span></button></div>`;
 }
 function quickHtml() {
-  const occN = pres().filter(p => preStatus(p).occupe).length;
+  const occN = paturages().filter(p => preStatus(p).occupe).length;
   const st = stock();
   const nB = Object.values(st.by).reduce((n, x) => n + Math.max(0, x.n), 0);
   const t = todayISO();

@@ -72,6 +72,11 @@ function rappelPill(r) {
 
 /* ---------- Prés & rotation ---------- */
 const pres = (all = false) => list('pres').filter(p => all || !p.archive).sort(byName);
+/* Espaces sans rotation : la piste et la carrière accueillent des chevaux sans temps de repos ni de pâture */
+const TYPES_ESPACE = [{ id: 'pre', label: 'Pré' }, { id: 'piste', label: 'Piste' }, { id: 'carriere', label: 'Carrière' }];
+const typeEspace = p => (p && TYPES_ESPACE.find(t => t.id === p.type)) || TYPES_ESPACE[0];
+const sansRotation = p => !!p && (p.type === 'piste' || p.type === 'carriere');
+const paturages = (all = false) => pres(all).filter(p => !sansRotation(p));
 const openPlace = hid => list('places').find(p => p.horseId === hid && !p.fin) || null;
 function horseWhere(hid) {
   const o = openPlace(hid);
@@ -98,6 +103,11 @@ function segments(preId) {
 }
 function preStatus(p) {
   const C = cfg(), t = todayISO();
+  if (sansRotation(p)) {
+    const horses = list('places').filter(x => x.preId === p.id && !x.fin).map(x => x.horseId);
+    const segs = segments(p.id), last = segs[segs.length - 1], ouvert = !!(last && last.open);
+    return { sansRotation: true, occupe: horses.length > 0, horses, depuis: ouvert ? last.a : null, days: ouvert ? diffDays(last.a, t) : 0, over: false, pret: false, jamais: !segs.length, cible: null, max: null };
+  }
   const cible = p.repos || C.repos, max = p.paturage || C.paturage;
   const segs = segments(p.id);
   const last = segs[segs.length - 1];
@@ -118,7 +128,7 @@ function joursPatures(preId, depuis) {
 }
 /* Pré conseillé : le plus reposé, de préférence ayant atteint sa cible */
 function prePret(exclude) {
-  const c = pres().filter(p => p.id !== exclude).map(p => ({ p, s: preStatus(p) })).filter(x => !x.s.occupe);
+  const c = paturages().filter(p => p.id !== exclude).map(p => ({ p, s: preStatus(p) })).filter(x => !x.s.occupe);
   c.sort((a, b) => (b.s.pret - a.s.pret) || ((b.s.repos ?? 9999) - (a.s.repos ?? 9999)));
   return c[0] || null;
 }

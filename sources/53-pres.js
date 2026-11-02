@@ -1,15 +1,25 @@
 
 /* ---------- Prés : rotation, repos, entretien ---------- */
 function statusPill(s) {
+  if (s.sansRotation) return `<span class="pill sable">${s.occupe ? 'Occupée' : 'Libre'}</span>`;
   if (s.occupe) return s.over ? '<span class="pill warn">À changer</span>' : '<span class="pill hay">En pâture</span>';
   if (s.jamais) return '<span class="pill info">Libre</span>';
   return s.pret ? '<span class="pill ok">Prêt</span>' : '<span class="pill">Au repos</span>';
 }
 function pcard({ p, s }, detail = false) {
-  const sub = (p.surface ? `${num(p.surface, 2)} ha` : 'Surface non renseignée')
-    + (s.occupe && p.surface ? ` · ${num(s.horses.length / p.surface, 1)} cheval/ha` : '');
+  const sub = s.sansRotation ? [typeEspace(p).label, p.surface ? `${num(p.surface, 2)} ha` : ''].filter(Boolean).join(' · ')
+    : (p.surface ? `${num(p.surface, 2)} ha` : 'Surface non renseignée') + (s.occupe && p.surface ? ` · ${num(s.horses.length / p.surface, 1)} cheval/ha` : '');
   const inner = `<div class="row-main"><div class="row-t">${esc(p.nom)} ${exTag(p)}</div><div class="row-s">${sub}</div></div>${statusPill(s)}`;
   const head = detail ? `<div class="pcard-h">${inner}</div>` : `<button type="button" class="pcard-h" data-act="open-pre" data-id="${p.id}">${inner}</button>`;
+  if (s.sansRotation) {
+    // piste, carrière : on suit seulement qui y est, sans repos ni durée de pâture
+    if (s.occupe) return `<article class="pcard">${head}
+      <div class="pnums"><span class="big">${s.days}</span><span class="unit">${pl(s.days, 'jour')} ${p.type === 'piste' ? 'sur la piste' : 'en carrière'}</span></div>
+      <div class="wrap">${s.horses.map(id => hchip(cheval(id))).join('')}</div>
+      <button type="button" class="btn small" data-act="move-from" data-id="${p.id}">${ic('move', 'sm')}Déplacer</button></article>`;
+    return `<article class="pcard">${head}<p class="note">Pas de temps de repos ni de pâture à suivre ici.</p>
+      <button type="button" class="btn small" data-act="move-to" data-id="${p.id}">${ic('plus', 'sm')}Y mettre des chevaux</button></article>`;
+  }
   if (s.occupe) {
     const pct = Math.min(100, Math.round(s.days / s.max * 100));
     return `<article class="pcard">${head}
@@ -28,8 +38,17 @@ function pcard({ p, s }, detail = false) {
 const col = html => `<div style="display:flex;flex-direction:column;gap:12px">${html}</div>`;
 
 VIEWS.pres = () => {
-  const ps = pres().map(p => ({ p, s: preStatus(p) }));
-  if (!ps.length) return { title: 'Prés', eyebrow: 'Rotation de pâture', html: emptyH('Aucun pré', 'Ajoute tes parcelles avec le bouton +. Le carnet comptera les jours de pâture et de repos de chacune.'), fab: () => formPre(null), fabLabel: 'Nouveau pré' };
+  // la carte du plan (3D ou vue de dessus), ou la liste des prés
+  const vue = (ui.presVue || (window.EQ_MODE ? 'carte' : 'liste')) === 'carte' ? 'carte' : 'liste';
+  const seg = segCtl('presVue', [['carte', 'Carte'], ['liste', 'Liste']], vue);
+  if (vue === 'carte') return { title: 'Prés', eyebrow: 'Carte des prés', html: seg + carteHtml(), fab: menuPres, fabLabel: 'Ajouter' };
+  if (!pres().length) return { title: 'Prés', eyebrow: 'Rotation de pâture', html: seg + emptyH('Aucun pré', 'Ajoute tes parcelles avec le bouton +, ou relie-les depuis la carte. Le carnet comptera les jours de pâture et de repos de chacune.'), fab: () => formPre(null), fabLabel: 'Nouveau pré' };
+  return { title: 'Prés', eyebrow: 'Rotation de pâture', html: seg + presListe(), fab: menuPres, fabLabel: 'Ajouter' };
+};
+/* La liste : prés en rotation (pâture, prêts, repos), puis piste et carrière, puis le box */
+function presListe() {
+  const ps = paturages().map(p => ({ p, s: preStatus(p) }));
+  const esp = pres().filter(sansRotation).map(p => ({ p, s: preStatus(p) }));
   const occ = ps.filter(x => x.s.occupe).sort((a, b) => b.s.days - a.s.days);
   const prets = ps.filter(x => !x.s.occupe && x.s.pret).sort((a, b) => (b.s.repos ?? -1) - (a.s.repos ?? -1));
   const repos = ps.filter(x => !x.s.occupe && !x.s.pret).sort((a, b) => (b.s.repos / b.s.cible) - (a.s.repos / a.s.cible));
@@ -41,12 +60,16 @@ VIEWS.pres = () => {
   if (occ.length) html += section('En pâture', col(occ.map(x => pcard(x)).join('')));
   if (prets.length) html += section('Prêts à pâturer', col(prets.map(x => pcard(x)).join('')));
   if (repos.length) html += section('Au repos', col(repos.map(x => pcard(x)).join('')));
+  if (esp.length) {
+    const types = new Set(esp.map(x => x.p.type));
+    html += section(types.size > 1 ? 'Piste et carrière' : typeEspace(esp[0].p).label, col(esp.map(x => pcard(x)).join('')));
+  }
   const box = chevaux().filter(h => !openPlace(h.id));
   if (box.length) html += section('Au box', `<div class="list"><div class="row">${lead('barn')}<div class="row-main"><div class="wrap">${box.map(hchip).join('')}</div></div><button type="button" class="btn small" data-act="new" data-what="move">Placer</button></div></div>`);
   const arch = list('pres').filter(p => p.archive).sort(byName);
   if (arch.length) html += `<div class="sec"><button type="button" class="link" data-act="toggle-arch-pres" style="align-self:flex-start">${ui.showArchPres ? 'Masquer' : 'Afficher'} les prés archivés (${arch.length})</button>${ui.showArchPres ? `<div class="list">${arch.map(p => `<button type="button" class="row" data-act="open-pre" data-id="${p.id}">${lead('fence')}<div class="row-main"><div class="row-t">${esc(p.nom)}</div></div></button>`).join('')}</div>` : ''}</div>`;
-  return { title: 'Prés', eyebrow: 'Rotation de pâture', html, fab: menuPres, fabLabel: 'Ajouter' };
-};
+  return html;
+}
 ACT['toggle-arch-pres'] = () => { ui.showArchPres = !ui.showArchPres; saveUi(); render(); };
 
 VIEWS.pre = p => {
@@ -55,7 +78,9 @@ VIEWS.pre = p => {
   const s = preStatus(pre), t = todayISO(), yr = t.slice(0, 4);
   const segs = segments(pre.id).slice().reverse();
   let html = pcard({ p: pre, s }, true);
-  html += `<div class="stats">
+  html += s.sansRotation ? `<div class="stats">
+    <div class="stat"><b>${joursPatures(pre.id, yr + '-01-01')}</b><span>jours occupés en ${yr}</span></div></div>`
+    : `<div class="stats">
     <div class="stat"><b>${joursPatures(pre.id, yr + '-01-01')}</b><span>jours pâturés en ${yr}</span></div>
     <div class="stat"><b>${s.cible}</b><span>jours de repos visés</span></div>
     <div class="stat"><b>${s.max}</b><span>jours de pâture max</span></div></div>`;
@@ -72,7 +97,7 @@ VIEWS.pre = p => {
     : "<p class=\"note\">Aucun passage enregistré pour l'instant.</p>");
   if (pre.notes) html += `<div class="card"><div class="eyebrow">Notes</div><div style="white-space:pre-wrap">${esc(pre.notes)}</div></div>`;
   html += `<div class="btnrow"><button type="button" class="btn" data-act="edit-pre" data-id="${pre.id}">${ic('edit', 'sm')}Modifier le pré</button></div>`;
-  const eyebrow = [pre.surface ? `${num(pre.surface, 2)} ha` : '', pre.archive ? 'archivé' : ''].filter(Boolean).join(' · ') || 'Pré';
+  const eyebrow = [sansRotation(pre) ? typeEspace(pre).label : '', pre.surface ? `${num(pre.surface, 2)} ha` : '', pre.archive ? 'archivé' : ''].filter(Boolean).join(' · ') || 'Pré';
   return { title: pre.nom, eyebrow, html, fab: () => formEntretien(null, { pid: pre.id }), fabLabel: 'Ajouter un entretien' };
 };
 
@@ -97,7 +122,8 @@ function formMove(pre = {}) {
   if (pre.hid) sel = [pre.hid];
   const destOpts = ps.filter(p => p.id !== pre.from).map(p => {
     const s = preStatus(p);
-    const sub = s.occupe ? `occupé · ${nJ(s.days)}` : s.jamais ? 'libre' : `repos ${nJ(s.repos)}${s.pret ? ' · prêt' : ''}`;
+    const sub = s.sansRotation ? `${typeEspace(p).label.toLowerCase()} · ${s.occupe ? 'occupée' : 'libre'}`
+      : s.occupe ? `occupé · ${nJ(s.days)}` : s.jamais ? 'libre' : `repos ${nJ(s.repos)}${s.pret ? ' · prêt' : ''}`;
     return { v: p.id, html: `<span class="two"><span>${esc(p.nom)}</span><small>${esc(sub)}</small></span>` };
   });
   destOpts.push({ v: '__box', html: `${ic('barn', 'sm')}<span>Box / écurie</span>` });
@@ -128,31 +154,41 @@ function formMove(pre = {}) {
 ACT['move-from'] = d => formMove({ from: d.id });
 ACT['move-to'] = d => formMove({ to: d.id });
 
-function formPre(id) {
+function formPre(id, pre = {}, opts = {}) {
   const ex = id ? get('pres', id) : null;
   if (id && !ex) return;
-  const p = ex ? clone(ex) : { nom: '' };
+  const p = ex ? clone(ex) : Object.assign({ nom: '' }, pre);
   const C = cfg();
   const body = `
+    ${grp('Type', chips('type', TYPES_ESPACE.map(t => ({ v: t.id, l: t.label })), p.type || 'pre'), 'Piste et carrière : on suit qui y est, sans temps de repos ni de pâture.')}
     ${fld('Nom', inp('f_nom', p.nom, 'required autocomplete="off" autocapitalize="sentences" placeholder="ex. Pré du bas"'))}
     ${fld('Surface (ha)', inp('f_surf', p.surface != null ? String(p.surface).replace('.', ',') : '', numAttr + ' placeholder="ex. 1,5"'))}
-    <div class="grid2">${fld('Repos visé (jours)', inp('f_repos', p.repos, `inputmode="numeric" autocomplete="off" placeholder="${C.repos}"`))}${fld('Pâture max (jours)', inp('f_pat', p.paturage, `inputmode="numeric" autocomplete="off" placeholder="${C.paturage}"`))}</div>
-    <p class="hint">Laisse vide pour garder les valeurs des réglages : ${C.repos} jours de repos, ${C.paturage} jours de pâture.</p>
+    <div id="w_rot"${sansRotation(p) ? ' hidden' : ''}><div class="grid2">${fld('Repos visé (jours)', inp('f_repos', p.repos, `inputmode="numeric" autocomplete="off" placeholder="${C.repos}"`))}${fld('Pâture max (jours)', inp('f_pat', p.paturage, `inputmode="numeric" autocomplete="off" placeholder="${C.paturage}"`))}</div>
+    <p class="hint">Laisse vide pour garder les valeurs des réglages : ${C.repos} jours de repos, ${C.paturage} jours de pâture.</p></div>
+    ${grp('Sur la carte', chips('carte', zonesOpts(p), (p.carte || (p.id && zoneDuPre(p))) ? [p.carte || zoneDuPre(p)] : [], { optional: true }), "Le numéro de la parcelle sur le plan (ou la piste, la carrière).")}
     ${fld('Notes', area('f_notes', p.notes, 'rows="3" placeholder="Abreuvoir, abri, type d\'herbe, clôture…"'))}
     ${ex ? `<label class="check"><input type="checkbox" id="f_arch"${p.archive ? ' checked' : ''}> Archiver ce pré</label>` : ''}`;
-  openSheet(ex ? 'Modifier le pré' : 'Nouveau pré', body, {
-    focus: ex ? null : '#f_nom',
-    onSubmit: () => {
+  openSheet(ex ? 'Modifier' : 'Nouveau pré', body, {
+    focus: ex || p.nom ? null : '#f_nom',
+    onMount: f => f.addEventListener('chipchange', e => { if (e.detail.name === 'type') $('#w_rot').hidden = (chipVal(f, 'type') || 'pre') !== 'pre'; }),
+    onSubmit: f => {
       const nom = val('f_nom');
       if (!nom) return 'Indique le nom du pré.';
       const surface = parseNum(val('f_surf'));
       if (val('f_surf') && (surface == null || surface <= 0)) return 'La surface doit être un nombre positif, en hectares.';
       const repos = parseNum(val('f_repos')), pat = parseNum(val('f_pat'));
       if ((val('f_repos') && (repos == null || repos < 1)) || (val('f_pat') && (pat == null || pat < 1))) return "Les durées doivent être d'au moins 1 jour.";
-      Object.assign(p, { nom, surface, repos: repos ? Math.round(repos) : null, paturage: pat ? Math.round(pat) : null, notes: val('f_notes') });
+      const type = chipVal(f, 'type') || 'pre';
+      Object.assign(p, { type, nom, surface, repos: type === 'pre' && repos ? Math.round(repos) : null, paturage: type === 'pre' && pat ? Math.round(pat) : null, notes: val('f_notes') });
+      if (document.querySelector('[data-chips="carte"]')) {
+        p.carte = chipVal(f, 'carte');
+        // une parcelle du plan ne va qu'à un seul espace
+        if (p.carte) list('pres').filter(o => o.id !== p.id && o.carte === p.carte).forEach(o => put('pres', Object.assign({}, o, { carte: null })));
+      }
       if (ex) p.archive = $('#f_arch').checked;
-      put('pres', p);
-      toast(ex ? 'Pré enregistré' : `${nom} ajouté`);
+      const saved = put('pres', p);
+      toast(ex ? `${nom} enregistré${type === 'pre' ? '' : 'e'}` : `${nom} ajouté${type === 'pre' ? '' : 'e'}`);
+      if (opts.apres) opts.apres(saved);
     },
     onDelete: ex ? () => deletePre(id) : null,
     delConfirm: 'Supprimer aussi son historique ?'
