@@ -48,7 +48,7 @@ VIEWS.equipe = () => {
     <div class="stat"><b>${B.taches}</b><span>${pl(B.taches, 'tâche cochée', 'tâches cochées')}</span></div>
     <div class="stat"><b>${B.seances}</b><span>${pl(B.seances, 'séance', 'séances')} de travail</span></div>
     <div class="stat"><b>${eurRond(B.total)}</b><span>de dépenses</span></div></div>`;
-  html += section(`Crottins ${P.label}`, classementCrottins(P), `<button type="button" class="link" data-act="boutique">Boutique ${ic('next', 'sm')}</button>`);
+  if (crottinsActifs()) html += section(`Crottins ${P.label}`, classementCrottins(P), `<button type="button" class="link" data-act="boutique">Boutique ${ic('next', 'sm')}</button>`);
   // les membres, puis les personnes hors équipe qui apparaissent dans le carnet (demi-pension, cavalier, payeur…)
   const keys = new Set(ms.map(m => 'u:' + m.id)), autres = new Set();
   const voir = k => { if (k && k !== '_' && !keys.has(k)) autres.add(k); };
@@ -89,7 +89,7 @@ VIEWS.membre = p => {
     <div class="row-s">${esc(m ? (ROLE_LABEL[m.role] || '') : 'Hors équipe')}</div>
     ${m && m.email ? `<div class="row-s trunc">${esc(m.email)}</div>` : ''}
     ${dispo ? `<div class="row-s">Jours de présence : ${esc(dispo)}</div>` : ''}
-    <div class="wrap crot-ligne">${crottinSvg('s')}<b>${num(soldeDe(pe.k), 0)}</b><span class="small muted">${pl(soldeDe(pe.k), 'crottin')} · ${esc(rangDe(crottinsDe(pe.k).gagnes).r.nom)}</span></div>
+    ${!crottinsActifs() ? '' : `<div class="wrap crot-ligne">${crottinSvg('s')}<b>${num(soldeDe(pe.k), 0)}</b><span class="small muted">${pl(soldeDe(pe.k), 'crottin')} · ${esc(rangDe(crottinsDe(pe.k).gagnes).r.nom)}</span></div>`}
     ${btns ? `<div class="btnrow">${btns}</div>` : ''}</div></div>`;
   html += perSeg();
   html += `<div class="stats">
@@ -123,7 +123,7 @@ ACT['ma-fiche'] = () => { const k = kMoi(); if (k) push('membre', { k }); else t
 function menuEquipe() {
   const mi = (act, icon, t, s) => `<button type="button" class="row" data-act="${act}">${lead(icon)}<div class="row-main"><div class="row-t">${t}</div><div class="row-s">${s}</div></div></button>`;
   openSheet('Ajouter', `<div class="list">
-    ${estGerante() ? mi('equipe', 'users', "Inviter quelqu'un", 'Par adresse e-mail, avec ses droits') : ''}
+    ${estGerante() ? mi('equipe', 'users', "Inviter quelqu'un", 'Par un lien, un code ou une adresse e-mail') : ''}
     ${mi('new-dp', 'card', 'Demi-pension', 'Qui prend quel cheval, quels jours')}
     ${mi('new-contact', 'phone', 'Contact utile', 'Vétérinaire, maréchal, coach…')}
     ${me.uid && get('membres', me.uid) ? mi('edit-profil-moi', 'user', 'Ma fiche', 'Téléphone, jours de présence, matériel') : ''}

@@ -15,7 +15,7 @@ const CROT = {
 };
 const EFFORTS = [{ id: 'leger', label: 'Léger', x: .6 }, { id: 'normal', label: 'Normal', x: 1 }, { id: 'costaud', label: 'Costaud', x: 2 }];
 /* Du moins cher au plus cher : il faut plusieurs mois de coups de main pour le tapis */
-const BOUTIQUE = [
+const BOUTIQUE_DEPART = [
   { id: 'biere', nom: 'Une bière offerte', prix: 150, ic: 'biere', tint: 'paille' },
   { id: 'apero', nom: 'Un apéro offert', prix: 300, ic: 'apero', tint: 'ciel' },
   { id: 'repas', nom: 'Un repas offert', prix: 550, ic: 'repas', tint: 'menthe' },
@@ -23,6 +23,22 @@ const BOUTIQUE = [
   { id: 'tapis', nom: 'Un tapis offert', prix: 1200, ic: 'tapis', tint: 'ciel' },
   { id: 'particulier', nom: 'Un cours particulier offert', prix: 1500, ic: 'particulier', tint: 'paille' }
 ];
+/* Chaque écurie a sa boutique (Réglages › Crottins, pour la gérante), sinon la liste de départ */
+const BQ_ICONES = ['biere', 'apero', 'repas', 'collectif', 'tapis', 'particulier'];
+const BQ_TEINTES = ['paille', 'ciel', 'menthe', 'prairie'];
+function boutique() {
+  const b = cfg().boutique;
+  if (!b) return BOUTIQUE_DEPART;
+  return b.filter(it => it && typeof it.id === 'string' && String(it.nom || '').trim() && Number(it.prix) > 0)
+    .map(it => ({ id: it.id, nom: String(it.nom).trim(), prix: Math.round(Number(it.prix)), ic: BQ_ICONES.includes(it.ic) ? it.ic : 'particulier', tint: BQ_TEINTES.includes(it.tint) ? it.tint : 'paille' }))
+    .sort((a, b) => a.prix - b.prix);
+}
+/* Points crottins dans cette écurie (activés par défaut) ; ils comptent à partir de sa date de départ */
+const crottinsActifs = () => cfg().crottins;
+function crotDebut() {
+  const e = ecurieOuverte(), d = e && e.crottinsDepuis;
+  return typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d) ? d : CROT.debut;
+}
 const RANGS = [
   { min: 0, nom: 'Poulain' }, { min: 200, nom: 'Yearling' }, { min: 600, nom: 'Cheval de club' },
   { min: 1500, nom: 'Cheval de concours' }, { min: 3000, nom: 'Crack' }, { min: 6000, nom: "Légende de l'écurie" }
@@ -53,7 +69,7 @@ const ptsSoin = s => Math.max(...soinTypes(s).map(x => CROT.soins[x] || CROT.soi
 let crotMemo = null;
 function crottinsEntrees() {
   if (crotMemo && crotMemo.v === dataV && crotMemo.j === todayISO()) return crotMemo.by;
-  const D = CROT.debut, t = todayISO(), by = new Map(), vus = new Set();
+  const D = crotDebut(), t = todayISO(), by = new Map(), vus = new Set();
   const jourT = ms => isoOf(new Date(ms));
   const recent = (o, d, j) => !!(o.creePar && o.creePar.t) && diffDays(d, jourT(o.creePar.t)) <= j;
   const auteur = o => o.creePar ? { uid: o.creePar.uid || null, nom: o.creePar.nom || '' } : null;
@@ -173,13 +189,13 @@ function rangDe(total) {
 }
 /* Rythme récent : crottins par semaine sur les quatre dernières semaines (ou depuis le lancement) */
 function rythmeDe(k) {
-  const t = todayISO(), from = addDays(t, -27), debut = from > CROT.debut ? from : CROT.debut;
+  const t = todayISO(), from = addDays(t, -27), D = crotDebut(), debut = from > D ? from : D;
   const jours = Math.max(7, diffDays(debut, t) + 1);
   return crottinsDe(k, debut).gagnes / jours * 7;
 }
 const delaiTxt = sem => sem <= 1 ? 'moins d’une semaine à ton rythme' : sem < 8.5 ? `environ ${Math.ceil(sem)} semaines à ton rythme` : `environ ${Math.round(sem / 4.35)} mois à ton rythme`;
 /* L'estimation n'a de sens qu'après une première semaine de jeu */
-const rythmeFiable = () => diffDays(CROT.debut, todayISO()) >= 6;
+const rythmeFiable = () => diffDays(crotDebut(), todayISO()) >= 6;
 
 /* ---------- Compteur de l'en-tête ---------- */
 let crotVu = null, crotRaf = 0, crotTenu = 0;
@@ -205,10 +221,10 @@ function majCrottins() {
   const b = document.getElementById('crotBtn');
   if (!b) return;
   const k = kMoi();
-  b.hidden = !k;
-  if (!k) return;
+  b.hidden = !k || !crottinsActifs();
+  if (b.hidden) return;
   const v = soldeDe(k);
-  b.classList.toggle('peut', BOUTIQUE.some(it => v >= it.prix));
+  b.classList.toggle('peut', boutique().some(it => v >= it.prix));
   b.setAttribute('aria-label', `${num(v, 0)} ${pl(v, 'crottin')} : ouvrir la boutique`);
   if (Date.now() >= crotTenu) compteVers(v);
 }
@@ -220,7 +236,7 @@ let crotDoux = false;
 const photoCrottins = () => { const m = new Map(); crottinsEntrees().forEach((es, k) => m.set(k, new Map(es.map(e => [e.k, e])))); return m; };
 /* Appelé juste avant chaque enregistrement fait sur ce téléphone */
 function crotAvant() {
-  if (crotSilence || restauration) return;
+  if (crotSilence || restauration || !crottinsActifs()) return;
   if (!crotPhoto) { crotPhoto = photoCrottins(); tenirCompteur(400); }
   clearTimeout(crotT);
   crotT = setTimeout(crotApres, 90);
@@ -419,8 +435,11 @@ function carteRecompense(it, solde, rythme, peutAcheter) {
     ${ok && peutAcheter ? `<button type="button" class="btn small primary" data-act="echanger" data-id="${it.id}">Échanger</button>` : ''}
   </div>`;
 }
-const itemDe = id => BOUTIQUE.find(x => x.id === id) || null;
+const itemDe = id => boutique().find(x => x.id === id) || BOUTIQUE_DEPART.find(x => x.id === id) || null;
+/* Un bon garde le nom et le prix de la récompense au moment de l'échange, même si la boutique a changé depuis */
+const bonItem = b => Object.assign({ ic: 'particulier', tint: 'paille' }, itemDe(b.item) || {}, { nom: b.nom || (itemDe(b.item) || {}).nom || 'Récompense' });
 VIEWS.boutique = () => {
+  if (!crottinsActifs()) return { title: 'Boutique', eyebrow: 'Points crottins', html: emptyH('Points crottins désactivés', '<p>La gérante a coupé les points crottins dans cette écurie.</p>'), fab: null };
   const k = kMoi(), solde = k ? soldeDe(k) : 0, tot = k ? crottinsDe(k).gagnes : 0, R = rangDe(tot), rythme = k ? rythmeDe(k) : 0;
   const peutAcheter = !!(window.EQ_MODE && window.EQ && me.uid && get('membres', me.uid));
   const pctR = R.next ? Math.round((tot - R.r.min) / (R.next.min - R.r.min) * 100) : 100;
@@ -431,12 +450,12 @@ VIEWS.boutique = () => {
       ${R.next ? `<div class="gauge"><i style="width:${pctR}%"></i></div>` : ''}
     </div></div>
     <button type="button" class="link" data-act="crot-regles" style="align-self:flex-start">${crottinSvg('s')}Comment gagner des crottins ?</button>`;
-  html += section('Récompenses', `<div class="bq-list">${BOUTIQUE.map(it => carteRecompense(it, solde, rythme, peutAcheter)).join('')}</div>
+  html += section('Récompenses', `<div class="bq-list">${boutique().map(it => carteRecompense(it, solde, rythme, peutAcheter)).join('') || '<p class="note">Aucune récompense pour le moment.</p>'}</div>
     ${peutAcheter ? '' : '<p class="note">Les échanges se font dans l’appli installable, avec ton compte de l’équipe.</p>'}`);
   // mes bons
   const mes = k ? bonsDe(k).filter(b => b.statut !== 'annule').sort((a, b) => (b.t || 0) - (a.t || 0)) : [];
   if (mes.length) html += section('Mes bons', `<div class="list">${mes.map(b => {
-    const it = itemDe(b.item) || { nom: b.nom || 'Récompense', ic: 'particulier', tint: 'paille' };
+    const it = bonItem(b);
     const etat = b.statut === 'offert' ? `<span class="pill ok">${ic('check')}Offert ${b.offertLe ? dRel(isoOf(new Date(b.offertLe))) : ''}</span>` : '<span class="pill info">À recevoir</span>';
     return `<div class="row"><span class="qa-ic ${it.tint}">${ic(it.ic)}</span><div class="row-main"><div class="row-t">${esc(it.nom)}</div><div class="row-s">${num(Number(b.prix), 0)} crottins · le ${dShort(isoOf(new Date(b.t || Date.now())))}</div><div class="wrap" style="margin-top:4px">${etat}</div></div>${b.statut === 'attente' ? `<button type="button" class="btn small" data-act="bon-annuler" data-id="${esc(b.id)}" data-confirm="Rembourser ?">Annuler</button>` : ''}</div>`;
   }).join('')}</div>`);
@@ -446,13 +465,16 @@ VIEWS.boutique = () => {
     membres().forEach(m => bonsDe('u:' + m.id).filter(b => b.statut === 'attente').forEach(b => att.push({ m, b })));
     att.sort((a, b) => (a.b.t || 0) - (b.b.t || 0));
     html += section(`Bons à offrir${att.length ? ` <span class="count">${att.length}</span>` : ''}`, att.length ? `<div class="list">${att.map(({ m, b }) => {
-      const it = itemDe(b.item) || { nom: b.nom || 'Récompense' };
+      const it = bonItem(b);
       return `<div class="row">${pav({ uid: m.id })}<div class="row-main"><div class="row-t">${esc(nomCourt({ uid: m.id }))} · ${esc(it.nom)}</div><div class="row-s">Demandé ${esc(dRel(isoOf(new Date(b.t || Date.now()))))}</div></div><button type="button" class="btn small primary" data-act="bon-offert" data-uid="${esc(m.id)}" data-id="${esc(b.id)}">C’est offert</button></div>`;
     }).join('')}</div>` : '<p class="note">Quand quelqu’un échange ses crottins, son bon apparaît ici : tu le marques offert une fois la récompense donnée.</p>');
   }
   return { title: 'Boutique', eyebrow: 'Points crottins', html, fab: null };
 };
-ACT.boutique = () => { const t = topView(); if (t && t.view === 'boutique') return; push('boutique'); };
+ACT.boutique = () => {
+  if (!crottinsActifs()) { toast('Les points crottins sont désactivés dans cette écurie.'); return; }
+  const t = topView(); if (t && t.view === 'boutique') return; push('boutique');
+};
 ACT['crot-regles'] = () => {
   const tl = (f, n) => ptsTache({ freq: f, n });
   const ligne = (icon, t, s, p) => `<div class="row">${lead(icon)}<div class="row-main"><div class="row-t">${t}</div>${s ? `<div class="row-s">${s}</div>` : ''}</div><span class="row-end bq-pts">${p}</span></div>`;
@@ -473,10 +495,10 @@ ACT['crot-regles'] = () => {
     ${ligne('bale', 'Balle entamée', `${CROT.ballesJour} par jour au plus`, `+${CROT.balle}`)}
     ${ligne('move', 'Chevaux déplacés', 'Un par cheval et par jour', `+${CROT.deplacement}`)}
   </div>
-  <p class="note">Annuler une action retire ses crottins. Ce qui est noté trop tard ne rapporte rien : une semaine au plus après coup, deux jours pour les déplacements et les balles entamées. Le compteur part du ${dFull(CROT.debut)}.</p>`);
+  <p class="note">Annuler une action retire ses crottins. Ce qui est noté trop tard ne rapporte rien : une semaine au plus après coup, deux jours pour les déplacements et les balles entamées. Le compteur part du ${dFull(crotDebut())}.</p>`);
 };
 ACT.echanger = d => {
-  const it = itemDe(d.id), k = kMoi();
+  const it = boutique().find(x => x.id === d.id) || null, k = kMoi();
   if (!it || !k || !window.EQ || !me.uid) return;
   if (soldeDe(k) < it.prix) { toast('Pas encore assez de crottins.', { danger: true }); return; }
   openSheet(it.nom, `<div class="bq-confirm"><span class="qa-ic ${it.tint}">${ic(it.ic)}</span><p>Échanger <b>${num(it.prix, 0)} crottins</b> contre ${esc(it.nom.charAt(0).toLowerCase() + it.nom.slice(1))} ?</p></div>

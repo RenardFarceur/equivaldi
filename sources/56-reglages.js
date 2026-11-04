@@ -16,9 +16,7 @@ VIEWS.reglages = () => {
   if (!validISO(fin) || fin <= t) fin = `${+t.slice(0, 4) + 1}-${C.finSaison}`;
   const rap = SOINS.filter(T => T.id !== 'autre').map(T =>
     `<div class="row"><div class="row-main"><div class="row-t">${T.label}</div><div class="row-s">${dureeTxt(C.rappels[T.id])}</div></div>${rinp('r_' + T.id, C.rappels[T.id] || '', 'Intervalle en jours : ' + T.label)}</div>`).join('');
-  let html = equipeHtml() + section('Crottins', `${segCtl('crotAnim', [['grand', 'Grande animation'], ['discret', 'Discrète']], ui.crotAnim === 'discret' ? 'discret' : 'grand')}
-    <p class="note">Ce que montre l'appli quand tu gagnes des crottins, sur ce téléphone.</p>
-    <button type="button" class="link" data-act="boutique" style="align-self:flex-start">${crottinSvg('s')}Ouvrir la boutique</button>`) + section('Rappels de soins', `<div class="list">${rap}</div><p class="note">Nombre de jours entre deux soins. 0 ou vide : pas de rappel. Un soin peut aussi porter sa propre date de rappel. Ces réglages sont communs à toutes les personnes du carnet.</p>`);
+  let html = monEcurieHtml() + equipeHtml() + crotSection() + section('Rappels de soins', `<div class="list">${rap}</div><p class="note">Nombre de jours entre deux soins. 0 ou vide : pas de rappel. Un soin peut aussi porter sa propre date de rappel. Ces réglages sont communs à toutes les personnes du carnet.</p>`);
   html += section('Alertes et prés', `<div class="list">
     <div class="row"><div class="row-main"><div class="row-t">Prévenir avant l'échéance</div><div class="row-s">Soins à prévoir sur l'accueil</div></div>${rinp('c_alerte', C.alerte, "Jours d'avance")}</div>
     <div class="row"><div class="row-main"><div class="row-t">Repos visé d'un pré</div><div class="row-s">Avant d'y remettre des chevaux</div></div>${rinp('c_repos', C.repos, 'Jours de repos visés')}</div>
@@ -132,76 +130,3 @@ ACT.wipe = () => {
   toast('Toutes les données ont été effacées');
 };
 
-/* ---------- Gérer à plusieurs ---------- */
-function equipeHtml() {
-  if (window.EQ_MODE && window.EQ) return section('Ton compte', `<div class="card">
-    <div class="row-main"><div class="row-t">${esc(EQ.email)}</div><div class="row-s">${esc(ROLE_LABEL[EQ.role] || '')}</div></div>
-    ${fld('Ton prénom', inp('f_moi', moiNom(), 'autocomplete="given-name" autocapitalize="words"'), "Affiché dans l'équipe et à côté des tâches que tu coches.")}
-    <div class="btnrow">
-      <button type="button" class="btn small" data-act="save-moi">${ic('check', 'sm')}Enregistrer le prénom</button>
-      <button type="button" class="btn small" data-act="ma-fiche">${ic('user', 'sm')}Ma fiche</button>
-      ${EQ.role === 'gerante' ? `<button type="button" class="btn small" data-act="equipe">${ic('users', 'sm')}Gérer l'équipe</button>` : ''}
-      <button type="button" class="btn small" data-act="deconnexion">Se déconnecter</button>
-    </div>
-  </div>`);
-  return section('Gérer à plusieurs', `<div class="card">
-    <p class="note" style="color:var(--ink)">Pour partager le carnet : depuis un ordinateur, ouvre cette page sur claude.ai, clique sur <b>Partager</b>, invite chaque personne par e-mail et choisis <b>Peut modifier</b>. Chacun se connecte avec son compte Claude et voit les mêmes données, en direct.</p>
-    <p class="note">N'active pas « Toute personne ayant le lien » : les invités ne pourraient plus que consulter.</p>
-    ${fld('Ton prénom', inp('f_moi', getMoi() || me.platformName || '', 'autocomplete="given-name" autocapitalize="words"'), 'Affiché à côté des tâches que tu coches. Il reste sur ce téléphone.')}
-    <button type="button" class="btn small" data-act="save-moi" style="align-self:flex-start">${ic('check', 'sm')}Enregistrer le prénom</button>
-  </div>`);
-}
-/* Équipe de la version installable : invitations par adresse e-mail et rôles */
-ACT.deconnexion = () => { if (window.EQ) EQ.deconnexion(); };
-ACT.equipe = () => equipeSheet();
-async function equipeSheet(msg = '') {
-  if (!window.EQ) return;
-  let mb = [], inv = [];
-  try { [mb, inv] = await Promise.all([EQ.membres(), EQ.invitations()]); }
-  catch (e) { toast("Impossible de charger l'équipe : vérifie ta connexion.", { danger: true }); return; }
-  // une invitation dont la personne a déjà créé son compte est terminée : on la retire
-  const inscrits = new Set(mb.map(m => String(m.email || '').toLowerCase()));
-  const faites = inv.filter(i => inscrits.has(String(i.email).toLowerCase()));
-  inv = inv.filter(i => !inscrits.has(String(i.email).toLowerCase()));
-  if (faites.length) Promise.all(faites.map(i => EQ.annulerInvitation(i.email))).catch(() => { /* réessayé à la prochaine ouverture */ });
-  const lien = EQ.lien();
-  const membres = mb.sort((a, b) => (a.role === 'gerante' ? -1 : 0) - (b.role === 'gerante' ? -1 : 0)).map(m => `<div class="row"><div class="row-main">
-      <div class="row-t">${esc(m.nom || m.email)}${m.moi ? ' <span class="pill ok">Toi</span>' : ''}</div><div class="row-s">${esc(m.email)} · ${esc(ROLE_LABEL[m.role] || m.role)}</div>
-      ${m.role === 'gerante' ? '' : `<div class="wrap" style="margin-top:6px"><button type="button" class="btn small" data-act="eq-role" data-uid="${esc(m.uid)}" data-role="${m.role === 'lecture' ? 'equipe' : 'lecture'}">${m.role === 'lecture' ? 'Passer en « Peut modifier »' : 'Passer en lecture seule'}</button><button type="button" class="btn small danger" data-act="eq-del" data-uid="${esc(m.uid)}" data-confirm="Confirmer le retrait">Retirer</button></div>`}
-    </div></div>`).join('');
-  const invites = inv.map(i => `<div class="row"><div class="row-main"><div class="row-t">${esc(i.email)}</div><div class="row-s">Invitation en attente · ${esc(ROLE_LABEL[i.role] || i.role)}</div></div><button type="button" class="btn small" data-act="eq-inv-del" data-mail="${esc(i.email)}">Annuler</button></div>`).join('');
-  openSheet("L'équipe", `
-    ${msg ? `<div class="box ok"><div class="issue ok">${ic('check', 'sm')}<span>${esc(msg)}</span></div></div>` : ''}
-    ${grp('Membres', `<div class="list">${membres || '<div class="row"><div class="row-s">Aucun membre</div></div>'}</div>`)}
-    ${inv.length ? grp('Invitations en attente', `<div class="list">${invites}</div>`) : ''}
-    ${fld('Inviter une adresse e-mail', inp('f_inv', '', 'type="email" autocomplete="off" placeholder="prenom@exemple.fr"'))}
-    ${grp('Droits', chips('invrole', [{ v: 'equipe', l: 'Peut modifier' }, { v: 'lecture', l: 'Lecture seule' }], 'equipe'))}
-    <div class="box"><p class="note" style="color:var(--ink)">Envoie ensuite le lien de l'appli à la personne. Elle crée son compte avec cette adresse e-mail.</p><p class="note" style="overflow-wrap:anywhere"><b>${esc(lien)}</b></p><button type="button" class="btn small" data-act="eq-copy">${ic('copy', 'sm')}Copier le lien</button></div>`, {
-    submit: 'Inviter',
-    onSubmit: f => {
-      const mail = val('f_inv').toLowerCase();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) return 'Indique une adresse e-mail valide.';
-      EQ.inviter(mail, chipVal(f, 'invrole') || 'equipe')
-        .then(() => equipeSheet(`${mail} est invité. Envoie-lui le lien de l'appli.`))
-        .catch(() => toast("L'invitation n'a pas pu être enregistrée.", { danger: true }));
-      return false;
-    }
-  });
-}
-const eqDo = (p, ok) => p.then(() => equipeSheet(ok)).catch(() => toast("La modification n'a pas pu être enregistrée.", { danger: true }));
-ACT['eq-role'] = d => eqDo(EQ.changerRole(d.uid, d.role), 'Droits modifiés.');
-ACT['eq-del'] = d => eqDo(EQ.retirerMembre(d.uid), 'Personne retirée du carnet.');
-ACT['eq-inv-del'] = d => eqDo(EQ.annulerInvitation(d.mail), 'Invitation annulée.');
-ACT['eq-copy'] = () => {
-  const txt = `Rejoins le carnet d'écurie EquiValdi : ${EQ.lien()}`;
-  try { navigator.clipboard.writeText(txt).then(() => toast('Lien copié'), () => toast(txt)); } catch (e) { toast(txt); }
-};
-ACT['save-moi'] = () => {
-  const v = val('f_moi').replace(/\s+/g, ' ').slice(0, 40);
-  if (!v) { toast('Indique ton prénom.'); return; }
-  setMoi(v);
-  // version installable : le prénom de la fiche d'équipe suit, sur tous les téléphones
-  const m = me.uid ? get('membres', me.uid) : null;
-  if (m && m.role && m.nom !== v) put('membres', Object.assign({}, m, { nom: v }));
-  toast('Prénom enregistré');
-};

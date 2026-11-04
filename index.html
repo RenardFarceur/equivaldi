@@ -125,7 +125,11 @@ sup{font-size:.6em;line-height:0}
 .top-in{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;grid-template-areas:"marque sur crot reg" "titre titre titre titre";align-items:center;column-gap:8px;max-width:720px;margin:0 auto}
 #backBtn,#brandBtn{grid-area:marque}
 .top-title{display:contents}
-#topEyebrow{grid-area:sur;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;letter-spacing:.12em}
+.sur{grid-area:sur;display:flex;align-items:center;gap:8px;min-width:0}
+#topEyebrow{flex:0 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;letter-spacing:.12em}
+/* l'écurie ouverte, quand on en a plusieurs : garde-fou contre la saisie au mauvais endroit */
+.ecu-btn{flex:0 0 auto;min-width:0;max-width:58%;min-height:34px;padding:0 10px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font-family:var(--f-display);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 2px 0 var(--edge);transition:transform .12s,box-shadow .12s}
+.ecu-btn:active{transform:translateY(2px);box-shadow:0 0 0 var(--edge)}
 #topTitle{grid-area:titre;margin-top:-1px}
 #crotBtn{grid-area:crot}
 #settingsBtn{grid-area:reg}
@@ -586,7 +590,30 @@ label.btn{cursor:pointer}
 .toast button{background:transparent;border:0;color:inherit;text-decoration:underline;font-weight:600;min-height:40px;padding:0 10px;flex:none}
 body.lock .toast{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto}
 
-@media (max-width:370px){.tabs button{font-size:11px}.tab-ic{width:44px}.crot{font-size:18px;padding:0 8px 0 3px;height:38px}.crot .crottin{width:24px;height:24px}#topEyebrow{letter-spacing:.08em;font-size:12px}}
+@media (max-width:370px){.tabs button{font-size:11px}.tab-ic{width:44px}.crot{font-size:18px;padding:0 8px 0 3px;height:38px}.crot .crottin{width:24px;height:24px}#topEyebrow{letter-spacing:.08em;font-size:12px}.ecu-btn{font-size:12px;letter-spacing:.03em;padding:0 8px}.sur{gap:6px}}
+/* Mon écurie, interrupteur, boutique de l'écurie, invitation */
+.ecu-nom{font-family:var(--f-display);font-weight:600;font-size:25px;line-height:1.1;overflow-wrap:anywhere}
+.sw-row{cursor:pointer}
+.sw-t{width:52px;height:32px;border-radius:999px;background:var(--surface-2);border:2px solid var(--line);position:relative;flex:none;transition:background .2s,border-color .2s}
+.sw-t i{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,.28);transition:transform .25s var(--spring)}
+.sw-row[aria-checked="true"] .sw-t{background:var(--accent);border-color:var(--accent-edge)}
+.sw-row[aria-checked="true"] .sw-t i{transform:translateX(20px)}
+.bq-eds{display:flex;flex-direction:column;gap:12px}
+.bq-ed{display:flex;flex-direction:column;gap:8px}
+.bq-ed-l,.bq-tete{display:grid;grid-template-columns:42px minmax(0,1fr) 76px 44px;gap:8px;align-items:center}
+.bq-tete span:first-child{grid-column:2}.bq-tete span:last-child{grid-column:3}
+.bq-look{border:0;padding:0;cursor:pointer}
+.bq-ed .bq-nom{width:100%;text-align:left;font-size:16px}
+.bq-ed .bq-prix{width:76px}
+.bq-choix{display:flex;flex-direction:column;gap:8px;padding:2px 0 6px}
+.bq-choix .chips{gap:6px}
+.bq-choix .chip{padding:0 9px;min-width:44px;justify-content:center}
+.qa-ic.mini{width:22px;height:22px;border-radius:50%}
+.inv-box{gap:12px}
+.inv-code{display:flex;flex-direction:column;align-items:center;gap:4px;padding:18px 12px;border-radius:var(--r);background:var(--accent-soft);text-align:center}
+.inv-code b{font-family:var(--f-display);font-weight:600;font-size:42px;letter-spacing:.12em;line-height:1.1;color:var(--ink);font-variant-numeric:tabular-nums}
+.field input.code-in{font-family:var(--f-display);font-weight:600;font-size:26px;letter-spacing:.16em;text-transform:uppercase;text-align:center}
+.field input.code-in::placeholder{letter-spacing:.16em;opacity:.45}
 @media (max-width:350px){.quick,.grid2{grid-template-columns:minmax(0,1fr)}.stat{padding:8px}.stat b{font-size:21px}.top h1{font-size:28px}.tab-ic{width:40px}.phead{flex-direction:column;align-items:flex-start}}
 /* ---------- Crottins : tâches, boutique, classement ---------- */
 .trow-pts{display:inline-flex;align-items:center;gap:2px;flex:none;padding:0 14px 0 2px;font-family:var(--f-display);font-weight:600;font-size:17px;color:var(--crot-ink)}
@@ -699,6 +726,22 @@ img{max-width:100%}
 .auth p{margin:0}
 .auth-links{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
 .auth .btn[disabled]{opacity:.6}
+.auth-wait{text-align:center;color:var(--ink-2);margin:24px 0}
+.auth-choix{display:flex;flex-direction:column;gap:12px}
+/* Mise à jour du carnet : étapes avec progression */
+.auth-etapes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.auth-etapes li{display:grid;grid-template-columns:26px minmax(0,1fr);column-gap:10px;align-items:start;color:var(--ink-2);font-weight:500}
+.auth-etapes li i{width:22px;height:22px;box-sizing:border-box;border-radius:50%;border:2px solid var(--line);margin-top:1px;display:grid;place-items:center}
+.auth-etapes li small{grid-column:2;font-size:13px;font-weight:400;color:var(--ink-2);overflow-wrap:anywhere}
+.auth-etapes li.encours,.auth-etapes li.fait{color:var(--ink)}
+.auth-etapes li.encours i{border-color:var(--accent);border-top-color:transparent;animation:eq-tourne .8s linear infinite}
+.auth-etapes li.fait i{background:var(--accent);border-color:var(--accent)}
+.auth-etapes li.fait i::after{content:"";width:9px;height:5px;border:2.5px solid var(--accent-ink);border-top:0;border-right:0;transform:translateY(-1px) rotate(-45deg)}
+.auth-etapes li.ko{color:var(--danger)}
+.auth-etapes li.ko i{background:var(--danger);border-color:var(--danger)}
+#aEtat.ok{color:var(--accent-strong);font-weight:600;font-size:16px}
+@keyframes eq-tourne{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.auth-etapes li.encours i{animation:none;border-top-color:var(--accent)}}
 </style>
 
 </head>
@@ -709,7 +752,7 @@ img{max-width:100%}
     <button class="iconbtn" id="backBtn" data-act="back" aria-label="Retour" hidden><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
     <button class="brand" id="brandBtn" data-act="go" data-tab="accueil" aria-label="EquiValdi, accueil"><svg class="brand-mark" viewBox="-8 -8 118.01 116" aria-hidden="true" focusable="false"><g class="lg-cheval"><path class="lg-leaf lg-queue" d="M17.61 59.34 12.55 59.64 12.82 65.05Q12.89 66.56 11.6 67.36L7.09 70.12L9.72 74.6Q10.62 76.13 9.51 77.51L6.15 81.69L10.06 84.97Q12.03 86.61 10.38 88.58Q9.56 89.56 8.66 89.64Q7.75 89.72 6.77 88.9L0.93 84.01Q-1 82.4 0.58 80.44L4.41 75.67L1.4 70.55Q0.12 68.38 2.27 67.06L7.62 63.78L7.31 57.36Q7.18 54.83 9.72 54.68L17.31 54.23Q19.87 54.07 20.02 56.63Q20.17 59.19 17.61 59.34Z"/><path class="lg-leaf lg-criniere" d="M60.98 40.41 54.88 38.59Q52.51 37.88 53.22 35.51Q53.46 34.69 54.16 34.2L57.25 32.03L55.37 31.15Q53.12 30.11 54.17 27.87Q54.53 27.09 55.29 26.7L59.16 24.75L57.03 22.93Q56.09 22.13 56.02 21.26Q55.95 20.39 56.75 19.45Q57.33 18.77 58.2 18.61L61.95 17.95L60.57 16.3Q58.98 14.4 60.88 12.82Q61.54 12.27 62.39 12.24L70.45 11.99Q71.68 11.95 72.32 12.55Q72.96 13.15 73 14.38Q73.07 16.85 70.6 16.93L67.63 17.02L68.49 18.05Q68.91 18.55 69.03 19.2Q69.46 21.64 67.03 22.07L64.23 22.57L65.2 23.39Q65.57 23.72 65.8 24.16Q66.91 26.36 64.71 27.48L62.08 28.81L63.22 29.34Q63.82 29.62 64.2 30.16Q64.91 31.17 64.76 32.04Q64.61 32.9 63.6 33.61L61.18 35.31L62.4 35.68Q64.77 36.39 64.06 38.75Q63.7 39.94 62.93 40.35Q62.16 40.77 60.98 40.41Z"/><path class="lg-ink lg-corps" d="M19.92 49.18Q23.75 46.86 35.39 46.24Q38.07 46.09 43.16 46.75Q47.48 47.31 49.52 47.24Q51.51 47.17 55.93 46.26Q57.53 45.94 58.87 45.71Q57.91 40.39 57.91 37.69Q57.91 31.16 59.8 24.78Q60.72 21.65 63.45 17.55Q63.95 16.81 64.17 16.47Q65.26 14.76 67.62 12.06L66.97 4.27Q66.85 2.77 67.53 1.95Q68.22 1.14 69.72 1.02Q71.7 0.85 72.63 2.6L73.37 3.97L74.22 1.88Q75.35 -0.91 78.14 0.22Q79.68 0.84 79.98 2.47L81.56 11.09Q81.74 11.26 81.95 11.46Q85.09 14.56 86.48 16.01Q88.04 17.64 91.23 21.17Q91.8 21.81 92.06 22.1Q93.14 23.29 94.84 25.21Q95.66 26.15 96.1 26.64Q96.46 27.04 97.37 27.9Q99.79 30.19 100.59 31.87Q102.55 35.99 101.83 39.76Q101.03 43.96 97.49 46.25Q93.84 48.61 89.66 47.66Q87.6 47.19 84.26 44.59Q83.42 43.93 83.03 43.64Q81.75 42.72 79.25 40.6Q77.97 39.51 77.37 39.03Q76.82 38.58 75.63 37.72Q75.54 37.66 75.45 37.59Q75.59 38.64 75.77 39.88Q75.91 40.82 75.97 41.28Q76.25 43.22 76.97 47.69Q77.07 48.33 77.14 48.74Q82.47 52.6 82.78 58.64Q82.96 61.96 81.84 65.56Q80.42 70.12 77.56 72.26Q76.32 73.19 74.12 73.85L76.74 95.62Q77.1 98.61 74.1 98.97Q71.11 99.33 70.75 96.34L68.18 74.95Q66.16 75.17 63.75 75.29L64.2 96.92Q64.26 99.94 61.24 100Q58.23 100.06 58.17 97.05L57.72 75.29Q55.61 75.16 52.83 74.87Q47.83 74.34 45.65 74.37Q43.91 74.4 40.68 74.89L41.58 96.86Q41.64 98.37 40.92 99.15Q40.2 99.94 38.69 100Q35.68 100.12 35.56 97.11L34.68 75.75Q32.63 75.95 31.34 75.87Q30.77 75.84 30.22 75.79L28.51 97.23Q28.39 98.73 27.58 99.42Q26.76 100.11 25.26 99.99Q22.26 99.75 22.5 96.74L24.27 74.63Q21.5 73.73 19.6 72.2Q13.44 67.28 13.44 60.8Q13.44 57.66 15.1 54.48Q16.92 50.99 19.92 49.18ZM23.04 54.34Q19.47 56.5 19.47 60.8Q19.47 64.38 23.37 67.49Q24.49 68.4 26.31 68.97Q26.93 68.79 27.75 68.85Q29.16 68.97 29.86 69.69Q30.74 69.79 31.72 69.86Q33.49 69.97 38.05 69.2Q42.94 68.39 45.55 68.34Q48.1 68.3 53.47 68.87Q57.8 69.33 60.24 69.37Q60.42 69.35 60.62 69.35Q60.91 69.34 61.17 69.36Q61.36 69.36 61.53 69.35Q62.1 69.32 63.24 69.27Q66.07 69.15 68.19 68.91Q68.84 68.04 70.37 67.86Q71.62 67.71 72.41 68.14Q73.42 67.83 73.94 67.44Q75.24 66.47 76.08 63.77Q76.88 61.2 76.76 58.95Q76.58 55.56 73.09 53.27Q70.63 51.66 65.45 51.33Q64.89 52.48 63.12 52.73Q60.99 53.04 60.16 51.61Q58.84 51.82 57.14 52.17Q52.23 53.18 49.73 53.26Q47.2 53.36 42.38 52.73Q37.84 52.14 35.71 52.26Q25.59 52.8 23.04 54.34ZM64.92 45.26Q68.06 45.4 70.59 45.95Q70.2 43.47 70.01 42.14Q69.94 41.68 69.8 40.76Q69.13 36.1 68.93 33.94Q68.79 32.31 68.69 29.27Q68.66 29.22 68.65 29.19Q67.48 27.24 68.66 25.88Q68.97 23.73 71.5 23.62Q73.01 23.56 73.8 24.28Q74.58 25 74.65 26.5Q74.66 26.81 74.68 27.72Q75.84 29.91 76.5 30.66Q77.15 31.39 79.15 32.82Q80.48 33.78 81.17 34.34Q81.82 34.87 83.15 36Q85.48 37.97 86.57 38.77Q87.05 39.12 87.97 39.83Q90.25 41.61 91 41.78Q92.7 42.17 94.22 41.19Q95.59 40.3 95.91 38.63Q96.07 37.75 95.9 36.76C95.63 37.02 95.26 37.19 94.85 37.19C94.02 37.19 93.34 36.51 93.34 35.68C93.34 34.85 94.02 34.17 94.85 34.17C94.89 34.17 94.93 34.17 94.97 34.18Q94.52 33.51 93.23 32.29Q92.12 31.25 91.59 30.65Q91.15 30.15 90.31 29.2Q88.64 27.31 87.59 26.14Q87.32 25.85 86.75 25.21Q83.62 21.75 82.12 20.17Q80.79 18.79 77.72 15.76Q76.89 14.95 76.64 14.69Q76.02 14.08 75.83 13.24Q75.54 13.51 75.17 13.71Q74.28 14.19 73.53 14.21Q73.36 14.6 73.08 14.95Q72.86 15.22 72.23 15.95Q70.11 18.36 69.25 19.72Q68.99 20.11 68.47 20.9Q66.24 24.24 65.58 26.48Q63.94 32.03 63.94 37.69Q63.94 40.02 64.92 45.26ZM75.75 21.61C75.75 20.22 76.88 19.1 78.27 19.1C79.65 19.1 80.78 20.22 80.78 21.61C80.78 23 79.65 24.12 78.27 24.12C76.88 24.12 75.75 23 75.75 21.61Z"/></g></svg></button>
     <div class="top-title">
-      <div class="eyebrow" id="topEyebrow">Carnet d'écurie</div>
+      <div class="sur"><div class="eyebrow" id="topEyebrow">Carnet d'écurie</div><button type="button" class="ecu-btn" id="ecurieBtn" data-act="mon-ecurie" hidden></button></div>
       <h1 id="topTitle">EquiValdi</h1>
     </div>
     <button class="crot" id="crotBtn" data-act="boutique" aria-label="Crottins : ouvrir la boutique" hidden><svg class="crottin" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path class="cr-fume" d="M12.8 7.6c-1.7-1.5-1.7-3 0-4.4M18.6 7.2c-1.5-1.4-1.5-2.8 0-4.1"/><ellipse class="cr-b" cx="10.5" cy="22.6" rx="7" ry="6"/><ellipse class="cr-b" cx="21.6" cy="23.1" rx="6.8" ry="5.8"/><ellipse class="cr-b" cx="16" cy="14.6" rx="6.2" ry="5.4"/><path class="cr-l" d="M7.4 20.6q1.5-2 3.6-2.1M18.5 21.2q1.5-2 3.5-2M12.9 12.6q1.4-1.8 3.4-1.9"/></svg><b id="crotN">0</b><i class="crot-dot" aria-hidden="true"></i></button>
@@ -954,9 +997,19 @@ const S = { chevaux: {}, soins: {}, pres: {}, places: {}, entretiens: {}, foin: 
 /* Fiches des membres (version installable) : lues avec le carnet, jamais exportées ni effacées avec lui */
 const EXTRA = window.EQ_MODE ? ['membres'] : [];
 EXTRA.forEach(k => { S[k] = {}; });
-const CACHE_KEY = 'carnet-ecurie:cache:v1';
-const OUTBOX_KEY = 'carnet-ecurie:outbox:v1';
+/* Version installable : l'écurie ouverte sur ce téléphone est connue avant Firebase (equivaldi:ecurie:v1).
+   Elle nomme la copie locale et la file d'envoi : chaque écurie a les siennes. */
+const ECURIE = window.EQ_MODE ? (() => {
+  try { const v = JSON.parse(localStorage.getItem('equivaldi:ecurie:v1') || 'null'); return v && typeof v.sid === 'string' && v.sid ? v : null; } catch (e) { return null; }
+})() : null;
+const SID = ECURIE ? ECURIE.sid : null;
+window.EQ_SID = SID;
+const CACHE_KEY = window.EQ_MODE ? (SID ? 'carnet-ecurie:cache:v1:' + SID : null) : 'carnet-ecurie:cache:v1';
+const OUTBOX_KEY = window.EQ_MODE ? (SID ? 'carnet-ecurie:outbox:v1:' + SID : null) : 'carnet-ecurie:outbox:v1';
 const UI_KEY = 'carnet-ecurie:ui:v1';
+/* L'écurie ouverte et la liste de mes écuries : celles de Firebase dès qu'il répond, sinon celles gardées ici */
+const ecurieOuverte = () => (window.EQ && window.EQ.ecurie) || ECURIE || null;
+const mesEcuries = () => (window.EQ && Array.isArray(window.EQ.ecuries) && window.EQ.ecuries.length ? window.EQ.ecuries : (ECURIE && Array.isArray(ECURIE.ecuries) ? ECURIE.ecuries : []));
 let outbox = [];
 let DB = null;
 let dataV = 0;              // change à chaque modification des données (calculs mis en cache)
@@ -1001,8 +1054,15 @@ async function resync(op) {
   } catch (e) { /* on réessaiera au prochain chargement */ }
 }
 
-function lsGet(k) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
-function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* stockage indisponible */ } }
+function lsGet(k) { if (!k) return null; try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+function lsSet(k, v) { if (!k) return; try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* stockage indisponible */ } }
+/* Une modification en attente ne part jamais vers une autre écurie que la sienne : rangée dans sa propre file */
+const aMoi = o => !o.sid || !SID || o.sid === SID;
+function renvoyer(op) {
+  if (!op.sid) return;
+  const k = 'carnet-ecurie:outbox:v1:' + op.sid, l = lsGet(k);
+  lsSet(k, (Array.isArray(l) ? l : []).concat([op]));
+}
 
 function loadCache() {
   const c = lsGet(CACHE_KEY);
@@ -1013,6 +1073,8 @@ function loadCache() {
   dataV++;
   const o = lsGet(OUTBOX_KEY);
   outbox = Array.isArray(o) ? o : [];
+  const autres = outbox.filter(x => !aMoi(x));
+  if (autres.length) { autres.forEach(renvoyer); outbox = outbox.filter(aMoi); saveOutbox(); }
   // les modifications pas encore envoyées restent prioritaires
   outbox.forEach(applyOp);
 }
@@ -1064,7 +1126,7 @@ function queue(coll, id, op, data) {
   dataV++;
   const k = coll + '/' + id;
   outbox = outbox.filter(o => o.k !== k);
-  outbox.push({ k, coll, id, op, data: data ? clone(data) : null });
+  outbox.push({ k, coll, id, op, data: data ? clone(data) : null, sid: SID });
   saveOutbox();
   saveCache();
   flushSoon();
@@ -1084,6 +1146,8 @@ async function flush() {
   try {
     while (outbox.length && DB) {
       const op = outbox[0];
+      // garde-fou : jamais vers une autre écurie que la sienne
+      if (op.sid && DB.sid && op.sid !== DB.sid) { outbox = outbox.filter(o => o !== op); saveOutbox(); renvoyer(op); continue; }
       try {
         const ref = DB.collection(op.coll).doc(op.id);
         if (op.op === 'set') await ref.set(op.data); else await ref.delete();
@@ -1176,6 +1240,8 @@ async function connect() {
   updateSync();
 }
 window.addEventListener('online', () => flushSoon(100));
+/* Écurie ouverte, renommée ou mieux connue (date des crottins…) : on redessine */
+window.addEventListener('eq-ecurie', () => { dataV++; rerenderSoon(); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden) { flushSoon(100); rerenderSoon(); } });
 
 function updateSync() {
@@ -1205,7 +1271,9 @@ function cfg() {
     finSaison: /^\d{2}-\d{2}$/.test(c.finSaison || '') ? c.finSaison : '04-30',
     alerte: Number.isFinite(c.alerte) ? c.alerte : 14,
     repos: Number.isFinite(c.repos) ? c.repos : 35,
-    paturage: Number.isFinite(c.paturage) ? c.paturage : 10
+    paturage: Number.isFinite(c.paturage) ? c.paturage : 10,
+    boutique: Array.isArray(c.boutique) ? c.boutique : null,   // null : la liste de départ
+    crottins: c.crottins !== false                              // points crottins dans cette écurie
   };
 }
 
@@ -1804,7 +1872,8 @@ function render() {
     v = { title: 'Carnet', html: empty("Cet écran n'a pas pu s'afficher", esc(e.message)) };
   }
   $('#topTitle').textContent = v.title;
-  $('#topEyebrow').textContent = v.eyebrow || dTete(todayISO());
+  const avecEcu = majEcurieBtn();
+  $('#topEyebrow').textContent = v.eyebrow || (avecEcu ? fmt(todayISO(), { weekday: 'short', day: 'numeric', month: 'short' }) : dTete(todayISO()));
   $('#backBtn').hidden = !top;
   $('#brandBtn').hidden = !!top;
   const view = $('#view');
@@ -2880,7 +2949,7 @@ function formSoin(id, pre = {}) {
       const majGere = () => {
         const fait = (chipVal(f, 'statut') || auto(val('f_date'))) === 'fait', ts = chipVals(f, 'types');
         $('#w_gere').hidden = !fait;
-        $('#w_gpts').innerHTML = ts.length ? `${crottinSvg('s')}Rapporte <b>${ptsSoin({ types: ts, planifie: !!(ex && (ex.planifie || ex.statut === 'prevu')) })} crottins</b> à la personne qui l'a géré.` : '';
+        $('#w_gpts').innerHTML = ts.length && crottinsActifs() ? `${crottinSvg('s')}Rapporte <b>${ptsSoin({ types: ts, planifie: !!(ex && (ex.planifie || ex.statut === 'prevu')) })} crottins</b> à la personne qui l'a géré.` : '';
       };
       f.addEventListener('chipchange', e => {
         if (e.detail.name === 'statut') touched = true;
@@ -3359,7 +3428,7 @@ function formConcours(id, pre = {}) {
     ${grp('Discipline', chips('disc', DISCIPLINES.map(x => ({ v: x, l: x })), c.discipline ? [c.discipline] : [], { optional: true }))}
     ${grp('Niveau', chips('niv', NIVEAUX.map(n => ({ v: n.id, l: n.label })), c.niveau ? [c.niveau] : [], { optional: true }), 'Sert à vérifier les vaccins exigés.')}
     ${fld('Épreuve', inp('f_epr', c.epreuve, 'list="dl-epr" autocomplete="off" placeholder="ex. Club 2 Grand Prix"'))}
-    ${pickPerson('cav', 'Cavalier', cavRef, { moi: !cavRef, def: lastUsed('concours', 'cavalier'), hint: `Le cavalier gagne ${CROT.concours} crottins par concours fait, et jusqu'à ${CROT.podium[1]} de plus pour un podium.` })}
+    ${pickPerson('cav', 'Cavalier', cavRef, { moi: !cavRef, def: lastUsed('concours', 'cavalier'), hint: crottinsActifs() ? `Le cavalier gagne ${CROT.concours} crottins par concours fait, et jusqu'à ${CROT.podium[1]} de plus pour un podium.` : '' })}
     ${grp('Engagement', chips('eng', ENGAGEMENT.map(e => ({ v: e.id, l: e.label })), c.statut || 'a_engager'))}
     <div class="grid2">${fld('Clôture des engagements', inp('f_clot', c.cloture, 'type="date"'))}${fld('Frais (€)', inp('f_frais', c.frais != null ? String(c.frais).replace('.', ',') : '', numAttr))}</div>
     ${payeField(c.payePar, 'f_frais', Number(c.frais) || 0)}
@@ -3421,9 +3490,7 @@ VIEWS.reglages = () => {
   if (!validISO(fin) || fin <= t) fin = `${+t.slice(0, 4) + 1}-${C.finSaison}`;
   const rap = SOINS.filter(T => T.id !== 'autre').map(T =>
     `<div class="row"><div class="row-main"><div class="row-t">${T.label}</div><div class="row-s">${dureeTxt(C.rappels[T.id])}</div></div>${rinp('r_' + T.id, C.rappels[T.id] || '', 'Intervalle en jours : ' + T.label)}</div>`).join('');
-  let html = equipeHtml() + section('Crottins', `${segCtl('crotAnim', [['grand', 'Grande animation'], ['discret', 'Discrète']], ui.crotAnim === 'discret' ? 'discret' : 'grand')}
-    <p class="note">Ce que montre l'appli quand tu gagnes des crottins, sur ce téléphone.</p>
-    <button type="button" class="link" data-act="boutique" style="align-self:flex-start">${crottinSvg('s')}Ouvrir la boutique</button>`) + section('Rappels de soins', `<div class="list">${rap}</div><p class="note">Nombre de jours entre deux soins. 0 ou vide : pas de rappel. Un soin peut aussi porter sa propre date de rappel. Ces réglages sont communs à toutes les personnes du carnet.</p>`);
+  let html = monEcurieHtml() + equipeHtml() + crotSection() + section('Rappels de soins', `<div class="list">${rap}</div><p class="note">Nombre de jours entre deux soins. 0 ou vide : pas de rappel. Un soin peut aussi porter sa propre date de rappel. Ces réglages sont communs à toutes les personnes du carnet.</p>`);
   html += section('Alertes et prés', `<div class="list">
     <div class="row"><div class="row-main"><div class="row-t">Prévenir avant l'échéance</div><div class="row-s">Soins à prévoir sur l'accueil</div></div>${rinp('c_alerte', C.alerte, "Jours d'avance")}</div>
     <div class="row"><div class="row-main"><div class="row-t">Repos visé d'un pré</div><div class="row-s">Avant d'y remettre des chevaux</div></div>${rinp('c_repos', C.repos, 'Jours de repos visés')}</div>
@@ -3537,79 +3604,6 @@ ACT.wipe = () => {
   toast('Toutes les données ont été effacées');
 };
 
-/* ---------- Gérer à plusieurs ---------- */
-function equipeHtml() {
-  if (window.EQ_MODE && window.EQ) return section('Ton compte', `<div class="card">
-    <div class="row-main"><div class="row-t">${esc(EQ.email)}</div><div class="row-s">${esc(ROLE_LABEL[EQ.role] || '')}</div></div>
-    ${fld('Ton prénom', inp('f_moi', moiNom(), 'autocomplete="given-name" autocapitalize="words"'), "Affiché dans l'équipe et à côté des tâches que tu coches.")}
-    <div class="btnrow">
-      <button type="button" class="btn small" data-act="save-moi">${ic('check', 'sm')}Enregistrer le prénom</button>
-      <button type="button" class="btn small" data-act="ma-fiche">${ic('user', 'sm')}Ma fiche</button>
-      ${EQ.role === 'gerante' ? `<button type="button" class="btn small" data-act="equipe">${ic('users', 'sm')}Gérer l'équipe</button>` : ''}
-      <button type="button" class="btn small" data-act="deconnexion">Se déconnecter</button>
-    </div>
-  </div>`);
-  return section('Gérer à plusieurs', `<div class="card">
-    <p class="note" style="color:var(--ink)">Pour partager le carnet : depuis un ordinateur, ouvre cette page sur claude.ai, clique sur <b>Partager</b>, invite chaque personne par e-mail et choisis <b>Peut modifier</b>. Chacun se connecte avec son compte Claude et voit les mêmes données, en direct.</p>
-    <p class="note">N'active pas « Toute personne ayant le lien » : les invités ne pourraient plus que consulter.</p>
-    ${fld('Ton prénom', inp('f_moi', getMoi() || me.platformName || '', 'autocomplete="given-name" autocapitalize="words"'), 'Affiché à côté des tâches que tu coches. Il reste sur ce téléphone.')}
-    <button type="button" class="btn small" data-act="save-moi" style="align-self:flex-start">${ic('check', 'sm')}Enregistrer le prénom</button>
-  </div>`);
-}
-/* Équipe de la version installable : invitations par adresse e-mail et rôles */
-ACT.deconnexion = () => { if (window.EQ) EQ.deconnexion(); };
-ACT.equipe = () => equipeSheet();
-async function equipeSheet(msg = '') {
-  if (!window.EQ) return;
-  let mb = [], inv = [];
-  try { [mb, inv] = await Promise.all([EQ.membres(), EQ.invitations()]); }
-  catch (e) { toast("Impossible de charger l'équipe : vérifie ta connexion.", { danger: true }); return; }
-  // une invitation dont la personne a déjà créé son compte est terminée : on la retire
-  const inscrits = new Set(mb.map(m => String(m.email || '').toLowerCase()));
-  const faites = inv.filter(i => inscrits.has(String(i.email).toLowerCase()));
-  inv = inv.filter(i => !inscrits.has(String(i.email).toLowerCase()));
-  if (faites.length) Promise.all(faites.map(i => EQ.annulerInvitation(i.email))).catch(() => { /* réessayé à la prochaine ouverture */ });
-  const lien = EQ.lien();
-  const membres = mb.sort((a, b) => (a.role === 'gerante' ? -1 : 0) - (b.role === 'gerante' ? -1 : 0)).map(m => `<div class="row"><div class="row-main">
-      <div class="row-t">${esc(m.nom || m.email)}${m.moi ? ' <span class="pill ok">Toi</span>' : ''}</div><div class="row-s">${esc(m.email)} · ${esc(ROLE_LABEL[m.role] || m.role)}</div>
-      ${m.role === 'gerante' ? '' : `<div class="wrap" style="margin-top:6px"><button type="button" class="btn small" data-act="eq-role" data-uid="${esc(m.uid)}" data-role="${m.role === 'lecture' ? 'equipe' : 'lecture'}">${m.role === 'lecture' ? 'Passer en « Peut modifier »' : 'Passer en lecture seule'}</button><button type="button" class="btn small danger" data-act="eq-del" data-uid="${esc(m.uid)}" data-confirm="Confirmer le retrait">Retirer</button></div>`}
-    </div></div>`).join('');
-  const invites = inv.map(i => `<div class="row"><div class="row-main"><div class="row-t">${esc(i.email)}</div><div class="row-s">Invitation en attente · ${esc(ROLE_LABEL[i.role] || i.role)}</div></div><button type="button" class="btn small" data-act="eq-inv-del" data-mail="${esc(i.email)}">Annuler</button></div>`).join('');
-  openSheet("L'équipe", `
-    ${msg ? `<div class="box ok"><div class="issue ok">${ic('check', 'sm')}<span>${esc(msg)}</span></div></div>` : ''}
-    ${grp('Membres', `<div class="list">${membres || '<div class="row"><div class="row-s">Aucun membre</div></div>'}</div>`)}
-    ${inv.length ? grp('Invitations en attente', `<div class="list">${invites}</div>`) : ''}
-    ${fld('Inviter une adresse e-mail', inp('f_inv', '', 'type="email" autocomplete="off" placeholder="prenom@exemple.fr"'))}
-    ${grp('Droits', chips('invrole', [{ v: 'equipe', l: 'Peut modifier' }, { v: 'lecture', l: 'Lecture seule' }], 'equipe'))}
-    <div class="box"><p class="note" style="color:var(--ink)">Envoie ensuite le lien de l'appli à la personne. Elle crée son compte avec cette adresse e-mail.</p><p class="note" style="overflow-wrap:anywhere"><b>${esc(lien)}</b></p><button type="button" class="btn small" data-act="eq-copy">${ic('copy', 'sm')}Copier le lien</button></div>`, {
-    submit: 'Inviter',
-    onSubmit: f => {
-      const mail = val('f_inv').toLowerCase();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) return 'Indique une adresse e-mail valide.';
-      EQ.inviter(mail, chipVal(f, 'invrole') || 'equipe')
-        .then(() => equipeSheet(`${mail} est invité. Envoie-lui le lien de l'appli.`))
-        .catch(() => toast("L'invitation n'a pas pu être enregistrée.", { danger: true }));
-      return false;
-    }
-  });
-}
-const eqDo = (p, ok) => p.then(() => equipeSheet(ok)).catch(() => toast("La modification n'a pas pu être enregistrée.", { danger: true }));
-ACT['eq-role'] = d => eqDo(EQ.changerRole(d.uid, d.role), 'Droits modifiés.');
-ACT['eq-del'] = d => eqDo(EQ.retirerMembre(d.uid), 'Personne retirée du carnet.');
-ACT['eq-inv-del'] = d => eqDo(EQ.annulerInvitation(d.mail), 'Invitation annulée.');
-ACT['eq-copy'] = () => {
-  const txt = `Rejoins le carnet d'écurie EquiValdi : ${EQ.lien()}`;
-  try { navigator.clipboard.writeText(txt).then(() => toast('Lien copié'), () => toast(txt)); } catch (e) { toast(txt); }
-};
-ACT['save-moi'] = () => {
-  const v = val('f_moi').replace(/\s+/g, ' ').slice(0, 40);
-  if (!v) { toast('Indique ton prénom.'); return; }
-  setMoi(v);
-  // version installable : le prénom de la fiche d'équipe suit, sur tous les téléphones
-  const m = me.uid ? get('membres', me.uid) : null;
-  if (m && m.role && m.nom !== v) put('membres', Object.assign({}, m, { nom: v }));
-  toast('Prénom enregistré');
-};
 
 /* ---------- Tâches partagées : chacun coche, tout le monde voit ---------- */
 function tacheSub(tk, e) {
@@ -3634,7 +3628,7 @@ function trow(tk) {
 }
 /* À droite : ce que rapporte la tâche ; une fois faite, qui l'a faite (toucher pour ajouter quelqu'un) */
 function trowFin(tk, e) {
-  if (!e.done) return `<span class="trow-pts" title="Rapporte ${ptsTache(tk)} crottins, partagés si vous la faites à plusieurs">+${ptsTache(tk)}${crottinSvg()}</span>`;
+  if (!e.done) return !crottinsActifs() ? '' : `<span class="trow-pts" title="Rapporte ${ptsTache(tk)} crottins, partagés si vous la faites à plusieurs">+${ptsTache(tk)}${crottinSvg()}</span>`;
   const qui = faitPar(e.last), noms = esc(nomsFait(e.last));
   if (qui.length > 1) {
     const avs = qui.slice(0, 3).map(r => pav(r, 's')).join('') + (qui.length > 3 ? `<span class="av pp s plus" aria-hidden="true">+${qui.length - 3}</span>` : '');
@@ -3787,6 +3781,7 @@ function formQui(id) {
       const maj = () => {
         const n = lire(f).length;
         $('#w_part').innerHTML = !n ? 'Choisis au moins une personne.'
+          : !crottinsActifs() ? ''
           : n === 1 ? `${crottinSvg('s')}<b>${pot} ${pl(pot, 'crottin')}</b> pour cette personne.`
           : `${crottinSvg('s')}Les ${pot} crottins se partagent : <b>${partTache(pot, n)} chacun</b>.`;
       };
@@ -3849,7 +3844,7 @@ function formTache(id, pre = {}) {
       // aperçu : ce que rapporte la tâche à chaque fois, selon la fréquence et l'effort
       const apercu = () => {
         const p = ptsTache({ freq: chipVal(f, 'freq') || 'jour', n: parseNum(val('f_n')), effort: chipVal(f, 'effort') || 'normal' });
-        $('#w_pts').innerHTML = `Rapporte <b>${p} crottins</b> à chaque fois.`;
+        $('#w_pts').innerHTML = crottinsActifs() ? `Rapporte <b>${p} crottins</b> à chaque fois.` : '';
       };
       f.addEventListener('chipchange', e => {
         if (e.detail.name === 'freq') {
@@ -3996,6 +3991,378 @@ function formSeance(id, pre = {}) {
 }
 ACT['edit-seance'] = d => formSeance(d.id);
 
+/* ---------- Écuries, compte, équipe et invitations ----------
+   Version installable : Réglages commence par « Mon écurie » (nom, commune, rôle, autres écuries) ;
+   la feuille « L'équipe » invite par lien (avec un code à taper) ou par adresse e-mail. */
+Object.assign(ICONS, {
+  partage: '<path d="M12 14V3.5M8 7.5l4-4 4 4"/><path d="M7.5 10.5H6a2 2 0 0 0-2 2V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6.5a2 2 0 0 0-2-2h-1.5"/>',
+  sortie: '<path d="M14 4h3.5A2.5 2.5 0 0 1 20 6.5v11a2.5 2.5 0 0 1-2.5 2.5H14"/><path d="M10 8l-4 4 4 4M6 12h10"/>'
+});
+const sheetErr = m => {
+  const el = document.getElementById('sfErr');
+  if (!el || $('#sheet').hidden) { if (m) toast(m, { danger: true }); return; }
+  el.textContent = m || '';
+  el.hidden = !m;
+  if (m) el.scrollIntoView({ block: 'nearest' });
+};
+// message d'erreur rédigé par firebase.js (code « invitation »), sinon le message prévu ici
+const eqMsg = (e, def) => (e && e.code === 'invitation' && e.message) || def;
+const idEcurie = e => e ? (e.id || e.sid || null) : null;
+/* Un nom d'écurie dans une phrase : « aux Écuries du Valdi », « du Haras… », « d'Écurie… » */
+const aNom = n => { const s = String(n || ''); return /^les\s/i.test(s) ? 'aux ' + s.slice(4) : /^le\s/i.test(s) ? 'au ' + s.slice(3) : 'à ' + s; };
+const deNom = n => { const s = String(n || ''); return /^les\s/i.test(s) ? 'des ' + s.slice(4) : /^le\s/i.test(s) ? 'du ' + s.slice(3) : /^[aeiouyàâäéèêëîïôöûü]/i.test(s) ? "d'" + s : 'de ' + s; };
+/* Nom court pour l'en-tête : sans le mot générique du début (« Écurie du… », « Haras des… »…) quand il reste un vrai nom */
+function nomCourtEcurie(n) {
+  const s = String(n || '').trim();
+  const c = s.replace(/^(les\s+|le\s+|la\s+)?([eéÉ]curies?|haras|centre\s+[eéÉ]questre|poney[\s-]+club|club\s+hippique|ferme\s+[eéÉ]questre|[eéÉ]levage|pension)\s+(de\s+la\s+|de\s+l['’]\s*|du\s+|des\s+|de\s+|d['’]\s*)?/i, '');
+  return c.length >= 2 && c !== s ? c.charAt(0).toUpperCase() + c.slice(1) : s;
+}
+const formeCode = i => {
+  const c = i.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8), v = c.length > 4 ? c.slice(0, 4) + '-' + c.slice(4) : c;
+  if (v !== i.value) i.value = v;
+};
+const codeAttrs = 'class="code-in" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="11" placeholder="ABCD-EF23"';
+
+/* ---------- En-tête : l'écurie ouverte, dès qu'on en a au moins deux ---------- */
+function majEcurieBtn() {
+  const b = document.getElementById('ecurieBtn');
+  if (!b) return false;
+  const e = ecurieOuverte(), voir = !!(window.EQ_MODE && e && e.nom && mesEcuries().length >= 2);
+  b.hidden = !voir;
+  if (!voir) return false;
+  const t = nomCourtEcurie(e.nom);
+  if (b.textContent !== t) b.textContent = t;
+  b.setAttribute('aria-label', `Écurie ouverte : ${e.nom}. Ouvrir « Mon écurie »`);
+  return true;
+}
+ACT['mon-ecurie'] = () => {
+  const t = topView();
+  if (t && t.view === 'reglages') { window.scrollTo({ top: 0, behavior: mouvementOk() ? 'smooth' : 'auto' }); return; }
+  push('reglages');
+};
+
+/* ---------- Réglages › Mon écurie ---------- */
+function monEcurieHtml() {
+  const e = ecurieOuverte();
+  if (!window.EQ_MODE || !e) return '';
+  const id = idEcurie(e), g = e.role === 'gerante';
+  const autres = mesEcuries().filter(x => x.id !== id).map(x => `<div class="row">
+      <span class="qa-ic menthe">${ic('barn')}</span>
+      <div class="row-main"><div class="row-t">${esc(x.nom)}</div><div class="row-s">${esc(ROLE_LABEL[x.role] || '')}</div></div>
+      <button type="button" class="btn small" data-act="ecu-ouvrir" data-sid="${esc(x.id)}">Ouvrir</button></div>`).join('');
+  return section('Mon écurie', `<div class="card ecu-carte">
+      <div class="row-main"><div class="ecu-nom">${esc(e.nom || 'Mon écurie')}</div><div class="row-s">${esc(e.commune || 'Commune non indiquée')}</div></div>
+      <div class="wrap"><span class="pill${g ? ' ok' : ''}">${esc(ROLE_LABEL[e.role] || '')}</span><span class="small muted">ton rôle dans cette écurie</span></div>
+      <div class="btnrow">${g
+        ? `<button type="button" class="btn small" data-act="ecu-renommer">${ic('edit', 'sm')}Modifier le nom</button><button type="button" class="btn small" data-act="ecu-gerance">${ic('users', 'sm')}Passer la gérance</button>`
+        : `<button type="button" class="btn small danger" data-act="ecu-quitter">${ic('sortie', 'sm')}Quitter cette écurie</button>`}</div>
+    </div>
+    ${autres ? `<div class="list">${autres}</div>` : ''}
+    <div class="btnrow"><button type="button" class="btn small" data-act="ecu-creer">${ic('plus', 'sm')}Créer une autre écurie</button><button type="button" class="btn small" data-act="ecu-code">Rejoindre avec un code</button></div>`);
+}
+const champsNom = (nom, commune) => `${fld("Nom de l'écurie", inp('f_enom', nom, 'maxlength="40" autocapitalize="words" autocomplete="off" required'))}
+  ${fld('Commune (facultatif)', inp('f_ecom', commune, 'maxlength="60" autocapitalize="words" autocomplete="off"'))}`;
+const lireNom = () => ({ nom: val('f_enom').replace(/\s+/g, ' '), commune: val('f_ecom').replace(/\s+/g, ' ') });
+// envoie l'action et garde la feuille ouverte jusqu'à la réponse (bouton grisé, erreur sous le formulaire)
+function envoi(p, ok, def) {
+  const b = $('#sfOk');
+  if (b) b.disabled = true;
+  p.then(ok, err => { if (b && b.isConnected) b.disabled = false; sheetErr(eqMsg(err, def)); });
+  return false;
+}
+ACT['ecu-renommer'] = () => {
+  const e = ecurieOuverte();
+  if (!e || !window.EQ || e.role !== 'gerante') return;
+  openSheet("Nom de l'écurie", `${champsNom(e.nom || '', e.commune || '')}<p class="note">Le nom change pour toute l'équipe.</p>`, {
+    submit: 'Enregistrer', local: true, focus: '#f_enom',
+    onSubmit: () => {
+      const v = lireNom();
+      if (v.nom.length < 2 || v.nom.length > 40) return 'Le nom doit faire de 2 à 40 caractères.';
+      return envoi(EQ.renommer(v), () => { closeSheet(); toast('Nom enregistré'); render(); }, "Le nom n'a pas pu être enregistré : vérifie ta connexion.");
+    }
+  });
+};
+ACT['ecu-gerance'] = () => {
+  if (!window.EQ || !estGerante()) return;
+  const ok = membres().filter(m => m.id !== me.uid && m.role === 'equipe');
+  if (!ok.length) {
+    openSheet('Passer la gérance', `<p class="note" style="color:var(--ink)">La gérance se passe à une personne de l'équipe qui a le droit « Peut modifier ». Personne ne l'a encore : invite quelqu'un, ou change ses droits dans l'équipe.</p>
+      <button type="button" class="btn" data-act="equipe">${ic('users', 'sm')}Ouvrir l'équipe</button>`);
+    return;
+  }
+  let arme = false;
+  openSheet('Passer la gérance', `${grp('À qui ?', chips('ger', ok.map(m => ({ v: m.id, html: `${pav({ uid: m.id }, 's')}<span>${esc(nomCourt({ uid: m.id }))}</span>` })), []))}
+    <p class="note">Cette personne gère ensuite l'écurie : l'équipe, les invitations, les bons de la boutique. Toi, tu passes en « Peut modifier ». Une écurie n'a qu'une gérante.</p>`, {
+    submit: 'Passer la gérance', local: true,
+    onMount: f => f.addEventListener('chipchange', () => {
+      arme = false;
+      const b = $('#sfOk');
+      if (b) { b.textContent = 'Passer la gérance'; b.classList.remove('armed'); }
+    }),
+    onSubmit: f => {
+      const uid = chipVal(f, 'ger'), b = $('#sfOk');
+      if (!uid) return 'Choisis la personne.';
+      // confirmation : un second appui
+      if (!arme) { arme = true; b.textContent = `Confirmer : ${nomCourt({ uid })} prend la gérance`; b.classList.add('armed'); return false; }
+      return envoi(EQ.passerGerance(uid), () => {}, "La gérance n'a pas pu être passée : vérifie ta connexion.");
+    }
+  });
+};
+ACT['ecu-quitter'] = () => {
+  const e = ecurieOuverte();
+  if (!e || !window.EQ) return;
+  if (e.role === 'gerante') { toast("Passe d'abord la gérance : une écurie garde toujours sa gérante.", { danger: true }); return; }
+  const n = outbox.length;
+  openSheet('Quitter cette écurie', `<p class="note" style="color:var(--ink)">Tu ne verras plus <b>${esc(e.nom)}</b>, ni sur ce téléphone ni ailleurs. Pour revenir, il te faudra une nouvelle invitation de la gérante.</p>
+    ${n ? `<div class="box danger"><div class="issue danger">${ic('alert', 'sm')}<span>${n} ${pl(n, 'modification')} pas encore ${n > 1 ? 'envoyées seront perdues' : 'envoyée sera perdue'}.</span></div></div>` : ''}`, {
+    submit: "Quitter l'écurie", local: true,
+    onSubmit: () => envoi(EQ.quitter(), () => {}, "Ça n'a pas marché : vérifie ta connexion.")
+  });
+};
+ACT['ecu-ouvrir'] = d => {
+  const x = mesEcuries().find(e => e.id === d.sid), cur = ecurieOuverte();
+  if (!x || !window.EQ) return;
+  const go = () => { toast(`Ouverture ${deNom(x.nom)}…`); EQ.ouvrir(x.id); };
+  const n = outbox.length;
+  if (!n) { go(); return; }
+  // les envois en attente restent rangés avec leur écurie : ils partiront quand on la rouvrira
+  const nom = esc(cur && cur.nom ? cur.nom : 'Cette écurie');
+  openSheet(`Ouvrir ${x.nom}`, `<p class="note" style="color:var(--ink)"><b>${nom}</b> : ${n} ${pl(n, 'modification')} ${n > 1 ? 'attendent' : 'attend'} encore le réseau. ${n > 1 ? 'Elles partiront' : 'Elle partira'} vers cette écurie quand tu la rouvriras, jamais ailleurs.</p>`, {
+    submit: `Ouvrir ${x.nom}`, local: true, onSubmit: () => { go(); return false; }
+  });
+};
+ACT['ecu-creer'] = () => {
+  if (!window.EQ) return;
+  openSheet('Créer une écurie', `${champsNom('', '')}<p class="note">Une écurie séparée de celle-ci : ses chevaux, son équipe, ses réglages. Tu en es la gérante.</p>`, {
+    submit: "Créer l'écurie", local: true, focus: '#f_enom',
+    onSubmit: () => {
+      const v = lireNom();
+      if (v.nom.length < 2 || v.nom.length > 40) return 'Le nom doit faire de 2 à 40 caractères.';
+      return envoi(EQ.creer(v), () => {}, "L'écurie n'a pas pu être créée : vérifie ta connexion.");
+    }
+  });
+};
+ACT['ecu-code'] = () => {
+  if (!window.EQ) return;
+  openSheet('Rejoindre une écurie', fld("Code d'invitation", inp('f_code', '', codeAttrs), 'Le code reçu de la gérante : 8 lettres et chiffres.'), {
+    submit: 'Continuer', local: true, focus: '#f_code',
+    onMount: () => { const i = $('#f_code'); i.addEventListener('input', () => formeCode(i)); },
+    onSubmit: () => envoi(EQ.infoInvitation(val('f_code')).then(inv => {
+      if (mesEcuries().some(x => x.id === inv.structure)) throw Object.assign(new Error(inv.structureNom ? `Tu fais déjà partie ${deNom(inv.structureNom)}.` : 'Tu fais déjà partie de cette écurie.'), { code: 'invitation' });
+      return inv;
+    }), confirmerRejoindre, "Ce code n'a pas pu être vérifié : vérifie ta connexion.")
+  });
+};
+function confirmerRejoindre(inv) {
+  const cur = ecurieOuverte();
+  openSheet(`Rejoindre ${inv.structureNom || "l'écurie"}`, `<p class="note" style="color:var(--ink)">${esc((inv.par && inv.par.nom) || 'La gérante')} t'invite à rejoindre <b>${esc(inv.structureNom || '')}</b>.</p>
+    <div class="wrap"><span class="pill ok">${esc(ROLE_LABEL[inv.role] || '')}</span></div>
+    <p class="note">${inv.role === 'lecture' ? 'Tu pourras tout consulter, sans rien modifier.' : 'Tu pourras tout noter dans cette écurie.'}${cur && cur.nom ? ` Tu restes dans ${esc(cur.nom)}.` : ''}</p>`, {
+    submit: 'Rejoindre', local: true,
+    onSubmit: () => envoi(EQ.rejoindre(inv.code), x => { toast(`Bienvenue dans ${x.nom || "l'écurie"} !`, { fete: true }); EQ.ouvrir(x.sid); }, "Ça n'a pas marché : vérifie ta connexion.")
+  });
+}
+
+/* ---------- Réglages › Ton compte ---------- */
+function equipeHtml() {
+  if (window.EQ_MODE && window.EQ) return section('Ton compte', `<div class="card">
+    <div class="row-main"><div class="row-t trunc">${esc(EQ.email || '')}</div><div class="row-s">Le même compte dans toutes tes écuries</div></div>
+    ${fld('Ton prénom', inp('f_moi', moiNom(), 'autocomplete="given-name" autocapitalize="words"'), "Affiché dans l'équipe et à côté des tâches que tu coches.")}
+    <div class="btnrow">
+      <button type="button" class="btn small" data-act="save-moi">${ic('check', 'sm')}Enregistrer le prénom</button>
+      <button type="button" class="btn small" data-act="ma-fiche">${ic('user', 'sm')}Ma fiche</button>
+      ${estGerante() ? `<button type="button" class="btn small" data-act="equipe">${ic('users', 'sm')}L'équipe et les invitations</button>` : ''}
+      <button type="button" class="btn small" data-act="deconnexion">Se déconnecter</button>
+    </div>
+  </div>`);
+  return section('Gérer à plusieurs', `<div class="card">
+    <p class="note" style="color:var(--ink)">Pour partager le carnet : depuis un ordinateur, ouvre cette page sur claude.ai, clique sur <b>Partager</b>, invite chaque personne par e-mail et choisis <b>Peut modifier</b>. Chacun se connecte avec son compte Claude et voit les mêmes données, en direct.</p>
+    <p class="note">N'active pas « Toute personne ayant le lien » : les invités ne pourraient plus que consulter.</p>
+    ${fld('Ton prénom', inp('f_moi', getMoi() || me.platformName || '', 'autocomplete="given-name" autocapitalize="words"'), 'Affiché à côté des tâches que tu coches. Il reste sur ce téléphone.')}
+    <button type="button" class="btn small" data-act="save-moi" style="align-self:flex-start">${ic('check', 'sm')}Enregistrer le prénom</button>
+  </div>`);
+}
+ACT.deconnexion = () => { if (window.EQ) EQ.deconnexion(); };
+ACT['save-moi'] = () => {
+  const v = val('f_moi').replace(/\s+/g, ' ').slice(0, 40);
+  if (!v) { toast('Indique ton prénom.'); return; }
+  setMoi(v);
+  // version installable : le prénom de la fiche d'équipe suit, sur tous les téléphones
+  const m = me.uid ? get('membres', me.uid) : null;
+  if (m && m.role && m.nom !== v) put('membres', Object.assign({}, m, { nom: v }));
+  toast('Prénom enregistré');
+};
+
+/* ---------- Feuille « L'équipe » (gérante) : membres, invitations en attente, inviter ---------- */
+ACT.equipe = () => equipeSheet();
+async function equipeSheet(msg = '', copier = '') {
+  if (!window.EQ || !estGerante()) return;
+  let mb = [], inv = [];
+  try { [mb, inv] = await Promise.all([EQ.membres(), EQ.invitations()]); }
+  catch (e) { toast("Impossible de charger l'équipe : vérifie ta connexion.", { danger: true }); return; }
+  const now = Date.now(), ordre = m => ({ gerante: 0, equipe: 1, lecture: 2 }[m.role] ?? 3);
+  const lignes = mb.sort((a, b) => ordre(a) - ordre(b) || String(a.nom || a.email).localeCompare(String(b.nom || b.email), 'fr')).map(m => `<div class="row"><div class="row-main">
+      <div class="row-t">${esc(m.nom || m.email)}${m.moi ? ' <span class="pill ok">Toi</span>' : ''}</div><div class="row-s">${esc(m.email)} · ${esc(ROLE_LABEL[m.role] || m.role)}</div>
+      ${m.role === 'gerante' ? '' : `<div class="wrap" style="margin-top:6px"><button type="button" class="btn small" data-act="eq-role" data-uid="${esc(m.uid)}" data-role="${m.role === 'lecture' ? 'equipe' : 'lecture'}">${m.role === 'lecture' ? 'Passer en « Peut modifier »' : 'Passer en lecture seule'}</button><button type="button" class="btn small danger" data-act="eq-del" data-uid="${esc(m.uid)}" data-confirm="Confirmer le retrait">Retirer</button></div>`}
+    </div></div>`).join('');
+  const attente = inv.map(i => {
+    const lien = !i.email, fini = !!(i.expire && i.expire <= now);
+    const t = lien ? `Lien · ${fini ? 'expiré le' : 'expire le'} ${dShort(isoOf(new Date(i.expire)))}` : i.email;
+    return `<div class="row${fini ? ' muted' : ''}"><div class="row-main"><div class="row-t">${esc(t)}</div><div class="row-s">${esc(ROLE_LABEL[i.role] || i.role)} · code ${esc(EQ.code(i.code))}</div></div><button type="button" class="btn small" data-act="eq-inv-del" data-code="${esc(i.code)}">Annuler</button></div>`;
+  }).join('');
+  openSheet("L'équipe", `
+    ${msg ? `<div class="box ok"><div class="issue ok">${ic('check', 'sm')}<span>${esc(msg)}</span></div>${copier ? `<button type="button" class="btn small" data-act="eq-copier" data-txt="${esc(copier)}" style="align-self:flex-start">${ic('copy', 'sm')}Copier un message pour cette personne</button>` : ''}</div>` : ''}
+    ${grp('Membres', `<div class="list">${lignes || '<div class="row"><div class="row-s">Aucun membre</div></div>'}</div>`)}
+    ${inv.length ? grp('Invitations en attente', `<div class="list">${attente}</div>`) : ''}
+    <div class="box inv-box">
+      <span class="flabel">Inviter quelqu'un</span>
+      ${chips('invrole', [{ v: 'equipe', l: 'Peut modifier' }, { v: 'lecture', l: 'Lecture seule' }], 'equipe')}
+      <button type="button" class="btn primary" data-act="eq-lien">${ic('partage', 'sm')}Partager un lien d'invitation</button>
+      <p class="note">Valable 7 jours, pour une seule personne. Son code peut aussi se taper dans l'appli.</p>
+      ${fld('Ou par adresse e-mail', inp('f_inv', '', 'type="email" autocomplete="off" placeholder="prenom@exemple.fr" enterkeyhint="send"'))}
+      <button type="button" class="btn" data-act="eq-mail">Inviter cette adresse</button>
+    </div>`, {
+    onMount: () => {
+      const i = $('#f_inv');
+      if (i) i.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); ACT['eq-mail']({}, $('[data-act="eq-mail"]')); } });
+    }
+  });
+}
+const eqDo = (p, ok) => p.then(() => equipeSheet(ok)).catch(e => toast(eqMsg(e, "La modification n'a pas pu être enregistrée."), { danger: true }));
+ACT['eq-role'] = d => eqDo(EQ.changerRole(d.uid, d.role), 'Droits modifiés.');
+ACT['eq-del'] = d => eqDo(EQ.retirerMembre(d.uid), "Personne retirée de l'écurie.");
+ACT['eq-inv-del'] = d => eqDo(EQ.annulerInvitation(d.code), 'Invitation annulée.');
+ACT['eq-mail'] = async (d, el) => {
+  const mail = val('f_inv').toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) { sheetErr('Indique une adresse e-mail valide.'); return; }
+  const role = chipVal(document, 'invrole') || 'equipe', e = ecurieOuverte() || {};
+  if (el) el.disabled = true;
+  try {
+    await EQ.inviter(mail, role);
+    equipeSheet(`${mail} est invité. En se connectant avec cette adresse, la personne trouvera l'invitation.`, `Rejoins l'écurie ${e.nom || ''} sur EquiValdi : ${EQ.lien()} (crée ton compte avec ${mail}).`);
+  } catch (err) {
+    if (el && el.isConnected) el.disabled = false;
+    sheetErr(eqMsg(err, "L'invitation n'a pas pu être enregistrée : vérifie ta connexion."));
+  }
+};
+// Partage du téléphone, sinon copie
+async function partager(txt) {
+  if (navigator.share) {
+    try { await navigator.share({ text: txt }); return 'partage'; }
+    catch (e) { if (e && e.name === 'AbortError') return 'annule'; }
+  }
+  try { await navigator.clipboard.writeText(txt); return 'copie'; } catch (e) { return null; }
+}
+ACT['eq-lien'] = async (d, el) => {
+  const role = chipVal(document, 'invrole') || 'equipe';
+  if (el) el.disabled = true;
+  let r;
+  try { r = await EQ.inviterLien(role); }
+  catch (e) { if (el && el.isConnected) el.disabled = false; sheetErr(eqMsg(e, "Le lien n'a pas pu être créé : vérifie ta connexion.")); return; }
+  const ec = ecurieOuverte() || {}, txt = `Rejoins l'écurie ${ec.nom || ''} sur EquiValdi : ${r.url}`;
+  openSheet('Invitation prête', `<div class="inv-code"><span class="flabel">Code d'invitation</span><b id="invCode">${esc(EQ.code(r.code))}</b><span class="small muted">${esc(ROLE_LABEL[role] || '')} · valable 7 jours, une seule fois</span></div>
+    <div class="btnrow"><button type="button" class="btn primary" data-act="eq-partager" data-txt="${esc(txt)}">${ic('partage', 'sm')}Partager le lien</button><button type="button" class="btn" data-act="eq-copier" data-txt="${esc(txt)}">${ic('copy', 'sm')}Copier</button></div>
+    <p class="note">La personne ouvre le lien, crée son compte et rejoint ${esc(ec.nom || "l'écurie")}. Si elle a déjà installé l'appli sur iPhone, elle tape ce code dans « J'ai un code d'invitation ».</p>
+    <button type="button" class="link" data-act="equipe" style="align-self:flex-start">${ic('users', 'sm')}Retour à l'équipe</button>`);
+  partager(txt).then(res => { if (res === 'copie') toast('Lien copié : colle-le dans un message.'); });
+};
+ACT['eq-partager'] = d => partager(d.txt).then(res => { if (res === 'copie') toast('Lien copié : colle-le dans un message.'); else if (!res) toast(d.txt); });
+ACT['eq-copier'] = d => {
+  try { navigator.clipboard.writeText(d.txt).then(() => toast('Copié : colle-le dans un message.'), () => toast(d.txt)); } catch (e) { toast(d.txt); }
+};
+
+/* ---------- Réglages › Crottins : interrupteur et boutique de l'écurie (gérante) ---------- */
+function crotSection() {
+  const actifs = crottinsActifs(), g = estGerante();
+  let h = '';
+  if (g) h += `<div class="list"><button type="button" class="row sw-row" role="switch" aria-checked="${actifs}" data-act="crot-onoff">
+      <div class="row-main"><div class="row-t">Points crottins dans cette écurie</div><div class="row-s">${actifs ? 'Compteur, boutique, animations et classement' : 'Coupés : ni compteur, ni boutique, ni classement'}</div></div>
+      <span class="sw-t" aria-hidden="true"><i></i></span></button></div>`;
+  if (actifs) h += `${segCtl('crotAnim', [['grand', 'Grande animation'], ['discret', 'Discrète']], ui.crotAnim === 'discret' ? 'discret' : 'grand')}
+    <p class="note">Ce que montre l'appli quand tu gagnes des crottins, sur ce téléphone.</p>
+    <div class="btnrow"><button type="button" class="link" data-act="boutique">${crottinSvg('s')}Ouvrir la boutique</button>${g ? `<button type="button" class="link" data-act="bq-edit">${ic('edit', 'sm')}Modifier les récompenses</button>` : ''}</div>`;
+  else if (!g) h += '<p class="note">La gérante a coupé les points crottins dans cette écurie.</p>';
+  return section('Crottins', h);
+}
+ACT['crot-onoff'] = () => {
+  if (!estGerante()) return;
+  const on = !crottinsActifs();
+  const regle = v => { putCfg(Object.assign({}, S.cfg || {}, { crottins: v })); render(); };
+  regle(on);
+  toast(on ? 'Points crottins activés' : 'Points crottins coupés dans cette écurie', { undo: () => regle(!on) });
+};
+const BQ_NOMS = { biere: 'Bière', apero: 'Apéro', repas: 'Repas', collectif: 'Cours collectif', tapis: 'Tapis', particulier: 'Étoile' };
+const BQ_COULEURS = { paille: 'Paille', ciel: 'Ciel', menthe: 'Menthe', prairie: 'Prairie' };
+function bqLigne(it) {
+  return `<div class="bq-ed" data-bq="${esc(it.id)}">
+    <div class="bq-ed-l">
+      <button type="button" class="qa-ic ${esc(it.tint)} bq-look" data-act="bq-look" aria-expanded="false" aria-label="Icône et couleur">${ic(it.ic)}</button>
+      <input class="rinput bq-nom" value="${esc(it.nom)}" maxlength="40" autocomplete="off" autocapitalize="sentences" placeholder="ex. Un café offert" aria-label="Nom de la récompense">
+      <input class="rinput bq-prix" value="${esc(it.prix)}" inputmode="numeric" autocomplete="off" placeholder="200" aria-label="Prix en crottins">
+      <button type="button" class="iconbtn" data-act="bq-del" aria-label="Retirer cette récompense">${ic('trash', 'sm')}</button>
+    </div>
+    <div class="bq-choix" hidden>
+      ${chips('bqi-' + it.id, BQ_ICONES.map(x => ({ v: x, html: ic(x), aria: BQ_NOMS[x] })), it.ic)}
+      ${chips('bqt-' + it.id, BQ_TEINTES.map(x => ({ v: x, html: `<span class="qa-ic ${x} mini"></span>`, aria: BQ_COULEURS[x] })), it.tint)}
+    </div>
+  </div>`;
+}
+ACT['bq-edit'] = () => {
+  if (!estGerante()) return;
+  const e = ecurieOuverte() || {};
+  openSheet('Récompenses', `<p class="note">${e.nom ? `<b>${esc(e.nom)}</b> : ` : ''}ce que l'équipe s'offre avec ses crottins. Les bons déjà pris gardent leur nom et leur prix.</p>
+    <div class="bq-tete small muted"><span>Récompense</span><span>Prix</span></div>
+    <div class="bq-eds" id="bqEds">${boutique().map(bqLigne).join('')}</div>
+    <div class="btnrow"><button type="button" class="link" data-act="bq-add">${ic('plus', 'sm')}Ajouter une récompense</button>
+      <button type="button" class="link" data-act="bq-reset" data-confirm="Confirmer : liste de départ">Remettre la liste de départ</button></div>`, {
+    submit: 'Enregistrer la boutique', local: true,
+    onMount: f => f.addEventListener('chipchange', ev => {
+      const row = ev.target.closest('[data-bq]');
+      if (!row || !/^bq[it]-/.test(ev.detail.name)) return;
+      const look = $('.bq-look', row), icv = chipVal(row, 'bqi-' + row.dataset.bq) || 'particulier', tv = chipVal(row, 'bqt-' + row.dataset.bq) || 'paille';
+      look.className = `qa-ic ${tv} bq-look`;
+      look.innerHTML = ic(icv);
+    }),
+    onSubmit: () => {
+      const items = $$('#bqEds [data-bq]').map(r => ({
+        id: r.dataset.bq, nom: $('.bq-nom', r).value.replace(/\s+/g, ' ').trim().slice(0, 40), prix: parseNum($('.bq-prix', r).value),
+        ic: chipVal(r, 'bqi-' + r.dataset.bq) || 'particulier', tint: chipVal(r, 'bqt-' + r.dataset.bq) || 'paille'
+      }));
+      if (!items.length) return 'Garde au moins une récompense, ou coupe les points crottins.';
+      if (items.some(i => !i.nom)) return "Chaque récompense a besoin d'un nom.";
+      if (items.some(i => !(Number.isInteger(i.prix) && i.prix >= 1 && i.prix <= 100000))) return 'Les prix sont des nombres entiers de crottins, de 1 à 100 000.';
+      putCfg(Object.assign({}, S.cfg || {}, { boutique: items }));
+      toast('Boutique enregistrée');
+      render();
+    }
+  });
+};
+ACT['bq-look'] = (d, el) => {
+  const row = el.closest('[data-bq]'), p = row && $('.bq-choix', row);
+  if (!p) return;
+  p.hidden = !p.hidden;
+  el.setAttribute('aria-expanded', String(!p.hidden));
+};
+ACT['bq-add'] = () => {
+  const box = $('#bqEds');
+  if (!box) return;
+  box.insertAdjacentHTML('beforeend', bqLigne({ id: uid(), nom: '', prix: '', ic: 'particulier', tint: 'menthe' }));
+  const row = box.lastElementChild;
+  $('.bq-choix', row).hidden = false;
+  $('.bq-look', row).setAttribute('aria-expanded', 'true');
+  $('.bq-nom', row).focus();
+};
+ACT['bq-del'] = (d, el) => { const row = el.closest('[data-bq]'); if (row) row.remove(); };
+ACT['bq-reset'] = () => {
+  if (!estGerante()) return;
+  const c = Object.assign({}, S.cfg || {});
+  delete c.boutique;
+  putCfg(c);
+  closeSheet();
+  toast('Liste de départ remise');
+  render();
+};
+
 /* ---------- Équipe : qui fait quoi, dépenses, fiches personnelles, contacts utiles ---------- */
 const eurRond = v => num(Math.round(Number(v) || 0), 0) + ' €';
 const perSeg = () => segCtl('eqPer', [['mois', 'Ce mois'], ['annee', 'Cette année'], ['tout', 'Tout']], periode(ui.eqPer).id);
@@ -4045,7 +4412,7 @@ VIEWS.equipe = () => {
     <div class="stat"><b>${B.taches}</b><span>${pl(B.taches, 'tâche cochée', 'tâches cochées')}</span></div>
     <div class="stat"><b>${B.seances}</b><span>${pl(B.seances, 'séance', 'séances')} de travail</span></div>
     <div class="stat"><b>${eurRond(B.total)}</b><span>de dépenses</span></div></div>`;
-  html += section(`Crottins ${P.label}`, classementCrottins(P), `<button type="button" class="link" data-act="boutique">Boutique ${ic('next', 'sm')}</button>`);
+  if (crottinsActifs()) html += section(`Crottins ${P.label}`, classementCrottins(P), `<button type="button" class="link" data-act="boutique">Boutique ${ic('next', 'sm')}</button>`);
   // les membres, puis les personnes hors équipe qui apparaissent dans le carnet (demi-pension, cavalier, payeur…)
   const keys = new Set(ms.map(m => 'u:' + m.id)), autres = new Set();
   const voir = k => { if (k && k !== '_' && !keys.has(k)) autres.add(k); };
@@ -4086,7 +4453,7 @@ VIEWS.membre = p => {
     <div class="row-s">${esc(m ? (ROLE_LABEL[m.role] || '') : 'Hors équipe')}</div>
     ${m && m.email ? `<div class="row-s trunc">${esc(m.email)}</div>` : ''}
     ${dispo ? `<div class="row-s">Jours de présence : ${esc(dispo)}</div>` : ''}
-    <div class="wrap crot-ligne">${crottinSvg('s')}<b>${num(soldeDe(pe.k), 0)}</b><span class="small muted">${pl(soldeDe(pe.k), 'crottin')} · ${esc(rangDe(crottinsDe(pe.k).gagnes).r.nom)}</span></div>
+    ${!crottinsActifs() ? '' : `<div class="wrap crot-ligne">${crottinSvg('s')}<b>${num(soldeDe(pe.k), 0)}</b><span class="small muted">${pl(soldeDe(pe.k), 'crottin')} · ${esc(rangDe(crottinsDe(pe.k).gagnes).r.nom)}</span></div>`}
     ${btns ? `<div class="btnrow">${btns}</div>` : ''}</div></div>`;
   html += perSeg();
   html += `<div class="stats">
@@ -4120,7 +4487,7 @@ ACT['ma-fiche'] = () => { const k = kMoi(); if (k) push('membre', { k }); else t
 function menuEquipe() {
   const mi = (act, icon, t, s) => `<button type="button" class="row" data-act="${act}">${lead(icon)}<div class="row-main"><div class="row-t">${t}</div><div class="row-s">${s}</div></div></button>`;
   openSheet('Ajouter', `<div class="list">
-    ${estGerante() ? mi('equipe', 'users', "Inviter quelqu'un", 'Par adresse e-mail, avec ses droits') : ''}
+    ${estGerante() ? mi('equipe', 'users', "Inviter quelqu'un", 'Par un lien, un code ou une adresse e-mail') : ''}
     ${mi('new-dp', 'card', 'Demi-pension', 'Qui prend quel cheval, quels jours')}
     ${mi('new-contact', 'phone', 'Contact utile', 'Vétérinaire, maréchal, coach…')}
     ${me.uid && get('membres', me.uid) ? mi('edit-profil-moi', 'user', 'Ma fiche', 'Téléphone, jours de présence, matériel') : ''}
@@ -4240,7 +4607,7 @@ const CROT = {
 };
 const EFFORTS = [{ id: 'leger', label: 'Léger', x: .6 }, { id: 'normal', label: 'Normal', x: 1 }, { id: 'costaud', label: 'Costaud', x: 2 }];
 /* Du moins cher au plus cher : il faut plusieurs mois de coups de main pour le tapis */
-const BOUTIQUE = [
+const BOUTIQUE_DEPART = [
   { id: 'biere', nom: 'Une bière offerte', prix: 150, ic: 'biere', tint: 'paille' },
   { id: 'apero', nom: 'Un apéro offert', prix: 300, ic: 'apero', tint: 'ciel' },
   { id: 'repas', nom: 'Un repas offert', prix: 550, ic: 'repas', tint: 'menthe' },
@@ -4248,6 +4615,22 @@ const BOUTIQUE = [
   { id: 'tapis', nom: 'Un tapis offert', prix: 1200, ic: 'tapis', tint: 'ciel' },
   { id: 'particulier', nom: 'Un cours particulier offert', prix: 1500, ic: 'particulier', tint: 'paille' }
 ];
+/* Chaque écurie a sa boutique (Réglages › Crottins, pour la gérante), sinon la liste de départ */
+const BQ_ICONES = ['biere', 'apero', 'repas', 'collectif', 'tapis', 'particulier'];
+const BQ_TEINTES = ['paille', 'ciel', 'menthe', 'prairie'];
+function boutique() {
+  const b = cfg().boutique;
+  if (!b) return BOUTIQUE_DEPART;
+  return b.filter(it => it && typeof it.id === 'string' && String(it.nom || '').trim() && Number(it.prix) > 0)
+    .map(it => ({ id: it.id, nom: String(it.nom).trim(), prix: Math.round(Number(it.prix)), ic: BQ_ICONES.includes(it.ic) ? it.ic : 'particulier', tint: BQ_TEINTES.includes(it.tint) ? it.tint : 'paille' }))
+    .sort((a, b) => a.prix - b.prix);
+}
+/* Points crottins dans cette écurie (activés par défaut) ; ils comptent à partir de sa date de départ */
+const crottinsActifs = () => cfg().crottins;
+function crotDebut() {
+  const e = ecurieOuverte(), d = e && e.crottinsDepuis;
+  return typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d) ? d : CROT.debut;
+}
 const RANGS = [
   { min: 0, nom: 'Poulain' }, { min: 200, nom: 'Yearling' }, { min: 600, nom: 'Cheval de club' },
   { min: 1500, nom: 'Cheval de concours' }, { min: 3000, nom: 'Crack' }, { min: 6000, nom: "Légende de l'écurie" }
@@ -4278,7 +4661,7 @@ const ptsSoin = s => Math.max(...soinTypes(s).map(x => CROT.soins[x] || CROT.soi
 let crotMemo = null;
 function crottinsEntrees() {
   if (crotMemo && crotMemo.v === dataV && crotMemo.j === todayISO()) return crotMemo.by;
-  const D = CROT.debut, t = todayISO(), by = new Map(), vus = new Set();
+  const D = crotDebut(), t = todayISO(), by = new Map(), vus = new Set();
   const jourT = ms => isoOf(new Date(ms));
   const recent = (o, d, j) => !!(o.creePar && o.creePar.t) && diffDays(d, jourT(o.creePar.t)) <= j;
   const auteur = o => o.creePar ? { uid: o.creePar.uid || null, nom: o.creePar.nom || '' } : null;
@@ -4398,13 +4781,13 @@ function rangDe(total) {
 }
 /* Rythme récent : crottins par semaine sur les quatre dernières semaines (ou depuis le lancement) */
 function rythmeDe(k) {
-  const t = todayISO(), from = addDays(t, -27), debut = from > CROT.debut ? from : CROT.debut;
+  const t = todayISO(), from = addDays(t, -27), D = crotDebut(), debut = from > D ? from : D;
   const jours = Math.max(7, diffDays(debut, t) + 1);
   return crottinsDe(k, debut).gagnes / jours * 7;
 }
 const delaiTxt = sem => sem <= 1 ? 'moins d’une semaine à ton rythme' : sem < 8.5 ? `environ ${Math.ceil(sem)} semaines à ton rythme` : `environ ${Math.round(sem / 4.35)} mois à ton rythme`;
 /* L'estimation n'a de sens qu'après une première semaine de jeu */
-const rythmeFiable = () => diffDays(CROT.debut, todayISO()) >= 6;
+const rythmeFiable = () => diffDays(crotDebut(), todayISO()) >= 6;
 
 /* ---------- Compteur de l'en-tête ---------- */
 let crotVu = null, crotRaf = 0, crotTenu = 0;
@@ -4430,10 +4813,10 @@ function majCrottins() {
   const b = document.getElementById('crotBtn');
   if (!b) return;
   const k = kMoi();
-  b.hidden = !k;
-  if (!k) return;
+  b.hidden = !k || !crottinsActifs();
+  if (b.hidden) return;
   const v = soldeDe(k);
-  b.classList.toggle('peut', BOUTIQUE.some(it => v >= it.prix));
+  b.classList.toggle('peut', boutique().some(it => v >= it.prix));
   b.setAttribute('aria-label', `${num(v, 0)} ${pl(v, 'crottin')} : ouvrir la boutique`);
   if (Date.now() >= crotTenu) compteVers(v);
 }
@@ -4445,7 +4828,7 @@ let crotDoux = false;
 const photoCrottins = () => { const m = new Map(); crottinsEntrees().forEach((es, k) => m.set(k, new Map(es.map(e => [e.k, e])))); return m; };
 /* Appelé juste avant chaque enregistrement fait sur ce téléphone */
 function crotAvant() {
-  if (crotSilence || restauration) return;
+  if (crotSilence || restauration || !crottinsActifs()) return;
   if (!crotPhoto) { crotPhoto = photoCrottins(); tenirCompteur(400); }
   clearTimeout(crotT);
   crotT = setTimeout(crotApres, 90);
@@ -4644,8 +5027,11 @@ function carteRecompense(it, solde, rythme, peutAcheter) {
     ${ok && peutAcheter ? `<button type="button" class="btn small primary" data-act="echanger" data-id="${it.id}">Échanger</button>` : ''}
   </div>`;
 }
-const itemDe = id => BOUTIQUE.find(x => x.id === id) || null;
+const itemDe = id => boutique().find(x => x.id === id) || BOUTIQUE_DEPART.find(x => x.id === id) || null;
+/* Un bon garde le nom et le prix de la récompense au moment de l'échange, même si la boutique a changé depuis */
+const bonItem = b => Object.assign({ ic: 'particulier', tint: 'paille' }, itemDe(b.item) || {}, { nom: b.nom || (itemDe(b.item) || {}).nom || 'Récompense' });
 VIEWS.boutique = () => {
+  if (!crottinsActifs()) return { title: 'Boutique', eyebrow: 'Points crottins', html: emptyH('Points crottins désactivés', '<p>La gérante a coupé les points crottins dans cette écurie.</p>'), fab: null };
   const k = kMoi(), solde = k ? soldeDe(k) : 0, tot = k ? crottinsDe(k).gagnes : 0, R = rangDe(tot), rythme = k ? rythmeDe(k) : 0;
   const peutAcheter = !!(window.EQ_MODE && window.EQ && me.uid && get('membres', me.uid));
   const pctR = R.next ? Math.round((tot - R.r.min) / (R.next.min - R.r.min) * 100) : 100;
@@ -4656,12 +5042,12 @@ VIEWS.boutique = () => {
       ${R.next ? `<div class="gauge"><i style="width:${pctR}%"></i></div>` : ''}
     </div></div>
     <button type="button" class="link" data-act="crot-regles" style="align-self:flex-start">${crottinSvg('s')}Comment gagner des crottins ?</button>`;
-  html += section('Récompenses', `<div class="bq-list">${BOUTIQUE.map(it => carteRecompense(it, solde, rythme, peutAcheter)).join('')}</div>
+  html += section('Récompenses', `<div class="bq-list">${boutique().map(it => carteRecompense(it, solde, rythme, peutAcheter)).join('') || '<p class="note">Aucune récompense pour le moment.</p>'}</div>
     ${peutAcheter ? '' : '<p class="note">Les échanges se font dans l’appli installable, avec ton compte de l’équipe.</p>'}`);
   // mes bons
   const mes = k ? bonsDe(k).filter(b => b.statut !== 'annule').sort((a, b) => (b.t || 0) - (a.t || 0)) : [];
   if (mes.length) html += section('Mes bons', `<div class="list">${mes.map(b => {
-    const it = itemDe(b.item) || { nom: b.nom || 'Récompense', ic: 'particulier', tint: 'paille' };
+    const it = bonItem(b);
     const etat = b.statut === 'offert' ? `<span class="pill ok">${ic('check')}Offert ${b.offertLe ? dRel(isoOf(new Date(b.offertLe))) : ''}</span>` : '<span class="pill info">À recevoir</span>';
     return `<div class="row"><span class="qa-ic ${it.tint}">${ic(it.ic)}</span><div class="row-main"><div class="row-t">${esc(it.nom)}</div><div class="row-s">${num(Number(b.prix), 0)} crottins · le ${dShort(isoOf(new Date(b.t || Date.now())))}</div><div class="wrap" style="margin-top:4px">${etat}</div></div>${b.statut === 'attente' ? `<button type="button" class="btn small" data-act="bon-annuler" data-id="${esc(b.id)}" data-confirm="Rembourser ?">Annuler</button>` : ''}</div>`;
   }).join('')}</div>`);
@@ -4671,13 +5057,16 @@ VIEWS.boutique = () => {
     membres().forEach(m => bonsDe('u:' + m.id).filter(b => b.statut === 'attente').forEach(b => att.push({ m, b })));
     att.sort((a, b) => (a.b.t || 0) - (b.b.t || 0));
     html += section(`Bons à offrir${att.length ? ` <span class="count">${att.length}</span>` : ''}`, att.length ? `<div class="list">${att.map(({ m, b }) => {
-      const it = itemDe(b.item) || { nom: b.nom || 'Récompense' };
+      const it = bonItem(b);
       return `<div class="row">${pav({ uid: m.id })}<div class="row-main"><div class="row-t">${esc(nomCourt({ uid: m.id }))} · ${esc(it.nom)}</div><div class="row-s">Demandé ${esc(dRel(isoOf(new Date(b.t || Date.now()))))}</div></div><button type="button" class="btn small primary" data-act="bon-offert" data-uid="${esc(m.id)}" data-id="${esc(b.id)}">C’est offert</button></div>`;
     }).join('')}</div>` : '<p class="note">Quand quelqu’un échange ses crottins, son bon apparaît ici : tu le marques offert une fois la récompense donnée.</p>');
   }
   return { title: 'Boutique', eyebrow: 'Points crottins', html, fab: null };
 };
-ACT.boutique = () => { const t = topView(); if (t && t.view === 'boutique') return; push('boutique'); };
+ACT.boutique = () => {
+  if (!crottinsActifs()) { toast('Les points crottins sont désactivés dans cette écurie.'); return; }
+  const t = topView(); if (t && t.view === 'boutique') return; push('boutique');
+};
 ACT['crot-regles'] = () => {
   const tl = (f, n) => ptsTache({ freq: f, n });
   const ligne = (icon, t, s, p) => `<div class="row">${lead(icon)}<div class="row-main"><div class="row-t">${t}</div>${s ? `<div class="row-s">${s}</div>` : ''}</div><span class="row-end bq-pts">${p}</span></div>`;
@@ -4698,10 +5087,10 @@ ACT['crot-regles'] = () => {
     ${ligne('bale', 'Balle entamée', `${CROT.ballesJour} par jour au plus`, `+${CROT.balle}`)}
     ${ligne('move', 'Chevaux déplacés', 'Un par cheval et par jour', `+${CROT.deplacement}`)}
   </div>
-  <p class="note">Annuler une action retire ses crottins. Ce qui est noté trop tard ne rapporte rien : une semaine au plus après coup, deux jours pour les déplacements et les balles entamées. Le compteur part du ${dFull(CROT.debut)}.</p>`);
+  <p class="note">Annuler une action retire ses crottins. Ce qui est noté trop tard ne rapporte rien : une semaine au plus après coup, deux jours pour les déplacements et les balles entamées. Le compteur part du ${dFull(crotDebut())}.</p>`);
 };
 ACT.echanger = d => {
-  const it = itemDe(d.id), k = kMoi();
+  const it = boutique().find(x => x.id === d.id) || null, k = kMoi();
   if (!it || !k || !window.EQ || !me.uid) return;
   if (soldeDe(k) < it.prix) { toast('Pas encore assez de crottins.', { danger: true }); return; }
   openSheet(it.nom, `<div class="bq-confirm"><span class="qa-ic ${it.tint}">${ic(it.ic)}</span><p>Échanger <b>${num(it.prix, 0)} crottins</b> contre ${esc(it.nom.charAt(0).toLowerCase() + it.nom.slice(1))} ?</p></div>
@@ -5408,7 +5797,9 @@ connect();
 let lastDay = todayISO();
 setInterval(() => { if (todayISO() !== lastDay) { lastDay = todayISO(); render(); } }, 60000);
 </script>
-<script type="module">/* Connexion, rôles et base Firestore pour la version installable EquiValdi */
+<script type="module">/* Connexion, écuries, rôles et base Firestore pour la version installable EquiValdi
+   Chaque écurie (« structure ») est un espace séparé : structures/{sid}/… Une personne peut appartenir
+   à plusieurs écuries, avec un rôle dans chacune. Les règles (firestore.rules) font respecter la séparation. */
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
 import {
   getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
@@ -5416,7 +5807,8 @@ import {
 } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js';
 import {
   initializeFirestore, getFirestore, persistentLocalCache, persistentMultipleTabManager,
-  collection, doc, setDoc, deleteDoc, getDoc, getDocs, onSnapshot, updateDoc
+  collection, doc, setDoc, deleteDoc, getDoc, getDocs, getDocFromServer, getDocsFromServer, getCountFromServer,
+  onSnapshot, updateDoc, query, where, writeBatch, deleteField
 } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -5427,8 +5819,6 @@ const firebaseConfig = {
   messagingSenderId: '438472603797',
   appId: '1:438472603797:web:670fef2053cebb0772c39c'
 };
-const GERANTE = 'celiacourtois8@gmail.com';   // première gérante du carnet
-const ROLE_KEY = 'equivaldi:role:v1';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -5437,7 +5827,58 @@ let fs;
 try { fs = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) }); }
 catch (e) { fs = getFirestore(app); }
 
-/* ---------- Adaptateur : la base Firestore sous la forme attendue par le carnet ---------- */
+/* ---------- Ce téléphone : écurie ouverte, rôle gardé, invitation en attente ---------- */
+const K = {
+  ecurie: 'equivaldi:ecurie:v1',               // { uid, sid, nom, commune, role, crottinsDepuis, ecuries } : connue avant Firebase
+  role: sid => 'equivaldi:role:v1:' + sid,     // rôle gardé, pour ouvrir sans réseau
+  invitation: 'equivaldi:invitation',          // code d'un lien ouvert, gardé pendant l'inscription
+  migration: 'equivaldi:migration:sid',        // mise à jour en cours : { uid, sid, nom, commune }
+  avis: 'equivaldi:avis',                      // message à montrer après un rechargement
+  cache: sid => 'carnet-ecurie:cache:v1:' + sid,
+  file: sid => 'carnet-ecurie:outbox:v1:' + sid
+};
+// clés de l'ancien carnet (avant les écuries)
+const ANC = { cache: 'carnet-ecurie:cache:v1', file: 'carnet-ecurie:outbox:v1', role: 'equivaldi:role:v1' };
+const lis = k => { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (x) { return null; } };
+const ecris = (k, v) => { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); return true; } catch (x) { return false; } };
+const COLS = ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches'];
+const JOUR = 86400000;
+const ROLES = { gerante: 'Gérante', equipe: 'Peut modifier', lecture: 'Lecture seule' };
+const attendre = ms => new Promise(r => setTimeout(r, ms));
+const deux = n => String(n).padStart(2, '0');
+const isoJour = ms => { const d = new Date(ms); return `${d.getFullYear()}-${deux(d.getMonth() + 1)}-${deux(d.getDate())}`; };
+const pl = (n, s) => n > 1 ? s + 's' : s;
+// un nom d'écurie dans une phrase : « aux Écuries du Valdi », « du Haras… », « d'Écurie… »
+const aNom = n => { const s = String(n || ''); return /^les\s/i.test(s) ? 'aux ' + s.slice(4) : /^le\s/i.test(s) ? 'au ' + s.slice(3) : 'à ' + s; };
+const deNom = n => { const s = String(n || ''); return /^les\s/i.test(s) ? 'des ' + s.slice(4) : /^le\s/i.test(s) ? 'du ' + s.slice(3) : /^[aeiouyàâäéèêëîïôöûü]/i.test(s) ? "d'" + s : 'de ' + s; };
+const plusAcces = n => n ? `Tu n'as plus accès ${aNom(n)}.` : "Tu n'as plus accès à une écurie.";
+const erreur = (message, extra) => Object.assign(new Error(message), { code: 'invitation' }, extra || {});
+const estRefus = e => !!(e && e.code === 'permission-denied');
+const delai = (p, ms) => Promise.race([p, new Promise((_, ko) => setTimeout(() => ko(Object.assign(new Error('délai dépassé'), { code: 'deadline-exceeded' })), ms))]);
+
+/* ---------- Codes d'invitation : 8 caractères faciles à lire et à dicter ---------- */
+const ALPHA = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const normCode = s => String(s || '').toUpperCase().replace(/[\s\-‐-—_.]/g, '');
+const codeOk = c => /^[A-HJ-NP-Z2-9]{8}$/.test(c);
+const joli = c => c.slice(0, 4) + '-' + c.slice(4);
+function tireCode() {
+  const a = new Uint32Array(8);
+  crypto.getRandomValues(a);
+  return Array.from(a, n => ALPHA[n % ALPHA.length]).join('');   // 32 symboles : tirage sans biais
+}
+// lien d'invitation ouvert : le code est gardé, puis retiré de l'adresse
+try {
+  const p = new URLSearchParams(location.search);
+  if (p.has('invitation')) {
+    const c = normCode(p.get('invitation'));
+    if (codeOk(c)) ecris(K.invitation, c);
+    p.delete('invitation');
+    const q = p.toString();
+    history.replaceState(null, '', location.pathname + (q ? '?' + q : '') + location.hash);
+  }
+} catch (x) { /* adresse sans paramètres */ }
+
+/* ---------- Adaptateur : la base de l'écurie ouverte, sous la forme attendue par le carnet ---------- */
 const code = e => ({ 'permission-denied': 'invalid_argument', 'invalid-argument': 'invalid_argument', 'resource-exhausted': 'quota_exceeded', 'unauthenticated': 'revoked' }[e && e.code] || 'unavailable');
 const fail = e => { throw { code: code(e), message: e && e.message }; };
 const clean = d => JSON.parse(JSON.stringify(d));
@@ -5445,25 +5886,30 @@ const snapDoc = s => ({ id: s.id, exists: s.exists(), data: () => s.data(), meta
 // Les fiches de l'équipe sont fusionnées, jamais remplacées, et sans le rôle ni l'adresse :
 // ceux-là ne changent que par la gérante (changerRole), même si la copie locale est ancienne.
 const fiche = d => { const o = clean(d); delete o.role; delete o.email; return o; };
-const docApi = r => ({
-  id: r.id, path: r.path,
-  set: d => (String(r.path).startsWith('membres/') ? setDoc(r, fiche(d), { merge: true }) : setDoc(r, clean(d))).catch(fail),
-  delete: () => deleteDoc(r).catch(fail),
-  get: () => getDoc(r).then(snapDoc, fail),
-  onSnapshot: (next, err) => onSnapshot(r, { includeMetadataChanges: true }, s => next(snapDoc(s)), e => err && err({ code: code(e), message: e.message }))
-});
-const db = {
-  doc: path => docApi(doc(fs, path)),
-  collection: c => ({
-    path: c,
-    doc: id => docApi(id ? doc(fs, c, id) : doc(collection(fs, c))),
-    onSnapshot: (next, err) => onSnapshot(collection(fs, c), { includeMetadataChanges: true },
-      q => next({ docs: q.docs.map(snapDoc), size: q.size, empty: q.empty, metadata: { fromCache: q.metadata.fromCache, hasPendingWrites: q.metadata.hasPendingWrites } }),
-      e => err && err({ code: code(e), message: e.message }))
-  })
-};
+function adaptateur(sid) {
+  const base = 'structures/' + sid;
+  const refus = e => { if (estRefus(e)) verifierAccesBientot(); };
+  const docApi = r => ({
+    id: r.id, path: r.path,
+    set: d => (String(r.path).startsWith(base + '/membres/') ? setDoc(r, fiche(d), { merge: true }) : setDoc(r, clean(d))).catch(fail),
+    delete: () => deleteDoc(r).catch(fail),
+    get: () => getDoc(r).then(snapDoc, fail),
+    onSnapshot: (next, err) => onSnapshot(r, { includeMetadataChanges: true }, s => next(snapDoc(s)), e => { refus(e); if (err) err({ code: code(e), message: e.message }); })
+  });
+  return {
+    sid,
+    doc: path => docApi(doc(fs, base + '/' + path)),
+    collection: c => ({
+      path: c,
+      doc: id => docApi(id ? doc(fs, base + '/' + c, id) : doc(collection(fs, base + '/' + c))),
+      onSnapshot: (next, err) => onSnapshot(collection(fs, base + '/' + c), { includeMetadataChanges: true },
+        q => next({ docs: q.docs.map(snapDoc), size: q.size, empty: q.empty, metadata: { fromCache: q.metadata.fromCache, hasPendingWrites: q.metadata.hasPendingWrites } }),
+        e => { refus(e); if (err) err({ code: code(e), message: e.message }); })
+    })
+  };
+}
 
-/* ---------- Écran de connexion ---------- */
+/* ---------- Écrans de connexion (logo vertical, au-dessus de l'appli) ---------- */
 const $a = () => document.getElementById('auth');
 const body = () => document.getElementById('authBody');
 const escH = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -5477,22 +5923,28 @@ const MSG = {
   'auth/too-many-requests': 'Trop d\'essais. Patiente quelques minutes puis réessaie.',
   'auth/network-request-failed': 'Pas de connexion internet. Réessaie avec du réseau.'
 };
-const errTxt = e => MSG[e && e.code] || 'Ça n\'a pas marché. Réessaie dans un instant.';
+const errTxt = e => MSG[e && e.code] || (e && e.code === 'invitation' ? e.message : 'Ça n\'a pas marché. Vérifie ta connexion et réessaie.');
 function show(html, bind) {
   $a().hidden = false;
   document.body.classList.add('lock');
   body().innerHTML = html;
+  $a().scrollTop = 0;
   if (bind) bind(body());
 }
 function hide() { $a().hidden = true; document.body.classList.remove('lock'); }
 const field = (id, label, type, extra = '') => `<label class="field"><span>${label}</span><input id="${id}" type="${type}" ${extra}></label>`;
 const errBox = '<p class="err" id="aErr" role="alert" hidden></p>';
-const setErr = (root, m) => { const e = root.querySelector('#aErr'); e.textContent = m || ''; e.hidden = !m; };
-async function busy(btn, fn) { btn.disabled = true; try { await fn(); } finally { btn.disabled = false; } }
+const setErr = (root, m) => { const e = root.querySelector('#aErr'); if (!e) return; e.textContent = m || ''; e.hidden = !m; };
+async function busy(btn, fn) { btn.disabled = true; try { await fn(); } finally { if (btn.isConnected) btn.disabled = false; } }
+const sortie = '<div class="auth-links"><button type="button" class="link" id="aOut">Se déconnecter</button></div>';
+const lierSortie = root => { const b = root.querySelector('#aOut'); if (b) b.addEventListener('click', deconnexion); };
+const noteInvitation = () => lis(K.invitation) ? `<div class="box ok"><p class="note" style="color:var(--ink)">Tu as reçu une invitation : connecte-toi, ou crée ton compte, pour rejoindre l'écurie.</p></div>` : '';
+const attente = () => show('<p class="auth-wait">Ouverture du carnet…</p>');
 
 function ecranConnexion() {
   show(`<form class="form" id="aForm" novalidate>
       <h2 class="auth-t">Connexion</h2>
+      ${noteInvitation()}
       ${field('aMail', 'Adresse e-mail', 'email', 'autocomplete="email" required')}
       ${field('aPass', 'Mot de passe', 'password', 'autocomplete="current-password" required')}
       ${errBox}
@@ -5518,10 +5970,11 @@ function ecranConnexion() {
 function ecranCreation() {
   show(`<form class="form" id="aForm" novalidate>
       <h2 class="auth-t">Créer ton compte</h2>
+      ${noteInvitation()}
       ${field('aNom', 'Prénom', 'text', 'autocomplete="given-name" autocapitalize="words" required')}
       ${field('aMail', 'Adresse e-mail', 'email', 'autocomplete="email" required')}
       ${field('aPass', 'Mot de passe (6 caractères minimum)', 'password', 'autocomplete="new-password" required')}
-      <p class="hint">Utilise l'adresse à laquelle tu as été invitée ou invité.</p>
+      <p class="hint">Si tu as été invitée ou invité par e-mail, utilise cette adresse.</p>
       ${errBox}
       <button class="btn primary" type="submit">Créer mon compte</button>
       <div class="auth-links"><button type="button" class="link" id="aBack">J'ai déjà un compte</button></div>
@@ -5561,99 +6014,891 @@ function ecranVerification(u) {
     root.querySelector('#aResend').addEventListener('click', async () => {
       try { await sendEmailVerification(u); setErr(root, ''); root.querySelector('#aResend').textContent = 'E-mail renvoyé'; } catch (x) { setErr(root, errTxt(x)); }
     });
-    root.querySelector('#aOut').addEventListener('click', deconnexion);
+    lierSortie(root);
   });
 }
-function ecranPasInvite(u) {
-  show(`<div class="form">
-      <h2 class="auth-t">Pas encore invité</h2>
-      <p>L'adresse <b>${escH(u.email)}</b> n'a pas encore accès au carnet. Demande à la gérante de t'inviter avec cette adresse, puis touche « Réessayer ».</p>
-      <button class="btn primary" id="aRetry">Réessayer</button>
-      <div class="auth-links"><button type="button" class="link" id="aOut">Se déconnecter</button></div>
-    </div>`, root => {
-    root.querySelector('#aRetry').addEventListener('click', () => entrer(u));
-    root.querySelector('#aOut').addEventListener('click', deconnexion);
-  });
-}
-
 function ecranSouci(u, e) {
-  const regles = e && e.code === 'permission-denied';
+  const regles = estRefus(e), stockage = e && e.code === 'stockage';
   show(`<div class="form">
       <h2 class="auth-t">Accès au carnet impossible</h2>
-      <p>${regles ? "La base refuse l'accès : les règles d'accès de Firestore ne sont pas encore à jour. Recolle le fichier firestore.rules dans Firebase, onglet Règles, puis touche « Réessayer »." : "Le carnet n'a pas pu joindre la base. Vérifie ta connexion internet, puis touche « Réessayer »."}</p>
+      <p>${stockage ? "Ce téléphone n'arrive pas à garder le carnet en mémoire (stockage plein ou navigation privée). Libère un peu de place, puis touche « Réessayer »."
+        : regles ? "La base refuse l'accès : les règles d'accès de Firestore ne sont pas à jour. Recolle le fichier firestore.rules dans Firebase, onglet Règles, publie-le, puis touche « Réessayer »."
+        : "Le carnet n'a pas pu joindre la base. Vérifie ta connexion internet, puis touche « Réessayer »."}</p>
       <p class="hint">Code : ${escH((e && e.code) || 'inconnu')}</p>
       <button class="btn primary" id="aRetry">Réessayer</button>
-      <div class="auth-links"><button type="button" class="link" id="aOut">Se déconnecter</button></div>
+      ${sortie}
     </div>`, root => {
     root.querySelector('#aRetry').addEventListener('click', () => entrer(u));
-    root.querySelector('#aOut').addEventListener('click', deconnexion);
+    lierSortie(root);
   });
 }
+const message = (titre, texte) => new Promise(fin => show(`<div class="form">
+    <h2 class="auth-t">${escH(titre)}</h2><p>${escH(texte)}</p>
+    <button class="btn primary" id="aOk">Continuer</button>
+  </div>`, root => root.querySelector('#aOk').addEventListener('click', () => fin())));
 
-/* ---------- Rôles ---------- */
-let ROLE = null, ME = null;
-async function entrer(u) {
-  const mail = (u.email || '').toLowerCase();
-  let role = null, souci = null;
-  try { const c = JSON.parse(localStorage.getItem(ROLE_KEY) || 'null'); if (c && c.uid === u.uid) role = c.role; } catch (x) { /* rien en cache */ }
+/* ---------- La personne connectée et ses écuries ---------- */
+let U = null, MAIL = '', IDX = null, OUV = null;   // compte, adresse, index personnel, écurie ouverte
+// invitations remises « à plus tard » : plus reproposées pendant cette visite, même après un rechargement
+const VUS = (() => {
+  const k = 'equivaldi:plus-tard';
+  let s = [];
+  try { s = JSON.parse(sessionStorage.getItem(k) || '[]'); } catch (x) { s = []; }
+  const set = new Set(Array.isArray(s) ? s : []);
+  return { has: c => set.has(c), add: c => { set.add(c); try { sessionStorage.setItem(k, JSON.stringify([...set])); } catch (x) { /* rien */ } } };
+})();
+const adresse = u => String((u && u.email) || '').toLowerCase();
+const prenomGarde = () => { const v = lis('carnet-ecurie:moi:v1'); return v && typeof v.nom === 'string' ? v.nom : ''; };
+const nomDe = u => String((u && u.displayName) || prenomGarde() || adresse(u).split('@')[0]).trim().slice(0, 40);
+const moiQui = () => ({ uid: U.uid, nom: (typeof moiNom === 'function' && moiNom()) || nomDe(U) });
+const indexRef = () => doc(fs, 'utilisateurs', U.uid);
+const listeEcuries = () => Object.entries((IDX && IDX.ecuries) || {}).filter(([, x]) => x && typeof x === 'object')
+  .map(([id, x]) => ({ id, nom: String(x.nom || 'Écurie'), role: x.role || '' })).sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
+const notifier = () => { try { window.dispatchEvent(new CustomEvent('eq-ecurie')); } catch (x) { /* ancien navigateur */ } };
+const tente = p => p.then(v => ({ v }), e => ({ e }));
+
+// 1. L'index personnel : la liste des écuries, pour le sélecteur (la preuve d'accès reste la fiche de membre)
+async function lireIndex(u) {
+  const s = await getDoc(doc(fs, 'utilisateurs', u.uid));
+  const base = { nom: nomDe(u), email: adresse(u) };
+  if (!s.exists()) {
+    setDoc(doc(fs, 'utilisateurs', u.uid), Object.assign({ ecuries: {} }, base), { merge: true }).catch(() => {});
+    return Object.assign({ ecuries: {}, derniere: null }, base);
+  }
+  const d = s.data() || {};
+  if (d.email !== base.email || !d.nom) setDoc(doc(fs, 'utilisateurs', u.uid), { email: base.email, nom: d.nom || base.nom }, { merge: true }).catch(() => {});
+  return Object.assign({}, d, { ecuries: (d.ecuries && typeof d.ecuries === 'object') ? Object.assign({}, d.ecuries) : {} });
+}
+const retirerDeLIndex = sids => {
+  if (!sids.length) return;
+  const maj = { ecuries: {} };
+  sids.forEach(s => { maj.ecuries[s] = deleteField(); delete IDX.ecuries[s]; });
+  if (sids.includes(IDX.derniere)) { maj.derniere = deleteField(); IDX.derniere = null; }
+  setDoc(indexRef(), maj, { merge: true }).catch(() => {});
+};
+// Accès réel à une écurie : sa fiche et sa propre fiche de membre (refusé = plus membre)
+async function acces(sid) {
   try {
-    const m = await getDoc(doc(fs, 'membres', u.uid)).catch(e => (e && e.code === 'permission-denied') ? null : Promise.reject(e));
-    if (m && m.exists()) role = m.data().role;
-    else {
-      let r = mail === GERANTE ? 'gerante' : null;
-      if (!r) {
-        const inv = await getDoc(doc(fs, 'invitations', mail)).catch(() => null);
-        if (inv && inv.exists()) r = inv.data().role;
-      }
-      if (r) { await setDoc(doc(fs, 'membres', u.uid), { email: mail, role: r, nom: u.displayName || '', depuis: Date.now() }); role = r; }
-      else role = null;
+    const [s, f] = await Promise.all([getDoc(doc(fs, 'structures', sid)), getDoc(doc(fs, 'structures', sid, 'membres', U.uid))]);
+    if (!s.exists() || !f.exists()) {
+      if ((s.metadata && s.metadata.fromCache) || (f.metadata && f.metadata.fromCache)) throw Object.assign(new Error('hors ligne'), { code: 'unavailable' });
+      return { perdu: true };
     }
-  } catch (e) { souci = e; }
-  if (!role && souci) { ecranSouci(u, souci); return; }
-  if (!role) { ecranPasInvite(u); return; }
-  try { localStorage.setItem(ROLE_KEY, JSON.stringify({ uid: u.uid, role })); } catch (x) { /* ignoré */ }
-  ROLE = role;
-  ME = u;
-  window.EQ.email = mail;
-  window.EQ.role = role;
+    const d = s.data() || {}, role = (f.data() || {}).role;
+    return { ok: true, e: { id: sid, nom: d.nom || '', commune: d.commune || '', role: ROLES[role] ? role : 'lecture', crottinsDepuis: d.crottinsDepuis || '', creeLe: d.creeLe || null } };
+  } catch (e) { if (estRefus(e)) return { perdu: true }; throw e; }
+}
+async function estMembre(sid) {
+  try { return (await getDoc(doc(fs, 'structures', sid, 'membres', U.uid))).exists(); }
+  catch (e) { if (estRefus(e)) return false; throw e; }
+}
+
+/* ---------- Parcours à la connexion ---------- */
+async function entrer(u) {
+  U = u; MAIL = adresse(u);
+  const local = lis(K.ecurie);
+  // un autre compte s'est servi de ce téléphone : ses écuries n'ont rien à faire ici
+  if (local && local.uid && local.uid !== u.uid) { purgerEcuries(); location.reload(); return; }
+  if (!window.EQ_SID) attente();
+  try { await parcours(u, local && local.uid === u.uid ? local : null); }
+  catch (e) {
+    console.error(e);
+    // sans réseau : l'écurie de ce téléphone s'ouvre avec ses données et son rôle gardés
+    if (!estRefus(e) && local && ouvrirHorsLigne(u, local)) return;
+    ecranSouci(u, e);
+  }
+}
+function ouvrirHorsLigne(u, local) {
+  const r = local.sid ? lis(K.role(local.sid)) : null;
+  if (!r || r.uid !== u.uid || window.EQ_SID !== local.sid) return false;
+  IDX = IDX || { ecuries: Object.fromEntries((local.ecuries || []).map(x => [x.id, { nom: x.nom, role: x.role }])), derniere: local.sid };
+  demarrer(u, { id: local.sid, nom: local.nom, commune: local.commune, role: r.role, crottinsDepuis: local.crottinsDepuis, creeLe: local.creeLe }, { horsLigne: true });
+  return true;
+}
+async function parcours(u, local) {
+  // lectures lancées ensemble, pour ouvrir vite
+  const preLocal = local && local.sid ? tente(acces(local.sid)) : null;
+  const preMails = tente(invitationsMail());
+  // 1. Index personnel (un refus ici veut dire que les nouvelles règles ne sont pas encore publiées)
+  let idx;
+  try { idx = await lireIndex(u); }
+  catch (e) {
+    if (!estRefus(e)) throw e;
+    await u.getIdToken(true).catch(() => {});   // adresse confirmée depuis peu : jeton à rafraîchir
+    try { idx = await lireIndex(u); }
+    catch (e2) { if (estRefus(e2)) { await reglesAnciennes(u, e2); return; } throw e2; }
+  }
+  IDX = idx;
+  // 2. Invitation en attente (lien ouvert ou code tapé)
+  const c = lis(K.invitation);
+  if (c && !VUS.has(c)) await proposerCode(u, c);
+  // 3. Invitations reçues à son adresse, une à la fois
+  const m = await preMails;
+  for (const inv of (m.v || [])) if (!VUS.has(inv.code) && !IDX.ecuries[inv.structure]) await proposer(u, inv);
+  // 5. Ouvrir la dernière écurie si elle est encore accessible, sinon celle de ce téléphone, sinon la première
+  const ordre = [IDX.derniere, local && local.sid, ...listeEcuries().map(x => x.id)].filter((s, i, a) => s && a.indexOf(s) === i);
+  const perdues = [];
+  for (const sid of ordre) {
+    let r;
+    try {
+      if (preLocal && local && sid === local.sid) { const x = await preLocal; if (x.e) throw x.e; r = x.v; }
+      else r = await acces(sid);
+    } catch (e) {
+      if (!estRefus(e) && local && sid === local.sid && ouvrirHorsLigne(u, local)) return;
+      throw e;
+    }
+    if (r.perdu) { perdues.push({ sid, nom: (IDX.ecuries[sid] && IDX.ecuries[sid].nom) || (local && local.sid === sid && local.nom) || '' }); continue; }
+    retirerDeLIndex(perdues.map(p => p.sid));
+    perdues.forEach(p => { oublierEcurie(p.sid); avis(plusAcces(p.nom)); });
+    const recharger = await rangerAnciennesCles(r.e.id);
+    demarrer(u, r.e, { recharger });
+    return;
+  }
+  retirerDeLIndex(perdues.map(p => p.sid));
+  perdues.forEach(p => oublierEcurie(p.sid));
+  const note = perdues.map(p => plusAcces(p.nom)).join(' ');
+  // 4. Ancien carnet : mise à jour par la gérante, ou écurie déjà mise à jour à rejoindre
+  if (await ancienCarnet(u)) return;
+  // 6. Aucune écurie
+  ecranAccueil(u, note);
+}
+
+/* ---------- Ouvrir une écurie ---------- */
+function demarrer(u, e, o = {}) {
+  OUV = { id: e.id, nom: e.nom || '', commune: e.commune || '', role: e.role, crottinsDepuis: e.crottinsDepuis || (e.creeLe ? isoJour(e.creeLe) : ''), creeLe: e.creeLe || null };
+  const avant = IDX && IDX.ecuries[e.id] ? Object.assign({}, IDX.ecuries[e.id]) : null;
+  if (IDX && !o.horsLigne) IDX.ecuries[e.id] = { nom: OUV.nom || (avant && avant.nom) || '', role: e.role };
+  const rec = Object.assign({ uid: u.uid, sid: e.id }, OUV, { ecuries: listeEcuries() });
+  delete rec.id;
+  ecris(K.ecurie, rec);
+  ecris(K.role(e.id), { uid: u.uid, role: e.role });
+  // le carnet chargé sur ce téléphone doit être celui de cette écurie : sinon on recharge
+  let flag = null;
+  try { flag = sessionStorage.getItem('equivaldi:recharge'); } catch (x) { flag = e.id; }
+  if (window.EQ_SID !== e.id) {
+    const relu = lis(K.ecurie);
+    if (relu && relu.sid === e.id) { location.reload(); return; }
+    if (window.EQ_SID) { ecranSouci(u, { code: 'stockage' }); return; }
+    // stockage indisponible et rien de chargé : on continue sans copie locale
+  } else if (o.recharger && flag !== e.id) {
+    // clés locales rangées à l'instant : on les recharge (une seule fois par visite)
+    try { sessionStorage.setItem('equivaldi:recharge', e.id); } catch (x) { /* rien */ }
+    location.reload();
+    return;
+  }
+  try { sessionStorage.removeItem('equivaldi:recharge'); } catch (x) { /* rien */ }
+  if (IDX && !o.horsLigne) {
+    const maj = {};
+    if (!avant || avant.nom !== IDX.ecuries[e.id].nom || avant.role !== e.role) maj.ecuries = { [e.id]: IDX.ecuries[e.id] };
+    if (IDX.derniere !== e.id) maj.derniere = e.id;
+    IDX.derniere = e.id;
+    if (Object.keys(maj).length) setDoc(indexRef(), maj, { merge: true }).catch(() => {});
+  }
+  const role = e.role;
+  Object.assign(window.EQ, { email: MAIL, role, ecurie: Object.assign({}, OUV), ecuries: listeEcuries() });
   hide();
   window.claude._resolve('user', {
-    me: async () => ({ id: u.uid, name: u.displayName || '', email: mail, isOwner: role === 'gerante', canEdit: role !== 'lecture', avatarUrl: '', color: '' }),
+    me: async () => ({ id: u.uid, name: u.displayName || '', email: MAIL, isOwner: role === 'gerante', canEdit: role !== 'lecture', avatarUrl: '', color: '' }),
     id: async () => u.uid,
     isOwner: async () => role === 'gerante',
     canEdit: async () => role !== 'lecture',
     can: async n => n === 'data.write' ? role !== 'lecture' : false,
     profiles: async ids => Object.fromEntries([].concat(ids).map(i => [i, { id: i, name: '' }]))
   });
-  window.claude._resolve('db', db);
+  window.claude._resolve('db', adaptateur(e.id));
+  notifier();
+  if (!o.horsLigne) setTimeout(() => { verifierIndex().catch(() => {}); }, 1500);
+  let a = '';
+  try { a = sessionStorage.getItem(K.avis) || ''; sessionStorage.removeItem(K.avis); } catch (x) { /* rien */ }
+  if (a) setTimeout(() => { if (typeof toast === 'function') toast(a); }, 700);
+}
+const avis = t => { try { const p = sessionStorage.getItem(K.avis); sessionStorage.setItem(K.avis, p ? p + ' ' + t : t); } catch (x) { /* rien */ } };
+// Les autres écuries de l'index, vérifiées sans bloquer : celle dont on a été retiré quitte le sélecteur
+async function verifierIndex() {
+  if (!OUV || !IDX) return;
+  const perdues = [];
+  await Promise.all(listeEcuries().filter(x => x.id !== OUV.id).map(async x => {
+    try { if (!(await estMembre(x.id))) perdues.push(x); } catch (e) { /* hors ligne : on verra plus tard */ }
+  }));
+  if (!perdues.length) return;
+  retirerDeLIndex(perdues.map(x => x.id));
+  perdues.forEach(x => oublierEcurie(x.id));
+  const l = lis(K.ecurie);
+  if (l && l.sid === OUV.id) ecris(K.ecurie, Object.assign(l, { ecuries: listeEcuries() }));
+  window.EQ.ecuries = listeEcuries();
+  notifier();
+  if (typeof toast === 'function') toast(perdues.map(x => plusAcces(x.nom)).join(' '));
+}
+// Changer d'écurie : la nouvelle est notée sur ce téléphone et dans l'index, puis l'appli se recharge
+async function ouvrir(sid) {
+  if (!U) return;
+  const x = (IDX && IDX.ecuries[sid]) || {};
+  const cur = lis(K.ecurie) || {};
+  ecris(K.ecurie, { uid: U.uid, sid, nom: x.nom || '', role: x.role || '', ecuries: listeEcuries().length ? listeEcuries() : (cur.ecuries || []) });
+  if (IDX) IDX.derniere = sid;
+  await Promise.race([setDoc(indexRef(), { derniere: sid }, { merge: true }).catch(() => {}), attendre(1500)]);
+  location.reload();
+}
+// Une écurie perdue ou quittée : sa copie locale et ses envois en attente n'ont plus lieu d'être
+function oublierEcurie(sid) {
+  try { [K.cache(sid), K.file(sid), K.role(sid)].forEach(k => localStorage.removeItem(k)); } catch (x) { /* rien */ }
+  const l = lis(K.ecurie);
+  if (l && l.sid === sid) ecris(K.ecurie, null);
+}
+function purgerEcuries() {
+  const pref = [ANC.cache, ANC.file, ANC.role, K.ecurie];
+  try { Object.keys(localStorage).filter(k => pref.some(p => k === p || k.startsWith(p + ':'))).forEach(k => localStorage.removeItem(k)); } catch (x) { /* rien */ }
+}
+// Accès retiré pendant l'utilisation (la base refuse les lectures) : on vérifie, puis on prévient
+let verifT = null;
+function verifierAccesBientot() {
+  if (verifT || !OUV || !U) return;
+  verifT = setTimeout(async () => {
+    try {
+      const r = await acces(OUV.id);
+      if (r.perdu) {
+        avis(plusAcces(OUV.nom));
+        retirerDeLIndex([OUV.id]);
+        oublierEcurie(OUV.id);
+        await attendre(400);
+        location.reload();
+        return;
+      }
+    } catch (e) { /* hors ligne : on réessaiera */ }
+    verifT = null;
+  }, 1200);
+}
+
+/* ---------- Écrans : accueil, création, code, invitation ---------- */
+function ecranAccueil(u, note = '') {
+  const prenom = nomDe(u).split(' ')[0];
+  show(`<div class="form">
+      <h2 class="auth-t">Bienvenue${prenom ? ' ' + escH(prenom) : ''} !</h2>
+      ${note ? `<div class="box"><p class="note" style="color:var(--ink)">${escH(note)}</p></div>` : ''}
+      <p>Pour commencer, crée ton écurie, ou rejoins celle où l'on t'attend avec le code reçu.</p>
+      <div class="auth-choix">
+        <button class="btn primary" id="aCreer">Créer mon écurie</button>
+        <button class="btn" id="aCode">J'ai un code d'invitation</button>
+      </div>
+      ${sortie}
+    </div>`, root => {
+    root.querySelector('#aCreer').addEventListener('click', () => ecranCreer(u, () => ecranAccueil(u)));
+    root.querySelector('#aCode').addEventListener('click', () => ecranCode(u, () => ecranAccueil(u)));
+    lierSortie(root);
+  });
+}
+const champsEcurie = (nom = '', commune = '') => `
+  ${field('aNomE', "Nom de l'écurie", 'text', `maxlength="40" autocapitalize="words" autocomplete="organization" required value="${escH(nom)}"`)}
+  ${field('aCommune', 'Commune (facultatif)', 'text', `maxlength="60" autocapitalize="words" autocomplete="address-level2" value="${escH(commune)}"`)}`;
+const lireEcurie = root => ({ nom: root.querySelector('#aNomE').value.replace(/\s+/g, ' ').trim(), commune: root.querySelector('#aCommune').value.replace(/\s+/g, ' ').trim() });
+const nomValide = n => n.length >= 2 && n.length <= 40;
+function ecranCreer(u, retour) {
+  show(`<form class="form" id="aForm" novalidate>
+      <h2 class="auth-t">Créer ton écurie</h2>
+      ${champsEcurie()}
+      <p class="hint">Tu en es la gérante : tu inviteras ensuite ton équipe, avec un lien ou un code.</p>
+      ${errBox}
+      <button class="btn primary" type="submit">Créer l'écurie</button>
+      <div class="auth-links"><button type="button" class="link" id="aBack">Retour</button></div>
+    </form>`, root => {
+    root.querySelector('#aForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const v = lireEcurie(root);
+      if (!nomValide(v.nom)) { setErr(root, "Le nom de l'écurie doit faire de 2 à 40 caractères."); return; }
+      busy(root.querySelector('[type=submit]'), async () => {
+        try { const ec = await creer(v); demarrer(u, ec); }
+        catch (x) { setErr(root, errTxt(x)); }
+      });
+    });
+    root.querySelector('#aBack').addEventListener('click', retour);
+  });
+}
+function ecranCode(u, retour) {
+  show(`<form class="form" id="aForm" novalidate>
+      <h2 class="auth-t">Code d'invitation</h2>
+      <p>Tape le code reçu de la gérante de l'écurie : 8 lettres et chiffres.</p>
+      ${field('aCodeI', 'Code', 'text', 'class="code-in" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="11" placeholder="ABCD-EF23" required')}
+      ${errBox}
+      <button class="btn primary" type="submit">Continuer</button>
+      <div class="auth-links"><button type="button" class="link" id="aBack">Retour</button></div>
+    </form>`, root => {
+    const i = root.querySelector('#aCodeI');
+    i.addEventListener('input', () => { const c = normCode(i.value).slice(0, 8); const v = c.length > 4 ? joli(c) : c; if (v !== i.value) i.value = v; });
+    root.querySelector('#aForm').addEventListener('submit', e => {
+      e.preventDefault();
+      busy(root.querySelector('[type=submit]'), async () => {
+        let inv;
+        try { inv = await lireInvitation(i.value); }
+        catch (x) { setErr(root, errTxt(x)); return; }
+        if (await estMembre(inv.structure).catch(() => false)) { setErr(root, inv.structureNom ? `Tu fais déjà partie ${deNom(inv.structureNom)}.` : 'Tu fais déjà partie de cette écurie.'); return; }
+        const ok = await proposer(u, inv, { plusTard: 'Retour' });
+        if (ok) entrer(u); else ecranCode(u, retour);
+      });
+    });
+    root.querySelector('#aBack').addEventListener('click', retour);
+    setTimeout(() => i.focus(), 50);
+  });
+}
+// Écran « Rejoindre {écurie} » : se résout à true (rejointe) ou false (plus tard)
+function proposer(u, inv, o = {}) {
+  const role = ROLES[inv.role] || inv.role;
+  const qui = inv.par && inv.par.nom ? escH(inv.par.nom) : 'La gérante';
+  const quoi = inv.role === 'lecture' ? 'Tu pourras tout consulter, sans rien modifier.' : 'Tu pourras tout noter : chevaux, soins, prés, foin, concours et tâches.';
+  return new Promise(fin => show(`<div class="form">
+      <h2 class="auth-t">Rejoindre ${escH(inv.structureNom || "l'écurie")}</h2>
+      <p>${qui} t'invite à rejoindre <b>${escH(inv.structureNom || "l'écurie")}</b>.</p>
+      <div class="box"><div class="wrap"><span class="pill ok">${escH(role)}</span></div><p class="note">${quoi}</p></div>
+      ${errBox}
+      <div class="auth-choix">
+        <button class="btn primary" id="aOui">Rejoindre</button>
+        <button class="btn" id="aNon">${escH(o.plusTard || 'Plus tard')}</button>
+      </div>
+    </div>`, root => {
+    root.querySelector('#aOui').addEventListener('click', e => busy(e.currentTarget, async () => {
+      try { await rejoindreInv(inv); fin(true); }
+      catch (x) { setErr(root, errTxt(x)); }
+    }));
+    root.querySelector('#aNon').addEventListener('click', () => { VUS.add(inv.code); fin(false); });
+  }));
+}
+// 2. Le code d'un lien ouvert (ou tapé pendant l'inscription)
+async function proposerCode(u, c) {
+  let inv;
+  try { inv = await lireInvitation(c); }
+  catch (e) {
+    if (e.code !== 'invitation') return;          // sans réseau : on garde le code pour la prochaine fois
+    ecris(K.invitation, null);
+    if (!e.deja) await message('Invitation', e.message);
+    return;
+  }
+  if (await estMembre(inv.structure).catch(() => false)) { ecris(K.invitation, null); return; }
+  await proposer(u, inv);
+}
+async function lireInvitation(saisie) {
+  const c = normCode(saisie);
+  if (!codeOk(c)) throw erreur("Ce code n'a pas le bon format : 8 lettres et chiffres, par exemple ABCD-EF23.");
+  let s;
+  try { s = await getDoc(doc(fs, 'invitations', c)); }
+  catch (e) { if (estRefus(e)) throw erreur("Ce code ne correspond à aucune invitation."); throw e; }
+  if (!s.exists()) throw erreur("Ce code ne correspond à aucune invitation. Vérifie-le avec la personne qui te l'a donné.");
+  const inv = Object.assign({ code: c }, s.data());
+  if (inv.utiliseePar) throw erreur(inv.utiliseePar === U.uid ? 'Tu as déjà rejoint cette écurie avec ce code.' : "Ce code a déjà servi : il ne marche qu'une fois. Demande un nouveau lien à la gérante.", { deja: inv.utiliseePar === U.uid });
+  if (inv.expire && inv.expire <= Date.now()) throw erreur("Cette invitation a expiré (un lien reste valable 7 jours). Demande-en une nouvelle à la gérante.");
+  if (inv.email && String(inv.email).toLowerCase() !== MAIL) throw erreur("Cette invitation a été faite pour une autre adresse e-mail. Connecte-toi avec l'adresse invitée.");
+  if (!['equipe', 'lecture'].includes(inv.role) || typeof inv.structure !== 'string') throw erreur("Cette invitation n'est pas valable.");
+  return inv;
+}
+// Rejoindre = un seul lot : sa fiche de membre, l'invitation marquée utilisée, l'index
+async function rejoindreInv(inv) {
+  const sid = inv.structure, now = Date.now(), nom = nomDe(U);
+  const b = writeBatch(fs);
+  b.set(doc(fs, 'structures', sid, 'membres', U.uid), { email: MAIL, role: inv.role, nom, depuis: now, via: inv.code });
+  b.update(doc(fs, 'invitations', inv.code), { utiliseePar: U.uid, utiliseeLe: now });
+  b.set(indexRef(), { nom, email: MAIL, ecuries: { [sid]: { nom: inv.structureNom || '', role: inv.role } }, derniere: sid }, { merge: true });
+  try { await b.commit(); }
+  catch (e) { if (estRefus(e)) throw erreur("Cette invitation n'est plus valable (déjà utilisée, expirée ou annulée)."); throw e; }
+  IDX.ecuries[sid] = { nom: inv.structureNom || '', role: inv.role };
+  IDX.derniere = sid;
+  if (lis(K.invitation) === inv.code) ecris(K.invitation, null);
+  return { sid, nom: inv.structureNom || '' };
+}
+// 3. Les invitations faites à son adresse e-mail
+async function invitationsMail() {
+  const q = await getDocs(query(collection(fs, 'invitations'), where('email', '==', MAIL)));
+  const now = Date.now();
+  return q.docs.map(d => Object.assign({ code: d.id }, d.data()))
+    .filter(i => !i.utiliseePar && (!i.expire || i.expire > now) && ['equipe', 'lecture'].includes(i.role) && typeof i.structure === 'string')
+    .sort((a, b) => (a.le || 0) - (b.le || 0));
+}
+// Créer une écurie = un seul lot : la structure, sa propre fiche de gérante, l'index
+async function creer({ nom, commune }) {
+  nom = String(nom || '').replace(/\s+/g, ' ').trim();
+  commune = String(commune || '').replace(/\s+/g, ' ').trim().slice(0, 60);
+  if (!nomValide(nom)) throw erreur("Le nom de l'écurie doit faire de 2 à 40 caractères.");
+  const ref = doc(collection(fs, 'structures')), sid = ref.id, now = Date.now(), qui = { uid: U.uid, nom: nomDe(U) };
+  const e = { id: sid, nom, commune, role: 'gerante', crottinsDepuis: isoJour(now), creeLe: now };
+  const b = writeBatch(fs);
+  b.set(ref, { nom, commune, creeLe: now, creePar: qui, gerante: U.uid, crottinsDepuis: e.crottinsDepuis, abonnement: { statut: 'essai', debut: now, finEssai: now + 61 * JOUR } });
+  b.set(doc(fs, 'structures', sid, 'membres', U.uid), { email: MAIL, role: 'gerante', nom: qui.nom, depuis: now });
+  b.set(indexRef(), { nom: qui.nom, email: MAIL, ecuries: { [sid]: { nom, role: 'gerante' } }, derniere: sid }, { merge: true });
+  await b.commit();
+  IDX.ecuries[sid] = { nom, role: 'gerante' };
+  IDX.derniere = sid;
+  return e;
+}
+
+/* ---------- Ancien carnet (avant les écuries) : mise à jour ---------- */
+const anciennesCles = () => { try { return localStorage.getItem(ANC.cache) != null || (lis(ANC.file) || []).length > 0; } catch (x) { return false; } };
+// Les clés locales de l'ancien carnet deviennent celles de l'écurie mise à jour : les modifications
+// faites hors ligne avant la mise à jour partent au bon endroit (sauf vider : déjà recopiées par la gérante)
+function rangerAnciennes(sid, vider = false) {
+  try {
+    const cache = localStorage.getItem(ANC.cache), file = lis(ANC.file);
+    if (cache != null && localStorage.getItem(K.cache(sid)) == null) localStorage.setItem(K.cache(sid), cache);
+    if (!vider && Array.isArray(file) && file.length) ecris(K.file(sid), (lis(K.file(sid)) || []).concat(file.map(o => Object.assign({}, o, { sid }))));
+    if (vider) ecris(K.file(sid), []);
+    [ANC.cache, ANC.file, ANC.role].forEach(k => localStorage.removeItem(k));
+  } catch (x) { /* stockage indisponible */ }
+}
+// Téléphone qui garde des clés de l'ancien carnet : si la gérante a fait la mise à jour, on les range
+async function rangerAnciennesCles(sidOuvert) {
+  if (!anciennesCles()) return false;
+  let mq = null;
+  try { const m = await getDoc(doc(fs, 'config', 'migration')); mq = m.exists() ? m.data() : null; }
+  catch (e) { return false; }
+  if (!mq || typeof mq.structure !== 'string') return false;   // pas encore mis à jour : on attend
+  const S = mq.structure;
+  if (S !== sidOuvert) {
+    const r = await acces(S).catch(() => null);
+    if (!r) return false;
+    if (r.perdu) { [ANC.cache, ANC.file, ANC.role].forEach(k => { try { localStorage.removeItem(k); } catch (x) { /* rien */ } }); return false; }
+    if (!IDX.ecuries[S]) { IDX.ecuries[S] = { nom: r.e.nom, role: r.e.role }; setDoc(indexRef(), { ecuries: { [S]: IDX.ecuries[S] } }, { merge: true }).catch(() => {}); }
+  }
+  rangerAnciennes(S);
+  return S === sidOuvert;
+}
+// 4. Ancien membre sans écurie : rejoindre l'écurie mise à jour, attendre la gérante, ou faire la mise à jour
+async function ancienCarnet(u) {
+  let a = null;
+  try { const s = await getDoc(doc(fs, 'membres', u.uid)); a = s.exists() ? s.data() : null; }
+  catch (e) { if (estRefus(e)) return false; throw e; }
+  if (!a) return false;
+  let mq = null;
+  try { const m = await getDoc(doc(fs, 'config', 'migration')); mq = m.exists() ? m.data() : null; }
+  catch (e) { if (!estRefus(e)) throw e; }
+  if (mq && typeof mq.structure === 'string') {
+    const r = await acces(mq.structure);
+    if (!r.ok) return false;
+    // sa fiche est déjà recopiée : l'écurie entre dans son index et ses clés locales la suivent
+    IDX.ecuries[r.e.id] = { nom: r.e.nom, role: r.e.role };
+    IDX.derniere = r.e.id;
+    await Promise.race([setDoc(indexRef(), { nom: nomDe(u), email: MAIL, ecuries: { [r.e.id]: IDX.ecuries[r.e.id] }, derniere: r.e.id }, { merge: true }).catch(() => {}), attendre(4000)]);
+    rangerAnciennes(r.e.id);
+    demarrer(u, r.e, { recharger: true });
+    return true;
+  }
+  if (a.role === 'gerante') ecranMigration(u);
+  else ecranAttenteMigration(u);
+  return true;
+}
+function ecranAttenteMigration(u) {
+  show(`<div class="form">
+      <h2 class="auth-t">Mise à jour du carnet</h2>
+      <p>La gérante met le carnet à jour. Réessaie dans quelques minutes.</p>
+      <button class="btn primary" id="aRetry">Réessayer</button>
+      ${sortie}
+    </div>`, root => {
+    root.querySelector('#aRetry').addEventListener('click', e => busy(e.currentTarget, () => entrer(u)));
+    lierSortie(root);
+  });
+}
+// Nouvelle version publiée avant les nouvelles règles : on attend, avec une sauvegarde possible
+async function reglesAnciennes(u, err) {
+  let a = null;
+  try { const s = await getDoc(doc(fs, 'membres', u.uid)); a = s.exists() ? s.data() : null; } catch (x) { a = null; }
+  if (!a) { ecranSouci(u, err); return; }
+  const g = a.role === 'gerante';
+  show(`<div class="form">
+      <h2 class="auth-t">Mise à jour en attente</h2>
+      ${g ? `<p>La nouvelle version du carnet est prête, mais ses règles d'accès ne sont pas encore publiées dans Firebase.</p>
+        <p class="hint">Télécharge d'abord une sauvegarde. Colle ensuite le fichier firestore.rules dans Firebase › Firestore Database › Règles, touche « Publier », puis « Réessayer » ici.</p>`
+      : '<p>La gérante met le carnet à jour. Réessaie dans quelques minutes.</p>'}
+      ${errBox}
+      <div class="auth-choix">
+        ${g ? '<button class="btn" id="aSave">Télécharger une sauvegarde</button>' : ''}
+        <button class="btn primary" id="aRetry">Réessayer</button>
+      </div>
+      ${sortie}
+    </div>`, root => {
+    const s = root.querySelector('#aSave');
+    if (s) s.addEventListener('click', e => busy(e.currentTarget, async () => {
+      try { const src = await lireAncien(false); appliquerFileAncienne(src); telecharger(sauvegardeJson(src), `carnet-ecurie-${isoJour(Date.now())}.json`); setErr(root, ''); s.textContent = 'Sauvegarde téléchargée'; }
+      catch (x) { setErr(root, "La sauvegarde n'a pas pu être lue. Vérifie ta connexion et réessaie."); }
+    }));
+    root.querySelector('#aRetry').addEventListener('click', e => busy(e.currentTarget, () => entrer(u)));
+    lierSortie(root);
+  });
+}
+// Lecture complète de l'ancien carnet, depuis le serveur
+async function lireAncien(avecInvitations) {
+  const src = { cols: {}, cfg: null, membres: {}, invitations: [] };
+  const lots = await Promise.all([
+    ...COLS.map(c => getDocsFromServer(collection(fs, c))),
+    getDocFromServer(doc(fs, 'config', 'reglages')),
+    getDocsFromServer(collection(fs, 'membres')),
+    avecInvitations ? getDocsFromServer(query(collection(fs, 'invitations'), where('par', '==', U.uid))) : null
+  ]);
+  COLS.forEach((c, i) => { src.cols[c] = {}; lots[i].docs.forEach(d => { src.cols[c][d.id] = d.data(); }); });
+  const r = lots[COLS.length];
+  src.cfg = r.exists() ? r.data() : null;
+  lots[COLS.length + 1].docs.forEach(d => { src.membres[d.id] = d.data(); });
+  if (lots[COLS.length + 2]) src.invitations = lots[COLS.length + 2].docs.map(d => Object.assign({ email: String(d.id).toLowerCase() }, d.data()));
+  return src;
+}
+const fusionner = (a, b) => {
+  const o = Object.assign({}, a);
+  Object.keys(b || {}).forEach(k => {
+    const x = b[k], y = o[k];
+    o[k] = (x && y && typeof x === 'object' && typeof y === 'object' && !Array.isArray(x) && !Array.isArray(y)) ? fusionner(y, x) : x;
+  });
+  return o;
+};
+// Les modifications de ce téléphone pas encore envoyées à l'ancien carnet sont ajoutées à la copie
+function appliquerFileAncienne(src) {
+  const file = lis(ANC.file);
+  if (!Array.isArray(file)) return 0;
+  file.forEach(o => {
+    if (!o || typeof o.coll !== 'string' || typeof o.id !== 'string') return;
+    if (o.coll === 'config') { if (o.id === 'reglages') src.cfg = o.op === 'set' ? o.data : null; return; }
+    if (o.coll === 'membres') {
+      if (o.op === 'set' && src.membres[o.id] && o.data) { const f = Object.assign({}, o.data); delete f.role; delete f.email; src.membres[o.id] = fusionner(src.membres[o.id], f); }
+      return;
+    }
+    if (!src.cols[o.coll]) return;
+    if (o.op === 'set' && o.data) src.cols[o.coll][o.id] = o.data; else if (o.op !== 'set') delete src.cols[o.coll][o.id];
+  });
+  return file.length;
+}
+// Sauvegarde au format de l'export actuel (Réglages › Exporter), avec en plus les fiches de l'équipe
+function sauvegardeJson(src) {
+  const data = { app: 'carnet-ecurie', version: 1, exporte: new Date().toISOString(), cfg: src.cfg };
+  COLS.forEach(c => { data[c] = Object.entries(src.cols[c]).map(([id, d]) => Object.assign({}, d, { id })); });
+  data.membres = Object.entries(src.membres).map(([id, d]) => Object.assign({}, d, { id }));
+  return JSON.stringify(data, null, 1);
+}
+function telecharger(texte, nom) {
+  const url = URL.createObjectURL(new Blob([texte], { type: 'application/json' }));
+  const a = document.createElement('a');
+  a.href = url; a.download = nom; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 8000);
+}
+// Écritures par lots : nombre limité (règles d'accès) et taille limitée (photos dans les fiches)
+const TAILLE_LOT = 5 * 1024 * 1024;
+const octets = s => { try { return new TextEncoder().encode(s).length; } catch (x) { return s.length * 2; } };
+async function ecrireParLots(ops, max, suivi) {
+  let b = writeBatch(fs), n = 0, taille = 0, faits = 0;
+  const envoyer = async () => { await delai(b.commit(), 180000); faits += n; if (suivi) suivi(faits); b = writeBatch(fs); n = 0; taille = 0; };
+  for (const o of ops) {
+    const t = octets(JSON.stringify(o.data));
+    if (n && (n >= max || taille + t > TAILLE_LOT)) await envoyer();
+    b.set(doc(fs, o.path), o.data); n++; taille += t;
+  }
+  if (n) await envoyer();
+}
+async function compte(path) {
+  try { return (await getCountFromServer(collection(fs, path))).data().count; }
+  catch (e) { if (estRefus(e)) throw e; return (await getDocsFromServer(collection(fs, path))).size; }
+}
+// Même nombre de fiches qu'avant ; s'il y en a plus (quelqu'un a déjà rejoint), toutes les anciennes doivent y être
+async function concorde(path, ids) {
+  const k = await compte(path);
+  if (k === ids.length) return { ok: true, k };
+  if (k < ids.length) return { ok: false, k };
+  const la = new Set((await getDocsFromServer(collection(fs, path))).docs.map(d => d.id));
+  return { ok: ids.every(id => la.has(id)), k };
+}
+const ETAPES = ['Sauvegarde sur ce téléphone', "Création de l'écurie", "L'équipe", 'Le carnet', 'Les invitations en attente', 'Vérification', "Ouverture de l'écurie"];
+function ecranMigration(u, msg = '') {
+  const rep = lis(K.migration), reprise = !!(rep && rep.uid === u.uid && rep.sid);
+  show(`<form class="form" id="aForm" novalidate>
+      <h2 class="auth-t">Mise à jour du carnet</h2>
+      <p>EquiValdi accueille maintenant plusieurs écuries, chacune dans son propre espace. Ton carnet devient ta première écurie : tout est recopié (chevaux, prés, foin, concours, tâches, équipe et crottins), après une sauvegarde téléchargée sur ce téléphone.</p>
+      ${reprise ? '<div class="box"><p class="note" style="color:var(--ink)">La mise à jour a été interrompue : elle reprend là où elle s\'était arrêtée.</p></div>' : ''}
+      ${champsEcurie(reprise ? rep.nom : '', reprise ? rep.commune : '')}
+      ${errBox}
+      <button class="btn primary" type="submit">${reprise ? 'Reprendre la mise à jour' : 'Mettre à jour'}</button>
+      ${sortie}
+    </form>`, root => {
+    if (msg) setErr(root, msg);
+    root.querySelector('#aForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const v = lireEcurie(root);
+      if (!nomValide(v.nom)) { setErr(root, "Le nom de l'écurie doit faire de 2 à 40 caractères."); return; }
+      migrer(u, v);
+    });
+    lierSortie(root);
+  });
+}
+function ecranProgres() {
+  const etats = ETAPES.map(() => 'afaire'), det = ETAPES.map(() => '');
+  let root = null;
+  show(`<div class="form">
+      <h2 class="auth-t">Mise à jour du carnet</h2>
+      <ol class="auth-etapes" id="aEtapes"></ol>
+      <p class="hint" id="aEtat" aria-live="polite"></p>
+      ${errBox}
+      <div class="auth-choix" id="aFin" hidden></div>
+    </div>`, r => { root = r; });
+  const dessine = () => {
+    root.querySelector('#aEtapes').innerHTML = ETAPES.map((t, i) => `<li class="${etats[i]}"><i aria-hidden="true"></i><span>${t}</span>${det[i] ? `<small>${escH(det[i])}</small>` : ''}</li>`).join('');
+  };
+  dessine();
+  return {
+    root,
+    etape(n, e, d) {
+      etats[n - 1] = e;
+      if (d != null) det[n - 1] = d;
+      dessine();
+      if (e === 'encours') root.querySelector('#aEtat').textContent = ETAPES[n - 1] + '…';
+    },
+    detail(n, d) { det[n - 1] = d; dessine(); },
+    echec(n, texte, boutons) {
+      if (n) etats[n - 1] = 'ko';
+      dessine();
+      root.querySelector('#aEtat').textContent = '';
+      setErr(root, texte);
+      const f = root.querySelector('#aFin');
+      f.innerHTML = boutons;
+      f.hidden = false;
+      return f;
+    },
+    fin(texte, boutons) {
+      root.querySelector('#aEtat').textContent = texte;
+      root.querySelector('#aEtat').classList.add('ok');
+      const f = root.querySelector('#aFin');
+      f.innerHTML = boutons;
+      f.hidden = false;
+      const b = f.querySelector('.primary');
+      if (b) b.focus();
+      return f;
+    }
+  };
+}
+// La mise à jour : sauvegarde, écurie, équipe, carnet, invitations, vérification, puis seulement le marqueur
+async function migrer(u, v) {
+  const uid = u.uid, qui = { uid, nom: nomDe(u) };
+  let rep = lis(K.migration);
+  if (!rep || rep.uid !== uid || !rep.sid) rep = { uid, sid: doc(collection(fs, 'structures')).id };
+  Object.assign(rep, { nom: v.nom, commune: v.commune });
+  ecris(K.migration, rep);
+  const S = rep.sid, base = 'structures/' + S, P = ecranProgres();
+  let n = 1, sauvegarde = '';
+  const nomFichier = `carnet-ecurie-avant-mise-a-jour-${isoJour(Date.now())}.json`;
+  try {
+    // 1. Sauvegarde complète, avant toute écriture
+    P.etape(1, 'encours');
+    const src = await lireAncien(true);
+    const nFile = appliquerFileAncienne(src);
+    sauvegarde = sauvegardeJson(src);
+    telecharger(sauvegarde, nomFichier);
+    const nDocs = COLS.reduce((s, c) => s + Object.keys(src.cols[c]).length, 0);
+    P.etape(1, 'fait', `${nDocs} ${pl(nDocs, 'fiche')} · ${nomFichier}${nFile ? ` · ${nFile} ${pl(nFile, 'modification')} de ce téléphone ${nFile > 1 ? 'incluses' : 'incluse'}` : ''}`);
+    // 2. L'écurie (déjà créée si la mise à jour reprend)
+    n = 2; P.etape(2, 'encours');
+    let existe = false;
+    try { existe = (await getDocFromServer(doc(fs, base))).exists(); } catch (e) { if (!estRefus(e)) throw e; }
+    const moi = src.membres[uid] || {};
+    if (!existe) {
+      const now = Date.now(), b = writeBatch(fs);
+      b.set(doc(fs, base), { nom: v.nom, commune: v.commune, creeLe: now, creePar: qui, gerante: uid, crottinsDepuis: '2026-10-25', abonnement: { statut: 'fondatrice', debut: now } });
+      b.set(doc(fs, base, 'membres', uid), clean(Object.assign({}, moi, { email: MAIL, role: 'gerante', nom: moi.nom || qui.nom, depuis: moi.depuis || now })));
+      await delai(b.commit(), 60000);
+    } else {
+      await delai(updateDoc(doc(fs, base), { nom: v.nom, commune: v.commune }), 60000);
+      await delai(setDoc(doc(fs, base, 'membres', uid), clean(Object.assign({}, moi, { email: MAIL, role: 'gerante', nom: moi.nom || qui.nom }))), 60000);
+    }
+    P.etape(2, 'fait', v.nom + (v.commune ? ' · ' + v.commune : ''));
+    // 3. L'équipe : les mêmes personnes, avec tous les champs de leur fiche (bons compris)
+    n = 3; P.etape(3, 'encours');
+    const autres = Object.entries(src.membres).filter(([id]) => id !== uid).map(([id, m]) => ({ path: `${base}/membres/${id}`, data: clean(m) }));
+    const nM = autres.length + 1;
+    await ecrireParLots(autres, 4, k => P.detail(3, `${k + 1} sur ${nM}`));   // 4 par lot : la règle de recopie lit 4 documents
+    P.etape(3, 'fait', `${nM} ${pl(nM, 'personne')}`);
+    // 4. Le carnet : 9 collections et les réglages, mêmes identifiants
+    n = 4; P.etape(4, 'encours');
+    const ops = [];
+    COLS.forEach(c => Object.entries(src.cols[c]).forEach(([id, d]) => ops.push({ path: `${base}/${c}/${id}`, data: clean(d) })));
+    if (src.cfg) ops.push({ path: `${base}/config/reglages`, data: clean(src.cfg) });
+    P.detail(4, `0 sur ${ops.length}`);
+    await ecrireParLots(ops, 18, k => P.detail(4, `${k} sur ${ops.length}`));
+    P.etape(4, 'fait', `${ops.length} ${pl(ops.length, 'fiche')}`);
+    // 5. Les invitations en attente (anciennes, par adresse) deviennent des invitations par e-mail avec un code
+    n = 5; P.etape(5, 'encours');
+    const inscrits = new Set(Object.values(src.membres).map(m => String(m.email || '').toLowerCase()));
+    const deja = new Set((await getDocsFromServer(query(collection(fs, 'invitations'), where('structure', '==', S)))).docs.map(d => String(d.data().email || '').toLowerCase()));
+    const opsI = [];
+    for (const i of src.invitations) {
+      if (!i.email || !i.email.includes('@') || inscrits.has(i.email) || deja.has(i.email)) continue;
+      opsI.push({ path: 'invitations/' + await codeLibre(), data: { structure: S, structureNom: v.nom, role: i.role === 'lecture' ? 'lecture' : 'equipe', email: i.email, par: qui, le: Number.isFinite(i.le) ? i.le : Date.now() } });
+      deja.add(i.email);
+    }
+    await ecrireParLots(opsI, 18);
+    const nI = [...deja].filter(Boolean).length;
+    P.etape(5, 'fait', nI ? `${nI} ${pl(nI, 'invitation')}` : 'Aucune');
+    // 6. Vérification : nombre de fiches par collection, ancien contre nouveau
+    n = 6; P.etape(6, 'encours');
+    const ecarts = [];
+    const cmp = async (lib, chemin, ids) => { const r = await concorde(chemin, ids); if (!r.ok) ecarts.push(`${lib} : ${ids.length} dans l'ancien carnet, ${r.k} dans l'écurie`); };
+    await Promise.all([
+      ...COLS.map(c => cmp(c, `${base}/${c}`, Object.keys(src.cols[c]))),
+      cmp('équipe', `${base}/membres`, [...new Set([...Object.keys(src.membres), uid])]),
+      (async () => { const r = (await getDocFromServer(doc(fs, base, 'config', 'reglages'))).exists(); if (r !== !!src.cfg) ecarts.push('réglages : absents de l\'écurie'); })()
+    ]);
+    if (ecarts.length) {
+      P.echec(6, `Les nombres ne concordent pas (${ecarts.join(' ; ')}). L'ancien carnet n'a pas changé et reste lisible : touche « Réessayer » pour recopier.`,
+        '<button class="btn primary" id="aRetry">Réessayer</button><button class="btn" id="aSave">Retélécharger la sauvegarde</button>');
+      lierEchec(u, v, P, sauvegarde, nomFichier);
+      return;
+    }
+    P.etape(6, 'fait', 'Tout concorde');
+    // 7. Seulement maintenant : le marqueur, l'index, et les clés locales de ce téléphone
+    n = 7; P.etape(7, 'encours');
+    await delai(setDoc(doc(fs, 'config', 'migration'), { structure: S, le: Date.now(), par: qui }), 60000);
+    IDX.ecuries[S] = { nom: v.nom, role: 'gerante' };
+    IDX.derniere = S;
+    await delai(setDoc(indexRef(), { nom: qui.nom, email: MAIL, ecuries: { [S]: IDX.ecuries[S] }, derniere: S }, { merge: true }), 60000);
+    rangerAnciennes(S, true);
+    ecris(K.migration, null);
+    P.etape(7, 'fait', 'Mise à jour terminée');
+    const f = P.fin(`C'est fait : ${v.nom} est prête. Ton équipe la retrouve en rouvrant l'appli.`,
+      `<button class="btn primary" id="aGo">Ouvrir ${escH(v.nom)}</button><button class="btn" id="aSave">Retélécharger la sauvegarde</button>`);
+    f.querySelector('#aSave').addEventListener('click', () => telecharger(sauvegarde, nomFichier));
+    f.querySelector('#aGo').addEventListener('click', () => demarrer(u, { id: S, nom: v.nom, commune: v.commune, role: 'gerante', crottinsDepuis: '2026-10-25', creeLe: Date.now() }, { recharger: true }));
+  } catch (e) {
+    console.error(e);
+    const txt = estRefus(e) ? "La base a refusé une écriture : vérifie que les nouvelles règles d'accès sont bien publiées, puis réessaie."
+      : "La connexion s'est interrompue. L'ancien carnet n'a pas changé : touche « Réessayer », la mise à jour reprend là où elle en était.";
+    P.echec(n, txt, `<button class="btn primary" id="aRetry">Réessayer</button>${sauvegarde ? '<button class="btn" id="aSave">Retélécharger la sauvegarde</button>' : ''}`);
+    lierEchec(u, v, P, sauvegarde, nomFichier);
+  }
+}
+function lierEchec(u, v, P, sauvegarde, nomFichier) {
+  const r = P.root.querySelector('#aRetry'), s = P.root.querySelector('#aSave');
+  if (r) r.addEventListener('click', () => migrer(u, v));
+  if (s) s.addEventListener('click', () => telecharger(sauvegarde, nomFichier));
+}
+
+/* ---------- Gestion de l'écurie ouverte (window.EQ) ---------- */
+const exigerGerante = () => { if (!OUV || OUV.role !== 'gerante') throw erreur("Seule la gérante de l'écurie peut faire ça."); };
+async function codeLibre() {
+  for (let i = 0; i < 8; i++) {
+    const c = tireCode();
+    if (!(await getDoc(doc(fs, 'invitations', c))).exists()) return c;
+  }
+  throw erreur("Le code n'a pas pu être créé. Réessaie.");
+}
+async function nouvelleInvitation(champs) {
+  exigerGerante();
+  for (let i = 0; i < 4; i++) {
+    const c = await codeLibre();
+    try {
+      await setDoc(doc(fs, 'invitations', c), Object.assign({ structure: OUV.id, structureNom: OUV.nom, par: moiQui(), le: Date.now() }, champs));
+      return c;
+    } catch (e) { if (!estRefus(e) || i === 3) throw e; }   // code pris entre-temps : on en tire un autre
+  }
+}
+async function quitter() {
+  if (!OUV) return;
+  if (OUV.role === 'gerante') throw erreur("Passe d'abord la gérance à quelqu'un de l'équipe : une écurie garde toujours sa gérante.");
+  const sid = OUV.id, autres = listeEcuries().filter(x => x.id !== sid);
+  const b = writeBatch(fs);
+  b.delete(doc(fs, 'structures', sid, 'membres', U.uid));
+  b.set(indexRef(), { ecuries: { [sid]: deleteField() }, derniere: autres.length ? autres[0].id : deleteField() }, { merge: true });
+  await b.commit();
+  oublierEcurie(sid);
+  if (autres.length) ecris(K.ecurie, { uid: U.uid, sid: autres[0].id, nom: autres[0].nom, role: autres[0].role, ecuries: autres });
+  avis(OUV.nom ? `Tu as quitté ${OUV.nom}.` : "Tu as quitté l'écurie.");
+  location.reload();
+}
+async function renommer({ nom, commune }) {
+  exigerGerante();
+  nom = String(nom || '').replace(/\s+/g, ' ').trim();
+  commune = String(commune || '').replace(/\s+/g, ' ').trim().slice(0, 60);
+  if (!nomValide(nom)) throw erreur("Le nom de l'écurie doit faire de 2 à 40 caractères.");
+  const sid = OUV.id;
+  await Promise.race([updateDoc(doc(fs, 'structures', sid), { nom, commune }), attendre(4000)]);
+  Object.assign(OUV, { nom, commune });
+  IDX.ecuries[sid] = { nom, role: OUV.role };
+  setDoc(indexRef(), { ecuries: { [sid]: IDX.ecuries[sid] } }, { merge: true }).catch(() => {});
+  const l = lis(K.ecurie);
+  if (l && l.sid === sid) ecris(K.ecurie, Object.assign(l, { nom, commune, ecuries: listeEcuries() }));
+  Object.assign(window.EQ, { ecurie: Object.assign({}, OUV), ecuries: listeEcuries() });
+  notifier();
+  // les invitations en attente portent le nouveau nom
+  invitations().then(ls => { if (!ls.length) return; const b = writeBatch(fs); ls.forEach(i => b.update(doc(fs, 'invitations', i.code), { structureNom: nom })); return b.commit(); }).catch(() => {});
+}
+async function passerGerance(cible) {
+  exigerGerante();
+  if (!cible || cible === U.uid) throw erreur('Choisis une autre personne de l\'équipe.');
+  const sid = OUV.id, f = await getDoc(doc(fs, 'structures', sid, 'membres', cible));
+  if (!f.exists() || f.data().role !== 'equipe') throw erreur('La gérance se passe à une personne qui a le droit « Peut modifier ».');
+  const b = writeBatch(fs);
+  b.update(doc(fs, 'structures', sid), { gerante: cible });
+  b.update(doc(fs, 'structures', sid, 'membres', cible), { role: 'gerante' });
+  b.update(doc(fs, 'structures', sid, 'membres', U.uid), { role: 'equipe' });
+  b.set(indexRef(), { ecuries: { [sid]: { nom: OUV.nom, role: 'equipe' } } }, { merge: true });
+  await b.commit();
+  ecris(K.role(sid), { uid: U.uid, role: 'equipe' });
+  avis(`Gérance passée : ${f.data().nom || 'la nouvelle gérante'} gère maintenant ${OUV.nom || "l'écurie"}.`);
+  location.reload();
+}
+async function invitations() {
+  if (!OUV) return [];
+  const q = await getDocs(query(collection(fs, 'invitations'), where('structure', '==', OUV.id)));
+  return q.docs.map(d => Object.assign({ code: d.id }, d.data())).filter(i => !i.utiliseePar).sort((a, b) => (b.le || 0) - (a.le || 0));
+}
+async function retirerMembre(cible) {
+  exigerGerante();
+  if (cible === U.uid) throw erreur('Pour partir, passe d\'abord la gérance.');
+  const ref = doc(fs, 'structures', OUV.id, 'membres', cible), f = await getDoc(ref);
+  const mail = f.exists() ? String(f.data().email || '').toLowerCase() : '';
+  await deleteDoc(ref);
+  // ses invitations encore en attente sont annulées aussi
+  if (mail) { const ls = await invitations().catch(() => []); await Promise.all(ls.filter(i => i.email === mail).map(i => deleteDoc(doc(fs, 'invitations', i.code)))).catch(() => {}); }
 }
 async function deconnexion() {
-  try { ['carnet-ecurie:cache:v1', 'carnet-ecurie:outbox:v1', ROLE_KEY].forEach(k => localStorage.removeItem(k)); } catch (x) { /* ignoré */ }
+  purgerEcuries();
+  // nouvelle connexion : les invitations remises à plus tard seront reproposées
+  try { ['equivaldi:plus-tard', K.avis, 'equivaldi:recharge'].forEach(k => sessionStorage.removeItem(k)); } catch (x) { /* rien */ }
   await signOut(auth).catch(() => {});
   location.reload();
 }
 
-/* ---------- Équipe (gérante) ---------- */
 window.EQ = {
-  email: '', role: '',
+  email: '', role: '', ecurie: null, ecuries: [],
   deconnexion,
-  membres: async () => (await getDocs(collection(fs, 'membres'))).docs.map(d => Object.assign({ uid: d.id, moi: ME && d.id === ME.uid }, d.data())),
-  invitations: async () => (await getDocs(collection(fs, 'invitations'))).docs.map(d => Object.assign({ email: d.id }, d.data())),
-  inviter: (email, role) => setDoc(doc(fs, 'invitations', email.trim().toLowerCase()), { role, par: ME ? ME.uid : null, le: Date.now() }),
-  annulerInvitation: email => deleteDoc(doc(fs, 'invitations', email)),
-  changerRole: (uid, role) => updateDoc(doc(fs, 'membres', uid), { role }),
-  // retirer quelqu'un supprime aussi son invitation, pour qu'il ne puisse pas revenir seul
-  retirerMembre: async uid => {
-    const m = await getDoc(doc(fs, 'membres', uid));
-    const mail = m.exists() ? String(m.data().email || '').toLowerCase() : '';
-    await deleteDoc(doc(fs, 'membres', uid));
-    if (mail) await deleteDoc(doc(fs, 'invitations', mail)).catch(() => {});
+  ouvrir,
+  creer: async v => { const e = await creer(v); await ouvrir(e.id); return e.id; },
+  infoInvitation: lireInvitation,
+  rejoindre: async c => {
+    const inv = await lireInvitation(c);
+    if (await estMembre(inv.structure)) throw erreur(inv.structureNom ? `Tu fais déjà partie ${deNom(inv.structureNom)}.` : 'Tu fais déjà partie de cette écurie.');
+    return rejoindreInv(inv);
   },
+  quitter,
+  renommer,
+  passerGerance,
+  inviterLien: async role => {
+    const c = await nouvelleInvitation({ role: role === 'lecture' ? 'lecture' : 'equipe', expire: Date.now() + 7 * JOUR });
+    return { code: c, url: location.origin + location.pathname + '?invitation=' + c };
+  },
+  inviter: async (email, role) => {
+    const mail = String(email || '').trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) throw erreur('Indique une adresse e-mail valide.');
+    exigerGerante();
+    const [ls, mb] = await Promise.all([invitations(), window.EQ.membres()]);
+    if (mb.some(m => String(m.email || '').toLowerCase() === mail)) throw erreur('Cette adresse fait déjà partie de l\'écurie.');
+    if (ls.some(i => i.email === mail)) throw erreur('Cette adresse a déjà une invitation en attente.');
+    const c = await nouvelleInvitation({ role: role === 'lecture' ? 'lecture' : 'equipe', email: mail });
+    return { code: c };
+  },
+  invitations,
+  annulerInvitation: async c => { exigerGerante(); await deleteDoc(doc(fs, 'invitations', c)); },
+  membres: async () => (await getDocs(collection(fs, 'structures', OUV.id, 'membres'))).docs.map(d => Object.assign({ uid: d.id, moi: !!U && d.id === U.uid }, d.data())),
+  changerRole: async (uid, role) => {
+    exigerGerante();
+    if (!['equipe', 'lecture'].includes(role)) throw erreur('Pour la gérance, utilise « Passer la gérance ».');
+    await updateDoc(doc(fs, 'structures', OUV.id, 'membres', uid), { role });
+  },
+  retirerMembre,
   // bon de la boutique : écrit seul, sous sa clé, pour ne jamais écraser les autres bons de la fiche
-  bon: (uid, id, data) => setDoc(doc(fs, 'membres', uid), { bons: { [id]: data } }, { merge: true }),
-  lien: () => location.origin + location.pathname
+  bon: async (uid, id, data) => setDoc(doc(fs, 'structures', OUV.id, 'membres', uid), { bons: { [id]: data } }, { merge: true }),
+  lien: () => location.origin + location.pathname,
+  code: joli
 };
 
+// rien de l'écurie n'est connu sur ce téléphone : on attend la connexion derrière l'écran d'accueil
+if (!window.EQ_SID) attente();
 onAuthStateChanged(auth, u => {
   if (!u) { ecranConnexion(); return; }
   if (!u.emailVerified) { ecranVerification(u); return; }

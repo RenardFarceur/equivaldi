@@ -196,7 +196,7 @@ function formSoin(id, pre = {}) {
       const majGere = () => {
         const fait = (chipVal(f, 'statut') || auto(val('f_date'))) === 'fait', ts = chipVals(f, 'types');
         $('#w_gere').hidden = !fait;
-        $('#w_gpts').innerHTML = ts.length ? `${crottinSvg('s')}Rapporte <b>${ptsSoin({ types: ts, planifie: !!(ex && (ex.planifie || ex.statut === 'prevu')) })} crottins</b> à la personne qui l'a géré.` : '';
+        $('#w_gpts').innerHTML = ts.length && crottinsActifs() ? `${crottinSvg('s')}Rapporte <b>${ptsSoin({ types: ts, planifie: !!(ex && (ex.planifie || ex.statut === 'prevu')) })} crottins</b> à la personne qui l'a géré.` : '';
       };
       f.addEventListener('chipchange', e => {
         if (e.detail.name === 'statut') touched = true;

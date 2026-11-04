@@ -1,35 +1,171 @@
 rules_version = '2';
-// Règles d'accès du carnet EquiValdi : à coller dans Firebase > Firestore Database > Règles
+// Règles d'accès EquiValdi : plusieurs écuries, chacune séparée des autres.
+// À coller dans Firebase › Firestore Database › Règles, puis « Publier ».
+// Chaque cas autorisé est une ligne « allow » à part : un cas qui ne s'applique pas ne bloque jamais les autres.
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // ---------- Outils ----------
     function connecte() { return request.auth != null && request.auth.token.email_verified == true; }
+    function moi() { return request.auth.uid; }
     function mail() { return request.auth.token.email.lower(); }
-    function fiche() { return /databases/$(database)/documents/membres/$(request.auth.uid); }
-    function membre() { return connecte() && exists(fiche()); }
-    function role() { return get(fiche()).data.role; }
-    function gerante() { return membre() && role() == 'gerante'; }
-    function editeur() { return membre() && role() in ['gerante', 'equipe']; }
-    function invitation() { return /databases/$(database)/documents/invitations/$(mail()); }
+    function maintenant() { return request.time.toMillis(); }
+    function structure(sid) { return /databases/$(database)/documents/structures/$(sid); }
+    function fiche(sid, uid) { return /databases/$(database)/documents/structures/$(sid)/membres/$(uid); }
+    function invitation(code) { return /databases/$(database)/documents/invitations/$(code); }
+    function ancienne(uid) { return /databases/$(database)/documents/membres/$(uid); }
+    // un champ absent ou vide
+    function absent(m, champ) { return !(champ in m) || m[champ] == null; }
+    function touche(champs) { return request.resource.data.diff(resource.data).affectedKeys().hasAny(champs); }
+    function donnees() { return ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches', 'config']; }
 
-    // Qui a accès : chacun crée sa propre fiche, avec le rôle de son invitation
-    match /membres/{uid} {
-      allow read: if membre() || (connecte() && request.auth.uid == uid);
-      allow create: if connecte() && request.auth.uid == uid
+    // Dans une écurie : membre (sa fiche existe), éditrice (gérante ou « Peut modifier »), gérante (celle de la structure)
+    function membre(sid) { return connecte() && exists(fiche(sid, moi())); }
+    function editeur(sid) { return connecte() && get(fiche(sid, moi())).data.role in ['gerante', 'equipe']; }
+    function gerante(sid) { return connecte() && get(structure(sid)).data.gerante == moi(); }
+
+    // Ancien carnet (avant les écuries) : ses membres le lisent encore, personne n'y écrit
+    function ancienMembre() { return connecte() && exists(ancienne(moi())); }
+    function ancienneGerante() { return connecte() && get(ancienne(moi())).data.role == 'gerante'; }
+
+    // Fiche de membre : les trois façons d'entrer dans une écurie
+    // (a) sa propre fiche de gérante, dans le lot qui crée l'écurie
+    function creationEcurie(sid, uid) {
+      return uid == moi()
+        && request.resource.data.role == 'gerante'
         && request.resource.data.email == mail()
-        && ((mail() == 'celiacourtois8@gmail.com' && request.resource.data.role == 'gerante')
-            || (exists(invitation()) && request.resource.data.role == get(invitation()).data.role));
-      allow update: if gerante() || (request.auth.uid == uid && request.resource.data.role == resource.data.role);
-      allow delete: if gerante();
+        && !exists(structure(sid))
+        && getAfter(structure(sid)).data.gerante == moi();
     }
-    match /invitations/{adresse} {
-      allow read: if gerante() || (connecte() && adresse == mail());
-      allow write: if gerante();
+    // (b) sa propre fiche, grâce à une invitation : même écurie, même rôle, valable, utilisée une seule fois
+    function invitationOk(sid, code) {
+      let inv = get(invitation(code)).data;
+      return inv.structure == sid
+        && inv.role == request.resource.data.role
+        && inv.role in ['equipe', 'lecture']
+        && absent(inv, 'utiliseePar')
+        && (absent(inv, 'expire') || inv.expire > maintenant())
+        && (absent(inv, 'email') || inv.email == mail())
+        && getAfter(invitation(code)).data.utiliseePar == moi();
+    }
+    function viaInvitation(sid, uid) {
+      return uid == moi()
+        && ('via' in request.resource.data)
+        && request.resource.data.via is string
+        && request.resource.data.email == mail()
+        && invitationOk(sid, request.resource.data.via);
+    }
+    // (c) migration : la gérante de l'ancien carnet recopie la fiche d'un de ses membres, avec le même rôle
+    function recopie(sid, uid) {
+      return uid != moi()
+        && gerante(sid)
+        && ancienneGerante()
+        && exists(ancienne(uid))
+        && request.resource.data.role == get(ancienne(uid)).data.role
+        && request.resource.data.role in ['equipe', 'lecture'];
     }
 
-    // Le carnet : lecture pour tous les membres, écriture pour la gérante et « Peut modifier »
+    // ---------- Index personnel : la liste de mes écuries ----------
+    match /utilisateurs/{uid} {
+      allow read, write: if connecte() && uid == moi();
+    }
+
+    // ---------- Écuries ----------
+    match /structures/{sid} {
+      allow read: if membre(sid);
+      // création : par soi, gérante de sa nouvelle écurie, en essai de 62 jours au plus
+      allow create: if connecte()
+        && request.resource.data.gerante == moi()
+        && request.resource.data.creePar.uid == moi()
+        && request.resource.data.nom is string
+        && request.resource.data.nom.size() >= 2 && request.resource.data.nom.size() <= 40
+        && request.resource.data.abonnement.statut == 'essai'
+        && request.resource.data.abonnement.finEssai is int
+        && request.resource.data.abonnement.finEssai <= maintenant() + 62 * 86400000;
+      // « fondatrice » : seulement la première écurie, celle de Célia (migration de l'ancien carnet)
+      allow create: if connecte()
+        && request.resource.data.gerante == moi()
+        && request.resource.data.creePar.uid == moi()
+        && request.resource.data.nom is string
+        && request.resource.data.nom.size() >= 2 && request.resource.data.nom.size() <= 40
+        && request.resource.data.abonnement.statut == 'fondatrice'
+        && mail() == 'celiacourtois8@gmail.com';
+      // mise à jour : la gérante, sans toucher à l'abonnement ; la gérance ne passe qu'à un membre existant
+      allow update: if gerante(sid)
+        && !touche(['abonnement', 'creePar', 'creeLe'])
+        && (request.resource.data.gerante == resource.data.gerante
+            || exists(fiche(sid, request.resource.data.gerante)));
+      allow delete: if false;
+
+      // ---------- L'équipe de l'écurie ----------
+      match /membres/{uid} {
+        allow read: if membre(sid);
+        allow create: if connecte() && creationEcurie(sid, uid);
+        allow create: if connecte() && viaInvitation(sid, uid);
+        allow create: if connecte() && recopie(sid, uid);
+        // la gérante modifie toutes les fiches. Personne ne devient gérante sans que structures.gerante
+        // le désigne dans le même lot, et la gérante ne se retire ce rôle qu'en passant la gérance.
+        allow update: if gerante(sid)
+          && (request.resource.data.role != 'gerante' || getAfter(structure(sid)).data.gerante == uid)
+          && (uid != moi() || request.resource.data.role == 'gerante' || getAfter(structure(sid)).data.gerante != moi());
+        // chacun tient sa fiche (prénom, téléphone, bons…), sans toucher à son rôle ni à son adresse
+        allow update: if connecte() && uid == moi() && !touche(['role', 'email']);
+        // la gérante retire quelqu'un (pas elle-même) ; chacun peut quitter, sauf la gérante
+        allow delete: if gerante(sid) && uid != moi();
+        allow delete: if connecte() && uid == moi() && get(structure(sid)).data.gerante != moi();
+      }
+
+      // ---------- Le carnet de l'écurie ----------
+      match /{coll}/{id} {
+        allow read: if coll in donnees() && membre(sid);
+        allow write: if coll in donnees() && editeur(sid);
+      }
+    }
+
+    // ---------- Invitations (par lien ou par adresse e-mail) ----------
+    match /invitations/{code} {
+      // le code est le secret : toute personne connectée qui le connaît peut lire l'invitation
+      // (pas les anciennes invitations, rangées sous l'adresse e-mail, qui n'a rien de secret)
+      allow get: if connecte() && (resource == null || resource.data.structure is string);
+      // listes : celles de mon adresse ; celles de mon écurie (gérante) ; l'ancien format, pour la migration
+      allow list: if connecte() && resource.data.email == mail();
+      allow list: if gerante(resource.data.structure);
+      allow list: if ancienneGerante() && resource.data.par == moi();
+      allow create: if connecte()
+        && request.resource.data.structure is string
+        && gerante(request.resource.data.structure)
+        && request.resource.data.role in ['equipe', 'lecture']
+        && absent(request.resource.data, 'utiliseePar')
+        && ((('email' in request.resource.data) && request.resource.data.email is string)
+            || (request.resource.data.expire is int && request.resource.data.expire <= maintenant() + 8 * 86400000));
+      // la gérante (sans changer d'écurie ni marquer l'invitation utilisée)
+      allow update: if resource.data.structure is string
+        && gerante(resource.data.structure)
+        && !touche(['structure', 'utiliseePar']);
+      // l'invitée : seulement utiliseePar = soi et utiliseeLe, avec sa fiche créée dans le même lot
+      allow update: if connecte()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['utiliseePar', 'utiliseeLe'])
+        && absent(resource.data, 'utiliseePar')
+        && request.resource.data.utiliseePar == moi()
+        && (absent(resource.data, 'expire') || resource.data.expire > maintenant())
+        && (absent(resource.data, 'email') || resource.data.email == mail())
+        && !exists(fiche(resource.data.structure, moi()))
+        && existsAfter(fiche(resource.data.structure, moi()));
+      allow delete: if resource.data.structure is string && gerante(resource.data.structure);
+    }
+
+    // ---------- Ancien carnet (racine) : lecture seule pour ses membres ----------
+    match /membres/{uid} {
+      allow read: if ancienMembre();
+      allow get: if connecte() && uid == moi();
+    }
     match /{coll}/{id} {
-      allow read: if membre() && coll in ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches', 'config'];
-      allow write: if editeur() && coll in ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches', 'config'];
+      allow read: if coll in donnees() && ancienMembre();
+      // seule exception : l'ancienne gérante note que la mise à jour est faite, vers une écurie qu'elle gère
+      allow create, update: if coll == 'config' && id == 'migration'
+        && ancienneGerante()
+        && request.resource.data.structure is string
+        && gerante(request.resource.data.structure);
     }
   }
 }

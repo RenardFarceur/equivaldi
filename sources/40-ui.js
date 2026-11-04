@@ -87,7 +87,8 @@ function render() {
     v = { title: 'Carnet', html: empty("Cet écran n'a pas pu s'afficher", esc(e.message)) };
   }
   $('#topTitle').textContent = v.title;
-  $('#topEyebrow').textContent = v.eyebrow || dTete(todayISO());
+  const avecEcu = majEcurieBtn();
+  $('#topEyebrow').textContent = v.eyebrow || (avecEcu ? fmt(todayISO(), { weekday: 'short', day: 'numeric', month: 'short' }) : dTete(todayISO()));
   $('#backBtn').hidden = !top;
   $('#brandBtn').hidden = !!top;
   const view = $('#view');

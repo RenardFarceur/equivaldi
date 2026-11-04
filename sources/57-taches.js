@@ -22,7 +22,7 @@ function trow(tk) {
 }
 /* À droite : ce que rapporte la tâche ; une fois faite, qui l'a faite (toucher pour ajouter quelqu'un) */
 function trowFin(tk, e) {
-  if (!e.done) return `<span class="trow-pts" title="Rapporte ${ptsTache(tk)} crottins, partagés si vous la faites à plusieurs">+${ptsTache(tk)}${crottinSvg()}</span>`;
+  if (!e.done) return !crottinsActifs() ? '' : `<span class="trow-pts" title="Rapporte ${ptsTache(tk)} crottins, partagés si vous la faites à plusieurs">+${ptsTache(tk)}${crottinSvg()}</span>`;
   const qui = faitPar(e.last), noms = esc(nomsFait(e.last));
   if (qui.length > 1) {
     const avs = qui.slice(0, 3).map(r => pav(r, 's')).join('') + (qui.length > 3 ? `<span class="av pp s plus" aria-hidden="true">+${qui.length - 3}</span>` : '');
@@ -175,6 +175,7 @@ function formQui(id) {
       const maj = () => {
         const n = lire(f).length;
         $('#w_part').innerHTML = !n ? 'Choisis au moins une personne.'
+          : !crottinsActifs() ? ''
           : n === 1 ? `${crottinSvg('s')}<b>${pot} ${pl(pot, 'crottin')}</b> pour cette personne.`
           : `${crottinSvg('s')}Les ${pot} crottins se partagent : <b>${partTache(pot, n)} chacun</b>.`;
       };
@@ -237,7 +238,7 @@ function formTache(id, pre = {}) {
       // aperçu : ce que rapporte la tâche à chaque fois, selon la fréquence et l'effort
       const apercu = () => {
         const p = ptsTache({ freq: chipVal(f, 'freq') || 'jour', n: parseNum(val('f_n')), effort: chipVal(f, 'effort') || 'normal' });
-        $('#w_pts').innerHTML = `Rapporte <b>${p} crottins</b> à chaque fois.`;
+        $('#w_pts').innerHTML = crottinsActifs() ? `Rapporte <b>${p} crottins</b> à chaque fois.` : '';
       };
       f.addEventListener('chipchange', e => {
         if (e.detail.name === 'freq') {

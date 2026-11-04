@@ -5,9 +5,19 @@ const S = { chevaux: {}, soins: {}, pres: {}, places: {}, entretiens: {}, foin: 
 /* Fiches des membres (version installable) : lues avec le carnet, jamais exportées ni effacées avec lui */
 const EXTRA = window.EQ_MODE ? ['membres'] : [];
 EXTRA.forEach(k => { S[k] = {}; });
-const CACHE_KEY = 'carnet-ecurie:cache:v1';
-const OUTBOX_KEY = 'carnet-ecurie:outbox:v1';
+/* Version installable : l'écurie ouverte sur ce téléphone est connue avant Firebase (equivaldi:ecurie:v1).
+   Elle nomme la copie locale et la file d'envoi : chaque écurie a les siennes. */
+const ECURIE = window.EQ_MODE ? (() => {
+  try { const v = JSON.parse(localStorage.getItem('equivaldi:ecurie:v1') || 'null'); return v && typeof v.sid === 'string' && v.sid ? v : null; } catch (e) { return null; }
+})() : null;
+const SID = ECURIE ? ECURIE.sid : null;
+window.EQ_SID = SID;
+const CACHE_KEY = window.EQ_MODE ? (SID ? 'carnet-ecurie:cache:v1:' + SID : null) : 'carnet-ecurie:cache:v1';
+const OUTBOX_KEY = window.EQ_MODE ? (SID ? 'carnet-ecurie:outbox:v1:' + SID : null) : 'carnet-ecurie:outbox:v1';
 const UI_KEY = 'carnet-ecurie:ui:v1';
+/* L'écurie ouverte et la liste de mes écuries : celles de Firebase dès qu'il répond, sinon celles gardées ici */
+const ecurieOuverte = () => (window.EQ && window.EQ.ecurie) || ECURIE || null;
+const mesEcuries = () => (window.EQ && Array.isArray(window.EQ.ecuries) && window.EQ.ecuries.length ? window.EQ.ecuries : (ECURIE && Array.isArray(ECURIE.ecuries) ? ECURIE.ecuries : []));
 let outbox = [];
 let DB = null;
 let dataV = 0;              // change à chaque modification des données (calculs mis en cache)
@@ -52,8 +62,15 @@ async function resync(op) {
   } catch (e) { /* on réessaiera au prochain chargement */ }
 }
 
-function lsGet(k) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
-function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* stockage indisponible */ } }
+function lsGet(k) { if (!k) return null; try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+function lsSet(k, v) { if (!k) return; try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* stockage indisponible */ } }
+/* Une modification en attente ne part jamais vers une autre écurie que la sienne : rangée dans sa propre file */
+const aMoi = o => !o.sid || !SID || o.sid === SID;
+function renvoyer(op) {
+  if (!op.sid) return;
+  const k = 'carnet-ecurie:outbox:v1:' + op.sid, l = lsGet(k);
+  lsSet(k, (Array.isArray(l) ? l : []).concat([op]));
+}
 
 function loadCache() {
   const c = lsGet(CACHE_KEY);
@@ -64,6 +81,8 @@ function loadCache() {
   dataV++;
   const o = lsGet(OUTBOX_KEY);
   outbox = Array.isArray(o) ? o : [];
+  const autres = outbox.filter(x => !aMoi(x));
+  if (autres.length) { autres.forEach(renvoyer); outbox = outbox.filter(aMoi); saveOutbox(); }
   // les modifications pas encore envoyées restent prioritaires
   outbox.forEach(applyOp);
 }
@@ -115,7 +134,7 @@ function queue(coll, id, op, data) {
   dataV++;
   const k = coll + '/' + id;
   outbox = outbox.filter(o => o.k !== k);
-  outbox.push({ k, coll, id, op, data: data ? clone(data) : null });
+  outbox.push({ k, coll, id, op, data: data ? clone(data) : null, sid: SID });
   saveOutbox();
   saveCache();
   flushSoon();
@@ -135,6 +154,8 @@ async function flush() {
   try {
     while (outbox.length && DB) {
       const op = outbox[0];
+      // garde-fou : jamais vers une autre écurie que la sienne
+      if (op.sid && DB.sid && op.sid !== DB.sid) { outbox = outbox.filter(o => o !== op); saveOutbox(); renvoyer(op); continue; }
       try {
         const ref = DB.collection(op.coll).doc(op.id);
         if (op.op === 'set') await ref.set(op.data); else await ref.delete();
@@ -227,6 +248,8 @@ async function connect() {
   updateSync();
 }
 window.addEventListener('online', () => flushSoon(100));
+/* Écurie ouverte, renommée ou mieux connue (date des crottins…) : on redessine */
+window.addEventListener('eq-ecurie', () => { dataV++; rerenderSoon(); });
 document.addEventListener('visibilitychange', () => { if (!document.hidden) { flushSoon(100); rerenderSoon(); } });
 
 function updateSync() {
@@ -256,7 +279,9 @@ function cfg() {
     finSaison: /^\d{2}-\d{2}$/.test(c.finSaison || '') ? c.finSaison : '04-30',
     alerte: Number.isFinite(c.alerte) ? c.alerte : 14,
     repos: Number.isFinite(c.repos) ? c.repos : 35,
-    paturage: Number.isFinite(c.paturage) ? c.paturage : 10
+    paturage: Number.isFinite(c.paturage) ? c.paturage : 10,
+    boutique: Array.isArray(c.boutique) ? c.boutique : null,   // null : la liste de départ
+    crottins: c.crottins !== false                              // points crottins dans cette écurie
   };
 }
 

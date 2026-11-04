@@ -10,3 +10,19 @@ img{max-width:100%}
 .auth p{margin:0}
 .auth-links{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
 .auth .btn[disabled]{opacity:.6}
+.auth-wait{text-align:center;color:var(--ink-2);margin:24px 0}
+.auth-choix{display:flex;flex-direction:column;gap:12px}
+/* Mise à jour du carnet : étapes avec progression */
+.auth-etapes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.auth-etapes li{display:grid;grid-template-columns:26px minmax(0,1fr);column-gap:10px;align-items:start;color:var(--ink-2);font-weight:500}
+.auth-etapes li i{width:22px;height:22px;box-sizing:border-box;border-radius:50%;border:2px solid var(--line);margin-top:1px;display:grid;place-items:center}
+.auth-etapes li small{grid-column:2;font-size:13px;font-weight:400;color:var(--ink-2);overflow-wrap:anywhere}
+.auth-etapes li.encours,.auth-etapes li.fait{color:var(--ink)}
+.auth-etapes li.encours i{border-color:var(--accent);border-top-color:transparent;animation:eq-tourne .8s linear infinite}
+.auth-etapes li.fait i{background:var(--accent);border-color:var(--accent)}
+.auth-etapes li.fait i::after{content:"";width:9px;height:5px;border:2.5px solid var(--accent-ink);border-top:0;border-right:0;transform:translateY(-1px) rotate(-45deg)}
+.auth-etapes li.ko{color:var(--danger)}
+.auth-etapes li.ko i{background:var(--danger);border-color:var(--danger)}
+#aEtat.ok{color:var(--accent-strong);font-weight:600;font-size:16px}
+@keyframes eq-tourne{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.auth-etapes li.encours i{animation:none;border-top-color:var(--accent)}}
