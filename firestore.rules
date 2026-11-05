@@ -169,3 +169,4 @@ service cloud.firestore {
     }
   }
 }
+// ---------- fin des règles EquiValdi : cette ligne doit être la dernière de l'éditeur ----------
