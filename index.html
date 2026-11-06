@@ -452,6 +452,61 @@ label.btn{cursor:pointer}
 .verrou-carte .verrou-voile{position:absolute;left:14px;right:14px;top:50%;transform:translateY(-50%)}
 .verrou-voile p{margin:0;max-width:34ch}
 .verrou-ligne .verrou-voile{box-shadow:none;background:var(--surface-2)}
+/* Ma carte des prés : l'invitation (onglet Prés) et l'éditeur, en plein écran */
+.c-afaire .carte{filter:blur(2px) saturate(.7);opacity:.6}
+.c-modif{align-self:flex-start;display:inline-flex;align-items:center;gap:6px}
+body.ed-ouvert{overflow:hidden}
+.ed{position:fixed;inset:0;z-index:35;display:flex;flex-direction:column;background:var(--bg);padding-top:env(safe-area-inset-top,0px);animation:ed-in .28s cubic-bezier(.2,.9,.25,1)}
+@keyframes ed-in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.ed{animation:none}}
+.ed-tete{display:flex;align-items:center;gap:8px;padding:8px max(14px,env(safe-area-inset-right,0px)) 8px max(8px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line)}
+.ed-titre{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.15}
+.ed-titre b{font-family:var(--f-display);font-weight:600;font-size:23px;letter-spacing:.01em}
+.ed-envoi{font-size:13px;color:var(--ink-2);text-align:right;max-width:46%}
+.ed-envoi.err,.ed-envoi.err .link{color:var(--danger)}
+.ed-zone,.ed-vide,.ed .ed-carte{flex:1 1 auto;min-height:0;position:relative}
+.ed-zone{background:#1A211C;overflow:hidden}
+.ed .ed-carte.carte{height:auto;border-radius:0;border:0;box-shadow:none}
+.ed-vide{overflow:auto;padding:18px max(16px,env(safe-area-inset-left,0px)) 10px}
+.ed-exig{max-width:560px}
+.ed-exig h3{margin:0 0 12px;font-family:var(--f-display);font-weight:600;font-size:26px}
+.ed-exig ol{margin:0 0 14px;padding-left:22px;display:flex;flex-direction:column;gap:10px;line-height:1.4}
+.ed-exig p{margin:0}
+.ed-svg{display:block;width:100%;height:100%;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;cursor:crosshair}
+.ed-outils{position:absolute;right:10px;top:10px}
+.ed-pan{flex:0 0 auto;background:var(--surface);border-top:2px solid var(--line);padding:12px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));max-height:46vh;overflow:auto;display:flex;flex-direction:column;gap:10px}
+.ed-aide{margin:0;line-height:1.4}
+.ed-aide b{margin-right:3px}
+.ed-ligne{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ed-ligne label{font-weight:600}
+.ed-ligne input{width:96px;min-height:44px;padding:8px 12px;border-radius:var(--r-sm);border:var(--bw) solid var(--line);background:var(--surface);color:var(--ink);font-size:17px}
+.ed-ligne input:focus{outline:none;border-color:var(--accent)}
+.ed-ajout{display:flex;flex-wrap:wrap;gap:8px}
+.ed-pastille{display:inline-block;width:12px;height:12px;border-radius:4px;flex:none}
+.ed-pastille.et-pre{background:#4FA35F}.ed-pastille.et-carriere{background:#E2B33C}.ed-pastille.et-piste{background:#E8853D}
+.ed-pastille.et-verger{background:#9A6BC4}.ed-pastille.et-abri{background:#D3503F}.ed-pastille.et-eau{background:#2F86C9}
+.ed-demande{background:var(--warn-soft);border-radius:var(--r-sm);padding:10px 12px;font-size:15px}
+.ed-demande p{margin:4px 0 0}
+.ed-fichier{cursor:pointer;align-self:flex-start}
+.ed-svg .ed-el{stroke-width:2px;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+.ed-svg .et-pre{fill:rgba(79,163,95,.34);stroke:#62C474}
+.ed-svg .et-carriere{fill:rgba(226,179,60,.4);stroke:#F2C64E}
+.ed-svg .et-verger{fill:rgba(154,107,196,.4);stroke:#B98EE0}
+.ed-svg .et-abri{fill:rgba(211,80,63,.62);stroke:#F26D5B}
+.ed-svg .et-eau{fill:#2F86C9;stroke:#fff}
+.ed-svg .ed-encours{fill-opacity:.55;pointer-events:none}
+.ed-svg .ed-piste{fill:none;stroke:rgba(232,133,61,.5);stroke-linejoin:round;stroke-linecap:round}
+.ed-svg .ed-piste-c{fill:none;stroke:#FFB077;stroke-width:1.5px;vector-effect:non-scaling-stroke;stroke-dasharray:5 4;pointer-events:none}
+.ed-svg .sel{stroke:#fff;stroke-width:3px}
+.ed-svg .ed-piste.sel{stroke:rgba(255,190,140,.75);stroke-width:inherit}
+.ed-svg .ed-cur{fill:none;stroke:#fff;stroke-width:2.5px;vector-effect:non-scaling-stroke;stroke-linejoin:round;pointer-events:none}
+.ed-svg .ed-h{fill:#fff;stroke:#2B6340;stroke-width:2.5px;vector-effect:non-scaling-stroke}
+.ed-svg .ed-h.premier{fill:#9FD6AE}
+.ed-svg .ed-h.actif{fill:#F0B45C}
+.ed-svg .ed-h.ech{stroke:#16211A}
+.ed-svg .ed-m{fill:rgba(255,255,255,.78);stroke:#2B6340;stroke-width:1.5px;vector-effect:non-scaling-stroke}
+.ed-svg .ed-n{font-family:var(--f-display);font-weight:600;fill:#fff;text-anchor:middle;dominant-baseline:central;paint-order:stroke;stroke:rgba(0,0,0,.6);stroke-linejoin:round;pointer-events:none}
+.ed-svg .ed-ech-l{stroke:#fff;stroke-width:3px;vector-effect:non-scaling-stroke;stroke-dasharray:8 5;pointer-events:none}
 .ecu-btn.admin{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .tl-day{font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);padding:6px 2px 0}
 
@@ -756,6 +811,7 @@ img{max-width:100%}
 .auth-in{max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
 .auth-in .brand-logo{width:min(220px,62%);align-self:center}
 .auth-t{font-family:var(--f-display);font-weight:600;font-size:28px;margin:0}
+.auth-sous{font-family:var(--f-display);font-weight:600;font-size:20px;margin:0 0 -16px}
 .auth p{margin:0}
 .auth-links{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
 .auth .btn[disabled]{opacity:.6}
@@ -940,6 +996,10 @@ const ICONS = {
   tasks: '<path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="m3.5 6.5 1.3 1.3 2.5-2.5M3.5 12l1.3 1.3 2.5-2.5M3.5 17.5l1.3 1.3 2.5-2.5"/>',
   user: '<circle cx="12" cy="8" r="3.8"/><path d="M4.5 20.5c.6-3.9 3.6-6.3 7.5-6.3s6.9 2.4 7.5 6.3"/>',
   close: '<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
+  undo: '<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>',
+  tourner: '<path d="M20 11a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/>',
+  image: '<rect x="3" y="4.5" width="18" height="15" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="m3.5 18 5.5-5.5 4 4 2.5-2.5 5 5"/>',
+  regle: '<path d="M3 16.5 16.5 3l4.5 4.5L7.5 21Z"/><path d="m7 12.5 2 2M10 9.5l2 2M13 6.5l2 2"/>',
   cible: '<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/>',
   agrandir: '<path d="M14 4h6v6M10 20H4v-6M20 4l-6.5 6.5M4 20l6.5-6.5"/>',
   avec: '<circle cx="9.5" cy="8.6" r="3.4"/><path d="M3.2 19.6c.5-3.5 3-5.6 6.3-5.6s5.8 2.1 6.3 5.6"/><path d="M18.6 6.4v6M15.6 9.4h6"/>',
@@ -1026,7 +1086,7 @@ ICON_VB.horse = BRAND.mark.vb;
 
 /* ---------- Données : copie locale + base de l'artifact ---------- */
 const COLS = ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches'];
-const S = { chevaux: {}, soins: {}, pres: {}, places: {}, entretiens: {}, foin: {}, concours: {}, seances: {}, taches: {}, cfg: null };
+const S = { chevaux: {}, soins: {}, pres: {}, places: {}, entretiens: {}, foin: {}, concours: {}, seances: {}, taches: {}, cfg: null, carte: null };
 /* Fiches des membres (version installable) : lues avec le carnet, jamais exportées ni effacées avec lui */
 const EXTRA = window.EQ_MODE ? ['membres'] : [];
 EXTRA.forEach(k => { S[k] = {}; });
@@ -1084,7 +1144,7 @@ async function connectUser() {
 async function resync(op) {
   if (!DB) return;
   try {
-    if (op.coll === 'config') { const s = await DB.doc('config/reglages').get(); S.cfg = s.exists ? clone(s.data()) : null; }
+    if (op.coll === 'config') { const s = await DB.doc('config/' + op.id).get(), v = s.exists ? clone(s.data()) : null; if (op.id === 'carte') S.carte = v; else S.cfg = v; }
     else {
       const s = await DB.collection(op.coll).doc(op.id).get();
       if (s.exists) { const o = clone(s.data()); o.id = s.id; S[op.coll][op.id] = o; } else delete S[op.coll][op.id];
@@ -1110,6 +1170,7 @@ function loadCache() {
   if (c && typeof c === 'object') {
     [...COLS, ...EXTRA].forEach(k => { S[k] = (c[k] && typeof c[k] === 'object') ? c[k] : {}; });
     S.cfg = c.cfg || null;
+    S.carte = c.carte || null;
   }
   dataV++;
   const o = lsGet(OUTBOX_KEY);
@@ -1123,7 +1184,7 @@ let cacheTimer = null;
 function saveCache() {
   clearTimeout(cacheTimer);
   cacheTimer = setTimeout(() => {
-    const o = { cfg: S.cfg };
+    const o = { cfg: S.cfg, carte: S.carte };
     [...COLS, ...EXTRA].forEach(k => { o[k] = S[k]; });
     lsSet(CACHE_KEY, o);
   }, 200);
@@ -1131,7 +1192,7 @@ function saveCache() {
 const saveOutbox = () => lsSet(OUTBOX_KEY, outbox);
 
 function applyOp(o) {
-  if (o.coll === 'config') { S.cfg = o.op === 'set' ? o.data : null; return; }
+  if (o.coll === 'config') { if (o.id === 'carte') S.carte = o.op === 'set' ? o.data : null; else S.cfg = o.op === 'set' ? o.data : null; return; }
   if (!S[o.coll]) return;
   if (o.op === 'set') S[o.coll][o.id] = o.data; else delete S[o.coll][o.id];
 }
@@ -1162,6 +1223,11 @@ function del(coll, id) {
 function putCfg(c) {
   S.cfg = clone(c);
   queue('config', 'reglages', 'set', S.cfg);
+}
+/* La carte des prés de l'écurie : le plan publié et le tracé en cours (65-carte-editeur.js) */
+function putCarte(c) {
+  S.carte = clone(c);
+  queue('config', 'carte', 'set', S.carte);
 }
 function queue(coll, id, op, data) {
   dataV++;
@@ -1252,14 +1318,15 @@ function subscribe(coll) {
   };
   make();
 }
-function subscribeCfg() {
+/* Les documents de config/ suivis en direct : les réglages (S.cfg) et la carte des prés (S.carte) */
+function subscribeCfg(id = 'reglages', cle = 'cfg') {
   const make = () => {
     if (!DB) return;
     try {
-      DB.doc('config/reglages').onSnapshot(snap => {
-        if (outbox.some(o => o.k === 'config/reglages')) return;
-        if (snap.exists) S.cfg = clone(snap.data());
-        else if (!(snap.metadata && snap.metadata.fromCache)) S.cfg = null;
+      DB.doc('config/' + id).onSnapshot(snap => {
+        if (outbox.some(o => o.k === 'config/' + id)) return;
+        if (snap.exists) S[cle] = clone(snap.data());
+        else if (!(snap.metadata && snap.metadata.fromCache)) S[cle] = null;
         dataV++;
         saveCache();
         rerenderSoon();
@@ -1277,6 +1344,7 @@ async function connect() {
   sync.mode = 'cloud';
   [...COLS, ...EXTRA].forEach(subscribe);
   subscribeCfg();
+  subscribeCfg('carte', 'carte');
   flushSoon(50);
   updateSync();
 }
@@ -1945,6 +2013,7 @@ function render() {
   updateSync();
   majCrottins();
   majCarte();
+  majEditeur();
 }
 let rrTimer = null;
 function rerenderSoon() { clearTimeout(rrTimer); rrTimer = setTimeout(render, 40); }
@@ -3089,7 +3158,8 @@ VIEWS.pres = () => {
   const vue = (ui.presVue || (window.EQ_MODE && premium() ? 'carte' : 'liste')) === 'carte' ? 'carte' : 'liste';
   const seg = segCtl('presVue', [['carte', premium() ? 'Carte' : `${ic('lock', 'sm')}Carte`], ['liste', 'Liste']], vue);
   // la carte est réservée aux écuries abonnées : sinon, aperçu flouté et de quoi s'abonner
-  if (vue === 'carte') return { title: 'Prés', eyebrow: 'Carte des prés', html: seg + (premium() ? carteHtml() : carteVerrouHtml()), fab: menuPres, fabLabel: 'Ajouter' };
+  // une écurie sans carte (elle se crée à partir d'un plan) voit l'invitation à la créer
+  if (vue === 'carte') return { title: 'Prés', eyebrow: 'Carte des prés', html: seg + (!premium() ? carteVerrouHtml() : prepPlan('ecurie') ? carteHtml() : carteAFaireHtml()), fab: menuPres, fabLabel: 'Ajouter' };
   if (!pres().length) return { title: 'Prés', eyebrow: 'Rotation de pâture', html: seg + emptyH('Aucun pré', 'Ajoute tes parcelles avec le bouton +, ou relie-les depuis la carte. Le carnet comptera les jours de pâture et de repos de chacune.'), fab: () => formPre(null), fabLabel: 'Nouveau pré' };
   return { title: 'Prés', eyebrow: 'Rotation de pâture', html: seg + presListe(), fab: menuPres, fabLabel: 'Ajouter' };
 };
@@ -3213,7 +3283,7 @@ function formPre(id, pre = {}, opts = {}) {
     ${fld('Surface (ha)', inp('f_surf', p.surface != null ? String(p.surface).replace('.', ',') : '', numAttr + ' placeholder="ex. 1,5"'))}
     <div id="w_rot"${sansRotation(p) ? ' hidden' : ''}><div class="grid2">${fld('Repos visé (jours)', inp('f_repos', p.repos, `inputmode="numeric" autocomplete="off" placeholder="${C.repos}"`))}${fld('Pâture max (jours)', inp('f_pat', p.paturage, `inputmode="numeric" autocomplete="off" placeholder="${C.paturage}"`))}</div>
     <p class="hint">Laisse vide pour garder les valeurs des réglages : ${C.repos} jours de repos, ${C.paturage} jours de pâture.</p></div>
-    ${grp('Sur la carte', chips('carte', zonesOpts(p), (p.carte || (p.id && zoneDuPre(p))) ? [p.carte || zoneDuPre(p)] : [], { optional: true }), "Le numéro de la parcelle sur le plan (ou la piste, la carrière).")}
+    ${zonesOpts(p).length ? grp('Sur la carte', chips('carte', zonesOpts(p), (p.carte || (p.id && zoneDuPre(p))) ? [p.carte || zoneDuPre(p)] : [], { optional: true }), "Le numéro de la parcelle sur le plan (ou la piste, la carrière).") : ''}
     ${fld('Notes', area('f_notes', p.notes, 'rows="3" placeholder="Abreuvoir, abri, type d\'herbe, clôture…"'))}
     ${ex ? `<label class="check"><input type="checkbox" id="f_arch"${p.archive ? ' checked' : ''}> Archiver ce pré</label>` : ''}`;
   openSheet(ex ? 'Modifier' : 'Nouveau pré', body, {
@@ -3593,7 +3663,9 @@ ACT['save-cfg'] = () => {
   toast('Réglages enregistrés');
 };
 ACT.export = async () => {
-  const data = { app: 'carnet-ecurie', version: 1, exporte: new Date().toISOString(), cfg: S.cfg };
+  // la carte des prés voyage avec (sans l'image du plan, rangée à part)
+  const data = { app: 'carnet-ecurie', version: 1, exporte: new Date().toISOString(), cfg: S.cfg,
+    carte: S.carte && (S.carte.plan || S.carte.trace) ? { plan: S.carte.plan || null, trace: S.carte.trace || null } : null };
   COLS.forEach(k => { data[k] = list(k); });
   const json = JSON.stringify(data, null, 1);
   let dl = null;
@@ -3643,6 +3715,10 @@ function doImport(d) {
     });
   } finally { restauration = false; }
   if (d.cfg && typeof d.cfg === 'object') putCfg(d.cfg);
+  if (d.carte && typeof d.carte === 'object') {
+    const plan = nettoiePlan(d.carte.plan);
+    if (plan) putCarte({ plan, trace: nettoieTrace(d.carte.trace), publie: Date.now() });
+  }
   nav.stack = [];
   render();
   toast('Sauvegarde restaurée');
@@ -4812,6 +4888,11 @@ VIEWS.admin = () => {
   const vis = tous.filter(x => f === 'toutes' || (f === 'abo' ? ['abonnee', 'a_vie'].includes(x.st.code) : x.st.code === f));
   const parMois = tous.filter(x => x.st.code === 'abonnee').reduce((t, x) => t + (x.st.formule === 'an' ? ABO.an / 12 : ABO.mois), 0);
   const ouv = idEcurie(ecurieOuverte());
+  // les cartes des prés demandées à EquiValdi, les plus anciennes d'abord
+  const cartes = tous.filter(x => x.s.carteDemande && x.s.carteDemande.statut === 'demandee').sort((a, b) => a.s.carteDemande.le - b.s.carteDemande.le);
+  const aDessiner = cartes.length ? section(`Cartes à dessiner <span class="count">${cartes.length}</span>`, `<div class="list">${cartes.map(({ s }) => `<button type="button" class="row" data-act="adm-ecurie" data-sid="${esc(s.id)}"><span class="qa-ic paille">${ic('image')}</span>
+      <div class="row-main"><div class="row-t">${esc(s.nom || 'Sans nom')}</div><div class="row-s">${esc(['demandée le ' + dJour(s.carteDemande.le), s.carteDemande.par && s.carteDemande.par.nom].filter(Boolean).join(' · '))}</div></div>
+      <span class="pill warn">À dessiner</span></button>`).join('')}</div>`) : '';
   const rows = vis.map(({ s, st }) => {
     const b = admBadge(st), quand = s.creeLe ? 'créée le ' + dShort(isoOf(new Date(s.creeLe))) : '';
     return `<button type="button" class="row" data-act="adm-ecurie" data-sid="${esc(s.id)}"><span class="qa-ic menthe">${ic('barn')}</span>
@@ -4824,6 +4905,7 @@ VIEWS.admin = () => {
         <div class="stat"><b>${n('essai')}</b><span>en essai</span></div>
         <div class="stat"><b>${n('abonnee', 'a_vie')}</b><span>${pl(n('abonnee', 'a_vie'), 'abonnée')}</span></div></div>
       <p class="note">${n('a_vie')} à vie · ${n('expiree')} ${pl(n('expiree'), 'expirée')} · environ ${num(parMois, 0)} € par mois d'abonnements en cours (paiements de démonstration compris).</p>
+      ${aDessiner}
       ${segCtl('admFiltre', [['toutes', 'Toutes'], ['essai', 'Essai'], ['abo', 'Abonnées'], ['expiree', 'Expirées']], f)}
       <div class="list">${rows || '<div class="row"><div class="row-s">Aucune écurie ici.</div></div>'}</div>
       <button type="button" class="link" data-act="adm-actualiser" style="align-self:flex-start">Actualiser</button>`
@@ -4850,7 +4932,8 @@ ACT['adm-ecurie'] = async d => {
       ${ligne('Créée', `${s.creeLe ? esc(dJour(s.creeLe)) : '—'}${s.creePar && s.creePar.nom ? ' par ' + esc(s.creePar.nom) : ''}${s.commune ? ' · ' + esc(s.commune) : ''}`)}
       ${ligne('Dernier paiement', p ? `${num(p.montant || 0, 0)} € · ${p.fournisseur === 'fictif' ? 'démonstration' : p.fournisseur === 'manuel' ? 'enregistré à la main' : esc(p.fournisseur || '')} · ${p.le ? esc(dJour(p.le)) : ''}` : 'Aucun')}
     </div>
-    <button type="button" class="btn primary" data-act="adm-ouvrir" data-sid="${esc(s.id)}">${ic('next', 'sm')}Ouvrir l'écurie</button>
+    ${carteAdm(s)}
+    <button type="button" class="btn${s.carteDemande && s.carteDemande.statut === 'demandee' ? '' : ' primary'}" data-act="adm-ouvrir" data-sid="${esc(s.id)}">${ic('next', 'sm')}Ouvrir l'écurie</button>
     ${grp('Abonnement', `<div class="btnrow">
       ${bt('essai', "Prolonger l'essai d'un mois")}
       ${bt('payer', `Paiement reçu · 1 mois (${ABO.mois} €)`, ' data-f="mois"')}
@@ -4874,6 +4957,15 @@ ACT['adm-action'] = async (d, el) => {
   }
 };
 ACT['adm-ouvrir'] = d => { toast('Ouverture…'); EQ.ouvrirAdmin(d.sid); };
+/* La carte des prés demandée : la demande, la note de la gérante, et de quoi la dessiner */
+function carteAdm(s) {
+  const d = s.carteDemande;
+  if (!d) return '';
+  if (d.statut !== 'demandee') return `<p class="small muted">Carte des prés demandée le ${esc(dJour(d.le))}, faite le ${esc(dJour(d.faiteLe || d.le))}${d.faitePar === 'equivaldi' ? ' par EquiValdi' : ' par la gérante'}.</p>`;
+  return `<div class="abo-etat warn">${ic('image')}<div class="row-main"><b>Carte des prés à dessiner</b><span class="small">Demandée le ${esc(dJour(d.le))}${d.par && d.par.nom ? ' par ' + esc(d.par.nom) : ''}.</span>${d.note ? `<span class="small">« ${esc(d.note)} »</span>` : ''}</div>
+    <button type="button" class="btn small primary" data-act="adm-carte" data-sid="${esc(s.id)}">${ic('edit', 'sm')}Dessiner la carte</button></div>`;
+}
+ACT['adm-carte'] = d => { toast('Ouverture du plan…'); EQ.ouvrirAdmin(d.sid, 'carte'); };
 ACT['adm-quitter'] = () => { if (window.EQ) EQ.quitterAdmin(); };
 
 /* ---------- Points crottins : chaque action rapporte, la boutique récompense ----------
@@ -5424,16 +5516,97 @@ function classementCrottins(P) {
 }
 
 /* ---------- Carte des prés ----------
-   Le plan dessiné par Célia sur la vue aérienne, relevé en mètres : 13 parcelles, la carrière (2), le verger,
-   la piste, trois abris et deux abreuvoirs. Vue en 3D isométrique façon maquette, ou vue de dessus.
-   Chaque parcelle se relie à un pré du carnet : sa couleur dit où en est la rotation, les chevaux y sont posés
-   et changent de pré quand on les fait glisser. Repère : x le long du parcellaire, y en travers (mètres). */
-const PLAN = {"beta":23.59,"zones":[{"id":"p1","type":"pre","pts":[[72.7,-32.4],[62.7,-41.0],[38.6,-41.5],[34.8,-42.5],[21.9,-40.8],[20.5,-34.4],[20.5,-23.2],[23.8,-22.2],[70.6,-21.0],[72.9,-21.6],[73.5,-23.0]],"lab":[52.0,-31.4],"n":1,"aire":985},{"id":"p3","type":"pre","pts":[[82.0,10.0],[76.9,10.1],[74.3,9.0],[31.7,11.6],[30.2,21.7],[26.5,26.9],[34.3,27.3],[74.5,22.4],[81.5,22.4],[83.0,19.5]],"lab":[38.2,18.9],"n":3,"aire":754},{"id":"p4","type":"pre","pts":[[121.4,26.9],[120.1,26.1],[104.8,26.5],[94.9,25.0],[74.8,25.1],[43.2,27.2],[23.3,30.4],[13.3,30.9],[11.3,32.9],[11.0,42.6],[12.9,43.6],[43.3,41.9],[48.1,42.7],[76.5,41.5],[114.6,41.5],[120.1,40.2],[121.1,37.8]],"lab":[80.3,33.3],"n":4,"aire":1658},{"id":"p5","type":"pre","pts":[[123.9,-48.4],[111.7,-50.5],[106.6,-49.0],[99.1,-49.4],[93.4,-48.2],[92.9,-38.4],[90.9,-35.5],[85.2,-32.1],[84.9,-27.6],[90.4,-26.8],[103.9,-28.9],[119.7,-28.5],[124.5,-29.9],[125.4,-31.4],[125.5,-37.5]],"lab":[112.6,-39.6],"n":5,"aire":720},{"id":"p6","type":"pre","pts":[[123.5,-27.6],[106.0,-27.7],[93.0,-25.7],[84.5,-25.7],[85.7,-6.9],[88.5,-5.2],[89.3,0.8],[122.0,1.5],[124.0,-7.3]],"lab":[109.0,-13.1],"n":6,"aire":1052},{"id":"p7","type":"pre","pts":[[121.2,3.4],[118.5,2.5],[89.9,2.7],[88.4,5.7],[83.3,11.0],[83.7,22.2],[108.6,24.2],[121.8,23.4],[122.6,19.5]],"lab":[109.8,13.4],"n":7,"aire":768},{"id":"p8","type":"pre","pts":[[-9.4,13.8],[-10.1,17.5],[-8.1,60.6],[-6.6,62.5],[2.3,61.4],[4.4,58.2],[5.1,36.7],[7.4,25.6],[6.2,20.4],[3.9,17.0],[-2.6,13.7]],"lab":[-1.1,25.8],"n":8,"aire":677},{"id":"p9","type":"pre","pts":[[-12.4,13.6],[-26.5,13.8],[-27.1,15.2],[-26.2,34.5],[-26.9,56.0],[-26.1,57.3],[-26.3,62.7],[-25.1,63.5],[-9.7,62.7],[-9.1,61.4],[-11.2,14.2]],"lab":[-18.1,51.4],"n":9,"aire":811},{"id":"p10","type":"pre","pts":[[-29.9,13.5],[-45.3,13.5],[-45.8,14.7],[-44.9,50.2],[-43.9,62.8],[-42.1,63.6],[-28.8,63.5],[-28.2,62.2],[-27.3,32.9],[-28.5,21.6],[-28.1,14.3]],"lab":[-36.4,32.2],"n":10,"aire":860},{"id":"p11","type":"pre","pts":[[-50.5,13.1],[-53.3,14.7],[-65.6,15.6],[-66.6,17.3],[-64.1,60.8],[-65.1,63.1],[-63.9,63.6],[-45.3,63.3],[-44.6,61.8],[-46.3,48.4],[-47.0,14.7]],"lab":[-56.7,25.2],"n":11,"aire":930},{"id":"p12","type":"pre","pts":[[-53.9,9.1],[-55.5,8.4],[-78.1,9.3],[-83.7,27.4],[-88.2,51.9],[-92.5,62.2],[-69.7,63.0],[-66.1,61.7],[-65.3,59.8],[-67.9,25.2],[-67.7,15.5],[-66.6,14.5],[-52.7,13.3],[-52.1,12.0]],"lab":[-77.0,51.2],"n":12,"aire":1052},{"id":"p13","type":"pre","pts":[[5.9,-40.1],[-18.4,-41.1],[-23.3,-36.3],[-26.1,-36.3],[-26.8,-30.0],[-29.2,-27.6],[-33.9,-26.6],[-39.5,-28.1],[-40.2,-24.9],[-39.4,-8.7],[-40.6,2.7],[-14.2,3.8],[-2.0,2.1],[6.5,3.0],[7.4,-1.6],[5.6,-15.7],[6.6,-25.5]],"lab":[-13.7,-16.1],"n":13,"aire":1821},{"id":"p14","type":"pre","pts":[[-53.5,-38.4],[-83.1,-40.2],[-83.9,-36.3],[-83.1,-18.9],[-81.3,-6.9],[-82.2,4.9],[-73.9,6.2],[-54.5,5.6],[-53.8,4.0],[-54.7,-14.2],[-53.1,-22.8]],"lab":[-68.1,-22.1],"n":14,"aire":1301},{"id":"p15","type":"pre","pts":[[-87.2,-39.4],[-93.2,-41.3],[-118.5,-43.7],[-123.0,-28.1],[-135.9,6.2],[-125.5,6.6],[-108.4,4.2],[-94.3,5.7],[-86.0,5.4],[-85.1,2.5],[-85.2,-15.6],[-87.5,-31.8]],"lab":[-106.1,-16.0],"n":15,"aire":1943},{"id":"carriere","type":"carriere","pts":[[60.8,-17.5],[36.2,-19.9],[18.7,-20.0],[17.8,-18.5],[18.8,-17.6],[17.7,-11.8],[18.3,0.2],[24.1,2.4],[38.0,2.2],[60.5,-0.1],[61.4,-5.8]],"lab":[30.1,-8.7],"n":2,"aire":889},{"id":"verger","type":"verger","pts":[[73.8,-16.6],[72.0,-17.3],[63.9,-16.9],[63.4,-4.0],[70.1,-3.4],[73.7,-5.8],[74.7,-8.4]],"lab":[68.8,-9.6],"aire":137},{"id":"piste","type":"piste","pts":[[91.3,-42.8],[82.5,-46.2],[78.8,-50.1],[77.1,-50.9],[66.3,-50.2],[45.5,-51.6],[25.6,-50.9],[19.6,-51.6],[9.9,-50.8],[8.5,-49.2],[7.7,-38.8],[8.4,-25.4],[7.5,-14.8],[9.0,-1.1],[7.0,3.6],[-13.7,5.4],[-37.3,4.9],[-41.2,3.2],[-42.3,0.1],[-42.0,-24.1],[-39.9,-28.8],[-31.9,-29.0],[-29.5,-30.3],[-27.5,-35.8],[-22.9,-38.9],[-21.6,-45.1],[-22.7,-53.8],[-24.0,-56.2],[-27.1,-57.1],[-29.9,-55.5],[-30.8,-53.3],[-29.9,-45.4],[-30.8,-42.8],[-32.4,-41.2],[-36.3,-40.3],[-43.2,-42.6],[-47.1,-42.9],[-50.0,-41.6],[-51.1,-39.7],[-51.8,8.6],[-50.7,10.9],[-49.2,11.6],[-0.5,12.1],[3.8,14.2],[6.9,17.2],[8.9,21.8],[9.1,28.2],[11.1,29.5],[20.0,27.8],[25.2,24.5],[31.3,10.5],[33.6,9.6],[49.1,8.2],[61.9,8.4],[73.1,7.0],[78.8,8.3],[81.6,7.2],[83.6,7.4],[85.8,5.8],[87.6,1.6],[87.8,-1.5],[84.2,-7.8],[82.7,-19.9],[83.5,-24.9],[83.0,-27.0],[84.8,-32.8],[90.4,-37.6]],"lab":[-8.5,8.4],"trous":[[[73.8,-33.4],[76.1,-24.6],[77.2,-7.8],[76.2,-5.0],[72.3,-1.5],[70.1,-0.6],[61.5,-0.8],[60.1,0.9],[37.6,3.0],[23.5,3.1],[17.6,0.6],[16.9,-11.7],[18.0,-17.5],[17.0,-18.4],[17.8,-20.2],[17.2,-24.6],[18.0,-37.6],[18.9,-41.0],[20.6,-42.6],[34.5,-44.9],[62.8,-43.3],[67.1,-40.5]]],"aire":3588}],"abris":[{"c":[84.6,-47.3],"w":13.6,"h":7.2},{"c":[-33.3,-44.1],"w":6.9,"h":13.9},{"c":[-24.6,-33.8],"w":3.5,"h":4.0}],"eau":[{"c":[73.1,-45.3]},{"c":[-43.1,-38.1]}],"arbres":[[66.6,-14.5],[72.9,-11.8],[68.3,-10.0],[63.9,-8.5],[70.2,-5.7]],"obstacles":[[29.9,-8.7],[48.3,-8.6]],"socle":[[129.8,-45.2],[127.2,-52.2],[121.1,-54.3],[112.2,-55.4],[102.8,-53.7],[98.2,-54.3],[91.5,-52.8],[88.2,-49.1],[77.6,-55.8],[40.0,-56.5],[10.3,-56.0],[4.9,-53.2],[3.2,-45.7],[-16.5,-46.1],[-19.0,-57.5],[-20.7,-59.9],[-25.8,-62.1],[-30.5,-61.1],[-34.1,-58.3],[-36.1,-52.1],[-35.5,-45.3],[-46.6,-47.8],[-54.8,-43.9],[-82.6,-45.1],[-86.0,-44.2],[-92.7,-46.2],[-119.2,-48.7],[-121.2,-47.9],[-127.0,-34.5],[-140.9,6.9],[-139.2,10.0],[-135.2,11.7],[-108.2,9.2],[-94.8,10.6],[-84.0,10.0],[-88.5,26.2],[-92.6,48.3],[-97.8,60.8],[-95.8,65.9],[-91.8,67.6],[-25.6,68.5],[3.2,66.3],[6.7,64.1],[9.3,59.4],[9.7,47.6],[12.4,48.5],[43.0,47.0],[118.4,45.7],[126.4,27.3],[127.3,22.5],[126.2,7.5],[129.0,-6.9],[128.5,-26.8],[130.5,-31.8]]};
-const ZONES = new Map(PLAN.zones.map(z => [z.id, z]));
+   Chaque écurie a son plan, relevé en mètres : ses parcelles numérotées, carrière, piste, verger, abris et abreuvoirs.
+   Vue en 3D isométrique façon maquette, ou vue de dessus. Chaque parcelle se relie à un pré du carnet : sa couleur
+   dit où en est la rotation, les chevaux y sont posés et changent de pré quand on les fait glisser.
+   Repère : x le long du parcellaire, y en travers (mètres) ; beta tourne la vue de dessus comme le plan d'origine.
+   Le plan de l'écurie fondatrice (dessiné par Célia sur la vue aérienne : 13 parcelles, la carrière (2), le verger,
+   la piste, trois abris et deux abreuvoirs) est ci-dessous ; les autres écuries créent le leur (65-carte-editeur.js). */
+const PLAN_VALDI = {"beta":23.59,"zones":[{"id":"p1","type":"pre","pts":[[72.7,-32.4],[62.7,-41.0],[38.6,-41.5],[34.8,-42.5],[21.9,-40.8],[20.5,-34.4],[20.5,-23.2],[23.8,-22.2],[70.6,-21.0],[72.9,-21.6],[73.5,-23.0]],"lab":[52.0,-31.4],"n":1,"aire":985},{"id":"p3","type":"pre","pts":[[82.0,10.0],[76.9,10.1],[74.3,9.0],[31.7,11.6],[30.2,21.7],[26.5,26.9],[34.3,27.3],[74.5,22.4],[81.5,22.4],[83.0,19.5]],"lab":[38.2,18.9],"n":3,"aire":754},{"id":"p4","type":"pre","pts":[[121.4,26.9],[120.1,26.1],[104.8,26.5],[94.9,25.0],[74.8,25.1],[43.2,27.2],[23.3,30.4],[13.3,30.9],[11.3,32.9],[11.0,42.6],[12.9,43.6],[43.3,41.9],[48.1,42.7],[76.5,41.5],[114.6,41.5],[120.1,40.2],[121.1,37.8]],"lab":[80.3,33.3],"n":4,"aire":1658},{"id":"p5","type":"pre","pts":[[123.9,-48.4],[111.7,-50.5],[106.6,-49.0],[99.1,-49.4],[93.4,-48.2],[92.9,-38.4],[90.9,-35.5],[85.2,-32.1],[84.9,-27.6],[90.4,-26.8],[103.9,-28.9],[119.7,-28.5],[124.5,-29.9],[125.4,-31.4],[125.5,-37.5]],"lab":[112.6,-39.6],"n":5,"aire":720},{"id":"p6","type":"pre","pts":[[123.5,-27.6],[106.0,-27.7],[93.0,-25.7],[84.5,-25.7],[85.7,-6.9],[88.5,-5.2],[89.3,0.8],[122.0,1.5],[124.0,-7.3]],"lab":[109.0,-13.1],"n":6,"aire":1052},{"id":"p7","type":"pre","pts":[[121.2,3.4],[118.5,2.5],[89.9,2.7],[88.4,5.7],[83.3,11.0],[83.7,22.2],[108.6,24.2],[121.8,23.4],[122.6,19.5]],"lab":[109.8,13.4],"n":7,"aire":768},{"id":"p8","type":"pre","pts":[[-9.4,13.8],[-10.1,17.5],[-8.1,60.6],[-6.6,62.5],[2.3,61.4],[4.4,58.2],[5.1,36.7],[7.4,25.6],[6.2,20.4],[3.9,17.0],[-2.6,13.7]],"lab":[-1.1,25.8],"n":8,"aire":677},{"id":"p9","type":"pre","pts":[[-12.4,13.6],[-26.5,13.8],[-27.1,15.2],[-26.2,34.5],[-26.9,56.0],[-26.1,57.3],[-26.3,62.7],[-25.1,63.5],[-9.7,62.7],[-9.1,61.4],[-11.2,14.2]],"lab":[-18.1,51.4],"n":9,"aire":811},{"id":"p10","type":"pre","pts":[[-29.9,13.5],[-45.3,13.5],[-45.8,14.7],[-44.9,50.2],[-43.9,62.8],[-42.1,63.6],[-28.8,63.5],[-28.2,62.2],[-27.3,32.9],[-28.5,21.6],[-28.1,14.3]],"lab":[-36.4,32.2],"n":10,"aire":860},{"id":"p11","type":"pre","pts":[[-50.5,13.1],[-53.3,14.7],[-65.6,15.6],[-66.6,17.3],[-64.1,60.8],[-65.1,63.1],[-63.9,63.6],[-45.3,63.3],[-44.6,61.8],[-46.3,48.4],[-47.0,14.7]],"lab":[-56.7,25.2],"n":11,"aire":930},{"id":"p12","type":"pre","pts":[[-53.9,9.1],[-55.5,8.4],[-78.1,9.3],[-83.7,27.4],[-88.2,51.9],[-92.5,62.2],[-69.7,63.0],[-66.1,61.7],[-65.3,59.8],[-67.9,25.2],[-67.7,15.5],[-66.6,14.5],[-52.7,13.3],[-52.1,12.0]],"lab":[-77.0,51.2],"n":12,"aire":1052},{"id":"p13","type":"pre","pts":[[5.9,-40.1],[-18.4,-41.1],[-23.3,-36.3],[-26.1,-36.3],[-26.8,-30.0],[-29.2,-27.6],[-33.9,-26.6],[-39.5,-28.1],[-40.2,-24.9],[-39.4,-8.7],[-40.6,2.7],[-14.2,3.8],[-2.0,2.1],[6.5,3.0],[7.4,-1.6],[5.6,-15.7],[6.6,-25.5]],"lab":[-13.7,-16.1],"n":13,"aire":1821},{"id":"p14","type":"pre","pts":[[-53.5,-38.4],[-83.1,-40.2],[-83.9,-36.3],[-83.1,-18.9],[-81.3,-6.9],[-82.2,4.9],[-73.9,6.2],[-54.5,5.6],[-53.8,4.0],[-54.7,-14.2],[-53.1,-22.8]],"lab":[-68.1,-22.1],"n":14,"aire":1301},{"id":"p15","type":"pre","pts":[[-87.2,-39.4],[-93.2,-41.3],[-118.5,-43.7],[-123.0,-28.1],[-135.9,6.2],[-125.5,6.6],[-108.4,4.2],[-94.3,5.7],[-86.0,5.4],[-85.1,2.5],[-85.2,-15.6],[-87.5,-31.8]],"lab":[-106.1,-16.0],"n":15,"aire":1943},{"id":"carriere","type":"carriere","pts":[[60.8,-17.5],[36.2,-19.9],[18.7,-20.0],[17.8,-18.5],[18.8,-17.6],[17.7,-11.8],[18.3,0.2],[24.1,2.4],[38.0,2.2],[60.5,-0.1],[61.4,-5.8]],"lab":[30.1,-8.7],"n":2,"aire":889},{"id":"verger","type":"verger","pts":[[73.8,-16.6],[72.0,-17.3],[63.9,-16.9],[63.4,-4.0],[70.1,-3.4],[73.7,-5.8],[74.7,-8.4]],"lab":[68.8,-9.6],"aire":137},{"id":"piste","type":"piste","pts":[[91.3,-42.8],[82.5,-46.2],[78.8,-50.1],[77.1,-50.9],[66.3,-50.2],[45.5,-51.6],[25.6,-50.9],[19.6,-51.6],[9.9,-50.8],[8.5,-49.2],[7.7,-38.8],[8.4,-25.4],[7.5,-14.8],[9.0,-1.1],[7.0,3.6],[-13.7,5.4],[-37.3,4.9],[-41.2,3.2],[-42.3,0.1],[-42.0,-24.1],[-39.9,-28.8],[-31.9,-29.0],[-29.5,-30.3],[-27.5,-35.8],[-22.9,-38.9],[-21.6,-45.1],[-22.7,-53.8],[-24.0,-56.2],[-27.1,-57.1],[-29.9,-55.5],[-30.8,-53.3],[-29.9,-45.4],[-30.8,-42.8],[-32.4,-41.2],[-36.3,-40.3],[-43.2,-42.6],[-47.1,-42.9],[-50.0,-41.6],[-51.1,-39.7],[-51.8,8.6],[-50.7,10.9],[-49.2,11.6],[-0.5,12.1],[3.8,14.2],[6.9,17.2],[8.9,21.8],[9.1,28.2],[11.1,29.5],[20.0,27.8],[25.2,24.5],[31.3,10.5],[33.6,9.6],[49.1,8.2],[61.9,8.4],[73.1,7.0],[78.8,8.3],[81.6,7.2],[83.6,7.4],[85.8,5.8],[87.6,1.6],[87.8,-1.5],[84.2,-7.8],[82.7,-19.9],[83.5,-24.9],[83.0,-27.0],[84.8,-32.8],[90.4,-37.6]],"lab":[-8.5,8.4],"trous":[[[73.8,-33.4],[76.1,-24.6],[77.2,-7.8],[76.2,-5.0],[72.3,-1.5],[70.1,-0.6],[61.5,-0.8],[60.1,0.9],[37.6,3.0],[23.5,3.1],[17.6,0.6],[16.9,-11.7],[18.0,-17.5],[17.0,-18.4],[17.8,-20.2],[17.2,-24.6],[18.0,-37.6],[18.9,-41.0],[20.6,-42.6],[34.5,-44.9],[62.8,-43.3],[67.1,-40.5]]],"aire":3588}],"abris":[{"c":[84.6,-47.3],"w":13.6,"h":7.2},{"c":[-33.3,-44.1],"w":6.9,"h":13.9},{"c":[-24.6,-33.8],"w":3.5,"h":4.0}],"eau":[{"c":[73.1,-45.3]},{"c":[-43.1,-38.1]}],"arbres":[[66.6,-14.5],[72.9,-11.8],[68.3,-10.0],[63.9,-8.5],[70.2,-5.7]],"obstacles":[[29.9,-8.7],[48.3,-8.6]],"socle":[[129.8,-45.2],[127.2,-52.2],[121.1,-54.3],[112.2,-55.4],[102.8,-53.7],[98.2,-54.3],[91.5,-52.8],[88.2,-49.1],[77.6,-55.8],[40.0,-56.5],[10.3,-56.0],[4.9,-53.2],[3.2,-45.7],[-16.5,-46.1],[-19.0,-57.5],[-20.7,-59.9],[-25.8,-62.1],[-30.5,-61.1],[-34.1,-58.3],[-36.1,-52.1],[-35.5,-45.3],[-46.6,-47.8],[-54.8,-43.9],[-82.6,-45.1],[-86.0,-44.2],[-92.7,-46.2],[-119.2,-48.7],[-121.2,-47.9],[-127.0,-34.5],[-140.9,6.9],[-139.2,10.0],[-135.2,11.7],[-108.2,9.2],[-94.8,10.6],[-84.0,10.0],[-88.5,26.2],[-92.6,48.3],[-97.8,60.8],[-95.8,65.9],[-91.8,67.6],[-25.6,68.5],[3.2,66.3],[6.7,64.1],[9.3,59.4],[9.7,47.6],[12.4,48.5],[43.0,47.0],[118.4,45.7],[126.4,27.3],[127.3,22.5],[126.2,7.5],[129.0,-6.9],[128.5,-26.8],[130.5,-31.8]]};
+PLAN_VALDI.zones.forEach(z => { if (z.type === 'verger') z.desc = 'Les pommiers, au bout de la carrière'; });
+let PLAN = PLAN_VALDI, ZONES = new Map(PLAN.zones.map(z => [z.id, z]));
 const zoneDe = id => ZONES.get(id) || null;
-const zoneNom = z => z.type === 'pre' ? `Parcelle ${z.n}` : z.type === 'carriere' ? 'Carrière' : z.type === 'piste' ? 'Piste' : 'Verger';
+const NOMS_ZONE = { carriere: 'Carrière', piste: 'Piste', verger: 'Verger' };
+const zoneNom = z => z.nom || (z.type === 'pre' ? `Parcelle ${z.n}` : NOMS_ZONE[z.type] || 'Espace');
 const zoneCourt = z => z.type === 'pre' ? String(z.n) : zoneNom(z);
 const zoneHa = z => Math.round(z.aire / 100) / 100;
+
+/* ---------- Quel plan : celui de l'écurie, l'aperçu du tracé en cours, ou la démonstration ----------
+   La carte publiée de l'écurie (config/carte) ; à défaut, l'écurie fondatrice garde le plan d'origine (et le carnet
+   partagé sur claude.ai aussi). La démonstration (floutée, sous un verrou ou une invitation) montre ce plan d'origine. */
+const planOk = p => !!p && Array.isArray(p.zones) && p.zones.length > 0 && Array.isArray(p.socle) && p.socle.length >= 3;
+/* Une carte lue dans la base est remise au propre avant d'être dessinée (tout membre « Peut modifier » écrit
+   config/carte) : identifiants simples, nombres, textes sans balises ni guillemets. */
+const PLAN_TYPES = ['pre', 'carriere', 'piste', 'verger'];
+const nbOk = v => typeof v === 'number' && isFinite(v);
+const ptOk = q => Array.isArray(q) && nbOk(q[0]) && nbOk(q[1]) ? [q[0], q[1]] : null;
+const ptsOk = (l, max = 4000) => Array.isArray(l) ? l.slice(0, max).map(ptOk).filter(Boolean) : [];
+const texteOk = (t, n) => typeof t === 'string' ? t.replace(/[<>"&]/g, '').replace(/'/g, '’').trim().slice(0, n) : '';
+function nettoiePlan(p) {
+  if (!p || typeof p !== 'object' || !Array.isArray(p.zones)) return null;
+  const vus = new Set();
+  const zones = p.zones.slice(0, 300).map(z => {
+    if (!z || !PLAN_TYPES.includes(z.type) || typeof z.id !== 'string' || !/^[a-z0-9-]{1,24}$/.test(z.id) || vus.has(z.id)) return null;
+    const pts = ptsOk(z.pts);
+    if (pts.length < 3 || (z.type === 'pre' && !nbOk(z.n))) return null;
+    const o = { id: z.id, type: z.type, pts, aire: nbOk(z.aire) ? Math.max(0, z.aire) : 0, lab: ptOk(z.lab) || pts[0] };
+    if (z.type === 'pre') o.n = Math.round(z.n);
+    const nom = texteOk(z.nom, 40), desc = texteOk(z.desc, 80);
+    if (nom) o.nom = nom;
+    if (desc) o.desc = desc;
+    const trous = Array.isArray(z.trous) ? z.trous.slice(0, 20).map(r => ptsOk(r)).filter(r => r.length >= 3) : [];
+    if (trous.length) o.trous = trous;
+    vus.add(z.id);
+    return o;
+  }).filter(Boolean);
+  const socle = ptsOk(p.socle), liste = (l, n) => Array.isArray(l) ? l.slice(0, n) : [];
+  if (!zones.length || socle.length < 3) return null;
+  return {
+    beta: nbOk(p.beta) ? p.beta : 0, zones, socle,
+    abris: liste(p.abris, 100).map(a => a && ptOk(a.c) && nbOk(a.w) && nbOk(a.h) ? { c: ptOk(a.c), w: Math.max(.5, a.w), h: Math.max(.5, a.h) } : null).filter(Boolean),
+    eau: liste(p.eau, 100).map(e => e && ptOk(e.c) ? { c: ptOk(e.c) } : null).filter(Boolean),
+    arbres: ptsOk(p.arbres, 400),
+    obstacles: liste(p.obstacles, 40).map(o => ptOk(o) ? (o[2] === 'x' ? [o[0], o[1], 'x'] : [o[0], o[1]]) : null).filter(Boolean)
+  };
+}
+let planNet = { cle: null, p: null };
+// la carte publiée de l'écurie, remise au propre une fois par publication
+function planEcurie() {
+  const c = S.carte && S.carte.plan;
+  if (!c) return null;
+  const cle = (S.carte.publie || 0) + ':' + (Array.isArray(c.zones) ? c.zones.length : 0);
+  if (planNet.cle !== cle) planNet = { cle, p: nettoiePlan(c) };
+  return planNet.p;
+}
+function planDe(src) {
+  if (src === 'apercu') return planOk(ED.apercu) ? ED.apercu : null;
+  if (src === 'demo') return PLAN_VALDI;
+  const c = planEcurie();
+  if (c) return c;
+  if (!window.EQ_MODE) return PLAN_VALDI;
+  const e = ecurieOuverte();
+  return e && e.abonnement && e.abonnement.statut === 'fondatrice' ? PLAN_VALDI : null;
+}
+// identité du plan (la copie locale est recopiée à chaque synchronisation : on compare la date de publication)
+function cleDe(src) {
+  if (src === 'apercu') return 'apercu:' + ED.apercuV;
+  if (src === 'demo') return 'demo';
+  return planEcurie() ? 'pub:' + planNet.cle : planDe(src) ? 'origine' : 'aucun';
+}
+let planCle = '';
+function prepPlan(src = 'ecurie') {
+  const cle = src + '|' + cleDe(src);
+  if (cle === planCle) return PLAN;
+  planCle = cle;
+  PLAN = planDe(src);
+  ZONES = new Map((PLAN ? PLAN.zones : []).map(z => [z.id, z]));
+  const b = (PLAN && PLAN.beta || 0) * Math.PI / 180;
+  MATS['2d'] = [Math.cos(b), Math.sin(b), -Math.sin(b), Math.cos(b)];
+  Object.assign(carte, { src, boites: {}, vues: { '3d': null, '2d': null }, sel: null, filtre: null, sig: '' });
+  lienMemo = null;
+  if (carte.svg) { carte.host = null; carte.svg = null; }   // la carte affichée se redessine avec le nouveau plan
+  return PLAN;
+}
 
 /* ---------- Parcelles du plan ↔ prés du carnet ----------
    Un lien enregistré sur le pré (carte) passe en premier ; à défaut, la piste et la carrière se trouvent par leur type,
@@ -5444,7 +5617,7 @@ function liensCarte() {
   if (lienMemo && lienMemo.v === dataV) return lienMemo.m;
   const m = new Map(), pris = new Set(), ps = pres();
   ps.forEach(p => { if (p.carte && ZONES.has(p.carte) && !m.has(p.carte)) { m.set(p.carte, p); pris.add(p.id); } });
-  PLAN.zones.forEach(z => {
+  (PLAN ? PLAN.zones : []).forEach(z => {
     if (m.has(z.id) || z.type === 'verger') return;
     const c = ps.filter(p => !pris.has(p.id) && !p.carte && (z.type === 'pre'
       ? !sansRotation(p) && numNom(p.nom) === z.n
@@ -5454,9 +5627,10 @@ function liensCarte() {
   lienMemo = { v: dataV, m };
   return m;
 }
-const zoneDuPre = p => { for (const [k, v] of liensCarte()) if (v.id === p.id) return k; return null; };
-/* Choix de la parcelle dans la fiche d'un pré */
+const zoneDuPre = p => { prepPlan('ecurie'); for (const [k, v] of liensCarte()) if (v.id === p.id) return k; return null; };
+/* Choix de la parcelle dans la fiche d'un pré (rien si l'écurie n'a pas encore de carte) */
 function zonesOpts(p) {
+  if (!prepPlan('ecurie')) return [];
   const L = liensCarte();
   return PLAN.zones.filter(z => z.type !== 'verger').map(z => {
     const o = L.get(z.id), autre = o && (!p || o.id !== p.id);
@@ -5491,8 +5665,8 @@ function etatTxt(z) {
    Vue de dessus : orientée comme le plan (nord en haut). 3D : isométrique, le parcellaire dans les axes.
    X = a·x + b·y ; Y = c·x + d·y − z */
 const ISO_C = Math.cos(Math.PI / 6);
-const PLAN_B = PLAN.beta * Math.PI / 180;
-const MATS = { '3d': [ISO_C, -ISO_C, .5, .5], '2d': [Math.cos(PLAN_B), Math.sin(PLAN_B), -Math.sin(PLAN_B), Math.cos(PLAN_B)] };
+const PLAN_B = PLAN_VALDI.beta * Math.PI / 180;
+const MATS = { '3d': [ISO_C, -ISO_C, .5, .5], '2d': [Math.cos(PLAN_B), Math.sin(PLAN_B), -Math.sin(PLAN_B), Math.cos(PLAN_B)] };   // '2d' suit le plan affiché (prepPlan)
 const PJ = (mode, x, y, z = 0) => { const m = MATS[mode]; return [m[0] * x + m[1] * y, m[2] * x + m[3] * y - (mode === '3d' ? z : 0)]; };
 const f1 = v => Math.round(v * 10) / 10;
 const pt = (mode, x, y, z) => PJ(mode, x, y, z).map(f1).join(' ');
@@ -5554,10 +5728,11 @@ function dessinSol(mode) {
     h += `<g class="c-cotes">${cotes(PLAN.socle, 0, -HAUT.socle, 'c-terre')}</g>`;
   }
   h += `<path class="c-socle" d="${chemin(mode, PLAN.socle)}"/>`;
-  // la piste, en sable, avec des traces de sabots
-  const pi = zoneDe('piste');
-  const traces = semis(pi, 140, 7, .6).map(([x, y]) => { const [X, Y] = PJ(mode, x, y); return `M${f1(X - .45)} ${f1(Y)}h.9`; }).join('');
-  h += `<g class="z zt-piste" data-zone="piste"><path class="z-top" fill-rule="evenodd" d="${chemin(mode, pi.pts)}${(pi.trous || []).map(t => chemin(mode, t)).join('')}"/><path class="c-traces" d="${traces}"/></g>`;
+  // les pistes, en sable, avec des traces de sabots
+  PLAN.zones.filter(z => z.type === 'piste').forEach((pi, i) => {
+    const traces = semis(pi, Math.max(24, Math.min(220, Math.round(pi.aire / 25))), 7 + i * 13, .6).map(([x, y]) => { const [X, Y] = PJ(mode, x, y); return `M${f1(X - .45)} ${f1(Y)}h.9`; }).join('');
+    h += `<g class="z zt-piste" data-zone="${pi.id}"><path class="z-top" fill-rule="evenodd" d="${chemin(mode, pi.pts)}${(pi.trous || []).map(t => chemin(mode, t)).join('')}"/><path class="c-traces" d="${traces}"/></g>`;
+  });
   // les parcelles, la carrière et le verger : des dalles d'herbe (ou de sable) un peu en relief
   const zs = PLAN.zones.filter(z => z.type !== 'piste').map(z => ({ z, p: d3 ? Math.max(...z.pts.map(([x, y]) => x + y)) : 0 })).sort((a, b) => a.p - b.p);
   zs.forEach(({ z }, i) => {
@@ -5590,7 +5765,7 @@ function dessinObjets(mode) {
     });
   }
   // abris : murs en bois, toit en pente, ouverts devant
-  PLAN.abris.forEach(({ c: [cx, cy], w, h }) => {
+  (PLAN.abris || []).forEach(({ c: [cx, cy], w, h }) => {
     const x0 = cx - w / 2, x1 = cx + w / 2, y0 = cy - h / 2, y1 = cy + h / 2;
     if (!d3) {
       const P = (x, y) => pt('2d', x, y);
@@ -5606,7 +5781,7 @@ function dessinObjets(mode) {
       <path class="ab-rive" d="M${P(x1 + o, y0 - o, t + .15)}L${P(x1 + o, y1 + o, m - .15)}L${P(x1 + o, y1 + o, m - .55)}L${P(x1 + o, y0 - o, t - .25)}Z"/></g>`);
   });
   // abreuvoirs : un bac galvanisé plein d'eau
-  PLAN.eau.forEach(({ c: [cx, cy] }) => {
+  (PLAN.eau || []).forEach(({ c: [cx, cy] }) => {
     const x0 = cx - 1.3, x1 = cx + 1.3, y0 = cy - .55, y1 = cy + .55, a = HAUT.auge;
     if (!d3) {
       const P = (x, y) => pt('2d', x, y);
@@ -5621,8 +5796,8 @@ function dessinObjets(mode) {
       <path class="eau-o" d="M${P(x0 + .25, y0 + .2, a)}L${P(x1 - .25, y0 + .2, a)}L${P(x1 - .25, y1 - .2, a)}L${P(x0 + .25, y1 - .2, a)}Z"/></g>`);
   });
   // verger : des pommiers
-  const zv = zoneDe('verger'), hv = hautZone(zv);
-  PLAN.arbres.forEach(([x, y], i) => {
+  const hv = HAUT.tuile;
+  (PLAN.arbres || []).forEach(([x, y], i) => {
     const r = HAUT.houppier;
     const pommes = [[-.9, -.4], [.8, .3], [-.1, 1]].map(([dx, dy]) => `<circle class="pomme" cx="${f1(dx * r * .55)}" cy="${f1(dy * r * .55)}" r=".42"/>`).join('');
     if (!d3) {
@@ -5633,18 +5808,19 @@ function dessinObjets(mode) {
     const [X, Y] = PJ('3d', x, y, hv), hc = HAUT.tronc + r * .8;
     add(x, y, `<g class="c-arbre" transform="translate(${f1(X)} ${f1(Y)})"><ellipse class="arb-ombre" cx=".6" cy=".3" rx="${f1(r * 1.1)}" ry="${f1(r * .55)}"/><path class="arb-tronc" d="M0 0V${f1(-hc)}"/><g transform="translate(0 ${f1(-hc)})"><circle class="arb-h" r="${r}"/><circle class="arb-l" cx="-.9" cy="-.9" r="${f1(r * .45)}"/>${pommes}</g></g>`);
   });
-  // carrière : deux obstacles
-  const zc = zoneDe('carriere'), hc = hautZone(zc);
-  PLAN.obstacles.forEach(([x, y]) => {
-    if (!d3) { add(x, y, `<path class="c-barre" d="M${pt('2d', x, y - 2)}L${pt('2d', x, y + 2)}"/>`); return; }
-    add(x, y + 2, `<g class="c-obst"><path class="obst-ch" d="M${pt('3d', x, y - 2, hc)}L${pt('3d', x, y - 2, hc + HAUT.barre + .4)}M${pt('3d', x, y + 2, hc)}L${pt('3d', x, y + 2, hc + HAUT.barre + .4)}"/><path class="c-barre" d="M${pt('3d', x, y - 2, hc + HAUT.barre)}L${pt('3d', x, y + 2, hc + HAUT.barre)}"/></g>`);
+  // carrière : des obstacles (barre en travers de la longueur : le long de y, ou de x si « x »)
+  const hc = HAUT.carriere;
+  (PLAN.obstacles || []).forEach(([x, y, ax]) => {
+    const [xa, ya, xb, yb] = ax === 'x' ? [x - 2, y, x + 2, y] : [x, y - 2, x, y + 2];
+    if (!d3) { add(x, y, `<path class="c-barre" d="M${pt('2d', xa, ya)}L${pt('2d', xb, yb)}"/>`); return; }
+    add(Math.max(xa, xb), Math.max(ya, yb), `<g class="c-obst"><path class="obst-ch" d="M${pt('3d', xa, ya, hc)}L${pt('3d', xa, ya, hc + HAUT.barre + .4)}M${pt('3d', xb, yb, hc)}L${pt('3d', xb, yb, hc + HAUT.barre + .4)}"/><path class="c-barre" d="M${pt('3d', xa, ya, hc + HAUT.barre)}L${pt('3d', xb, yb, hc + HAUT.barre)}"/></g>`);
   });
   // chaque objet dans son groupe : l'animation d'arrivée (CSS) ne doit pas écraser leur position (attribut transform)
   return items.sort((a, b) => a.p - b.p).map(o => `<g>${o.h}</g>`).join('');
 }
 
 /* ---------- La carte : état, vue, montage ---------- */
-const carte = { mode: null, sel: null, filtre: null, plein: false, vues: { '3d': null, '2d': null }, host: null, svg: null, W: 0, H: 0, sig: '', boites: {} };
+const carte = { mode: null, sel: null, filtre: null, plein: false, vues: { '3d': null, '2d': null }, host: null, svg: null, W: 0, H: 0, sig: '', boites: {}, src: 'ecurie' };
 const modeCarte = () => ui.carte3d === false ? '2d' : '3d';
 /* Boîte englobante du dessin (avec le relief en 3D) */
 function boiteCarte(mode) {
@@ -5754,6 +5930,9 @@ function majCarte() {
     carte.host = null; carte.svg = null;
     return;
   }
+  // la carte de l'écurie, l'aperçu dans l'éditeur, ou la démonstration floutée
+  prepPlan(host.closest('.ed') ? 'apercu' : host.closest('.verrou-carte') ? 'demo' : 'ecurie');
+  if (!PLAN) { if (carte.host === host) { host.innerHTML = ''; carte.host = null; carte.svg = null; } return; }
   if (host !== carte.host || !host.querySelector('svg')) { monteCarte(host); return; }
   majCarteDyn();
 }
@@ -5880,7 +6059,7 @@ function gestes(host) {
       return;
     }
     const pion = e.target.closest && e.target.closest('[data-pion]');
-    geste = { type: 'attente', x0: e.clientX, y0: e.clientY, t0: Date.now(), last: loc(e), pion: pion && !sync.readOnly ? pion.getAttribute('data-pion') : null, cible: e.target };
+    geste = { type: 'attente', x0: e.clientX, y0: e.clientY, t0: Date.now(), last: loc(e), pion: pion && !sync.readOnly && carte.src === 'ecurie' ? pion.getAttribute('data-pion') : null, cible: e.target };
   });
   svg.addEventListener('pointermove', e => {
     if (!pts.has(e.pointerId)) return;
@@ -6005,7 +6184,7 @@ function deplaceVers(hid, cible) {
 /* Depuis le box (sous la carte) */
 document.addEventListener('pointerdown', e => {
   const b = e.target.closest && e.target.closest('.c-boxo [data-pion]');
-  if (!b || sync.readOnly || e.button > 0) return;
+  if (!b || sync.readOnly || carte.src !== 'ecurie' || e.button > 0) return;
   const hid = b.getAttribute('data-pion'), x0 = e.clientX, y0 = e.clientY;
   let parti = false;
   const bouge = ev => {
@@ -6026,7 +6205,9 @@ document.addEventListener('pointerdown', e => {
 
 /* ---------- Autour de la carte : légende, box, fiche de la parcelle choisie ---------- */
 function carteHtml() {
-  return `<div class="carte" data-key="carte" data-garde></div>${legendeHtml()}${horsCarteHtml()}<div class="c-fiche" data-key="c-fiche">${ficheZone()}</div>`;
+  prepPlan('ecurie');
+  const modif = window.EQ_MODE && edPeut() ? `<button type="button" class="link c-modif" data-act="carte-editer" data-key="c-modif">${ic('edit', 'sm')}${planEcurie() ? 'Modifier la carte' : 'Refaire la carte à partir d’un plan'}</button>` : '';
+  return `<div class="carte" data-key="carte" data-garde></div>${legendeHtml()}${horsCarteHtml()}<div class="c-fiche" data-key="c-fiche">${ficheZone()}</div>${modif}`;
 }
 function legendeHtml() {
   const presents = new Set(PLAN.zones.map(etatZone));
@@ -6044,12 +6225,12 @@ function ficheZone() {
   const z = carte.sel && zoneDe(carte.sel);
   if (!z) return `<p class="note c-aide">Touche une parcelle pour voir où elle en est. Fais glisser un cheval d’une parcelle à l’autre pour le déplacer.</p>`;
   const p = liensCarte().get(z.id);
-  const tete = `<div class="c-zfiche-h"><span class="eyebrow">${zoneNom(z)} · ≈ ${num(zoneHa(z), 2)} ha</span><button type="button" class="iconbtn" data-act="carte-sel" data-zone="" aria-label="Fermer">${ic('close', 'sm')}</button></div>`;
-  if (z.type === 'verger') return tete + `<article class="pcard"><div class="pcard-h"><div class="row-main"><div class="row-t">Verger</div><div class="row-s">Les pommiers, au bout de la carrière</div></div></div><p class="note">Pas de chevaux ici.</p></article>`;
+  const tete = `<div class="c-zfiche-h"><span class="eyebrow">${esc(zoneNom(z))} · ≈ ${num(zoneHa(z), 2)} ha</span><button type="button" class="iconbtn" data-act="carte-sel" data-zone="" aria-label="Fermer">${ic('close', 'sm')}</button></div>`;
+  if (z.type === 'verger') return tete + `<article class="pcard"><div class="pcard-h"><div class="row-main"><div class="row-t">${esc(zoneNom(z))}</div><div class="row-s">${esc(z.desc || 'Des arbres fruitiers')}</div></div></div><p class="note">Pas de chevaux ici.</p></article>`;
   if (!p) {
     const libres = pres().filter(x => !zoneDuPre(x) && (z.type === 'pre' ? !sansRotation(x) : true));
     const nouveau = z.type === 'pre' ? `Pré ${z.n}` : zoneNom(z);
-    return tete + `<article class="pcard"><div class="pcard-h"><div class="row-main"><div class="row-t">${zoneNom(z)}</div><div class="row-s">Pas encore reliée au carnet</div></div><span class="pill">À relier</span></div>
+    return tete + `<article class="pcard"><div class="pcard-h"><div class="row-main"><div class="row-t">${esc(zoneNom(z))}</div><div class="row-s">Pas encore reliée au carnet</div></div><span class="pill">À relier</span></div>
       ${libres.length ? `<p class="note">C’est lequel de tes espaces ?</p><div class="wrap">${libres.map(x => `<button type="button" class="chip" data-act="carte-relier" data-zone="${z.id}" data-id="${x.id}">${esc(x.nom)}</button>`).join('')}</div>` : ''}
       ${sync.readOnly ? '' : `<button type="button" class="btn small" data-act="carte-creer" data-zone="${z.id}">${ic('plus', 'sm')}Créer « ${esc(nouveau)} »</button>`}</article>`;
   }
@@ -6063,6 +6244,7 @@ ACT['carte-reduire'] = () => {
   setTimeout(() => { const f = document.querySelector('.c-fiche'); if (f) f.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
 };
 ACT['carte-relier'] = d => {
+  prepPlan('ecurie');
   const z = zoneDe(d.zone), p = get('pres', d.id);
   if (!z || !p) return;
   list('pres').filter(o => o.id !== p.id && o.carte === z.id).forEach(o => put('pres', Object.assign({}, o, { carte: null })));
@@ -6072,13 +6254,826 @@ ACT['carte-relier'] = d => {
   toast(`${p.nom} → ${zoneNom(z)}${p.surface ? '' : ` · surface estimée ${num(zoneHa(z), 2)} ha`}`);
 };
 ACT['carte-creer'] = d => {
+  prepPlan('ecurie');
   const z = zoneDe(d.zone);
   if (!z) return;
   formPre(null, { nom: z.type === 'pre' ? `Pré ${z.n}` : zoneNom(z), type: z.type === 'pre' ? 'pre' : z.type, carte: z.id, surface: zoneHa(z) });
 };
 
+/* ---------- Ma carte des prés : la créer à partir d'un plan envoyé ----------
+   La gérante envoie une vue du dessus de ses prés (capture de Géoportail, vue satellite, plan à l'échelle), règle
+   l'échelle, puis touche les coins de chaque espace : prés numérotés, carrière, piste, verger, abris, abreuvoirs.
+   Le carnet en tire la même maquette que la carte d'origine (3D ou vue de dessus, 64-carte.js). Ou bien elle demande
+   à EquiValdi de la dessiner pour elle, à partir du même plan (l'administration la trace ici, sans apparaître).
+   Le plan (image) est rangé à part, dans config/plan, et lu seulement ici ; le tracé et la carte publiée sont dans
+   config/carte (suivi par toute l'équipe). Coordonnées du tracé : pixels de l'image ; celles de la carte : mètres. */
+
+const ED_T = {
+  pre: { l: 'Pré', pl: 'prés', aide: "Touche chaque coin du pré, dans l'ordre, puis « Terminer ». Les coins et les bords des prés voisins s'attrapent tout seuls.", min: 3 },
+  carriere: { l: 'Carrière', pl: 'carrières', aide: 'Touche les coins de la carrière, puis « Terminer ».', min: 3 },
+  piste: { l: 'Piste', pl: 'pistes', aide: 'Touche le milieu de la piste, de point en point. Si elle fait le tour, finis en touchant le premier point.', min: 2 },
+  verger: { l: 'Verger', pl: 'vergers', aide: "Touche les coins du verger (ou d'un bosquet), puis « Terminer ».", min: 3 },
+  abri: { l: 'Abri', pl: 'abris', aide: "Touche deux coins opposés de l'abri (zoome d'abord : il est petit sur le plan).", min: 2, max: 2 },
+  eau: { l: 'Abreuvoir', pl: 'abreuvoirs', aide: "Touche l'endroit de l'abreuvoir.", min: 1, max: 1 }
+};
+const ED_ORDRE = ['pre', 'carriere', 'piste', 'verger', 'abri', 'eau'];
+const ED_SURFACES = ['pre', 'carriere', 'verger'];
+const ED = {
+  sid: null, etape: null, img: null, imgEtat: '', chargement: null, t: null,
+  cur: null, sel: null, som: null, vue: null, host: null, svg: null, ro: null, W: 0, H: 0,
+  apercu: null, apercuV: 0, sauveT: null
+};
+const r1 = v => Math.round(v * 10) / 10;
+const edDist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+const edEl = id => (ED.t && ED.t.els.find(e => e.id === id)) || null;
+const edId = () => 'e' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+/* ---------- Géométrie ---------- */
+function aireP(pts) {
+  let s = 0;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) s += (pts[j][0] + pts[i][0]) * (pts[j][1] - pts[i][1]);
+  return Math.abs(s) / 2;
+}
+function projSeg(p, a, b) {
+  const dx = b[0] - a[0], dy = b[1] - a[1], L2 = dx * dx + dy * dy;
+  if (!L2) return a.slice();
+  const t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / L2));
+  return [a[0] + t * dx, a[1] + t * dy];
+}
+/* Enveloppe convexe (chaîne monotone) */
+function enveloppe(points) {
+  const p = points.map(q => [q[0], q[1]]).sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  if (p.length < 3) return p;
+  const cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+  const lo = [], hi = [];
+  for (const q of p) { while (lo.length >= 2 && cr(lo[lo.length - 2], lo[lo.length - 1], q) <= 0) lo.pop(); lo.push(q); }
+  for (let i = p.length - 1; i >= 0; i--) { const q = p[i]; while (hi.length >= 2 && cr(hi[hi.length - 2], hi[hi.length - 1], q) <= 0) hi.pop(); hi.push(q); }
+  return lo.slice(0, -1).concat(hi.slice(0, -1));
+}
+/* Un point bien à l'intérieur d'une zone (là où va son numéro) : le plus loin possible des bords */
+function interieur(pts, trous) {
+  const b = boite(pts), anneaux = [pts].concat(trous || []);
+  const dedans = (x, y) => dansPoly(x, y, pts) && !(trous || []).some(t => dansPoly(x, y, t));
+  const bord = (x, y) => { let m = Infinity; anneaux.forEach(r => r.forEach((a, i) => { m = Math.min(m, edDist([x, y], projSeg([x, y], a, r[(i + 1) % r.length]))); })); return m; };
+  let best = null, bd = -1;
+  const essai = (x, y) => { if (!dedans(x, y)) return; const d = bord(x, y); if (d > bd) { bd = d; best = [x, y]; } };
+  const N = 18, sx = (b.x1 - b.x0) / N, sy = (b.y1 - b.y0) / N;
+  for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) essai(b.x0 + (i + .5) * sx, b.y0 + (j + .5) * sy);
+  if (best) { const c = best.slice(); for (let i = -3; i <= 3; i++) for (let j = -3; j <= 3; j++) essai(c[0] + i * sx / 4, c[1] + j * sy / 4); }
+  return best || [(b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2];
+}
+/* La piste : un couloir de largeur w autour de la ligne tracée (une boucle donne un anneau : bord extérieur + trou) */
+function bandeau(pts, w, ferme) {
+  const n = pts.length, h = w / 2;
+  const normale = (a, b) => { const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1; return [-dy / L, dx / L]; };
+  const G = [], D = [];
+  for (let i = 0; i < n; i++) {
+    const prev = ferme ? pts[(i - 1 + n) % n] : pts[i - 1], next = ferme ? pts[(i + 1) % n] : pts[i + 1];
+    let nx, ny, m = h;
+    if (prev && next) {
+      const n1 = normale(prev, pts[i]), n2 = normale(pts[i], next), sx = n1[0] + n2[0], sy = n1[1] + n2[1], L = Math.hypot(sx, sy);
+      if (L < 1e-6) { [nx, ny] = n1; } else { nx = sx / L; ny = sy / L; m = h / Math.max(.35, nx * n1[0] + ny * n1[1]); }
+    } else [nx, ny] = prev ? normale(prev, pts[i]) : normale(pts[i], next);
+    G.push([pts[i][0] + nx * m, pts[i][1] + ny * m]);
+    D.push([pts[i][0] - nx * m, pts[i][1] - ny * m]);
+  }
+  if (ferme && n >= 3) return aireP(G) >= aireP(D) ? { pts: G, trous: [D] } : { pts: D, trous: [G] };
+  return { pts: G.concat(D.reverse()), trous: null };
+}
+/* Mètres par pixel de l'image, d'après l'échelle posée */
+function edEchelle(t) {
+  const e = t && t.ech;
+  if (!e || !e.a || !e.b || !(e.m > 0)) return null;
+  const d = edDist(e.a, e.b);
+  return d > 2 ? e.m / d : null;
+}
+/* L'angle du parcellaire sur l'image (radians, entre −45° et 45°) : la moyenne des bords, pondérée par leur longueur */
+function edAngle(els) {
+  let C = 0, Sn = 0;
+  els.forEach(e => {
+    if (!ED_SURFACES.includes(e.type) || e.pts.length < 3) return;
+    e.pts.forEach((a, i) => {
+      const b = e.pts[(i + 1) % e.pts.length], dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy);
+      if (!L) return;
+      const th = Math.atan2(dy, dx);
+      C += L * Math.cos(4 * th); Sn += L * Math.sin(4 * th);
+    });
+  });
+  return C || Sn ? Math.atan2(Sn, C) / 4 : 0;
+}
+/* Un abri : rectangle dans l'axe du parcellaire, donné par deux coins opposés */
+function rectAbri(a, b, th) {
+  const c = Math.cos(th), s = Math.sin(th);
+  const vers = q => [c * q[0] + s * q[1], -s * q[0] + c * q[1]], depuis = q => [c * q[0] - s * q[1], s * q[0] + c * q[1]];
+  const A = vers(a), B = vers(b), x0 = Math.min(A[0], B[0]), x1 = Math.max(A[0], B[0]), y0 = Math.min(A[1], B[1]), y1 = Math.max(A[1], B[1]);
+  return [[x0, y0], [x1, y0], [x1, y1], [x0, y1]].map(depuis);
+}
+
+/* ---------- Du tracé (pixels) à la carte (mètres) ---------- */
+function planDepuisTrace(t) {
+  const s = edEchelle(t);
+  if (!s || !t.els.length) return null;
+  const th = edAngle(t.els), beta = -th * 180 / Math.PI + 90 * ((t.rot || 0) % 4);
+  const b = beta * Math.PI / 180, cb = Math.cos(b), sb = Math.sin(b);
+  const P = q => { const X = q[0] * s, Y = q[1] * s; return [cb * X - sb * Y, sb * X + cb * Y]; };
+  const tous = [];
+  t.els.forEach(e => e.pts.forEach(q => tous.push(P(q))));
+  const bb = boite(tous), ox = (bb.x0 + bb.x1) / 2, oy = (bb.y0 + bb.y1) / 2;
+  const Q = q => { const r = P(q); return [r1(r[0] - ox), r1(r[1] - oy)]; };
+  const zones = [], abris = [], eau = [], cpt = {}, ids = new Set();
+  t.els.forEach(e => {
+    if (e.type === 'abri') {
+      if (e.pts.length < 2) return;
+      const a = Q(e.pts[0]), c = Q(e.pts[1]);
+      abris.push({ c: [r1((a[0] + c[0]) / 2), r1((a[1] + c[1]) / 2)], w: r1(Math.max(2.5, Math.abs(c[0] - a[0]))), h: r1(Math.max(2.5, Math.abs(c[1] - a[1]))) });
+      return;
+    }
+    if (e.type === 'eau') { if (e.pts.length) eau.push({ c: Q(e.pts[0]) }); return; }
+    if (!ED_T[e.type] || e.pts.length < ED_T[e.type].min || (e.type !== 'piste' && e.pts.length < 3)) return;
+    let pts = e.pts.map(Q), trous = null;
+    if (e.type === 'piste') {
+      const r = bandeau(pts, Math.max(1.5, Math.min(30, e.larg || 4)), !!e.ferme);
+      pts = r.pts.map(q => q.map(r1));
+      trous = r.trous ? r.trous.map(tr => tr.map(q => q.map(r1))) : null;
+    }
+    cpt[e.type] = (cpt[e.type] || 0) + 1;
+    const z = { id: '', type: e.type, pts };
+    if (e.type === 'pre') {
+      z.n = e.n;
+      let id = 'p' + e.n, k = 1;
+      while (ids.has(id)) id = 'p' + e.n + '-' + (++k);
+      z.id = id;
+    } else {
+      z.id = e.type + (cpt[e.type] > 1 ? cpt[e.type] : '');
+      if (cpt[e.type] > 1) z.nom = ED_T[e.type].l + ' ' + cpt[e.type];
+    }
+    ids.add(z.id);
+    if (e.nom) z.nom = e.nom;
+    if (trous) z.trous = trous;
+    z.aire = Math.round(aireP(pts) - (trous || []).reduce((a, tr) => a + aireP(tr), 0));
+    z.lab = interieur(pts, trous).map(r1);
+    zones.push(z);
+  });
+  if (!zones.length) return null;
+  // des pommiers en rangs dans les vergers, deux obstacles dans les carrières
+  const arbres = [], obstacles = [];
+  zones.filter(z => z.type === 'verger').forEach(z => {
+    const bx = boite(z.pts), pas = 5.5, out = [];
+    for (let x = bx.x0 + pas / 2; x < bx.x1; x += pas) for (let y = bx.y0 + pas / 2; y < bx.y1; y += pas) {
+      const r = alea(Math.round(x * 31 + y * 17) >>> 0), xx = x + (r() - .5) * 1.4, yy = y + (r() - .5) * 1.4;
+      if (dansZone(z, xx, yy) && dansZone(z, xx + 1.5, yy) && dansZone(z, xx - 1.5, yy) && dansZone(z, xx, yy + 1.5) && dansZone(z, xx, yy - 1.5)) out.push([r1(xx), r1(yy)]);
+    }
+    arbres.push(...(out.length ? out.slice(0, 40) : [z.lab.slice()]));
+  });
+  zones.filter(z => z.type === 'carriere').forEach(z => {
+    const bx = boite(z.pts), lx = bx.x1 - bx.x0, ly = bx.y1 - bx.y0;
+    if (Math.min(lx, ly) < 10) return;
+    const long = lx >= ly;
+    [1 / 3, 2 / 3].forEach(f => {
+      const x = long ? bx.x0 + lx * f : (bx.x0 + bx.x1) / 2, y = long ? (bx.y0 + bx.y1) / 2 : bx.y0 + ly * f;
+      if (dansZone(z, x, y)) obstacles.push(long ? [r1(x), r1(y)] : [r1(x), r1(y), 'x']);
+    });
+  });
+  // le socle de la maquette : tout le terrain, avec 5 m de marge
+  const pts = [];
+  zones.forEach(z => z.pts.forEach(q => pts.push(q)));
+  abris.forEach(a => { pts.push([a.c[0] - a.w / 2, a.c[1] - a.h / 2], [a.c[0] + a.w / 2, a.c[1] + a.h / 2], [a.c[0] - a.w / 2, a.c[1] + a.h / 2], [a.c[0] + a.w / 2, a.c[1] - a.h / 2]); });
+  eau.forEach(e => pts.push(e.c));
+  const autour = [];
+  pts.forEach(q => { for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4; autour.push([q[0] + 5 * Math.cos(a), q[1] + 5 * Math.sin(a)]); } });
+  return { beta: Math.round(beta * 100) / 100, zones, abris, eau, arbres, obstacles, socle: enveloppe(autour).map(q => q.map(r1)) };
+}
+
+/* ---------- Qui peut créer la carte, et l'invitation dans l'onglet Prés ---------- */
+function edPeut() {
+  const e = ecurieOuverte();
+  return !!window.EQ_MODE && !!e && (!!e.fantome || e.role === 'gerante') && !sync.readOnly;
+}
+const edNb = t => (t && Array.isArray(t.els) ? t.els.length : 0);
+function carteAFaireHtml() {
+  const e = ecurieOuverte() || {}, d = e.carteDemande, n = edNb(S.carte && S.carte.trace), peut = edPeut();
+  let t, p, bt = '';
+  if (d && d.statut === 'demandee') {
+    t = 'Ta carte est en préparation';
+    p = `Demandée à EquiValdi le ${dJour(d.le)}, à partir de ton plan. Elle apparaîtra ici dès qu'elle sera prête.`;
+    if (peut) bt = `<button type="button" class="btn small" data-act="carte-editer">${ic('edit', 'sm')}${e.fantome ? 'Dessiner la carte' : 'La dessiner moi-même'}</button>`;
+  } else if (n && peut) {
+    t = 'Ta carte est commencée';
+    p = `${n} ${pl(n, 'espace')} ${pl(n, 'tracé')} sur ton plan. Reprends là où tu en étais.`;
+    bt = `<button type="button" class="btn small primary" data-act="carte-editer">Continuer ma carte</button>`;
+  } else {
+    t = 'La carte de tes prés, en 3D';
+    p = "Envoie une vue du dessus de tes prés (une capture de Géoportail, par exemple) et touche les coins de chaque pré : le carnet en fait une maquette où l'on voit d'un coup d'œil où en est la rotation et où sont les chevaux.";
+    bt = peut ? `<button type="button" class="btn small primary" data-act="carte-editer">${ic('image', 'sm')}Créer ma carte</button>`
+      : `<p class="small muted">La gérante peut créer la carte de l'écurie à partir d'un plan.</p>`;
+  }
+  return `<div class="verrou-carte c-afaire" data-key="c-afaire"><div class="carte" data-key="carte" data-garde></div>
+    <div class="verrou-voile"><span class="qa-ic menthe">${ic('fence')}</span><b>${esc(t)}</b><p class="small">${esc(p)}</p>${bt}</div></div>`;
+}
+
+/* ---------- Ouvrir, fermer ---------- */
+// le tracé lu dans la base, remis au propre (identifiants, nombres, types connus)
+function nettoieTrace(tr) {
+  if (!tr || typeof tr !== 'object' || !Array.isArray(tr.els)) return { w: 0, h: 0, ech: null, rot: 0, els: [] };
+  const els = tr.els.slice(0, 400).map(e => {
+    if (!e || !ED_T[e.type] || typeof e.id !== 'string' || !/^[a-z0-9]{1,24}$/.test(e.id)) return null;
+    const o = { id: e.id, type: e.type, pts: ptsOk(e.pts, 2000) };
+    if (!o.pts.length) return null;
+    if (e.type === 'pre') o.n = nbOk(e.n) ? Math.max(1, Math.min(999, Math.round(e.n))) : 1;
+    if (e.type === 'piste') { o.larg = nbOk(e.larg) ? Math.max(1, Math.min(30, e.larg)) : 4; o.ferme = e.ferme === true; }
+    const nom = texteOk(e.nom, 40);
+    if (nom) o.nom = nom;
+    return o;
+  }).filter(Boolean);
+  const E = tr.ech && typeof tr.ech === 'object' ? { a: ptOk(tr.ech.a), b: ptOk(tr.ech.b), m: nbOk(tr.ech.m) && tr.ech.m > 0 ? tr.ech.m : 50, ok: tr.ech.ok === true } : null;
+  return { w: nbOk(tr.w) ? tr.w : 0, h: nbOk(tr.h) ? tr.h : 0, ech: E, rot: nbOk(tr.rot) ? ((Math.round(tr.rot) % 4) + 4) % 4 : 0, els };
+}
+function edPrepare() {
+  const sid = idEcurie(ecurieOuverte());
+  if (ED.sid === sid && ED.t) return;
+  clearTimeout(ED.sauveT);
+  const tr = S.carte && S.carte.trace;
+  Object.assign(ED, { sid, etape: null, img: null, imgEtat: '', chargement: null, cur: null, sel: null, som: null, vue: null, apercu: null, sauveT: null,
+    t: nettoieTrace(tr) });
+}
+ACT['carte-editer'] = () => {
+  if (!edPeut()) { toast(sync.readOnly ? roMsg() : "Seule la gérante peut créer la carte de l'écurie."); return; }
+  if (!premium()) { ACT.abonner({ raison: 'carte' }); return; }
+  edPrepare();
+  ED.etape = null; ED.cur = null; ED.sel = null; ED.som = null;
+  (nav.stack[nav.stack.length - 1] || nav).savedY = window.scrollY;
+  nav.stack.push({ view: 'carteEd' });
+  entree = null;
+  render();
+};
+ACT['ed-fermer'] = () => {
+  if (ED.sauveT) edSauve(true);
+  ED.cur = null; ED.apercu = null;
+  if (topView() && topView().view === 'carteEd') back(); else render();
+};
+
+/* ---------- Le plan : choisi, réduit, envoyé (ou relu) ---------- */
+async function edReduire(f) {
+  const d = await decodeImage(f);
+  let max = 2000;
+  for (let essai = 0; essai < 6; essai++) {
+    const r = Math.min(1, max / Math.max(d.w, d.h)), w = Math.round(d.w * r), h = Math.round(d.h * r);
+    const c = newCanvas(w, h), x = ctx2d(c);
+    x.fillStyle = '#fff'; x.fillRect(0, 0, w, h);
+    x.drawImage(d.img, 0, 0, w, h);
+    for (const q of [.82, .72, .62]) { const src = c.toDataURL('image/jpeg', q); if (src.length <= 880000) return { src, w, h }; }
+    max = Math.round(max * .8);
+  }
+  throw new Error('image trop lourde');
+}
+async function edFichier(f) {
+  if (!f) return;
+  ED.imgEtat = 'prep'; render();
+  try {
+    const im = await edReduire(f);
+    Object.assign(ED, { img: im, vue: null, etape: 'echelle', cur: null, sel: null, som: null, apercu: null, t: { w: im.w, h: im.h, ech: null, rot: 0, els: [] } });
+    edEnvoyerPlan();
+    edSauve(true);
+  } catch (e) {
+    ED.imgEtat = ED.img ? 'ok' : '';
+    toast("Cette image n'a pas pu être ouverte. Essaie une capture d'écran (JPEG ou PNG).", { danger: true });
+  }
+  render();
+}
+function edEnvoyerPlan() {
+  const im = ED.img;
+  if (!im) return;
+  if (!DB) { ED.imgEtat = 'attente'; return; }
+  ED.imgEtat = 'envoi';
+  DB.doc('config/plan').set({ image: im.src, w: im.w, h: im.h, le: Date.now(), par: moiRef() }).then(
+    () => { if (ED.img === im) { ED.imgEtat = 'ok'; rerenderSoon(); } },
+    () => { if (ED.img === im) { ED.imgEtat = 'erreur'; rerenderSoon(); toast("Le plan n'a pas pu être envoyé : vérifie ta connexion.", { danger: true }); } });
+}
+function edCharger() {
+  if (ED.img || ED.chargement || ['absent', 'erreur-lecture', 'prep'].includes(ED.imgEtat) || !DB) return;
+  const sid = ED.sid;
+  ED.imgEtat = 'charge';
+  ED.chargement = DB.doc('config/plan').get().then(s => {
+    if (ED.sid !== sid) return;
+    const d = s.exists ? s.data() : null;
+    if (d && typeof d.image === 'string' && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(d.image) && nbOk(d.w) && nbOk(d.h) && d.w > 0 && d.h > 0) {
+      ED.img = { src: d.image, w: d.w, h: d.h };
+      ED.imgEtat = 'ok';
+      if (!ED.t.w) Object.assign(ED.t, { w: d.w, h: d.h });
+    } else ED.imgEtat = 'absent';
+  }, () => { if (ED.sid === sid) ED.imgEtat = 'erreur-lecture'; }).then(() => { ED.chargement = null; rerenderSoon(); });
+}
+/* Le tracé est enregistré au fil de l'eau (brouillon) : la carte publiée ne change qu'avec « Publier » */
+function edSauve(now) {
+  clearTimeout(ED.sauveT);
+  ED.sauveT = null;
+  const go = () => {
+    ED.sauveT = null;
+    if (!ED.t || ED.sid !== idEcurie(ecurieOuverte())) return;
+    putCarte(Object.assign({}, S.carte || {}, { trace: clone(ED.t), tmaj: Date.now() }));
+  };
+  if (now) go(); else ED.sauveT = setTimeout(go, 1200);
+}
+
+/* ---------- L'écran ---------- */
+function edEtape() {
+  // un plan déjà envoyé se relit dès que la base répond
+  if (!ED.img) return ED.imgEtat === 'charge' || ED.imgEtat === 'prep' || (!DB && ED.t && ED.t.w && !ED.imgEtat) ? 'charge' : 'plan';
+  // l'échelle n'est prise qu'une fois sa longueur confirmée (« Valider l'échelle »)
+  if (ED.etape === 'echelle' || !edEchelle(ED.t) || !ED.t.ech.ok) return 'echelle';
+  if (ED.etape === 'apercu' && planOk(ED.apercu)) return 'apercu';
+  return 'trace';
+}
+const ED_TITRES = { charge: 'Le plan', plan: 'Le plan', echelle: "L'échelle", trace: 'Les espaces', apercu: 'La maquette' };
+const ED_PAS = { charge: 1, plan: 1, echelle: 2, trace: 3, apercu: 4 };
+VIEWS.carteEd = () => {
+  const T = { title: 'Ma carte des prés', eyebrow: 'Prés', fab: null };
+  if (!edPeut()) return Object.assign(T, { html: emptyH('Réservé à la gérante', "La gérante crée la carte de l'écurie à partir d'un plan.") });
+  edPrepare();
+  edCharger();
+  const et = edEtape();
+  if (et === 'apercu') prepPlan('apercu');
+  const env = { envoi: 'Envoi du plan…', attente: 'Le plan partira dès que le réseau revient', erreur: 'Plan non envoyé' }[ED.imgEtat];
+  const tete = `<div class="ed-tete"><button type="button" class="iconbtn" data-act="ed-fermer" aria-label="Fermer">${ic('close')}</button>
+    <div class="ed-titre"><span class="eyebrow">Ma carte des prés · ${ED_PAS[et]}/4</span><b>${ED_TITRES[et]}</b></div>
+    ${env ? `<span class="ed-envoi${ED.imgEtat === 'erreur' ? ' err' : ''}">${ED.imgEtat === 'erreur' ? `<button type="button" class="link" data-act="ed-renvoyer">${env} · Réessayer</button>` : env}</span>` : ''}</div>`;
+  const zone = et === 'apercu' ? `<div class="carte ed-carte" data-key="carte" data-garde></div>`
+    : ED.img ? `<div class="ed-zone" data-key="ed-zone" data-garde></div>`
+    : `<div class="ed-vide" data-key="ed-vide">${et === 'charge' ? `<p class="note">${ED.imgEtat === 'prep' ? 'Préparation du plan…' : 'Chargement du plan…'}</p>` : edExigences()}</div>`;
+  return Object.assign(T, { html: `<div class="ed ed-${et}" data-key="ed">${tete}${zone}<div class="ed-pan" data-key="ed-pan-${et}">${edPanneau(et)}</div></div>` });
+};
+/* Ce qu'il faut pour un bon plan : les mêmes exigences que pour la carte d'origine */
+function edExigences() {
+  return `<div class="ed-exig">
+    <h3>Le plan de tes prés</h3>
+    <ol>
+      <li><b>Une vue du dessus.</b> Une capture de Géoportail (photographies aériennes, conseillé), de Google Maps en vue satellite, ou un plan dessiné à l'échelle.</li>
+      <li><b>Tout l'espace, en entier.</b> Tous les prés, la piste, la carrière, les abris et les abreuvoirs.</li>
+      <li><b>Une échelle.</b> La barre « 50 m » de Géoportail, ou une longueur que tu connais (une clôture, un bâtiment).</li>
+      <li><b>Le nord en haut</b>, si possible : la vue de dessus de la carte sera orientée comme ton plan.</li>
+    </ol>
+    <p class="small muted">Ensuite tu poses l'échelle et tu touches les coins de chaque pré : compte quelques minutes. Ou bien EquiValdi dessine la carte pour toi à partir du même plan. Le plan reste dans ton écurie.</p>
+  </div>`;
+}
+const edFichierBtn = (txt, cls = 'btn primary') => `<label class="${cls} ed-fichier">${ic('image', 'sm')}${txt}<input type="file" accept="image/*" id="edFichier" hidden></label>`;
+function edResume(els) {
+  const t = ED_ORDRE.map(ty => { const n = els.filter(e => e.type === ty).length; return n ? `${n} ${n > 1 ? ED_T[ty].pl : ED_T[ty].l.toLowerCase()}` : ''; }).filter(Boolean);
+  return t.length ? t.join(' · ') : "Rien de tracé pour l'instant.";
+}
+function edMesure(e) {
+  const s = edEchelle(ED.t);
+  if (!s || !e) return '';
+  if (ED_SURFACES.includes(e.type) && e.pts.length >= 3) return `≈ ${num(aireP(e.pts) * s * s / 10000, 2)} ha`;
+  if (e.type === 'piste' && e.pts.length >= 2) { let L = 0; e.pts.forEach((q, i) => { if (i || e.ferme) L += edDist(q, e.pts[(i - 1 + e.pts.length) % e.pts.length]); }); return `${num(L * s, 0)} m de long`; }
+  if (e.type === 'abri' && e.pts.length === 2) { const r = rectAbri(e.pts[0], e.pts[1], edAngle(ED.t.els)); return `${num(edDist(r[0], r[1]) * s, 1)} × ${num(edDist(r[1], r[2]) * s, 1)} m`; }
+  return '';
+}
+const edNumLibre = () => { const pris = new Set(ED.t.els.filter(e => e.type === 'pre').map(e => e.n)); let n = 1; while (pris.has(n)) n++; return n; };
+const edNomEl = e => e.type === 'pre' ? `Pré ${e.n}` : ED_T[e.type].l;
+// la gérante peut confier le tracé à EquiValdi (pas l'administration elle-même, ni deux fois)
+function edDemandable() {
+  const e = ecurieOuverte() || {}, d = e.carteDemande;
+  return !!ED.img && !e.fantome && e.role === 'gerante' && !(d && d.statut === 'demandee');
+}
+function edPanneau(et) {
+  const e = ecurieOuverte() || {}, t = ED.t;
+  if (et === 'charge') return `<p class="note">Un instant…</p>`;
+  if (et === 'plan') return `${edFichierBtn('Choisir le plan')}
+    ${ED.imgEtat === 'erreur-lecture' ? `<p class="small muted">Le plan déjà envoyé n'a pas pu être relu : vérifie ta connexion, ou choisis-le à nouveau.</p>` : ''}`;
+  if (et === 'echelle') {
+    const E = t.ech || {}, ok = E.a && E.b;
+    return `<p class="ed-aide"><b>Pose l'échelle.</b> ${ok ? 'Ajuste les deux bouts si besoin, puis indique la longueur.' : `Touche les deux bouts de la barre d'échelle${E.a ? ' : encore un' : ''} (ou d'une longueur que tu connais). Écarte deux doigts pour zoomer.`}</p>
+      ${ok ? `<div class="ed-ligne"><label for="edM">Cette longueur mesure</label><input id="edM" value="${esc(String(E.m || 50).replace('.', ','))}" inputmode="decimal" autocomplete="off"><span>m</span></div>` : ''}
+      <div class="btnrow"><button type="button" class="btn primary" data-act="ed-echelle-ok"${ok ? '' : ' disabled'}>Valider l'échelle</button>
+      ${t.els.length ? '' : edFichierBtn('Changer de plan', 'btn small')}
+      ${edDemandable() ? `<button type="button" class="btn small" data-act="ed-demander">EquiValdi la dessine pour moi</button>` : ''}</div>`;
+  }
+  if (et === 'trace') {
+    if (ED.cur) {
+      const c = ED.cur, d = ED_T[c.type], n = c.pts.length, ok = n >= Math.max(d.min, c.type === 'piste' ? 2 : d.min);
+      return `<p class="ed-aide"><b>${esc(edNomEl(c))}${n ? ` · ${n} ${pl(n, 'point')}` : ''}</b> ${esc(d.aide)}</p>
+        <div class="btnrow">${d.max ? '' : `<button type="button" class="btn primary" data-act="ed-fini"${ok ? '' : ' disabled'}>${ic('check', 'sm')}Terminer</button>`}
+        <button type="button" class="btn small" data-act="ed-retire"${n ? '' : ' disabled'}>${ic('undo', 'sm')}Retirer le point</button>
+        <button type="button" class="btn small" data-act="ed-abandon">Abandonner</button></div>`;
+    }
+    const s = ED.sel && edEl(ED.sel);
+    if (s) {
+      const m = edMesure(s);
+      const champ = s.type === 'pre' ? `<div class="ed-ligne"><label for="edNum">Numéro du pré</label><input id="edNum" value="${s.n}" inputmode="numeric" autocomplete="off"></div>`
+        : s.type === 'piste' ? `<div class="ed-ligne"><label for="edLarg">Largeur</label><input id="edLarg" value="${esc(String(s.larg || 4).replace('.', ','))}" inputmode="decimal" autocomplete="off"><span>m</span></div>` : '';
+      const doublon = s.type === 'pre' && t.els.some(o => o !== s && o.type === 'pre' && o.n === s.n);
+      return `<p class="ed-aide"><b>${esc(edNomEl(s))}</b>${m ? ` ${m} ·` : ''} Fais glisser les points pour les ajuster${ED_SURFACES.includes(s.type) || s.type === 'piste' ? ', ou les petits points du milieu pour en ajouter' : ''}.</p>
+        ${champ}${doublon ? `<p class="small" style="color:var(--danger)">Un autre pré porte déjà le numéro ${s.n}.</p>` : ''}
+        <div class="btnrow">${s.type === 'pre' ? `<button type="button" class="btn primary" data-act="ed-ajout" data-type="pre">${ic('plus', 'sm')}Pré suivant</button>` : ''}
+        <button type="button" class="btn small${s.type === 'pre' ? '' : ' primary'}" data-act="ed-ok">${ic('check', 'sm')}OK</button>
+        ${ED.som != null && s.pts.length > Math.max(3, ED_T[s.type].min) ? `<button type="button" class="btn small" data-act="ed-retire-som">Retirer ce point</button>` : ''}
+        <button type="button" class="btn small danger" data-act="ed-suppr" data-confirm="Supprimer ${esc(edNomEl(s).toLowerCase())} ?">${ic('trash', 'sm')}Supprimer</button></div>`;
+    }
+    const d = e.carteDemande, note = e.fantome && d && d.statut === 'demandee'
+      ? `<div class="ed-demande"><b>Demande de ${esc((d.par && d.par.nom) || 'la gérante')}</b> · ${esc(dJour(d.le))}${d.note ? `<p>« ${esc(d.note)} »</p>` : ''}</div>` : '';
+    const zonesOk = t.els.some(x => x.type !== 'abri' && x.type !== 'eau');
+    return `${note}<p class="ed-aide"><b>Ajoute chaque espace</b> en touchant ses coins sur le plan, puis regarde la maquette. ${esc(edResume(t.els))}</p>
+      <div class="ed-ajout">${ED_ORDRE.map(ty => `<button type="button" class="chip" data-act="ed-ajout" data-type="${ty}"><i class="ed-pastille et-${ty}"></i>${ED_T[ty].l}</button>`).join('')}</div>
+      <div class="btnrow"><button type="button" class="btn primary" data-act="ed-apercu"${zonesOk ? '' : ' disabled'}>Voir la maquette</button>
+      <button type="button" class="btn small" data-act="ed-reechelle">${ic('regle', 'sm')}Échelle</button>
+      ${edDemandable() ? `<button type="button" class="btn small" data-act="ed-demander">EquiValdi la dessine pour moi</button>` : ''}
+      ${t.els.length ? `<button type="button" class="btn small" data-act="ed-nouveau-plan" data-confirm="Effacer le tracé ?">Changer de plan</button>` : ''}</div>`;
+  }
+  // la maquette
+  const P = ED.apercu, L = liensCarte();
+  const sp = P.zones.filter(z => z.type === 'pre'), ha = P.zones.reduce((a, z) => a + (z.type === 'piste' ? 0 : z.aire), 0) / 10000;
+  const manque = P.zones.filter(z => z.type !== 'verger' && !L.has(z.id));
+  const nums = sp.map(z => z.n), doublons = nums.filter((n, i) => nums.indexOf(n) !== i);
+  return `<p class="ed-aide"><b>${sp.length} ${pl(sp.length, 'pré')}, ≈ ${num(ha, 2)} ha en tout.</b> Si la surface te paraît fausse, revois l'échelle. « Tourner » montre la maquette sous un autre angle.</p>
+    ${doublons.length ? `<p class="small" style="color:var(--danger)">Plusieurs prés portent le numéro ${[...new Set(doublons)].join(', ')}.</p>` : ''}
+    ${manque.length ? `<label class="check"><input type="checkbox" id="edCreerPres" checked> Ajouter au carnet ${manque.length > 1 ? `les ${manque.length} espaces` : "l'espace"} qui ${manque.length > 1 ? "n'y sont" : "n'y est"} pas encore (${esc(manque.slice(0, 4).map(z => z.type === 'pre' ? `Pré ${z.n}` : zoneNom(z)).join(', '))}${manque.length > 4 ? '…' : ''})</label>` : ''}
+    <div class="btnrow"><button type="button" class="btn primary" data-act="ed-publier">${ic('check', 'sm')}Publier la carte</button>
+    <button type="button" class="btn small" data-act="ed-tourner">${ic('tourner', 'sm')}Tourner</button>
+    <button type="button" class="btn small" data-act="ed-retour">Revenir au plan</button></div>`;
+}
+
+/* ---------- Le plan à l'écran : image, tracé, poignées ---------- */
+function majEditeur() {
+  const ed = document.querySelector('#view .ed');
+  document.body.classList.toggle('ed-ouvert', !!ed);
+  if (!ed) { if (ED.ro) { ED.ro.disconnect(); ED.ro = null; } ED.host = null; ED.svg = null; return; }
+  if (ED.imgEtat === 'attente' && DB) edEnvoyerPlan();
+  const host = ed.querySelector('.ed-zone');
+  if (!host || !ED.img) { ED.host = null; ED.svg = null; return; }
+  if (host !== ED.host || !host.querySelector('svg')) { edMonte(host); return; }
+  edDessine();
+}
+function edMonte(host) {
+  ED.host = host;
+  host.innerHTML = `<svg class="ed-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Ton plan"><image class="ed-img" x="0" y="0" width="${Number(ED.img.w)}" height="${Number(ED.img.h)}" preserveAspectRatio="none"/><g class="ed-els"></g><g class="ed-curg"></g><g class="ed-ech"></g><g class="ed-hs"></g></svg>
+    <div class="ed-outils c-zoom"><button type="button" data-edzoom="1" aria-label="Rapprocher">${ic('plus', 'sm')}</button><button type="button" data-edzoom="-1" aria-label="Éloigner">${ic('minus', 'sm')}</button><button type="button" data-edzoom="0" aria-label="Tout voir">${ic('cible', 'sm')}</button></div>`;
+  ED.svg = host.querySelector('svg');
+  ED.svg.querySelector('.ed-img').setAttribute('href', ED.img.src);   // l'image du plan : jamais écrite dans le HTML
+  host.querySelectorAll('[data-edzoom]').forEach(b => b.addEventListener('click', () => {
+    const z = Number(b.dataset.edzoom);
+    if (!z) ED.vue = null; else edZoomA(ED.W / 2, ED.H / 2, z > 0 ? 1.6 : 1 / 1.6);
+    edApplique(true);
+  }));
+  edGestes(ED.svg);
+  if (ED.ro) ED.ro.disconnect();
+  if (window.ResizeObserver) { ED.ro = new ResizeObserver(() => { if (ED.host === host && host.isConnected && edTaille()) edApplique(true); }); ED.ro.observe(host); }
+  edTaille();
+  edApplique(true);
+}
+function edTaille() {
+  if (!ED.host) return false;
+  const r = ED.host.getBoundingClientRect(), W = Math.round(r.width), H = Math.round(r.height);
+  if (!W || !H || (W === ED.W && H === ED.H)) return false;
+  ED.W = W; ED.H = H;
+  return true;
+}
+const edFit = () => Math.min(ED.W / ED.img.w, ED.H / ED.img.h) || 1;
+function edVue() { if (!ED.vue) ED.vue = { k: 1, cx: ED.img.w / 2, cy: ED.img.h / 2 }; return ED.vue; }
+function edVB() { const v = edVue(), k = edFit() * v.k, w = ED.W / k, h = ED.H / k; return { x: v.cx - w / 2, y: v.cy - h / 2, w, h, k }; }
+function edBorne() { const v = edVue(); v.k = Math.min(14, Math.max(1, v.k)); v.cx = Math.min(ED.img.w, Math.max(0, v.cx)); v.cy = Math.min(ED.img.h, Math.max(0, v.cy)); }
+function edApplique(redessine) {
+  if (!ED.svg || !ED.W) return;
+  edBorne();
+  const vb = edVB();
+  ED.svg.setAttribute('viewBox', `${vb.x.toFixed(2)} ${vb.y.toFixed(2)} ${vb.w.toFixed(2)} ${vb.h.toFixed(2)}`);
+  if (redessine) edDessine();
+}
+function edZoomA(sx, sy, f) {
+  const v = edVue(), vb = edVB(), ux = vb.x + sx / vb.k, uy = vb.y + sy / vb.k;
+  v.k = Math.min(14, Math.max(1, v.k * f));
+  const k2 = edFit() * v.k;
+  v.cx = ux - sx / k2 + ED.W / k2 / 2;
+  v.cy = uy - sy / k2 + ED.H / k2 / 2;
+}
+function edDessine() {
+  if (!ED.svg || !ED.img || !ED.W) return;
+  const vb = edVB(), k = vb.k, s = edEchelle(ED.t), et = edEtape(), th = edAngle(ED.t.els);
+  const P = q => `${r1(q[0])},${r1(q[1])}`, pts = l => l.map(P).join(' ');
+  const centre = l => [l.reduce((a, q) => a + q[0], 0) / l.length, l.reduce((a, q) => a + q[1], 0) / l.length];
+  const larg = e => s ? Math.max(2 / k, (e.larg || 4) / s) : 8 / k;
+  let els = '', labs = '';
+  ED.t.els.forEach(e => {
+    const sel = ED.sel === e.id ? ' sel' : '';
+    if (e.type === 'eau') { if (e.pts[0]) els += `<circle class="ed-el et-eau${sel}" data-el="${e.id}" cx="${r1(e.pts[0][0])}" cy="${r1(e.pts[0][1])}" r="${r1(7 / k)}"/>`; return; }
+    if (e.type === 'abri') { if (e.pts.length === 2) els += `<polygon class="ed-el et-abri${sel}" data-el="${e.id}" points="${pts(rectAbri(e.pts[0], e.pts[1], th))}"/>`; return; }
+    if (e.type === 'piste') {
+      const tag = e.ferme ? 'polygon' : 'polyline';
+      els += `<${tag} class="ed-piste${sel}" data-el="${e.id}" points="${pts(e.pts)}" style="stroke-width:${r1(larg(e))}px"/><${tag} class="ed-piste-c" points="${pts(e.pts)}"/>`;
+      return;
+    }
+    els += `<polygon class="ed-el et-${e.type}${sel}" data-el="${e.id}" points="${pts(e.pts)}"/>`;
+    const c = centre(e.pts);
+    labs += `<text class="ed-n" x="${r1(c[0])}" y="${r1(c[1])}" style="font-size:${r1((e.type === 'pre' ? 17 : 12) / k)}px;stroke-width:${Math.max(.1, r1(3 / k))}px">${e.type === 'pre' ? e.n : esc(ED_T[e.type].l)}</text>`;
+  });
+  ED.svg.querySelector('.ed-els').innerHTML = els + labs;
+  // l'espace en cours de tracé
+  let cur = '';
+  const c = ED.cur;
+  if (c && c.pts.length) {
+    if (c.type === 'piste') cur += `<polyline class="ed-piste" points="${pts(c.pts)}" style="stroke-width:${r1(larg(c))}px"/>`;
+    if (c.type === 'abri' && c.pts.length === 2) cur += `<polygon class="ed-el et-abri" points="${pts(rectAbri(c.pts[0], c.pts[1], th))}"/>`;
+    if (ED_SURFACES.includes(c.type) && c.pts.length >= 3) cur += `<polygon class="ed-el et-${c.type} ed-encours" points="${pts(c.pts)}"/>`;
+    cur += `<polyline class="ed-cur" points="${pts(c.pts)}"/>`;
+  }
+  ED.svg.querySelector('.ed-curg').innerHTML = cur;
+  // l'échelle
+  let ech = '';
+  const E = ED.t.ech;
+  if (et === 'echelle' && E) {
+    if (E.a && E.b) {
+      const m = [(E.a[0] + E.b[0]) / 2, (E.a[1] + E.b[1]) / 2];
+      ech += `<line class="ed-ech-l" x1="${r1(E.a[0])}" y1="${r1(E.a[1])}" x2="${r1(E.b[0])}" y2="${r1(E.b[1])}"/><text class="ed-n ed-ech-t" x="${r1(m[0])}" y="${r1(m[1] - 16 / k)}" style="font-size:${r1(15 / k)}px;stroke-width:${Math.max(.1, r1(3 / k))}px">${E.m > 0 ? esc(num(E.m, 1)) + ' m' : '? m'}</text>`;
+    }
+    ['a', 'b'].forEach(w => { if (E[w]) ech += `<circle class="ed-h ech" data-ech="${w}" cx="${r1(E[w][0])}" cy="${r1(E[w][1])}" r="${r1(11 / k)}"/>`; });
+  }
+  ED.svg.querySelector('.ed-ech').innerHTML = ech;
+  // les poignées : points du tracé en cours, ou de l'espace choisi (et les petits points du milieu pour en ajouter)
+  let hs = '';
+  const poignees = (l, id, milieux, ferme) => {
+    if (milieux) l.forEach((q, i) => {
+      if (!ferme && i === l.length - 1) return;
+      const n = l[(i + 1) % l.length];
+      hs += `<circle class="ed-m" data-m="${id}:${i}" cx="${r1((q[0] + n[0]) / 2)}" cy="${r1((q[1] + n[1]) / 2)}" r="${r1(7 / k)}"/>`;
+    });
+    l.forEach((q, i) => {
+      const premier = id === 'cur' && i === 0 && l.length >= 3 && c && c.type !== 'abri';
+      hs += `<circle class="ed-h${premier ? ' premier' : ''}${id === ED.sel && ED.som === i ? ' actif' : ''}" data-h="${id}:${i}" cx="${r1(q[0])}" cy="${r1(q[1])}" r="${r1((premier ? 12 : 9) / k)}"/>`;
+    });
+  };
+  if (et === 'trace') {
+    if (c) poignees(c.pts, 'cur', false, false);
+    else if (ED.sel) {
+      const e = edEl(ED.sel);
+      if (e) poignees(e.pts, e.id, ED_SURFACES.includes(e.type) || e.type === 'piste', e.type !== 'piste' || e.ferme);
+    }
+  }
+  ED.svg.querySelector('.ed-hs').innerHTML = hs;
+}
+/* Un coin posé près d'un coin (ou d'un bord) d'un pré, d'une carrière ou d'un verger déjà tracés s'y accroche :
+   les clôtures voisines se rejoignent. Plus on zoome, plus l'aimant est fin (il se mesure à l'écran). */
+function aimante(p, exclu) {
+  const k = edVB().k;
+  let best = null, bd = 13 / k;
+  ED.t.els.forEach(e => {
+    if (e === exclu || !ED_SURFACES.includes(e.type)) return;
+    e.pts.forEach(q => { const d = edDist(p, q); if (d < bd) { bd = d; best = [q[0], q[1]]; } });
+  });
+  if (best) return best;
+  bd = 8 / k;
+  ED.t.els.forEach(e => {
+    if (e === exclu || !ED_SURFACES.includes(e.type)) return;
+    e.pts.forEach((a, i) => { const q = projSeg(p, a, e.pts[(i + 1) % e.pts.length]), d = edDist(p, q); if (d < bd) { bd = d; best = q; } });
+  });
+  return best || p;
+}
+function edGestes(svg) {
+  const pts = new Map();
+  let g = null;
+  const loc = e => { const r = svg.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  const versImage = ([sx, sy]) => { const vb = edVB(); return [vb.x + sx / vb.k, vb.y + sy / vb.k]; };
+  svg.addEventListener('pointerdown', e => {
+    if (e.button > 0) return;
+    try { svg.setPointerCapture(e.pointerId); } catch (x) { /* rien */ }
+    pts.set(e.pointerId, loc(e));
+    if (pts.size === 2) {
+      const [a, b] = [...pts.values()];
+      g = { type: 'pince', d0: Math.hypot(a[0] - b[0], a[1] - b[1]) || 1, k0: edVue().k, m: [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2] };
+      return;
+    }
+    const h = e.target.closest && e.target.closest('[data-h],[data-m],[data-ech]');
+    g = { type: 'attente', x0: e.clientX, y0: e.clientY, last: loc(e), cible: e.target,
+      po: h ? { h: h.getAttribute('data-h'), m: h.getAttribute('data-m'), ech: h.getAttribute('data-ech') } : null };
+  });
+  svg.addEventListener('pointermove', e => {
+    if (!pts.has(e.pointerId)) return;
+    const p = loc(e);
+    pts.set(e.pointerId, p);
+    if (!g) return;
+    if (g.type === 'pince') {
+      if (pts.size < 2) return;
+      const [a, b] = [...pts.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]), m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+      const v = edVue(), k1 = edVB().k;
+      v.cx -= (m[0] - g.m[0]) / k1; v.cy -= (m[1] - g.m[1]) / k1;
+      g.m = m;
+      edZoomA(m[0], m[1], g.k0 * d / g.d0 / v.k);
+      edApplique(true);
+      return;
+    }
+    if (g.type === 'attente' && Math.hypot(e.clientX - g.x0, e.clientY - g.y0) > 6) g.type = g.po && edEtape() !== 'apercu' ? 'poignee' : 'pan';
+    if (g.type === 'pan') {
+      const v = edVue(), k = edVB().k;
+      v.cx -= (p[0] - g.last[0]) / k; v.cy -= (p[1] - g.last[1]) / k;
+      edApplique(false);
+    } else if (g.type === 'poignee') edBouge(g.po, versImage(p));
+    g.last = p;
+  });
+  const fin = e => {
+    if (!pts.has(e.pointerId)) return;
+    pts.delete(e.pointerId);
+    if (!g) return;
+    if (g.type === 'pince') { if (!pts.size) g = null; return; }
+    if (g.type === 'poignee') { edFinBouge(); g = null; return; }
+    if (g.type === 'attente' && e.type === 'pointerup') edTape(versImage(loc(e)), g.po, g.cible);
+    g = null;
+  };
+  svg.addEventListener('pointerup', fin);
+  svg.addEventListener('pointercancel', fin);
+  svg.addEventListener('wheel', e => { e.preventDefault(); const p = loc(e); edZoomA(p[0], p[1], Math.exp(-e.deltaY * .0022)); edApplique(true); }, { passive: false });
+}
+function edTape(p, po, cible) {
+  const et = edEtape(), t = ED.t;
+  if (et === 'echelle') {
+    if (po && po.ech) return;
+    t.ech = t.ech || { a: null, b: null, m: 50 };
+    if (!t.ech.a) t.ech.a = p;
+    else if (!t.ech.b) t.ech.b = p;
+    else t.ech[edDist(p, t.ech.a) < edDist(p, t.ech.b) ? 'a' : 'b'] = p;
+    t.ech.a = t.ech.a && t.ech.a.map(r1); t.ech.b = t.ech.b && t.ech.b.map(r1);
+    vibre(8); edSauve(); edDessine(); render();
+    return;
+  }
+  if (et !== 'trace') return;
+  const k = edVB().k, c = ED.cur;
+  if (c) {
+    const d = ED_T[c.type];
+    // toucher le premier point (sa poignée, 12 px à l'écran) ferme le tracé ; un coin voisin, même proche, s'ajoute
+    if (!d.max && c.pts.length >= 3 && edDist(p, c.pts[0]) * k < 14) { if (c.type === 'piste') c.ferme = true; edFinir(); return; }
+    const q = ED_SURFACES.includes(c.type) ? aimante(p, null) : p;
+    if (c.pts.some(r => edDist(r, q) * k < 4)) return;   // le même point touché deux fois : pas de doublon
+    c.pts.push(q);
+    vibre(6);
+    if (d.max && c.pts.length >= d.max) { edFinir(); return; }
+    edDessine(); render();
+    return;
+  }
+  if (po && po.h) { const [id, i] = po.h.split(':'); if (id === ED.sel) { ED.som = Number(i); edDessine(); render(); } return; }
+  if (po && po.m) {
+    const [id, i] = po.m.split(':'), e = edEl(id);
+    if (e) { const j = Number(i), n = e.pts[(j + 1) % e.pts.length]; e.pts.splice(j + 1, 0, [r1((e.pts[j][0] + n[0]) / 2), r1((e.pts[j][1] + n[1]) / 2)]); ED.som = j + 1; edSauve(); edDessine(); render(); }
+    return;
+  }
+  const el = cible && cible.closest && cible.closest('[data-el]');
+  ED.sel = el ? el.getAttribute('data-el') : null;
+  ED.som = null;
+  vibre(6); edDessine(); render();
+}
+function edBouge(po, p) {
+  if (po.ech) { ED.t.ech[po.ech] = p; edDessine(); return; }
+  if (po.m) {
+    const [id, i] = po.m.split(':'), e = edEl(id);
+    if (!e) return;
+    const j = Number(i);
+    e.pts.splice(j + 1, 0, p);
+    po.m = null; po.h = id + ':' + (j + 1); ED.sel = id; ED.som = j + 1;
+  }
+  if (po.h) {
+    const [id, i] = po.h.split(':'), j = Number(i), e = id === 'cur' ? ED.cur : edEl(id);
+    if (!e || !e.pts[j]) return;
+    e.pts[j] = ED_SURFACES.includes(e.type) ? aimante(p, e) : p;
+    edDessine();
+  }
+}
+function edFinBouge() {
+  const ar = l => l.forEach((q, i) => { l[i] = q.map(r1); });
+  if (ED.t.ech) ['a', 'b'].forEach(w => { if (ED.t.ech[w]) ED.t.ech[w] = ED.t.ech[w].map(r1); });
+  ED.t.els.forEach(e => ar(e.pts));
+  if (ED.cur) ar(ED.cur.pts);
+  edSauve(); edDessine(); render();
+}
+function edFinir() {
+  const c = ED.cur;
+  if (!c) return;
+  ED.cur = null;
+  if (c.pts.length < ED_T[c.type].min) { render(); return; }
+  const e = { id: edId(), type: c.type, pts: c.pts.map(q => q.map(r1)) };
+  if (c.type === 'pre') e.n = c.n;
+  if (c.type === 'piste') { e.larg = c.larg || 4; e.ferme = !!c.ferme; }
+  ED.t.els.push(e);
+  ED.sel = e.id; ED.som = null;
+  vibre(12); edSauve(); edDessine(); render();
+}
+
+/* ---------- Boutons ---------- */
+ACT['ed-ajout'] = d => {
+  if (!ED_T[d.type] || !ED.t) return;
+  ED.sel = null; ED.som = null;
+  ED.cur = { type: d.type, pts: [] };
+  if (d.type === 'pre') ED.cur.n = edNumLibre();
+  if (d.type === 'piste') ED.cur.larg = 4;
+  render(); edDessine();
+};
+ACT['ed-fini'] = () => edFinir();
+ACT['ed-retire'] = () => { if (ED.cur && ED.cur.pts.length) { ED.cur.pts.pop(); edDessine(); render(); } };
+ACT['ed-abandon'] = () => { ED.cur = null; edDessine(); render(); };
+ACT['ed-ok'] = () => { ED.sel = null; ED.som = null; edDessine(); render(); };
+ACT['ed-suppr'] = () => { if (!ED.sel) return; ED.t.els = ED.t.els.filter(e => e.id !== ED.sel); ED.sel = null; ED.som = null; edSauve(); edDessine(); render(); };
+ACT['ed-retire-som'] = () => {
+  const e = edEl(ED.sel);
+  if (!e || ED.som == null || e.pts.length <= Math.max(3, ED_T[e.type].min)) return;
+  e.pts.splice(ED.som, 1); ED.som = null;
+  edSauve(); edDessine(); render();
+};
+ACT['ed-echelle-ok'] = () => {
+  const E = ED.t.ech, inp = $('#edM'), m = inp ? parseNum(inp.value) : E && E.m;
+  if (!E || !E.a || !E.b) return;
+  if (!(m > 0) || m > 5000) { toast('Indique la longueur en mètres (par exemple 50).', { danger: true }); return; }
+  E.m = m;
+  E.ok = true;
+  if (!edEchelle(ED.t)) { toast("Les deux bouts sont trop proches : zoome et pose-les aux deux extrémités de l'échelle.", { danger: true }); return; }
+  ED.etape = 'trace';
+  edSauve(true); render();
+};
+ACT['ed-reechelle'] = () => { ED.cur = null; ED.sel = null; ED.etape = 'echelle'; render(); };
+ACT['ed-nouveau-plan'] = () => {
+  Object.assign(ED, { img: null, imgEtat: 'absent', vue: null, etape: null, cur: null, sel: null, som: null, apercu: null, t: { w: 0, h: 0, ech: null, rot: 0, els: [] } });
+  edSauve(true); render();
+};
+ACT['ed-renvoyer'] = () => { edEnvoyerPlan(); render(); };
+ACT['ed-apercu'] = () => {
+  const p = planDepuisTrace(ED.t);
+  if (!p) { toast('Trace au moins un pré, la carrière ou la piste.', { danger: true }); return; }
+  ED.apercu = p; ED.apercuV++; ED.etape = 'apercu'; ED.sel = null; ED.cur = null;
+  render();
+};
+ACT['ed-tourner'] = () => {
+  ED.t.rot = ((ED.t.rot || 0) + 1) % 4;
+  ED.apercu = planDepuisTrace(ED.t); ED.apercuV++;
+  edSauve(); render();
+};
+ACT['ed-retour'] = () => { ED.etape = 'trace'; ED.apercu = null; render(); };
+ACT['ed-publier'] = () => {
+  const plan = ED.apercu;
+  if (!planOk(plan) || !edPeut()) return;
+  const creer = !!($('#edCreerPres') && $('#edCreerPres').checked);
+  clearTimeout(ED.sauveT); ED.sauveT = null;
+  putCarte(Object.assign({}, S.carte || {}, { plan, trace: clone(ED.t), publie: Date.now(), par: moiRef() }));
+  if (creer) {
+    prepPlan('ecurie');
+    const L = liensCarte();
+    PLAN.zones.filter(z => z.type !== 'verger' && !L.has(z.id)).forEach(z => put('pres', {
+      type: z.type === 'pre' ? 'pre' : z.type, nom: z.type === 'pre' ? `Pré ${z.n}` : zoneNom(z), surface: zoneHa(z), repos: null, paturage: null, notes: '', carte: z.id
+    }));
+  }
+  if (window.EQ && EQ.carteFaite) EQ.carteFaite().catch(() => {});
+  ED.apercu = null; ED.etape = null;
+  nav.stack = nav.stack.filter(x => x.view !== 'carteEd');
+  nav.tab = 'pres'; ui.tab = 'pres'; ui.presVue = 'carte'; saveUi();
+  entree = 'back';
+  render();
+  window.scrollTo(0, 0);
+  toast('Ta carte des prés est prête !', { fete: true });
+};
+/* EquiValdi la dessine : la demande part avec le plan déjà envoyé */
+ACT['ed-demander'] = () => {
+  const e = ecurieOuverte();
+  if (!ED.img || !window.EQ || !e || e.role !== 'gerante') return;
+  if (ED.imgEtat === 'erreur' || ED.imgEtat === 'attente') edEnvoyerPlan();
+  openSheet('EquiValdi dessine ta carte', `
+    <p class="note" style="color:var(--ink)">On trace ta carte à partir de ton plan, avec les mêmes exigences que la carte d'origine : chaque pré à sa place et numéroté, la piste, la carrière, le verger, les abris et les abreuvoirs. Elle apparaîtra dans l'onglet Prés, pour toute l'équipe.</p>
+    ${fld('Ce qu’il faut savoir', area('edNote', '', 'rows="4" maxlength="800" placeholder="Les numéros de tes prés, où sont la piste, la carrière, les abris et les abreuvoirs…"'))}
+    <p class="hint">Le plus sûr : avant d'envoyer ta capture, entoure chaque pré et écris son numéro (outil « Annoter » du téléphone), et marque la piste, la carrière, les abris et les abreuvoirs. Sinon, décris-les ici.</p>`, {
+    submit: 'Envoyer la demande',
+    onSubmit: () => envoi(EQ.demanderCarte(val('edNote'), moiRef()), () => {
+      closeSheet();
+      if (ED.sauveT) edSauve(true);
+      ED.cur = null; ED.sel = null;
+      nav.stack = nav.stack.filter(x => x.view !== 'carteEd');
+      nav.tab = 'pres'; ui.tab = 'pres'; ui.presVue = 'carte'; saveUi();
+      entree = 'back'; render();
+      toast("C'est demandé : ta carte apparaîtra dans l'onglet Prés dès qu'elle sera prête.");
+    }, "La demande n'a pas pu être envoyée : vérifie ta connexion.")
+  });
+};
+/* Les champs du panneau (échelle, numéro, largeur) et le choix du plan */
+document.addEventListener('input', e => {
+  if (e.target && e.target.id === 'edM' && ED.t && ED.t.ech) { const v = parseNum(e.target.value); if (v > 0) { ED.t.ech.m = v; edDessine(); } }
+});
+document.addEventListener('change', e => {
+  const id = e.target && e.target.id;
+  if (id === 'edFichier') { const f = e.target.files && e.target.files[0]; e.target.value = ''; edFichier(f); return; }
+  if (id === 'edNum') {
+    const el = edEl(ED.sel), v = parseNum(e.target.value);
+    if (el && el.type === 'pre' && v != null && v >= 1 && v <= 999) { el.n = Math.round(v); edSauve(); edDessine(); }
+    render();
+    return;
+  }
+  if (id === 'edLarg') {
+    const el = edEl(ED.sel), v = parseNum(e.target.value);
+    if (el && el.type === 'piste' && v != null && v >= 1 && v <= 30) { el.larg = v; edSauve(); edDessine(); }
+    render();
+  }
+});
+
 /* ---------- Démarrage ---------- */
 loadCache();
+if (window.EQ_MODE) {
+  // après « Dessiner la carte » dans l'administration : l'éditeur de la carte de l'écurie ouverte
+  try {
+    const apres = JSON.parse(localStorage.getItem('equivaldi:apres') || 'null');
+    localStorage.removeItem('equivaldi:apres');
+    if (apres === 'carte') { nav.tab = 'pres'; ui.presVue = 'carte'; nav.stack = [{ view: 'carteEd' }]; }
+  } catch (e) { /* stockage indisponible */ }
+}
 render();
 connect();
 let lastDay = todayISO();
@@ -6121,6 +7116,7 @@ const K = {
   invitation: 'equivaldi:invitation',          // code d'un lien ouvert, gardé pendant l'inscription
   migration: 'equivaldi:migration:sid',        // mise à jour en cours : { uid, sid, nom, commune }
   avis: 'equivaldi:avis',                      // message à montrer après un rechargement
+  apres: 'equivaldi:apres',                    // écran à ouvrir après le rechargement (administration : 'carte')
   cache: sid => 'carnet-ecurie:cache:v1:' + sid,
   file: sid => 'carnet-ecurie:outbox:v1:' + sid
 };
@@ -6376,7 +7372,7 @@ const retirerDeLIndex = sids => {
 // Accès réel à une écurie : sa fiche et sa propre fiche de membre (refusé = plus membre)
 const ecurieDe = (sid, d, role, fantome = false) => ({
   id: sid, nom: d.nom || '', commune: d.commune || '', role: ROLES[role] ? role : 'lecture', crottinsDepuis: d.crottinsDepuis || '',
-  creeLe: d.creeLe || null, abonnement: d.abonnement || null, gerante: d.gerante || '', fantome
+  creeLe: d.creeLe || null, abonnement: d.abonnement || null, gerante: d.gerante || '', carteDemande: d.carteDemande || null, fantome
 });
 async function acces(sid, o = {}) {
   try {
@@ -6414,7 +7410,7 @@ function ouvrirHorsLigne(u, local) {
   const r = local.sid ? lis(K.role(local.sid)) : null;
   if (!r || r.uid !== u.uid || window.EQ_SID !== local.sid) return false;
   IDX = IDX || { ecuries: Object.fromEntries((local.ecuries || []).map(x => [x.id, { nom: x.nom, role: x.role }])), derniere: local.sid };
-  demarrer(u, { id: local.sid, nom: local.nom, commune: local.commune, role: r.role, crottinsDepuis: local.crottinsDepuis, creeLe: local.creeLe, abonnement: local.abonnement || null, gerante: local.gerante || '', fantome: !!local.fantome }, { horsLigne: true });
+  demarrer(u, { id: local.sid, nom: local.nom, commune: local.commune, role: r.role, crottinsDepuis: local.crottinsDepuis, creeLe: local.creeLe, abonnement: local.abonnement || null, gerante: local.gerante || '', carteDemande: local.carteDemande || null, fantome: !!local.fantome }, { horsLigne: true });
   return true;
 }
 async function parcours(u, local) {
@@ -6478,7 +7474,7 @@ function demarrer(u, e, o = {}) {
   const fantome = !!(e.fantome && ADMIN);
   OUV = {
     id: e.id, nom: e.nom || '', commune: e.commune || '', role: e.role, crottinsDepuis: e.crottinsDepuis || (e.creeLe ? isoJour(e.creeLe) : ''), creeLe: e.creeLe || null,
-    abonnement: e.abonnement || null, gerante: e.gerante || '', fantome
+    abonnement: e.abonnement || null, gerante: e.gerante || '', carteDemande: e.carteDemande || null, fantome
   };
   if (fantome) o = Object.assign({}, o, { sansIndex: true });
   const avant = IDX && IDX.ecuries[e.id] ? Object.assign({}, IDX.ecuries[e.id]) : null;
@@ -6536,7 +7532,7 @@ function suivreEcurie(sid) {
     if (!s.exists() || !OUV || OUV.id !== sid) return;
     const n = ecurieDe(sid, s.data() || {}, OUV.role, OUV.fantome);
     if (!n.crottinsDepuis && n.creeLe) n.crottinsDepuis = isoJour(n.creeLe);
-    const champs = ['nom', 'commune', 'crottinsDepuis', 'creeLe', 'abonnement', 'gerante'];
+    const champs = ['nom', 'commune', 'crottinsDepuis', 'creeLe', 'abonnement', 'gerante', 'carteDemande'];
     if (champs.every(k => JSON.stringify(n[k]) === JSON.stringify(OUV[k]))) return;
     champs.forEach(k => { OUV[k] = n[k]; });
     const l = lis(K.ecurie);
@@ -6628,13 +7624,21 @@ async function ecranAdmin(u) {
   show('<p class="auth-wait">Chargement des écuries…</p>');
   let l = [];
   try { l = await toutesEcuries(); } catch (e) { ecranSouci(u, e); return; }
+  // les cartes des prés demandées à EquiValdi d'abord (les plus anciennes en tête) : « Dessiner » ouvre l'éditeur
+  const cartes = l.filter(s => s.carteDemande && s.carteDemande.statut === 'demandee').sort((a, b) => a.carteDemande.le - b.carteDemande.le);
+  const jour = ms => new Date(ms).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
+  const aDessiner = cartes.length ? `<h3 class="auth-sous">Cartes des prés à dessiner</h3>
+      <div class="list">${cartes.map(s => `<button type="button" class="row" data-carte="${escH(s.id)}"><div class="row-main"><div class="row-t">${escH(s.nom || 'Sans nom')}</div><div class="row-s">${escH(['demandée le ' + jour(s.carteDemande.le), s.carteDemande.note ? '« ' + s.carteDemande.note + ' »' : ''].filter(Boolean).join(' · '))}</div></div><span class="pill warn">Dessiner</span></button>`).join('')}</div>
+      <h3 class="auth-sous">Toutes les écuries</h3>` : '';
   show(`<div class="form">
-      <h2 class="auth-t">Toutes les écuries</h2>
-      <p class="hint">Tu les ouvres sans apparaître dans leur équipe.</p>
+      <h2 class="auth-t">${cartes.length ? 'Administration' : 'Toutes les écuries'}</h2>
+      <p class="hint">Tu ouvres les écuries sans apparaître dans leur équipe.</p>
+      ${aDessiner}
       <div class="list">${l.map(s => `<button type="button" class="row" data-sid="${escH(s.id)}"><div class="row-main"><div class="row-t">${escH(s.nom || 'Sans nom')}</div><div class="row-s">${escH(s.commune || '')}</div></div></button>`).join('') || '<p class="hint">Aucune écurie pour le moment.</p>'}</div>
       <div class="auth-links"><button type="button" class="link" id="aBack">Retour</button></div>
     </div>`, root => {
     root.querySelectorAll('[data-sid]').forEach(b => b.addEventListener('click', () => ouvrirAdmin(b.dataset.sid)));
+    root.querySelectorAll('[data-carte]').forEach(b => b.addEventListener('click', () => ouvrirAdmin(b.dataset.carte, 'carte')));
     root.querySelector('#aBack').addEventListener('click', () => ecranAccueil(u));
   });
 }
@@ -7255,12 +8259,39 @@ async function gererAbonnement(sid, action, formule) {
   return a;
 }
 // ouvrir une écurie sans en être membre : rien n'est écrit dans son équipe ni dans l'index
-async function ouvrirAdmin(sid) {
+// (apres : 'carte' ouvre directement l'éditeur de la carte des prés, pour une carte demandée)
+async function ouvrirAdmin(sid, apres) {
   exigerAdmin();
+  if (apres) ecris(K.apres, apres);
   if (listeEcuries().some(x => x.id === sid)) return ouvrir(sid);
   const s = await getDoc(doc(fs, 'structures', sid));
   ecris(K.ecurie, { uid: U.uid, sid, nom: s.exists() ? (s.data() || {}).nom || '' : '', fantome: true, ecuries: listeEcuries() });
   location.reload();
+}
+/* ---------- Carte des prés : la gérante demande à EquiValdi de la dessiner ---------- */
+function majOuv(champs) {
+  Object.assign(OUV, champs);
+  const l = lis(K.ecurie);
+  if (l && l.sid === OUV.id) ecris(K.ecurie, Object.assign(l, champs));
+  window.EQ.ecurie = Object.assign({}, OUV);
+  notifier();
+}
+async function demanderCarte(note, par) {
+  exigerGerante();
+  if (OUV.fantome) throw erreur("L'administration dessine la carte elle-même.");
+  const v = { statut: 'demandee', le: Date.now(), par: { uid: U.uid, nom: String((par && par.nom) || nomDe(U)).trim().slice(0, 60) }, note: String(note || '').trim().slice(0, 800) };
+  await delai(updateDoc(doc(fs, 'structures', OUV.id), { carteDemande: v }), 15000);
+  majOuv({ carteDemande: v });
+  return v;
+}
+// la carte publiée (par la gérante ou par l'administration) : la demande est faite
+async function carteFaite() {
+  const d = OUV && OUV.carteDemande;
+  if (!d || d.statut !== 'demandee' || OUV.role !== 'gerante') return null;
+  const v = Object.assign({}, d, { statut: 'faite', faiteLe: Date.now(), faitePar: OUV.fantome ? 'equivaldi' : 'gerante' });
+  await delai(updateDoc(doc(fs, 'structures', OUV.id), { carteDemande: v }), 15000);
+  majOuv({ carteDemande: v });
+  return v;
 }
 async function quitterAdmin() {
   const x = listeEcuries();
@@ -7274,6 +8305,7 @@ window.EQ = {
   tarif: TARIF,
   payerFictif,
   toutesEcuries, equipeDe, gererAbonnement, ouvrirAdmin, quitterAdmin,
+  demanderCarte, carteFaite,
   deconnexion,
   ouvrir,
   creer: async v => { const e = await creer(v); await ouvrir(e.id); return e.id; },

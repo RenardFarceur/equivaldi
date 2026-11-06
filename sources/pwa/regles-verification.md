@@ -84,6 +84,21 @@ Une écurie est **active** si son essai court encore, si son abonnement est pay�
 
 Le compte `bennizdu03@gmail.com` (adresse confirmée) lit et écrit toutes les écuries : leur fiche (dont l'abonnement), leur équipe, leur carnet, leurs invitations, et la liste de toutes les écuries. Il n'a de fiche de membre dans aucune écurie : personne ne le voit dans son équipe. Un autre compte qui lit la liste de toutes les écuries est refusé.
 
+## 8. Carte des prés (sans nouvelle règle)
+
+La carte d'une écurie est une donnée de l'écurie : `config/carte` (la carte publiée et le tracé en cours) et `config/plan` (l'image du plan envoyé). Elles passent par les règles déjà en place.
+
+| Demande | Règle | Résultat |
+|---|---|---|
+| lire la carte ou le plan | `coll in donnees() && membre(sid)` | les membres de l'écurie (et l'administration) |
+| lire le plan d'une autre écurie | `membre(B)` faux | refusé |
+| enregistrer le tracé, publier la carte, envoyer le plan | `editeur(sid) && actif(sid)`, comme les réglages ; l'appli ne propose l'outil qu'à la gérante | refusé en lecture seule, après l'essai, depuis une autre écurie |
+| demander la carte à EquiValdi (`carteDemande` sur l'écurie) | mise à jour de l'écurie par la gérante, sans toucher à l'abonnement | seule la gérante ; l'administration la passe à « faite » |
+| un membre touche à la demande | `gerante(sid)` faux | refusé |
+| un plan trop lourd | 1 Mio au plus par document dans Firestore ; l'appli réduit l'image à 880 000 caractères au plus | jamais atteint |
+
+Une carte lue dans la base est remise au propre avant d'être dessinée (identifiants simples, nombres, textes sans balises ni guillemets), et l'image du plan n'est acceptée que comme image JPEG, PNG ou WebP : un membre « Peut modifier » ne peut rien glisser dans la carte qui s'exécute chez les autres.
+
 ## Migration
 
 - Recopie de l'équipe (cas c) : seulement par l'ancienne gérante, pour un uid qui existe dans l'ancien `membres`, avec exactement le même rôle (`equipe` ou `lecture`).

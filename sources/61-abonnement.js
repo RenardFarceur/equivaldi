@@ -154,6 +154,11 @@ VIEWS.admin = () => {
   const vis = tous.filter(x => f === 'toutes' || (f === 'abo' ? ['abonnee', 'a_vie'].includes(x.st.code) : x.st.code === f));
   const parMois = tous.filter(x => x.st.code === 'abonnee').reduce((t, x) => t + (x.st.formule === 'an' ? ABO.an / 12 : ABO.mois), 0);
   const ouv = idEcurie(ecurieOuverte());
+  // les cartes des prés demandées à EquiValdi, les plus anciennes d'abord
+  const cartes = tous.filter(x => x.s.carteDemande && x.s.carteDemande.statut === 'demandee').sort((a, b) => a.s.carteDemande.le - b.s.carteDemande.le);
+  const aDessiner = cartes.length ? section(`Cartes à dessiner <span class="count">${cartes.length}</span>`, `<div class="list">${cartes.map(({ s }) => `<button type="button" class="row" data-act="adm-ecurie" data-sid="${esc(s.id)}"><span class="qa-ic paille">${ic('image')}</span>
+      <div class="row-main"><div class="row-t">${esc(s.nom || 'Sans nom')}</div><div class="row-s">${esc(['demandée le ' + dJour(s.carteDemande.le), s.carteDemande.par && s.carteDemande.par.nom].filter(Boolean).join(' · '))}</div></div>
+      <span class="pill warn">À dessiner</span></button>`).join('')}</div>`) : '';
   const rows = vis.map(({ s, st }) => {
     const b = admBadge(st), quand = s.creeLe ? 'créée le ' + dShort(isoOf(new Date(s.creeLe))) : '';
     return `<button type="button" class="row" data-act="adm-ecurie" data-sid="${esc(s.id)}"><span class="qa-ic menthe">${ic('barn')}</span>
@@ -166,6 +171,7 @@ VIEWS.admin = () => {
         <div class="stat"><b>${n('essai')}</b><span>en essai</span></div>
         <div class="stat"><b>${n('abonnee', 'a_vie')}</b><span>${pl(n('abonnee', 'a_vie'), 'abonnée')}</span></div></div>
       <p class="note">${n('a_vie')} à vie · ${n('expiree')} ${pl(n('expiree'), 'expirée')} · environ ${num(parMois, 0)} € par mois d'abonnements en cours (paiements de démonstration compris).</p>
+      ${aDessiner}
       ${segCtl('admFiltre', [['toutes', 'Toutes'], ['essai', 'Essai'], ['abo', 'Abonnées'], ['expiree', 'Expirées']], f)}
       <div class="list">${rows || '<div class="row"><div class="row-s">Aucune écurie ici.</div></div>'}</div>
       <button type="button" class="link" data-act="adm-actualiser" style="align-self:flex-start">Actualiser</button>`
@@ -192,7 +198,8 @@ ACT['adm-ecurie'] = async d => {
       ${ligne('Créée', `${s.creeLe ? esc(dJour(s.creeLe)) : '—'}${s.creePar && s.creePar.nom ? ' par ' + esc(s.creePar.nom) : ''}${s.commune ? ' · ' + esc(s.commune) : ''}`)}
       ${ligne('Dernier paiement', p ? `${num(p.montant || 0, 0)} € · ${p.fournisseur === 'fictif' ? 'démonstration' : p.fournisseur === 'manuel' ? 'enregistré à la main' : esc(p.fournisseur || '')} · ${p.le ? esc(dJour(p.le)) : ''}` : 'Aucun')}
     </div>
-    <button type="button" class="btn primary" data-act="adm-ouvrir" data-sid="${esc(s.id)}">${ic('next', 'sm')}Ouvrir l'écurie</button>
+    ${carteAdm(s)}
+    <button type="button" class="btn${s.carteDemande && s.carteDemande.statut === 'demandee' ? '' : ' primary'}" data-act="adm-ouvrir" data-sid="${esc(s.id)}">${ic('next', 'sm')}Ouvrir l'écurie</button>
     ${grp('Abonnement', `<div class="btnrow">
       ${bt('essai', "Prolonger l'essai d'un mois")}
       ${bt('payer', `Paiement reçu · 1 mois (${ABO.mois} €)`, ' data-f="mois"')}
@@ -216,4 +223,13 @@ ACT['adm-action'] = async (d, el) => {
   }
 };
 ACT['adm-ouvrir'] = d => { toast('Ouverture…'); EQ.ouvrirAdmin(d.sid); };
+/* La carte des prés demandée : la demande, la note de la gérante, et de quoi la dessiner */
+function carteAdm(s) {
+  const d = s.carteDemande;
+  if (!d) return '';
+  if (d.statut !== 'demandee') return `<p class="small muted">Carte des prés demandée le ${esc(dJour(d.le))}, faite le ${esc(dJour(d.faiteLe || d.le))}${d.faitePar === 'equivaldi' ? ' par EquiValdi' : ' par la gérante'}.</p>`;
+  return `<div class="abo-etat warn">${ic('image')}<div class="row-main"><b>Carte des prés à dessiner</b><span class="small">Demandée le ${esc(dJour(d.le))}${d.par && d.par.nom ? ' par ' + esc(d.par.nom) : ''}.</span>${d.note ? `<span class="small">« ${esc(d.note)} »</span>` : ''}</div>
+    <button type="button" class="btn small primary" data-act="adm-carte" data-sid="${esc(s.id)}">${ic('edit', 'sm')}Dessiner la carte</button></div>`;
+}
+ACT['adm-carte'] = d => { toast('Ouverture du plan…'); EQ.ouvrirAdmin(d.sid, 'carte'); };
 ACT['adm-quitter'] = () => { if (window.EQ) EQ.quitterAdmin(); };

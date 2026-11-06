@@ -1,7 +1,7 @@
 
 /* ---------- Données : copie locale + base de l'artifact ---------- */
 const COLS = ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches'];
-const S = { chevaux: {}, soins: {}, pres: {}, places: {}, entretiens: {}, foin: {}, concours: {}, seances: {}, taches: {}, cfg: null };
+const S = { chevaux: {}, soins: {}, pres: {}, places: {}, entretiens: {}, foin: {}, concours: {}, seances: {}, taches: {}, cfg: null, carte: null };
 /* Fiches des membres (version installable) : lues avec le carnet, jamais exportées ni effacées avec lui */
 const EXTRA = window.EQ_MODE ? ['membres'] : [];
 EXTRA.forEach(k => { S[k] = {}; });
@@ -59,7 +59,7 @@ async function connectUser() {
 async function resync(op) {
   if (!DB) return;
   try {
-    if (op.coll === 'config') { const s = await DB.doc('config/reglages').get(); S.cfg = s.exists ? clone(s.data()) : null; }
+    if (op.coll === 'config') { const s = await DB.doc('config/' + op.id).get(), v = s.exists ? clone(s.data()) : null; if (op.id === 'carte') S.carte = v; else S.cfg = v; }
     else {
       const s = await DB.collection(op.coll).doc(op.id).get();
       if (s.exists) { const o = clone(s.data()); o.id = s.id; S[op.coll][op.id] = o; } else delete S[op.coll][op.id];
@@ -85,6 +85,7 @@ function loadCache() {
   if (c && typeof c === 'object') {
     [...COLS, ...EXTRA].forEach(k => { S[k] = (c[k] && typeof c[k] === 'object') ? c[k] : {}; });
     S.cfg = c.cfg || null;
+    S.carte = c.carte || null;
   }
   dataV++;
   const o = lsGet(OUTBOX_KEY);
@@ -98,7 +99,7 @@ let cacheTimer = null;
 function saveCache() {
   clearTimeout(cacheTimer);
   cacheTimer = setTimeout(() => {
-    const o = { cfg: S.cfg };
+    const o = { cfg: S.cfg, carte: S.carte };
     [...COLS, ...EXTRA].forEach(k => { o[k] = S[k]; });
     lsSet(CACHE_KEY, o);
   }, 200);
@@ -106,7 +107,7 @@ function saveCache() {
 const saveOutbox = () => lsSet(OUTBOX_KEY, outbox);
 
 function applyOp(o) {
-  if (o.coll === 'config') { S.cfg = o.op === 'set' ? o.data : null; return; }
+  if (o.coll === 'config') { if (o.id === 'carte') S.carte = o.op === 'set' ? o.data : null; else S.cfg = o.op === 'set' ? o.data : null; return; }
   if (!S[o.coll]) return;
   if (o.op === 'set') S[o.coll][o.id] = o.data; else delete S[o.coll][o.id];
 }
@@ -137,6 +138,11 @@ function del(coll, id) {
 function putCfg(c) {
   S.cfg = clone(c);
   queue('config', 'reglages', 'set', S.cfg);
+}
+/* La carte des prés de l'écurie : le plan publié et le tracé en cours (65-carte-editeur.js) */
+function putCarte(c) {
+  S.carte = clone(c);
+  queue('config', 'carte', 'set', S.carte);
 }
 function queue(coll, id, op, data) {
   dataV++;
@@ -227,14 +233,15 @@ function subscribe(coll) {
   };
   make();
 }
-function subscribeCfg() {
+/* Les documents de config/ suivis en direct : les réglages (S.cfg) et la carte des prés (S.carte) */
+function subscribeCfg(id = 'reglages', cle = 'cfg') {
   const make = () => {
     if (!DB) return;
     try {
-      DB.doc('config/reglages').onSnapshot(snap => {
-        if (outbox.some(o => o.k === 'config/reglages')) return;
-        if (snap.exists) S.cfg = clone(snap.data());
-        else if (!(snap.metadata && snap.metadata.fromCache)) S.cfg = null;
+      DB.doc('config/' + id).onSnapshot(snap => {
+        if (outbox.some(o => o.k === 'config/' + id)) return;
+        if (snap.exists) S[cle] = clone(snap.data());
+        else if (!(snap.metadata && snap.metadata.fromCache)) S[cle] = null;
         dataV++;
         saveCache();
         rerenderSoon();
@@ -252,6 +259,7 @@ async function connect() {
   sync.mode = 'cloud';
   [...COLS, ...EXTRA].forEach(subscribe);
   subscribeCfg();
+  subscribeCfg('carte', 'carte');
   flushSoon(50);
   updateSync();
 }

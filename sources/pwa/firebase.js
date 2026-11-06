@@ -35,6 +35,7 @@ const K = {
   invitation: 'equivaldi:invitation',          // code d'un lien ouvert, gardé pendant l'inscription
   migration: 'equivaldi:migration:sid',        // mise à jour en cours : { uid, sid, nom, commune }
   avis: 'equivaldi:avis',                      // message à montrer après un rechargement
+  apres: 'equivaldi:apres',                    // écran à ouvrir après le rechargement (administration : 'carte')
   cache: sid => 'carnet-ecurie:cache:v1:' + sid,
   file: sid => 'carnet-ecurie:outbox:v1:' + sid
 };
@@ -290,7 +291,7 @@ const retirerDeLIndex = sids => {
 // Accès réel à une écurie : sa fiche et sa propre fiche de membre (refusé = plus membre)
 const ecurieDe = (sid, d, role, fantome = false) => ({
   id: sid, nom: d.nom || '', commune: d.commune || '', role: ROLES[role] ? role : 'lecture', crottinsDepuis: d.crottinsDepuis || '',
-  creeLe: d.creeLe || null, abonnement: d.abonnement || null, gerante: d.gerante || '', fantome
+  creeLe: d.creeLe || null, abonnement: d.abonnement || null, gerante: d.gerante || '', carteDemande: d.carteDemande || null, fantome
 });
 async function acces(sid, o = {}) {
   try {
@@ -328,7 +329,7 @@ function ouvrirHorsLigne(u, local) {
   const r = local.sid ? lis(K.role(local.sid)) : null;
   if (!r || r.uid !== u.uid || window.EQ_SID !== local.sid) return false;
   IDX = IDX || { ecuries: Object.fromEntries((local.ecuries || []).map(x => [x.id, { nom: x.nom, role: x.role }])), derniere: local.sid };
-  demarrer(u, { id: local.sid, nom: local.nom, commune: local.commune, role: r.role, crottinsDepuis: local.crottinsDepuis, creeLe: local.creeLe, abonnement: local.abonnement || null, gerante: local.gerante || '', fantome: !!local.fantome }, { horsLigne: true });
+  demarrer(u, { id: local.sid, nom: local.nom, commune: local.commune, role: r.role, crottinsDepuis: local.crottinsDepuis, creeLe: local.creeLe, abonnement: local.abonnement || null, gerante: local.gerante || '', carteDemande: local.carteDemande || null, fantome: !!local.fantome }, { horsLigne: true });
   return true;
 }
 async function parcours(u, local) {
@@ -392,7 +393,7 @@ function demarrer(u, e, o = {}) {
   const fantome = !!(e.fantome && ADMIN);
   OUV = {
     id: e.id, nom: e.nom || '', commune: e.commune || '', role: e.role, crottinsDepuis: e.crottinsDepuis || (e.creeLe ? isoJour(e.creeLe) : ''), creeLe: e.creeLe || null,
-    abonnement: e.abonnement || null, gerante: e.gerante || '', fantome
+    abonnement: e.abonnement || null, gerante: e.gerante || '', carteDemande: e.carteDemande || null, fantome
   };
   if (fantome) o = Object.assign({}, o, { sansIndex: true });
   const avant = IDX && IDX.ecuries[e.id] ? Object.assign({}, IDX.ecuries[e.id]) : null;
@@ -450,7 +451,7 @@ function suivreEcurie(sid) {
     if (!s.exists() || !OUV || OUV.id !== sid) return;
     const n = ecurieDe(sid, s.data() || {}, OUV.role, OUV.fantome);
     if (!n.crottinsDepuis && n.creeLe) n.crottinsDepuis = isoJour(n.creeLe);
-    const champs = ['nom', 'commune', 'crottinsDepuis', 'creeLe', 'abonnement', 'gerante'];
+    const champs = ['nom', 'commune', 'crottinsDepuis', 'creeLe', 'abonnement', 'gerante', 'carteDemande'];
     if (champs.every(k => JSON.stringify(n[k]) === JSON.stringify(OUV[k]))) return;
     champs.forEach(k => { OUV[k] = n[k]; });
     const l = lis(K.ecurie);
@@ -542,13 +543,21 @@ async function ecranAdmin(u) {
   show('<p class="auth-wait">Chargement des écuries…</p>');
   let l = [];
   try { l = await toutesEcuries(); } catch (e) { ecranSouci(u, e); return; }
+  // les cartes des prés demandées à EquiValdi d'abord (les plus anciennes en tête) : « Dessiner » ouvre l'éditeur
+  const cartes = l.filter(s => s.carteDemande && s.carteDemande.statut === 'demandee').sort((a, b) => a.carteDemande.le - b.carteDemande.le);
+  const jour = ms => new Date(ms).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
+  const aDessiner = cartes.length ? `<h3 class="auth-sous">Cartes des prés à dessiner</h3>
+      <div class="list">${cartes.map(s => `<button type="button" class="row" data-carte="${escH(s.id)}"><div class="row-main"><div class="row-t">${escH(s.nom || 'Sans nom')}</div><div class="row-s">${escH(['demandée le ' + jour(s.carteDemande.le), s.carteDemande.note ? '« ' + s.carteDemande.note + ' »' : ''].filter(Boolean).join(' · '))}</div></div><span class="pill warn">Dessiner</span></button>`).join('')}</div>
+      <h3 class="auth-sous">Toutes les écuries</h3>` : '';
   show(`<div class="form">
-      <h2 class="auth-t">Toutes les écuries</h2>
-      <p class="hint">Tu les ouvres sans apparaître dans leur équipe.</p>
+      <h2 class="auth-t">${cartes.length ? 'Administration' : 'Toutes les écuries'}</h2>
+      <p class="hint">Tu ouvres les écuries sans apparaître dans leur équipe.</p>
+      ${aDessiner}
       <div class="list">${l.map(s => `<button type="button" class="row" data-sid="${escH(s.id)}"><div class="row-main"><div class="row-t">${escH(s.nom || 'Sans nom')}</div><div class="row-s">${escH(s.commune || '')}</div></div></button>`).join('') || '<p class="hint">Aucune écurie pour le moment.</p>'}</div>
       <div class="auth-links"><button type="button" class="link" id="aBack">Retour</button></div>
     </div>`, root => {
     root.querySelectorAll('[data-sid]').forEach(b => b.addEventListener('click', () => ouvrirAdmin(b.dataset.sid)));
+    root.querySelectorAll('[data-carte]').forEach(b => b.addEventListener('click', () => ouvrirAdmin(b.dataset.carte, 'carte')));
     root.querySelector('#aBack').addEventListener('click', () => ecranAccueil(u));
   });
 }
@@ -1169,12 +1178,39 @@ async function gererAbonnement(sid, action, formule) {
   return a;
 }
 // ouvrir une écurie sans en être membre : rien n'est écrit dans son équipe ni dans l'index
-async function ouvrirAdmin(sid) {
+// (apres : 'carte' ouvre directement l'éditeur de la carte des prés, pour une carte demandée)
+async function ouvrirAdmin(sid, apres) {
   exigerAdmin();
+  if (apres) ecris(K.apres, apres);
   if (listeEcuries().some(x => x.id === sid)) return ouvrir(sid);
   const s = await getDoc(doc(fs, 'structures', sid));
   ecris(K.ecurie, { uid: U.uid, sid, nom: s.exists() ? (s.data() || {}).nom || '' : '', fantome: true, ecuries: listeEcuries() });
   location.reload();
+}
+/* ---------- Carte des prés : la gérante demande à EquiValdi de la dessiner ---------- */
+function majOuv(champs) {
+  Object.assign(OUV, champs);
+  const l = lis(K.ecurie);
+  if (l && l.sid === OUV.id) ecris(K.ecurie, Object.assign(l, champs));
+  window.EQ.ecurie = Object.assign({}, OUV);
+  notifier();
+}
+async function demanderCarte(note, par) {
+  exigerGerante();
+  if (OUV.fantome) throw erreur("L'administration dessine la carte elle-même.");
+  const v = { statut: 'demandee', le: Date.now(), par: { uid: U.uid, nom: String((par && par.nom) || nomDe(U)).trim().slice(0, 60) }, note: String(note || '').trim().slice(0, 800) };
+  await delai(updateDoc(doc(fs, 'structures', OUV.id), { carteDemande: v }), 15000);
+  majOuv({ carteDemande: v });
+  return v;
+}
+// la carte publiée (par la gérante ou par l'administration) : la demande est faite
+async function carteFaite() {
+  const d = OUV && OUV.carteDemande;
+  if (!d || d.statut !== 'demandee' || OUV.role !== 'gerante') return null;
+  const v = Object.assign({}, d, { statut: 'faite', faiteLe: Date.now(), faitePar: OUV.fantome ? 'equivaldi' : 'gerante' });
+  await delai(updateDoc(doc(fs, 'structures', OUV.id), { carteDemande: v }), 15000);
+  majOuv({ carteDemande: v });
+  return v;
 }
 async function quitterAdmin() {
   const x = listeEcuries();
@@ -1188,6 +1224,7 @@ window.EQ = {
   tarif: TARIF,
   payerFictif,
   toutesEcuries, equipeDe, gererAbonnement, ouvrirAdmin, quitterAdmin,
+  demanderCarte, carteFaite,
   deconnexion,
   ouvrir,
   creer: async v => { const e = await creer(v); await ouvrir(e.id); return e.id; },

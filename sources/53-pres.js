@@ -42,7 +42,8 @@ VIEWS.pres = () => {
   const vue = (ui.presVue || (window.EQ_MODE && premium() ? 'carte' : 'liste')) === 'carte' ? 'carte' : 'liste';
   const seg = segCtl('presVue', [['carte', premium() ? 'Carte' : `${ic('lock', 'sm')}Carte`], ['liste', 'Liste']], vue);
   // la carte est réservée aux écuries abonnées : sinon, aperçu flouté et de quoi s'abonner
-  if (vue === 'carte') return { title: 'Prés', eyebrow: 'Carte des prés', html: seg + (premium() ? carteHtml() : carteVerrouHtml()), fab: menuPres, fabLabel: 'Ajouter' };
+  // une écurie sans carte (elle se crée à partir d'un plan) voit l'invitation à la créer
+  if (vue === 'carte') return { title: 'Prés', eyebrow: 'Carte des prés', html: seg + (!premium() ? carteVerrouHtml() : prepPlan('ecurie') ? carteHtml() : carteAFaireHtml()), fab: menuPres, fabLabel: 'Ajouter' };
   if (!pres().length) return { title: 'Prés', eyebrow: 'Rotation de pâture', html: seg + emptyH('Aucun pré', 'Ajoute tes parcelles avec le bouton +, ou relie-les depuis la carte. Le carnet comptera les jours de pâture et de repos de chacune.'), fab: () => formPre(null), fabLabel: 'Nouveau pré' };
   return { title: 'Prés', eyebrow: 'Rotation de pâture', html: seg + presListe(), fab: menuPres, fabLabel: 'Ajouter' };
 };
@@ -166,7 +167,7 @@ function formPre(id, pre = {}, opts = {}) {
     ${fld('Surface (ha)', inp('f_surf', p.surface != null ? String(p.surface).replace('.', ',') : '', numAttr + ' placeholder="ex. 1,5"'))}
     <div id="w_rot"${sansRotation(p) ? ' hidden' : ''}><div class="grid2">${fld('Repos visé (jours)', inp('f_repos', p.repos, `inputmode="numeric" autocomplete="off" placeholder="${C.repos}"`))}${fld('Pâture max (jours)', inp('f_pat', p.paturage, `inputmode="numeric" autocomplete="off" placeholder="${C.paturage}"`))}</div>
     <p class="hint">Laisse vide pour garder les valeurs des réglages : ${C.repos} jours de repos, ${C.paturage} jours de pâture.</p></div>
-    ${grp('Sur la carte', chips('carte', zonesOpts(p), (p.carte || (p.id && zoneDuPre(p))) ? [p.carte || zoneDuPre(p)] : [], { optional: true }), "Le numéro de la parcelle sur le plan (ou la piste, la carrière).")}
+    ${zonesOpts(p).length ? grp('Sur la carte', chips('carte', zonesOpts(p), (p.carte || (p.id && zoneDuPre(p))) ? [p.carte || zoneDuPre(p)] : [], { optional: true }), "Le numéro de la parcelle sur le plan (ou la piste, la carrière).") : ''}
     ${fld('Notes', area('f_notes', p.notes, 'rows="3" placeholder="Abreuvoir, abri, type d\'herbe, clôture…"'))}
     ${ex ? `<label class="check"><input type="checkbox" id="f_arch"${p.archive ? ' checked' : ''}> Archiver ce pré</label>` : ''}`;
   openSheet(ex ? 'Modifier' : 'Nouveau pré', body, {

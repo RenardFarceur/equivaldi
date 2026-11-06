@@ -44,11 +44,24 @@ Quand tu as au moins deux écuries, le nom court de celle qui est ouverte s'affi
 
 Le compte **bennizdu03@gmail.com** est l'administration EquiValdi : *Réglages* › *Administration* › *Toutes les écuries* (ou, s'il n'a pas d'écurie à lui, le bouton sur l'écran d'accueil). Pour chaque écurie : l'état de l'abonnement, la gérante, l'équipe, le dernier paiement, et *Ouvrir l'écurie*, *Prolonger l'essai d'un mois*, *Paiement reçu* (1 mois ou 1 an), *Passer à vie*, *Arrêter l'abonnement*.
 
+Les cartes des prés demandées par les gérantes apparaissent en tête (*Cartes des prés à dessiner*, avec leur note) : *Dessiner la carte* ouvre l'écurie directement sur l'outil de tracé, avec le plan envoyé ; une fois la carte publiée, la demande passe à « faite ».
+
 Une écurie ouverte par l'administration affiche « Admin » en haut et un bandeau. L'administration n'apparaît dans aucune équipe, aucun classement, aucune liste de personnes ; ce qu'elle note est signé « EquiValdi » dans le fil de l'équipe. Pour changer de compte d'administration : modifier l'adresse dans `firestore.rules` (fonction `admin`) et dans `sources/pwa/firebase.js` (`ADMIN_MAIL`), reconstruire, puis recoller les règles.
 
 ## Carte des prés
 
-Onglet *Prés* › *Carte* : le plan des prés (13 parcelles, la carrière, le verger, la piste, les abris et les abreuvoirs), en 3D isométrique ou en vue de dessus (bouton 3D / 2D, gardé sur chaque téléphone). La couleur de chaque parcelle dit où en est la rotation ; les chevaux y sont posés et changent de pré quand on les fait glisser (ou vont au box). Une parcelle se relie à un pré du carnet en la touchant (ou dans la fiche du pré, *Sur la carte*). La piste et la carrière sont des espaces sans temps de repos ni de pâture.
+Onglet *Prés* › *Carte* : la maquette des prés de l'écurie, en 3D isométrique ou en vue de dessus (bouton 3D / 2D, gardé sur chaque téléphone). La couleur de chaque parcelle dit où en est la rotation ; les chevaux y sont posés et changent de pré quand on les fait glisser (ou vont au box). Une parcelle se relie à un pré du carnet en la touchant (ou dans la fiche du pré, *Sur la carte*). La piste et la carrière sont des espaces sans temps de repos ni de pâture. La carte est réservée aux écuries abonnées (ou à vie).
+
+**Créer la carte de son écurie** (la gérante : *Créer ma carte*, puis *Modifier la carte* sous la carte) :
+
+1. **Le plan** : une vue du dessus de tous les prés (capture de Géoportail conseillée, vue satellite ou plan à l'échelle), avec une échelle visible, le nord en haut si possible. L'image est réduite (2 000 px au plus) et rangée dans l'écurie.
+2. **L'échelle** : toucher les deux bouts de la barre d'échelle (ou d'une longueur connue), indiquer sa longueur, *Valider l'échelle*.
+3. **Les espaces** : *Pré* (numéroté ; *Pré suivant* pour enchaîner), *Carrière*, *Piste* (le milieu, de point en point ; une boucle se ferme sur le premier point ; largeur réglable), *Verger*, *Abri* (deux coins opposés), *Abreuvoir*. On touche les coins ; ceux des prés voisins s'attrapent tout seuls. Toucher un espace le choisit : coins à faire glisser, points du milieu pour en ajouter, numéro, *Supprimer*.
+4. **La maquette** : l'appli remet le parcellaire d'équerre et ajoute le socle, les pommiers du verger et les obstacles de la carrière ; *Tourner* change l'angle de vue, la vue de dessus reste orientée comme le plan. *Publier la carte* la montre à toute l'équipe, et peut ajouter au carnet les espaces qui n'y sont pas encore (Pré 1, Pré 2…).
+
+Le tracé s'enregistre au fil de l'eau : on peut s'arrêter et reprendre plus tard. L'écurie fondatrice garde sa carte d'origine (elle peut la refaire à partir d'un plan).
+
+**Ou EquiValdi la dessine** : une fois le plan envoyé, *EquiValdi la dessine pour moi*, avec une note (numéros des prés, où sont la piste, la carrière, les abris et les abreuvoirs ; le plus sûr est d'annoter la capture avant de l'envoyer). L'onglet *Prés* affiche « Ta carte est en préparation » jusqu'à ce qu'elle soit publiée.
 
 ## Points crottins
 

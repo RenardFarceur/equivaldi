@@ -116,6 +116,7 @@ function render() {
   updateSync();
   majCrottins();
   majCarte();
+  majEditeur();
 }
 let rrTimer = null;
 function rerenderSoon() { clearTimeout(rrTimer); rrTimer = setTimeout(render, 40); }

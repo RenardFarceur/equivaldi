@@ -1,15 +1,96 @@
 
 /* ---------- Carte des prés ----------
-   Le plan dessiné par Célia sur la vue aérienne, relevé en mètres : 13 parcelles, la carrière (2), le verger,
-   la piste, trois abris et deux abreuvoirs. Vue en 3D isométrique façon maquette, ou vue de dessus.
-   Chaque parcelle se relie à un pré du carnet : sa couleur dit où en est la rotation, les chevaux y sont posés
-   et changent de pré quand on les fait glisser. Repère : x le long du parcellaire, y en travers (mètres). */
-const PLAN = {"beta":23.59,"zones":[{"id":"p1","type":"pre","pts":[[72.7,-32.4],[62.7,-41.0],[38.6,-41.5],[34.8,-42.5],[21.9,-40.8],[20.5,-34.4],[20.5,-23.2],[23.8,-22.2],[70.6,-21.0],[72.9,-21.6],[73.5,-23.0]],"lab":[52.0,-31.4],"n":1,"aire":985},{"id":"p3","type":"pre","pts":[[82.0,10.0],[76.9,10.1],[74.3,9.0],[31.7,11.6],[30.2,21.7],[26.5,26.9],[34.3,27.3],[74.5,22.4],[81.5,22.4],[83.0,19.5]],"lab":[38.2,18.9],"n":3,"aire":754},{"id":"p4","type":"pre","pts":[[121.4,26.9],[120.1,26.1],[104.8,26.5],[94.9,25.0],[74.8,25.1],[43.2,27.2],[23.3,30.4],[13.3,30.9],[11.3,32.9],[11.0,42.6],[12.9,43.6],[43.3,41.9],[48.1,42.7],[76.5,41.5],[114.6,41.5],[120.1,40.2],[121.1,37.8]],"lab":[80.3,33.3],"n":4,"aire":1658},{"id":"p5","type":"pre","pts":[[123.9,-48.4],[111.7,-50.5],[106.6,-49.0],[99.1,-49.4],[93.4,-48.2],[92.9,-38.4],[90.9,-35.5],[85.2,-32.1],[84.9,-27.6],[90.4,-26.8],[103.9,-28.9],[119.7,-28.5],[124.5,-29.9],[125.4,-31.4],[125.5,-37.5]],"lab":[112.6,-39.6],"n":5,"aire":720},{"id":"p6","type":"pre","pts":[[123.5,-27.6],[106.0,-27.7],[93.0,-25.7],[84.5,-25.7],[85.7,-6.9],[88.5,-5.2],[89.3,0.8],[122.0,1.5],[124.0,-7.3]],"lab":[109.0,-13.1],"n":6,"aire":1052},{"id":"p7","type":"pre","pts":[[121.2,3.4],[118.5,2.5],[89.9,2.7],[88.4,5.7],[83.3,11.0],[83.7,22.2],[108.6,24.2],[121.8,23.4],[122.6,19.5]],"lab":[109.8,13.4],"n":7,"aire":768},{"id":"p8","type":"pre","pts":[[-9.4,13.8],[-10.1,17.5],[-8.1,60.6],[-6.6,62.5],[2.3,61.4],[4.4,58.2],[5.1,36.7],[7.4,25.6],[6.2,20.4],[3.9,17.0],[-2.6,13.7]],"lab":[-1.1,25.8],"n":8,"aire":677},{"id":"p9","type":"pre","pts":[[-12.4,13.6],[-26.5,13.8],[-27.1,15.2],[-26.2,34.5],[-26.9,56.0],[-26.1,57.3],[-26.3,62.7],[-25.1,63.5],[-9.7,62.7],[-9.1,61.4],[-11.2,14.2]],"lab":[-18.1,51.4],"n":9,"aire":811},{"id":"p10","type":"pre","pts":[[-29.9,13.5],[-45.3,13.5],[-45.8,14.7],[-44.9,50.2],[-43.9,62.8],[-42.1,63.6],[-28.8,63.5],[-28.2,62.2],[-27.3,32.9],[-28.5,21.6],[-28.1,14.3]],"lab":[-36.4,32.2],"n":10,"aire":860},{"id":"p11","type":"pre","pts":[[-50.5,13.1],[-53.3,14.7],[-65.6,15.6],[-66.6,17.3],[-64.1,60.8],[-65.1,63.1],[-63.9,63.6],[-45.3,63.3],[-44.6,61.8],[-46.3,48.4],[-47.0,14.7]],"lab":[-56.7,25.2],"n":11,"aire":930},{"id":"p12","type":"pre","pts":[[-53.9,9.1],[-55.5,8.4],[-78.1,9.3],[-83.7,27.4],[-88.2,51.9],[-92.5,62.2],[-69.7,63.0],[-66.1,61.7],[-65.3,59.8],[-67.9,25.2],[-67.7,15.5],[-66.6,14.5],[-52.7,13.3],[-52.1,12.0]],"lab":[-77.0,51.2],"n":12,"aire":1052},{"id":"p13","type":"pre","pts":[[5.9,-40.1],[-18.4,-41.1],[-23.3,-36.3],[-26.1,-36.3],[-26.8,-30.0],[-29.2,-27.6],[-33.9,-26.6],[-39.5,-28.1],[-40.2,-24.9],[-39.4,-8.7],[-40.6,2.7],[-14.2,3.8],[-2.0,2.1],[6.5,3.0],[7.4,-1.6],[5.6,-15.7],[6.6,-25.5]],"lab":[-13.7,-16.1],"n":13,"aire":1821},{"id":"p14","type":"pre","pts":[[-53.5,-38.4],[-83.1,-40.2],[-83.9,-36.3],[-83.1,-18.9],[-81.3,-6.9],[-82.2,4.9],[-73.9,6.2],[-54.5,5.6],[-53.8,4.0],[-54.7,-14.2],[-53.1,-22.8]],"lab":[-68.1,-22.1],"n":14,"aire":1301},{"id":"p15","type":"pre","pts":[[-87.2,-39.4],[-93.2,-41.3],[-118.5,-43.7],[-123.0,-28.1],[-135.9,6.2],[-125.5,6.6],[-108.4,4.2],[-94.3,5.7],[-86.0,5.4],[-85.1,2.5],[-85.2,-15.6],[-87.5,-31.8]],"lab":[-106.1,-16.0],"n":15,"aire":1943},{"id":"carriere","type":"carriere","pts":[[60.8,-17.5],[36.2,-19.9],[18.7,-20.0],[17.8,-18.5],[18.8,-17.6],[17.7,-11.8],[18.3,0.2],[24.1,2.4],[38.0,2.2],[60.5,-0.1],[61.4,-5.8]],"lab":[30.1,-8.7],"n":2,"aire":889},{"id":"verger","type":"verger","pts":[[73.8,-16.6],[72.0,-17.3],[63.9,-16.9],[63.4,-4.0],[70.1,-3.4],[73.7,-5.8],[74.7,-8.4]],"lab":[68.8,-9.6],"aire":137},{"id":"piste","type":"piste","pts":[[91.3,-42.8],[82.5,-46.2],[78.8,-50.1],[77.1,-50.9],[66.3,-50.2],[45.5,-51.6],[25.6,-50.9],[19.6,-51.6],[9.9,-50.8],[8.5,-49.2],[7.7,-38.8],[8.4,-25.4],[7.5,-14.8],[9.0,-1.1],[7.0,3.6],[-13.7,5.4],[-37.3,4.9],[-41.2,3.2],[-42.3,0.1],[-42.0,-24.1],[-39.9,-28.8],[-31.9,-29.0],[-29.5,-30.3],[-27.5,-35.8],[-22.9,-38.9],[-21.6,-45.1],[-22.7,-53.8],[-24.0,-56.2],[-27.1,-57.1],[-29.9,-55.5],[-30.8,-53.3],[-29.9,-45.4],[-30.8,-42.8],[-32.4,-41.2],[-36.3,-40.3],[-43.2,-42.6],[-47.1,-42.9],[-50.0,-41.6],[-51.1,-39.7],[-51.8,8.6],[-50.7,10.9],[-49.2,11.6],[-0.5,12.1],[3.8,14.2],[6.9,17.2],[8.9,21.8],[9.1,28.2],[11.1,29.5],[20.0,27.8],[25.2,24.5],[31.3,10.5],[33.6,9.6],[49.1,8.2],[61.9,8.4],[73.1,7.0],[78.8,8.3],[81.6,7.2],[83.6,7.4],[85.8,5.8],[87.6,1.6],[87.8,-1.5],[84.2,-7.8],[82.7,-19.9],[83.5,-24.9],[83.0,-27.0],[84.8,-32.8],[90.4,-37.6]],"lab":[-8.5,8.4],"trous":[[[73.8,-33.4],[76.1,-24.6],[77.2,-7.8],[76.2,-5.0],[72.3,-1.5],[70.1,-0.6],[61.5,-0.8],[60.1,0.9],[37.6,3.0],[23.5,3.1],[17.6,0.6],[16.9,-11.7],[18.0,-17.5],[17.0,-18.4],[17.8,-20.2],[17.2,-24.6],[18.0,-37.6],[18.9,-41.0],[20.6,-42.6],[34.5,-44.9],[62.8,-43.3],[67.1,-40.5]]],"aire":3588}],"abris":[{"c":[84.6,-47.3],"w":13.6,"h":7.2},{"c":[-33.3,-44.1],"w":6.9,"h":13.9},{"c":[-24.6,-33.8],"w":3.5,"h":4.0}],"eau":[{"c":[73.1,-45.3]},{"c":[-43.1,-38.1]}],"arbres":[[66.6,-14.5],[72.9,-11.8],[68.3,-10.0],[63.9,-8.5],[70.2,-5.7]],"obstacles":[[29.9,-8.7],[48.3,-8.6]],"socle":[[129.8,-45.2],[127.2,-52.2],[121.1,-54.3],[112.2,-55.4],[102.8,-53.7],[98.2,-54.3],[91.5,-52.8],[88.2,-49.1],[77.6,-55.8],[40.0,-56.5],[10.3,-56.0],[4.9,-53.2],[3.2,-45.7],[-16.5,-46.1],[-19.0,-57.5],[-20.7,-59.9],[-25.8,-62.1],[-30.5,-61.1],[-34.1,-58.3],[-36.1,-52.1],[-35.5,-45.3],[-46.6,-47.8],[-54.8,-43.9],[-82.6,-45.1],[-86.0,-44.2],[-92.7,-46.2],[-119.2,-48.7],[-121.2,-47.9],[-127.0,-34.5],[-140.9,6.9],[-139.2,10.0],[-135.2,11.7],[-108.2,9.2],[-94.8,10.6],[-84.0,10.0],[-88.5,26.2],[-92.6,48.3],[-97.8,60.8],[-95.8,65.9],[-91.8,67.6],[-25.6,68.5],[3.2,66.3],[6.7,64.1],[9.3,59.4],[9.7,47.6],[12.4,48.5],[43.0,47.0],[118.4,45.7],[126.4,27.3],[127.3,22.5],[126.2,7.5],[129.0,-6.9],[128.5,-26.8],[130.5,-31.8]]};
-const ZONES = new Map(PLAN.zones.map(z => [z.id, z]));
+   Chaque écurie a son plan, relevé en mètres : ses parcelles numérotées, carrière, piste, verger, abris et abreuvoirs.
+   Vue en 3D isométrique façon maquette, ou vue de dessus. Chaque parcelle se relie à un pré du carnet : sa couleur
+   dit où en est la rotation, les chevaux y sont posés et changent de pré quand on les fait glisser.
+   Repère : x le long du parcellaire, y en travers (mètres) ; beta tourne la vue de dessus comme le plan d'origine.
+   Le plan de l'écurie fondatrice (dessiné par Célia sur la vue aérienne : 13 parcelles, la carrière (2), le verger,
+   la piste, trois abris et deux abreuvoirs) est ci-dessous ; les autres écuries créent le leur (65-carte-editeur.js). */
+const PLAN_VALDI = {"beta":23.59,"zones":[{"id":"p1","type":"pre","pts":[[72.7,-32.4],[62.7,-41.0],[38.6,-41.5],[34.8,-42.5],[21.9,-40.8],[20.5,-34.4],[20.5,-23.2],[23.8,-22.2],[70.6,-21.0],[72.9,-21.6],[73.5,-23.0]],"lab":[52.0,-31.4],"n":1,"aire":985},{"id":"p3","type":"pre","pts":[[82.0,10.0],[76.9,10.1],[74.3,9.0],[31.7,11.6],[30.2,21.7],[26.5,26.9],[34.3,27.3],[74.5,22.4],[81.5,22.4],[83.0,19.5]],"lab":[38.2,18.9],"n":3,"aire":754},{"id":"p4","type":"pre","pts":[[121.4,26.9],[120.1,26.1],[104.8,26.5],[94.9,25.0],[74.8,25.1],[43.2,27.2],[23.3,30.4],[13.3,30.9],[11.3,32.9],[11.0,42.6],[12.9,43.6],[43.3,41.9],[48.1,42.7],[76.5,41.5],[114.6,41.5],[120.1,40.2],[121.1,37.8]],"lab":[80.3,33.3],"n":4,"aire":1658},{"id":"p5","type":"pre","pts":[[123.9,-48.4],[111.7,-50.5],[106.6,-49.0],[99.1,-49.4],[93.4,-48.2],[92.9,-38.4],[90.9,-35.5],[85.2,-32.1],[84.9,-27.6],[90.4,-26.8],[103.9,-28.9],[119.7,-28.5],[124.5,-29.9],[125.4,-31.4],[125.5,-37.5]],"lab":[112.6,-39.6],"n":5,"aire":720},{"id":"p6","type":"pre","pts":[[123.5,-27.6],[106.0,-27.7],[93.0,-25.7],[84.5,-25.7],[85.7,-6.9],[88.5,-5.2],[89.3,0.8],[122.0,1.5],[124.0,-7.3]],"lab":[109.0,-13.1],"n":6,"aire":1052},{"id":"p7","type":"pre","pts":[[121.2,3.4],[118.5,2.5],[89.9,2.7],[88.4,5.7],[83.3,11.0],[83.7,22.2],[108.6,24.2],[121.8,23.4],[122.6,19.5]],"lab":[109.8,13.4],"n":7,"aire":768},{"id":"p8","type":"pre","pts":[[-9.4,13.8],[-10.1,17.5],[-8.1,60.6],[-6.6,62.5],[2.3,61.4],[4.4,58.2],[5.1,36.7],[7.4,25.6],[6.2,20.4],[3.9,17.0],[-2.6,13.7]],"lab":[-1.1,25.8],"n":8,"aire":677},{"id":"p9","type":"pre","pts":[[-12.4,13.6],[-26.5,13.8],[-27.1,15.2],[-26.2,34.5],[-26.9,56.0],[-26.1,57.3],[-26.3,62.7],[-25.1,63.5],[-9.7,62.7],[-9.1,61.4],[-11.2,14.2]],"lab":[-18.1,51.4],"n":9,"aire":811},{"id":"p10","type":"pre","pts":[[-29.9,13.5],[-45.3,13.5],[-45.8,14.7],[-44.9,50.2],[-43.9,62.8],[-42.1,63.6],[-28.8,63.5],[-28.2,62.2],[-27.3,32.9],[-28.5,21.6],[-28.1,14.3]],"lab":[-36.4,32.2],"n":10,"aire":860},{"id":"p11","type":"pre","pts":[[-50.5,13.1],[-53.3,14.7],[-65.6,15.6],[-66.6,17.3],[-64.1,60.8],[-65.1,63.1],[-63.9,63.6],[-45.3,63.3],[-44.6,61.8],[-46.3,48.4],[-47.0,14.7]],"lab":[-56.7,25.2],"n":11,"aire":930},{"id":"p12","type":"pre","pts":[[-53.9,9.1],[-55.5,8.4],[-78.1,9.3],[-83.7,27.4],[-88.2,51.9],[-92.5,62.2],[-69.7,63.0],[-66.1,61.7],[-65.3,59.8],[-67.9,25.2],[-67.7,15.5],[-66.6,14.5],[-52.7,13.3],[-52.1,12.0]],"lab":[-77.0,51.2],"n":12,"aire":1052},{"id":"p13","type":"pre","pts":[[5.9,-40.1],[-18.4,-41.1],[-23.3,-36.3],[-26.1,-36.3],[-26.8,-30.0],[-29.2,-27.6],[-33.9,-26.6],[-39.5,-28.1],[-40.2,-24.9],[-39.4,-8.7],[-40.6,2.7],[-14.2,3.8],[-2.0,2.1],[6.5,3.0],[7.4,-1.6],[5.6,-15.7],[6.6,-25.5]],"lab":[-13.7,-16.1],"n":13,"aire":1821},{"id":"p14","type":"pre","pts":[[-53.5,-38.4],[-83.1,-40.2],[-83.9,-36.3],[-83.1,-18.9],[-81.3,-6.9],[-82.2,4.9],[-73.9,6.2],[-54.5,5.6],[-53.8,4.0],[-54.7,-14.2],[-53.1,-22.8]],"lab":[-68.1,-22.1],"n":14,"aire":1301},{"id":"p15","type":"pre","pts":[[-87.2,-39.4],[-93.2,-41.3],[-118.5,-43.7],[-123.0,-28.1],[-135.9,6.2],[-125.5,6.6],[-108.4,4.2],[-94.3,5.7],[-86.0,5.4],[-85.1,2.5],[-85.2,-15.6],[-87.5,-31.8]],"lab":[-106.1,-16.0],"n":15,"aire":1943},{"id":"carriere","type":"carriere","pts":[[60.8,-17.5],[36.2,-19.9],[18.7,-20.0],[17.8,-18.5],[18.8,-17.6],[17.7,-11.8],[18.3,0.2],[24.1,2.4],[38.0,2.2],[60.5,-0.1],[61.4,-5.8]],"lab":[30.1,-8.7],"n":2,"aire":889},{"id":"verger","type":"verger","pts":[[73.8,-16.6],[72.0,-17.3],[63.9,-16.9],[63.4,-4.0],[70.1,-3.4],[73.7,-5.8],[74.7,-8.4]],"lab":[68.8,-9.6],"aire":137},{"id":"piste","type":"piste","pts":[[91.3,-42.8],[82.5,-46.2],[78.8,-50.1],[77.1,-50.9],[66.3,-50.2],[45.5,-51.6],[25.6,-50.9],[19.6,-51.6],[9.9,-50.8],[8.5,-49.2],[7.7,-38.8],[8.4,-25.4],[7.5,-14.8],[9.0,-1.1],[7.0,3.6],[-13.7,5.4],[-37.3,4.9],[-41.2,3.2],[-42.3,0.1],[-42.0,-24.1],[-39.9,-28.8],[-31.9,-29.0],[-29.5,-30.3],[-27.5,-35.8],[-22.9,-38.9],[-21.6,-45.1],[-22.7,-53.8],[-24.0,-56.2],[-27.1,-57.1],[-29.9,-55.5],[-30.8,-53.3],[-29.9,-45.4],[-30.8,-42.8],[-32.4,-41.2],[-36.3,-40.3],[-43.2,-42.6],[-47.1,-42.9],[-50.0,-41.6],[-51.1,-39.7],[-51.8,8.6],[-50.7,10.9],[-49.2,11.6],[-0.5,12.1],[3.8,14.2],[6.9,17.2],[8.9,21.8],[9.1,28.2],[11.1,29.5],[20.0,27.8],[25.2,24.5],[31.3,10.5],[33.6,9.6],[49.1,8.2],[61.9,8.4],[73.1,7.0],[78.8,8.3],[81.6,7.2],[83.6,7.4],[85.8,5.8],[87.6,1.6],[87.8,-1.5],[84.2,-7.8],[82.7,-19.9],[83.5,-24.9],[83.0,-27.0],[84.8,-32.8],[90.4,-37.6]],"lab":[-8.5,8.4],"trous":[[[73.8,-33.4],[76.1,-24.6],[77.2,-7.8],[76.2,-5.0],[72.3,-1.5],[70.1,-0.6],[61.5,-0.8],[60.1,0.9],[37.6,3.0],[23.5,3.1],[17.6,0.6],[16.9,-11.7],[18.0,-17.5],[17.0,-18.4],[17.8,-20.2],[17.2,-24.6],[18.0,-37.6],[18.9,-41.0],[20.6,-42.6],[34.5,-44.9],[62.8,-43.3],[67.1,-40.5]]],"aire":3588}],"abris":[{"c":[84.6,-47.3],"w":13.6,"h":7.2},{"c":[-33.3,-44.1],"w":6.9,"h":13.9},{"c":[-24.6,-33.8],"w":3.5,"h":4.0}],"eau":[{"c":[73.1,-45.3]},{"c":[-43.1,-38.1]}],"arbres":[[66.6,-14.5],[72.9,-11.8],[68.3,-10.0],[63.9,-8.5],[70.2,-5.7]],"obstacles":[[29.9,-8.7],[48.3,-8.6]],"socle":[[129.8,-45.2],[127.2,-52.2],[121.1,-54.3],[112.2,-55.4],[102.8,-53.7],[98.2,-54.3],[91.5,-52.8],[88.2,-49.1],[77.6,-55.8],[40.0,-56.5],[10.3,-56.0],[4.9,-53.2],[3.2,-45.7],[-16.5,-46.1],[-19.0,-57.5],[-20.7,-59.9],[-25.8,-62.1],[-30.5,-61.1],[-34.1,-58.3],[-36.1,-52.1],[-35.5,-45.3],[-46.6,-47.8],[-54.8,-43.9],[-82.6,-45.1],[-86.0,-44.2],[-92.7,-46.2],[-119.2,-48.7],[-121.2,-47.9],[-127.0,-34.5],[-140.9,6.9],[-139.2,10.0],[-135.2,11.7],[-108.2,9.2],[-94.8,10.6],[-84.0,10.0],[-88.5,26.2],[-92.6,48.3],[-97.8,60.8],[-95.8,65.9],[-91.8,67.6],[-25.6,68.5],[3.2,66.3],[6.7,64.1],[9.3,59.4],[9.7,47.6],[12.4,48.5],[43.0,47.0],[118.4,45.7],[126.4,27.3],[127.3,22.5],[126.2,7.5],[129.0,-6.9],[128.5,-26.8],[130.5,-31.8]]};
+PLAN_VALDI.zones.forEach(z => { if (z.type === 'verger') z.desc = 'Les pommiers, au bout de la carrière'; });
+let PLAN = PLAN_VALDI, ZONES = new Map(PLAN.zones.map(z => [z.id, z]));
 const zoneDe = id => ZONES.get(id) || null;
-const zoneNom = z => z.type === 'pre' ? `Parcelle ${z.n}` : z.type === 'carriere' ? 'Carrière' : z.type === 'piste' ? 'Piste' : 'Verger';
+const NOMS_ZONE = { carriere: 'Carrière', piste: 'Piste', verger: 'Verger' };
+const zoneNom = z => z.nom || (z.type === 'pre' ? `Parcelle ${z.n}` : NOMS_ZONE[z.type] || 'Espace');
 const zoneCourt = z => z.type === 'pre' ? String(z.n) : zoneNom(z);
 const zoneHa = z => Math.round(z.aire / 100) / 100;
+
+/* ---------- Quel plan : celui de l'écurie, l'aperçu du tracé en cours, ou la démonstration ----------
+   La carte publiée de l'écurie (config/carte) ; à défaut, l'écurie fondatrice garde le plan d'origine (et le carnet
+   partagé sur claude.ai aussi). La démonstration (floutée, sous un verrou ou une invitation) montre ce plan d'origine. */
+const planOk = p => !!p && Array.isArray(p.zones) && p.zones.length > 0 && Array.isArray(p.socle) && p.socle.length >= 3;
+/* Une carte lue dans la base est remise au propre avant d'être dessinée (tout membre « Peut modifier » écrit
+   config/carte) : identifiants simples, nombres, textes sans balises ni guillemets. */
+const PLAN_TYPES = ['pre', 'carriere', 'piste', 'verger'];
+const nbOk = v => typeof v === 'number' && isFinite(v);
+const ptOk = q => Array.isArray(q) && nbOk(q[0]) && nbOk(q[1]) ? [q[0], q[1]] : null;
+const ptsOk = (l, max = 4000) => Array.isArray(l) ? l.slice(0, max).map(ptOk).filter(Boolean) : [];
+const texteOk = (t, n) => typeof t === 'string' ? t.replace(/[<>"&]/g, '').replace(/'/g, '’').trim().slice(0, n) : '';
+function nettoiePlan(p) {
+  if (!p || typeof p !== 'object' || !Array.isArray(p.zones)) return null;
+  const vus = new Set();
+  const zones = p.zones.slice(0, 300).map(z => {
+    if (!z || !PLAN_TYPES.includes(z.type) || typeof z.id !== 'string' || !/^[a-z0-9-]{1,24}$/.test(z.id) || vus.has(z.id)) return null;
+    const pts = ptsOk(z.pts);
+    if (pts.length < 3 || (z.type === 'pre' && !nbOk(z.n))) return null;
+    const o = { id: z.id, type: z.type, pts, aire: nbOk(z.aire) ? Math.max(0, z.aire) : 0, lab: ptOk(z.lab) || pts[0] };
+    if (z.type === 'pre') o.n = Math.round(z.n);
+    const nom = texteOk(z.nom, 40), desc = texteOk(z.desc, 80);
+    if (nom) o.nom = nom;
+    if (desc) o.desc = desc;
+    const trous = Array.isArray(z.trous) ? z.trous.slice(0, 20).map(r => ptsOk(r)).filter(r => r.length >= 3) : [];
+    if (trous.length) o.trous = trous;
+    vus.add(z.id);
+    return o;
+  }).filter(Boolean);
+  const socle = ptsOk(p.socle), liste = (l, n) => Array.isArray(l) ? l.slice(0, n) : [];
+  if (!zones.length || socle.length < 3) return null;
+  return {
+    beta: nbOk(p.beta) ? p.beta : 0, zones, socle,
+    abris: liste(p.abris, 100).map(a => a && ptOk(a.c) && nbOk(a.w) && nbOk(a.h) ? { c: ptOk(a.c), w: Math.max(.5, a.w), h: Math.max(.5, a.h) } : null).filter(Boolean),
+    eau: liste(p.eau, 100).map(e => e && ptOk(e.c) ? { c: ptOk(e.c) } : null).filter(Boolean),
+    arbres: ptsOk(p.arbres, 400),
+    obstacles: liste(p.obstacles, 40).map(o => ptOk(o) ? (o[2] === 'x' ? [o[0], o[1], 'x'] : [o[0], o[1]]) : null).filter(Boolean)
+  };
+}
+let planNet = { cle: null, p: null };
+// la carte publiée de l'écurie, remise au propre une fois par publication
+function planEcurie() {
+  const c = S.carte && S.carte.plan;
+  if (!c) return null;
+  const cle = (S.carte.publie || 0) + ':' + (Array.isArray(c.zones) ? c.zones.length : 0);
+  if (planNet.cle !== cle) planNet = { cle, p: nettoiePlan(c) };
+  return planNet.p;
+}
+function planDe(src) {
+  if (src === 'apercu') return planOk(ED.apercu) ? ED.apercu : null;
+  if (src === 'demo') return PLAN_VALDI;
+  const c = planEcurie();
+  if (c) return c;
+  if (!window.EQ_MODE) return PLAN_VALDI;
+  const e = ecurieOuverte();
+  return e && e.abonnement && e.abonnement.statut === 'fondatrice' ? PLAN_VALDI : null;
+}
+// identité du plan (la copie locale est recopiée à chaque synchronisation : on compare la date de publication)
+function cleDe(src) {
+  if (src === 'apercu') return 'apercu:' + ED.apercuV;
+  if (src === 'demo') return 'demo';
+  return planEcurie() ? 'pub:' + planNet.cle : planDe(src) ? 'origine' : 'aucun';
+}
+let planCle = '';
+function prepPlan(src = 'ecurie') {
+  const cle = src + '|' + cleDe(src);
+  if (cle === planCle) return PLAN;
+  planCle = cle;
+  PLAN = planDe(src);
+  ZONES = new Map((PLAN ? PLAN.zones : []).map(z => [z.id, z]));
+  const b = (PLAN && PLAN.beta || 0) * Math.PI / 180;
+  MATS['2d'] = [Math.cos(b), Math.sin(b), -Math.sin(b), Math.cos(b)];
+  Object.assign(carte, { src, boites: {}, vues: { '3d': null, '2d': null }, sel: null, filtre: null, sig: '' });
+  lienMemo = null;
+  if (carte.svg) { carte.host = null; carte.svg = null; }   // la carte affichée se redessine avec le nouveau plan
+  return PLAN;
+}
 
 /* ---------- Parcelles du plan ↔ prés du carnet ----------
    Un lien enregistré sur le pré (carte) passe en premier ; à défaut, la piste et la carrière se trouvent par leur type,
@@ -20,7 +101,7 @@ function liensCarte() {
   if (lienMemo && lienMemo.v === dataV) return lienMemo.m;
   const m = new Map(), pris = new Set(), ps = pres();
   ps.forEach(p => { if (p.carte && ZONES.has(p.carte) && !m.has(p.carte)) { m.set(p.carte, p); pris.add(p.id); } });
-  PLAN.zones.forEach(z => {
+  (PLAN ? PLAN.zones : []).forEach(z => {
     if (m.has(z.id) || z.type === 'verger') return;
     const c = ps.filter(p => !pris.has(p.id) && !p.carte && (z.type === 'pre'
       ? !sansRotation(p) && numNom(p.nom) === z.n
@@ -30,9 +111,10 @@ function liensCarte() {
   lienMemo = { v: dataV, m };
   return m;
 }
-const zoneDuPre = p => { for (const [k, v] of liensCarte()) if (v.id === p.id) return k; return null; };
-/* Choix de la parcelle dans la fiche d'un pré */
+const zoneDuPre = p => { prepPlan('ecurie'); for (const [k, v] of liensCarte()) if (v.id === p.id) return k; return null; };
+/* Choix de la parcelle dans la fiche d'un pré (rien si l'écurie n'a pas encore de carte) */
 function zonesOpts(p) {
+  if (!prepPlan('ecurie')) return [];
   const L = liensCarte();
   return PLAN.zones.filter(z => z.type !== 'verger').map(z => {
     const o = L.get(z.id), autre = o && (!p || o.id !== p.id);
@@ -67,8 +149,8 @@ function etatTxt(z) {
    Vue de dessus : orientée comme le plan (nord en haut). 3D : isométrique, le parcellaire dans les axes.
    X = a·x + b·y ; Y = c·x + d·y − z */
 const ISO_C = Math.cos(Math.PI / 6);
-const PLAN_B = PLAN.beta * Math.PI / 180;
-const MATS = { '3d': [ISO_C, -ISO_C, .5, .5], '2d': [Math.cos(PLAN_B), Math.sin(PLAN_B), -Math.sin(PLAN_B), Math.cos(PLAN_B)] };
+const PLAN_B = PLAN_VALDI.beta * Math.PI / 180;
+const MATS = { '3d': [ISO_C, -ISO_C, .5, .5], '2d': [Math.cos(PLAN_B), Math.sin(PLAN_B), -Math.sin(PLAN_B), Math.cos(PLAN_B)] };   // '2d' suit le plan affiché (prepPlan)
 const PJ = (mode, x, y, z = 0) => { const m = MATS[mode]; return [m[0] * x + m[1] * y, m[2] * x + m[3] * y - (mode === '3d' ? z : 0)]; };
 const f1 = v => Math.round(v * 10) / 10;
 const pt = (mode, x, y, z) => PJ(mode, x, y, z).map(f1).join(' ');
@@ -130,10 +212,11 @@ function dessinSol(mode) {
     h += `<g class="c-cotes">${cotes(PLAN.socle, 0, -HAUT.socle, 'c-terre')}</g>`;
   }
   h += `<path class="c-socle" d="${chemin(mode, PLAN.socle)}"/>`;
-  // la piste, en sable, avec des traces de sabots
-  const pi = zoneDe('piste');
-  const traces = semis(pi, 140, 7, .6).map(([x, y]) => { const [X, Y] = PJ(mode, x, y); return `M${f1(X - .45)} ${f1(Y)}h.9`; }).join('');
-  h += `<g class="z zt-piste" data-zone="piste"><path class="z-top" fill-rule="evenodd" d="${chemin(mode, pi.pts)}${(pi.trous || []).map(t => chemin(mode, t)).join('')}"/><path class="c-traces" d="${traces}"/></g>`;
+  // les pistes, en sable, avec des traces de sabots
+  PLAN.zones.filter(z => z.type === 'piste').forEach((pi, i) => {
+    const traces = semis(pi, Math.max(24, Math.min(220, Math.round(pi.aire / 25))), 7 + i * 13, .6).map(([x, y]) => { const [X, Y] = PJ(mode, x, y); return `M${f1(X - .45)} ${f1(Y)}h.9`; }).join('');
+    h += `<g class="z zt-piste" data-zone="${pi.id}"><path class="z-top" fill-rule="evenodd" d="${chemin(mode, pi.pts)}${(pi.trous || []).map(t => chemin(mode, t)).join('')}"/><path class="c-traces" d="${traces}"/></g>`;
+  });
   // les parcelles, la carrière et le verger : des dalles d'herbe (ou de sable) un peu en relief
   const zs = PLAN.zones.filter(z => z.type !== 'piste').map(z => ({ z, p: d3 ? Math.max(...z.pts.map(([x, y]) => x + y)) : 0 })).sort((a, b) => a.p - b.p);
   zs.forEach(({ z }, i) => {
@@ -166,7 +249,7 @@ function dessinObjets(mode) {
     });
   }
   // abris : murs en bois, toit en pente, ouverts devant
-  PLAN.abris.forEach(({ c: [cx, cy], w, h }) => {
+  (PLAN.abris || []).forEach(({ c: [cx, cy], w, h }) => {
     const x0 = cx - w / 2, x1 = cx + w / 2, y0 = cy - h / 2, y1 = cy + h / 2;
     if (!d3) {
       const P = (x, y) => pt('2d', x, y);
@@ -182,7 +265,7 @@ function dessinObjets(mode) {
       <path class="ab-rive" d="M${P(x1 + o, y0 - o, t + .15)}L${P(x1 + o, y1 + o, m - .15)}L${P(x1 + o, y1 + o, m - .55)}L${P(x1 + o, y0 - o, t - .25)}Z"/></g>`);
   });
   // abreuvoirs : un bac galvanisé plein d'eau
-  PLAN.eau.forEach(({ c: [cx, cy] }) => {
+  (PLAN.eau || []).forEach(({ c: [cx, cy] }) => {
     const x0 = cx - 1.3, x1 = cx + 1.3, y0 = cy - .55, y1 = cy + .55, a = HAUT.auge;
     if (!d3) {
       const P = (x, y) => pt('2d', x, y);
@@ -197,8 +280,8 @@ function dessinObjets(mode) {
       <path class="eau-o" d="M${P(x0 + .25, y0 + .2, a)}L${P(x1 - .25, y0 + .2, a)}L${P(x1 - .25, y1 - .2, a)}L${P(x0 + .25, y1 - .2, a)}Z"/></g>`);
   });
   // verger : des pommiers
-  const zv = zoneDe('verger'), hv = hautZone(zv);
-  PLAN.arbres.forEach(([x, y], i) => {
+  const hv = HAUT.tuile;
+  (PLAN.arbres || []).forEach(([x, y], i) => {
     const r = HAUT.houppier;
     const pommes = [[-.9, -.4], [.8, .3], [-.1, 1]].map(([dx, dy]) => `<circle class="pomme" cx="${f1(dx * r * .55)}" cy="${f1(dy * r * .55)}" r=".42"/>`).join('');
     if (!d3) {
@@ -209,18 +292,19 @@ function dessinObjets(mode) {
     const [X, Y] = PJ('3d', x, y, hv), hc = HAUT.tronc + r * .8;
     add(x, y, `<g class="c-arbre" transform="translate(${f1(X)} ${f1(Y)})"><ellipse class="arb-ombre" cx=".6" cy=".3" rx="${f1(r * 1.1)}" ry="${f1(r * .55)}"/><path class="arb-tronc" d="M0 0V${f1(-hc)}"/><g transform="translate(0 ${f1(-hc)})"><circle class="arb-h" r="${r}"/><circle class="arb-l" cx="-.9" cy="-.9" r="${f1(r * .45)}"/>${pommes}</g></g>`);
   });
-  // carrière : deux obstacles
-  const zc = zoneDe('carriere'), hc = hautZone(zc);
-  PLAN.obstacles.forEach(([x, y]) => {
-    if (!d3) { add(x, y, `<path class="c-barre" d="M${pt('2d', x, y - 2)}L${pt('2d', x, y + 2)}"/>`); return; }
-    add(x, y + 2, `<g class="c-obst"><path class="obst-ch" d="M${pt('3d', x, y - 2, hc)}L${pt('3d', x, y - 2, hc + HAUT.barre + .4)}M${pt('3d', x, y + 2, hc)}L${pt('3d', x, y + 2, hc + HAUT.barre + .4)}"/><path class="c-barre" d="M${pt('3d', x, y - 2, hc + HAUT.barre)}L${pt('3d', x, y + 2, hc + HAUT.barre)}"/></g>`);
+  // carrière : des obstacles (barre en travers de la longueur : le long de y, ou de x si « x »)
+  const hc = HAUT.carriere;
+  (PLAN.obstacles || []).forEach(([x, y, ax]) => {
+    const [xa, ya, xb, yb] = ax === 'x' ? [x - 2, y, x + 2, y] : [x, y - 2, x, y + 2];
+    if (!d3) { add(x, y, `<path class="c-barre" d="M${pt('2d', xa, ya)}L${pt('2d', xb, yb)}"/>`); return; }
+    add(Math.max(xa, xb), Math.max(ya, yb), `<g class="c-obst"><path class="obst-ch" d="M${pt('3d', xa, ya, hc)}L${pt('3d', xa, ya, hc + HAUT.barre + .4)}M${pt('3d', xb, yb, hc)}L${pt('3d', xb, yb, hc + HAUT.barre + .4)}"/><path class="c-barre" d="M${pt('3d', xa, ya, hc + HAUT.barre)}L${pt('3d', xb, yb, hc + HAUT.barre)}"/></g>`);
   });
   // chaque objet dans son groupe : l'animation d'arrivée (CSS) ne doit pas écraser leur position (attribut transform)
   return items.sort((a, b) => a.p - b.p).map(o => `<g>${o.h}</g>`).join('');
 }
 
 /* ---------- La carte : état, vue, montage ---------- */
-const carte = { mode: null, sel: null, filtre: null, plein: false, vues: { '3d': null, '2d': null }, host: null, svg: null, W: 0, H: 0, sig: '', boites: {} };
+const carte = { mode: null, sel: null, filtre: null, plein: false, vues: { '3d': null, '2d': null }, host: null, svg: null, W: 0, H: 0, sig: '', boites: {}, src: 'ecurie' };
 const modeCarte = () => ui.carte3d === false ? '2d' : '3d';
 /* Boîte englobante du dessin (avec le relief en 3D) */
 function boiteCarte(mode) {
@@ -330,6 +414,9 @@ function majCarte() {
     carte.host = null; carte.svg = null;
     return;
   }
+  // la carte de l'écurie, l'aperçu dans l'éditeur, ou la démonstration floutée
+  prepPlan(host.closest('.ed') ? 'apercu' : host.closest('.verrou-carte') ? 'demo' : 'ecurie');
+  if (!PLAN) { if (carte.host === host) { host.innerHTML = ''; carte.host = null; carte.svg = null; } return; }
   if (host !== carte.host || !host.querySelector('svg')) { monteCarte(host); return; }
   majCarteDyn();
 }
@@ -456,7 +543,7 @@ function gestes(host) {
       return;
     }
     const pion = e.target.closest && e.target.closest('[data-pion]');
-    geste = { type: 'attente', x0: e.clientX, y0: e.clientY, t0: Date.now(), last: loc(e), pion: pion && !sync.readOnly ? pion.getAttribute('data-pion') : null, cible: e.target };
+    geste = { type: 'attente', x0: e.clientX, y0: e.clientY, t0: Date.now(), last: loc(e), pion: pion && !sync.readOnly && carte.src === 'ecurie' ? pion.getAttribute('data-pion') : null, cible: e.target };
   });
   svg.addEventListener('pointermove', e => {
     if (!pts.has(e.pointerId)) return;
@@ -581,7 +668,7 @@ function deplaceVers(hid, cible) {
 /* Depuis le box (sous la carte) */
 document.addEventListener('pointerdown', e => {
   const b = e.target.closest && e.target.closest('.c-boxo [data-pion]');
-  if (!b || sync.readOnly || e.button > 0) return;
+  if (!b || sync.readOnly || carte.src !== 'ecurie' || e.button > 0) return;
   const hid = b.getAttribute('data-pion'), x0 = e.clientX, y0 = e.clientY;
   let parti = false;
   const bouge = ev => {
@@ -602,7 +689,9 @@ document.addEventListener('pointerdown', e => {
 
 /* ---------- Autour de la carte : légende, box, fiche de la parcelle choisie ---------- */
 function carteHtml() {
-  return `<div class="carte" data-key="carte" data-garde></div>${legendeHtml()}${horsCarteHtml()}<div class="c-fiche" data-key="c-fiche">${ficheZone()}</div>`;
+  prepPlan('ecurie');
+  const modif = window.EQ_MODE && edPeut() ? `<button type="button" class="link c-modif" data-act="carte-editer" data-key="c-modif">${ic('edit', 'sm')}${planEcurie() ? 'Modifier la carte' : 'Refaire la carte à partir d’un plan'}</button>` : '';
+  return `<div class="carte" data-key="carte" data-garde></div>${legendeHtml()}${horsCarteHtml()}<div class="c-fiche" data-key="c-fiche">${ficheZone()}</div>${modif}`;
 }
 function legendeHtml() {
   const presents = new Set(PLAN.zones.map(etatZone));
@@ -620,12 +709,12 @@ function ficheZone() {
   const z = carte.sel && zoneDe(carte.sel);
   if (!z) return `<p class="note c-aide">Touche une parcelle pour voir où elle en est. Fais glisser un cheval d’une parcelle à l’autre pour le déplacer.</p>`;
   const p = liensCarte().get(z.id);
-  const tete = `<div class="c-zfiche-h"><span class="eyebrow">${zoneNom(z)} · ≈ ${num(zoneHa(z), 2)} ha</span><button type="button" class="iconbtn" data-act="carte-sel" data-zone="" aria-label="Fermer">${ic('close', 'sm')}</button></div>`;
-  if (z.type === 'verger') return tete + `<article class="pcard"><div class="pcard-h"><div class="row-main"><div class="row-t">Verger</div><div class="row-s">Les pommiers, au bout de la carrière</div></div></div><p class="note">Pas de chevaux ici.</p></article>`;
+  const tete = `<div class="c-zfiche-h"><span class="eyebrow">${esc(zoneNom(z))} · ≈ ${num(zoneHa(z), 2)} ha</span><button type="button" class="iconbtn" data-act="carte-sel" data-zone="" aria-label="Fermer">${ic('close', 'sm')}</button></div>`;
+  if (z.type === 'verger') return tete + `<article class="pcard"><div class="pcard-h"><div class="row-main"><div class="row-t">${esc(zoneNom(z))}</div><div class="row-s">${esc(z.desc || 'Des arbres fruitiers')}</div></div></div><p class="note">Pas de chevaux ici.</p></article>`;
   if (!p) {
     const libres = pres().filter(x => !zoneDuPre(x) && (z.type === 'pre' ? !sansRotation(x) : true));
     const nouveau = z.type === 'pre' ? `Pré ${z.n}` : zoneNom(z);
-    return tete + `<article class="pcard"><div class="pcard-h"><div class="row-main"><div class="row-t">${zoneNom(z)}</div><div class="row-s">Pas encore reliée au carnet</div></div><span class="pill">À relier</span></div>
+    return tete + `<article class="pcard"><div class="pcard-h"><div class="row-main"><div class="row-t">${esc(zoneNom(z))}</div><div class="row-s">Pas encore reliée au carnet</div></div><span class="pill">À relier</span></div>
       ${libres.length ? `<p class="note">C’est lequel de tes espaces ?</p><div class="wrap">${libres.map(x => `<button type="button" class="chip" data-act="carte-relier" data-zone="${z.id}" data-id="${x.id}">${esc(x.nom)}</button>`).join('')}</div>` : ''}
       ${sync.readOnly ? '' : `<button type="button" class="btn small" data-act="carte-creer" data-zone="${z.id}">${ic('plus', 'sm')}Créer « ${esc(nouveau)} »</button>`}</article>`;
   }
@@ -639,6 +728,7 @@ ACT['carte-reduire'] = () => {
   setTimeout(() => { const f = document.querySelector('.c-fiche'); if (f) f.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
 };
 ACT['carte-relier'] = d => {
+  prepPlan('ecurie');
   const z = zoneDe(d.zone), p = get('pres', d.id);
   if (!z || !p) return;
   list('pres').filter(o => o.id !== p.id && o.carte === z.id).forEach(o => put('pres', Object.assign({}, o, { carte: null })));
@@ -648,6 +738,7 @@ ACT['carte-relier'] = d => {
   toast(`${p.nom} → ${zoneNom(z)}${p.surface ? '' : ` · surface estimée ${num(zoneHa(z), 2)} ha`}`);
 };
 ACT['carte-creer'] = d => {
+  prepPlan('ecurie');
   const z = zoneDe(d.zone);
   if (!z) return;
   formPre(null, { nom: z.type === 'pre' ? `Pré ${z.n}` : zoneNom(z), type: z.type === 'pre' ? 'pre' : z.type, carte: z.id, surface: zoneHa(z) });

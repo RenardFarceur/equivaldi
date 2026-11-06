@@ -7,6 +7,7 @@ img{max-width:100%}
 .auth-in{max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
 .auth-in .brand-logo{width:min(220px,62%);align-self:center}
 .auth-t{font-family:var(--f-display);font-weight:600;font-size:28px;margin:0}
+.auth-sous{font-family:var(--f-display);font-weight:600;font-size:20px;margin:0 0 -16px}
 .auth p{margin:0}
 .auth-links{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
 .auth .btn[disabled]{opacity:.6}

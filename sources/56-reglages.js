@@ -66,7 +66,9 @@ ACT['save-cfg'] = () => {
   toast('Réglages enregistrés');
 };
 ACT.export = async () => {
-  const data = { app: 'carnet-ecurie', version: 1, exporte: new Date().toISOString(), cfg: S.cfg };
+  // la carte des prés voyage avec (sans l'image du plan, rangée à part)
+  const data = { app: 'carnet-ecurie', version: 1, exporte: new Date().toISOString(), cfg: S.cfg,
+    carte: S.carte && (S.carte.plan || S.carte.trace) ? { plan: S.carte.plan || null, trace: S.carte.trace || null } : null };
   COLS.forEach(k => { data[k] = list(k); });
   const json = JSON.stringify(data, null, 1);
   let dl = null;
@@ -116,6 +118,10 @@ function doImport(d) {
     });
   } finally { restauration = false; }
   if (d.cfg && typeof d.cfg === 'object') putCfg(d.cfg);
+  if (d.carte && typeof d.carte === 'object') {
+    const plan = nettoiePlan(d.carte.plan);
+    if (plan) putCarte({ plan, trace: nettoieTrace(d.carte.trace), publie: Date.now() });
+  }
   nav.stack = [];
   render();
   toast('Sauvegarde restaurée');
