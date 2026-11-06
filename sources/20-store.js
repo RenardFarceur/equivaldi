@@ -21,7 +21,10 @@ const mesEcuries = () => (window.EQ && Array.isArray(window.EQ.ecuries) && windo
 let outbox = [];
 let DB = null;
 let dataV = 0;              // change à chaque modification des données (calculs mis en cache)
-const sync = { mode: 'loading', error: null, loaded: new Set(), readOnly: false };
+const sync = { mode: 'loading', error: null, loaded: new Set() };
+/* Lecture seule : rôle « Lecture seule », ou écurie dont l'essai est fini sans abonnement (61-abonnement.js) */
+let roRole = false;
+Object.defineProperty(sync, 'readOnly', { enumerable: true, get: () => roRole || ecurieFigee(), set: v => { roRole = !!v; } });
 
 /* Qui utilise le carnet (partage à plusieurs) */
 const me = { uid: null, owner: null, platformName: '' };
@@ -32,13 +35,18 @@ function getMoi() {
   return moiMem;
 }
 /* Mon nom : celui de ma fiche dans l'équipe, sinon le prénom gardé sur ce téléphone */
-const moiNom = () => { const m = me.uid && S.membres ? S.membres[me.uid] : null; return (m && String(m.nom || '').trim()) || getMoi() || me.platformName || ''; };
+const moiNom = () => {
+  if (window.EQ && window.EQ.ecurie && window.EQ.ecurie.fantome) return 'EquiValdi';   // administration : jamais son prénom
+  const m = me.uid && S.membres ? S.membres[me.uid] : null; return (m && String(m.nom || '').trim()) || getMoi() || me.platformName || '';
+};
 const moiRef = () => ({ uid: me.uid || null, nom: moiNom() });
 function setMoi(n) { moiMem = n; try { localStorage.setItem(MOI_KEY, JSON.stringify({ nom: n })); } catch (e) { /* gardé pour cette visite */ } }
 const RO_MSG = window.EQ_MODE
   ? "Tu as un accès en lecture seule. Demande à la gérante du carnet de te passer en « Peut modifier »."
   : "Tu as un accès en lecture seule. Demande à la personne qui gère le carnet de te donner le droit « Peut modifier ».";
-function setReadOnly() { if (sync.readOnly) return; sync.readOnly = true; rerenderSoon(); }
+function setReadOnly() { if (roRole) return; sync.readOnly = true; rerenderSoon(); }
+/* Le message qui va avec : essai terminé, ou droit « Lecture seule » */
+function roMsg() { return ecurieFigee() ? figeeMsg() : RO_MSG; }
 async function connectUser() {
   let u = null;
   try { u = (window.claude && typeof window.claude.use === 'function') ? await window.claude.use('user') : null; } catch (e) { u = null; }
@@ -171,7 +179,7 @@ async function flush() {
           resync(op);
           if (code === 'invalid_argument' && !me.owner) {
             setReadOnly();
-            sync.error = RO_MSG;
+            sync.error = roMsg();
           } else {
             sync.error = code === 'quota_exceeded'
               ? "Stockage plein : supprime d'anciens mouvements pour continuer."

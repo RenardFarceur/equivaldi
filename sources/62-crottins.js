@@ -34,7 +34,7 @@ function boutique() {
     .sort((a, b) => a.prix - b.prix);
 }
 /* Points crottins dans cette écurie (activés par défaut) ; ils comptent à partir de sa date de départ */
-const crottinsActifs = () => cfg().crottins;
+const crottinsActifs = () => cfg().crottins && premium();   // coupés par la gérante, ou écurie pas encore abonnée
 function crotDebut() {
   const e = ecurieOuverte(), d = e && e.crottinsDepuis;
   return typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d) ? d : CROT.debut;
@@ -439,6 +439,7 @@ const itemDe = id => boutique().find(x => x.id === id) || BOUTIQUE_DEPART.find(x
 /* Un bon garde le nom et le prix de la récompense au moment de l'échange, même si la boutique a changé depuis */
 const bonItem = b => Object.assign({ ic: 'particulier', tint: 'paille' }, itemDe(b.item) || {}, { nom: b.nom || (itemDe(b.item) || {}).nom || 'Récompense' });
 VIEWS.boutique = () => {
+  if (!premium()) return { title: 'Boutique', eyebrow: 'Points crottins', html: `<div class="verrou-ligne">${verrouHtml('crottins')}</div>`, fab: null };
   if (!crottinsActifs()) return { title: 'Boutique', eyebrow: 'Points crottins', html: emptyH('Points crottins désactivés', '<p>La gérante a coupé les points crottins dans cette écurie.</p>'), fab: null };
   const k = kMoi(), solde = k ? soldeDe(k) : 0, tot = k ? crottinsDe(k).gagnes : 0, R = rangDe(tot), rythme = k ? rythmeDe(k) : 0;
   const peutAcheter = !!(window.EQ_MODE && window.EQ && me.uid && get('membres', me.uid));
@@ -472,6 +473,7 @@ VIEWS.boutique = () => {
   return { title: 'Boutique', eyebrow: 'Points crottins', html, fab: null };
 };
 ACT.boutique = () => {
+  if (!premium()) { ACT.abonner({ raison: 'crottins' }); return; }
   if (!crottinsActifs()) { toast('Les points crottins sont désactivés dans cette écurie.'); return; }
   const t = topView(); if (t && t.view === 'boutique') return; push('boutique');
 };

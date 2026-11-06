@@ -32,6 +32,20 @@ Les invitations en attente s'affichent dans la même feuille (« Lien · expire 
 
 Quand tu as au moins deux écuries, le nom court de celle qui est ouverte s'affiche en haut, à côté de la date : un repère pour ne pas noter dans la mauvaise écurie (le toucher ouvre *Mon écurie*). Changer d'écurie recharge l'appli. Une modification faite sans réseau reste rangée avec son écurie et ne part jamais vers une autre.
 
+## Abonnement
+
+- **Essai gratuit de 2 mois, sans carte bancaire**, dès la création d'une écurie. Pendant l'essai : tout le carnet, avec 2 chevaux au plus ; la carte des prés et les points crottins sont réservés aux écuries abonnées (aperçu et bouton *S'abonner*).
+- **Après l'essai sans abonnement** : lecture seule. Tout reste consultable et exportable ; la gérante voit *S'abonner*, les autres membres un message.
+- **Formules** : 10 € par mois ou 100 € par an (2 mois offerts), payées par la gérante dans *Réglages* › *Mon écurie* › *S'abonner*. Payer pendant l'essai ne fait rien perdre : tout se débloque tout de suite, et la période payée commence à la fin de l'essai (de même, un nouveau paiement s'ajoute à la suite de l'abonnement en cours).
+- **Paiement fictif pour l'instant** (« Payer 10 € (démo) », rien n'est débité). Pour brancher Shine ou Tebex : remplacer l'étape *Paiement* (`feuillePaiement` dans `sources/61-abonnement.js`) par le lien de paiement du prestataire ; faire enregistrer l'abonnement par un serveur qui reçoit la confirmation du paiement, ou par l'administration (*Paiement reçu*) ; puis retirer des règles la ligne du paiement de démonstration (`paiementFictif`).
+- **À vie** : l'écurie fondatrice et toutes celles créées avant le 6 novembre 2026 à 12 h.
+
+## Administration
+
+Le compte **bennizdu03@gmail.com** est l'administration EquiValdi : *Réglages* › *Administration* › *Toutes les écuries* (ou, s'il n'a pas d'écurie à lui, le bouton sur l'écran d'accueil). Pour chaque écurie : l'état de l'abonnement, la gérante, l'équipe, le dernier paiement, et *Ouvrir l'écurie*, *Prolonger l'essai d'un mois*, *Paiement reçu* (1 mois ou 1 an), *Passer à vie*, *Arrêter l'abonnement*.
+
+Une écurie ouverte par l'administration affiche « Admin » en haut et un bandeau. L'administration n'apparaît dans aucune équipe, aucun classement, aucune liste de personnes ; ce qu'elle note est signé « EquiValdi » dans le fil de l'équipe. Pour changer de compte d'administration : modifier l'adresse dans `firestore.rules` (fonction `admin`) et dans `sources/pwa/firebase.js` (`ADMIN_MAIL`), reconstruire, puis recoller les règles.
+
 ## Carte des prés
 
 Onglet *Prés* › *Carte* : le plan des prés (13 parcelles, la carrière, le verger, la piste, les abris et les abreuvoirs), en 3D isométrique ou en vue de dessus (bouton 3D / 2D, gardé sur chaque téléphone). La couleur de chaque parcelle dit où en est la rotation ; les chevaux y sont posés et changent de pré quand on les fait glisser (ou vont au box). Une parcelle se relie à un pré du carnet en la touchant (ou dans la fiche du pré, *Sur la carte*). La piste et la carrière sont des espaces sans temps de repos ni de pâture.

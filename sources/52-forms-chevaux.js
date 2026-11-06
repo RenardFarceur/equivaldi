@@ -3,6 +3,8 @@
 function formCheval(id) {
   const ex = id ? cheval(id) : null;
   if (id && !ex) return;
+  // pendant l'essai : 2 chevaux au plus (l'abonnement lève la limite)
+  if (!id && !chevalPossible()) { ACT.abonner({ raison: 'chevaux' }); return; }
   const h = ex ? clone(ex) : { nom: '', couleur: nextColor() };
   let ph = null;
   const body = `
@@ -37,7 +39,11 @@ function formCheval(id) {
         taille: parseNum(val('f_taille')), poids: parseNum(val('f_poids')), sire: val('f_sire'), puce: val('f_puce'),
         couleur: parseInt(chipVal(f, 'coul') || '0', 10), notes: val('f_notes'), proprietaire: prop ? prop.nom : '', propUid: prop ? prop.uid : null
       });
-      if (ex) h.archive = $('#f_arch').checked;
+      if (ex) {
+        const sortArchive = ex.archive && !$('#f_arch').checked;
+        if (sortArchive && !chevalPossible()) return "Pendant l'essai, l'écurie compte 2 chevaux au plus : abonne-la pour ressortir ce cheval de l'archive.";
+        h.archive = $('#f_arch').checked;
+      }
       const saved = put('chevaux', h);
       toast(ex ? 'Fiche enregistrée' : `${nom} ajouté`);
       if (!ex) setTimeout(() => push('cheval', { id: saved.id, sub: 'fiche' }), 50);
@@ -207,7 +213,7 @@ function formSoin(id, pre = {}) {
       majGere();
       const b = $('#b_done');
       if (b) b.addEventListener('click', () => {
-        if (sync.readOnly) { toast(RO_MSG, { danger: true }); return; }
+        if (sync.readOnly) { toast(roMsg(), { danger: true }); return; }
         const g = (hasPerson('gere') && readPerson('gere')) || moiRef();
         put('soins', Object.assign({}, ex, { date: todayISO(), statut: 'fait', gerePar: g, faitLe: Date.now(), planifie: true }));
         closeSheet(); toast('Rendez-vous honoré');

@@ -357,8 +357,10 @@ function refMembre(r) {
   return first.length === 1 ? first[0] : null;
 }
 const NOMS = new Map();   // orthographe affichée des noms saisis librement
+/* L'administration EquiValdi n'est une personne d'aucune équipe : ni classement, ni crottins, ni bilan */
+const estFantome = r => !!r && (r.uid === 'equivaldi' || (!r.uid && normNom(r.nom) === 'equivaldi'));
 function pKey(r) {
-  if (!r) return null;
+  if (!r || estFantome(r)) return null;
   const m = refMembre(r);
   if (m) return 'u:' + m.id;
   const n = normNom(r.nom);
@@ -478,7 +480,8 @@ const nomPre = id => (get('pres', id) || {}).nom || 'un pré';
 function filEquipe(fromT = 0, limit = 30, k = null) {
   const items = [];
   // une action sans auteur connu (saisie d'avant le prénom) n'apprend rien sur qui fait quoi
-  const push = (t, r, icon, quoi, objet, act) => { if (!t || t < fromT) return; const pk = pKey(r); if (pk && (!k || pk === k)) items.push({ t, r, icon, quoi, objet, act }); };
+  // ce que l'administration a fait reste visible dans le fil, signé « EquiValdi »
+  const push = (t, r, icon, quoi, objet, act) => { if (!t || t < fromT) return; const pk = pKey(r) || (estFantome(r) ? 'x:equivaldi' : null); if (pk && (!k || pk === k)) items.push({ t, r, icon, quoi, objet, act }); };
   toutesTaches().forEach(tk => faitsDe(tk).forEach(f => {
     const qui = faitPar(f), act = tk.retireLe ? '' : `data-act="edit-tache" data-id="${tk.id}"`;
     qui.forEach(r => push(f.t, r, 'tasks', qui.length > 1 ? `Tâche faite avec ${etListe(qui.filter(x => x !== r).map(x => nomCourt(x)))}` : 'Tâche cochée', tk.titre, act));

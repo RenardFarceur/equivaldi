@@ -45,6 +45,15 @@ const ecris = (k, v) => { try { if (v == null) localStorage.removeItem(k); else 
 const COLS = ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches'];
 const JOUR = 86400000;
 const ROLES = { gerante: 'Gérante', equipe: 'Peut modifier', lecture: 'Lecture seule' };
+// Administration EquiValdi : ce compte gère toutes les écuries sans en être membre (les règles d'accès le connaissent aussi).
+// Dans une écurie dont il n'est pas membre, il agit sous le nom « EquiValdi » et n'apparaît dans aucune équipe.
+const ADMIN_MAIL = 'bennizdu03@gmail.com';
+const FANTOME = { uid: 'equivaldi', nom: 'EquiValdi' };
+// Abonnement : essai de 2 mois sans carte, puis 10 €/mois ou 100 €/an
+const TARIF = { mois: 10, an: 100 };
+const ajouterMois = (ms, n) => { const d = new Date(ms), j = d.getDate(); d.setMonth(d.getMonth() + n); if (d.getDate() < j) d.setDate(0); return d.getTime(); };
+// une période payée commence après ce qui court déjà : l'essai, ou l'abonnement en cours (payer tôt ne fait rien perdre)
+const departAbo = (a, now) => Math.max(now, a.finEssai || 0, a.statut === 'abonnee' ? a.fin || 0 : 0);
 const attendre = ms => new Promise(r => setTimeout(r, ms));
 const deux = n => String(n).padStart(2, '0');
 const isoJour = ms => { const d = new Date(ms); return `${d.getFullYear()}-${deux(d.getMonth() + 1)}-${deux(d.getDate())}`; };
@@ -240,6 +249,7 @@ const message = (titre, texte) => new Promise(fin => show(`<div class="form">
 
 /* ---------- La personne connectée et ses écuries ---------- */
 let U = null, MAIL = '', IDX = null, OUV = null;   // compte, adresse, index personnel, écurie ouverte
+let ADMIN = false;                                  // compte d'administration EquiValdi
 // invitations remises « à plus tard » : plus reproposées pendant cette visite, même après un rechargement
 const VUS = (() => {
   const k = 'equivaldi:plus-tard';
@@ -278,15 +288,20 @@ const retirerDeLIndex = sids => {
   setDoc(indexRef(), maj, { merge: true }).catch(() => {});
 };
 // Accès réel à une écurie : sa fiche et sa propre fiche de membre (refusé = plus membre)
-async function acces(sid) {
+const ecurieDe = (sid, d, role, fantome = false) => ({
+  id: sid, nom: d.nom || '', commune: d.commune || '', role: ROLES[role] ? role : 'lecture', crottinsDepuis: d.crottinsDepuis || '',
+  creeLe: d.creeLe || null, abonnement: d.abonnement || null, gerante: d.gerante || '', fantome
+});
+async function acces(sid, o = {}) {
   try {
     const [s, f] = await Promise.all([getDoc(doc(fs, 'structures', sid)), getDoc(doc(fs, 'structures', sid, 'membres', U.uid))]);
+    // l'administration ouvre une écurie dont elle n'est pas membre, sans fiche : invisible pour l'équipe
+    if (s.exists() && !f.exists() && ADMIN && o.fantome) return { ok: true, e: ecurieDe(sid, s.data() || {}, 'gerante', true) };
     if (!s.exists() || !f.exists()) {
       if ((s.metadata && s.metadata.fromCache) || (f.metadata && f.metadata.fromCache)) throw Object.assign(new Error('hors ligne'), { code: 'unavailable' });
       return { perdu: true };
     }
-    const d = s.data() || {}, role = (f.data() || {}).role;
-    return { ok: true, e: { id: sid, nom: d.nom || '', commune: d.commune || '', role: ROLES[role] ? role : 'lecture', crottinsDepuis: d.crottinsDepuis || '', creeLe: d.creeLe || null } };
+    return { ok: true, e: ecurieDe(sid, s.data() || {}, (f.data() || {}).role) };
   } catch (e) { if (estRefus(e)) return { perdu: true }; throw e; }
 }
 async function estMembre(sid) {
@@ -296,7 +311,7 @@ async function estMembre(sid) {
 
 /* ---------- Parcours à la connexion ---------- */
 async function entrer(u) {
-  U = u; MAIL = adresse(u);
+  U = u; MAIL = adresse(u); ADMIN = MAIL === ADMIN_MAIL;
   const local = lis(K.ecurie);
   // un autre compte s'est servi de ce téléphone : ses écuries n'ont rien à faire ici
   if (local && local.uid && local.uid !== u.uid) { purgerEcuries(); location.reload(); return; }
@@ -313,12 +328,12 @@ function ouvrirHorsLigne(u, local) {
   const r = local.sid ? lis(K.role(local.sid)) : null;
   if (!r || r.uid !== u.uid || window.EQ_SID !== local.sid) return false;
   IDX = IDX || { ecuries: Object.fromEntries((local.ecuries || []).map(x => [x.id, { nom: x.nom, role: x.role }])), derniere: local.sid };
-  demarrer(u, { id: local.sid, nom: local.nom, commune: local.commune, role: r.role, crottinsDepuis: local.crottinsDepuis, creeLe: local.creeLe }, { horsLigne: true });
+  demarrer(u, { id: local.sid, nom: local.nom, commune: local.commune, role: r.role, crottinsDepuis: local.crottinsDepuis, creeLe: local.creeLe, abonnement: local.abonnement || null, gerante: local.gerante || '', fantome: !!local.fantome }, { horsLigne: true });
   return true;
 }
 async function parcours(u, local) {
   // lectures lancées ensemble, pour ouvrir vite
-  const preLocal = local && local.sid ? tente(acces(local.sid)) : null;
+  const preLocal = local && local.sid ? tente(acces(local.sid, { fantome: !!local.fantome })) : null;
   const preMails = tente(invitationsMail());
   // 1. Index personnel (un refus ici veut dire que les nouvelles règles ne sont pas encore publiées)
   let idx;
@@ -330,6 +345,14 @@ async function parcours(u, local) {
     catch (e2) { if (estRefus(e2)) { await reglesAnciennes(u, e2); return; } throw e2; }
   }
   IDX = idx;
+  // Administration : l'écurie ouverte depuis « Toutes les écuries », sans en être membre
+  if (ADMIN && local && local.fantome && preLocal) {
+    const x = await preLocal;
+    if (x.v && x.v.ok) { demarrer(u, x.v.e); return; }
+    if (x.e && !estRefus(x.e) && ouvrirHorsLigne(u, local)) return;
+    ecris(K.ecurie, null);
+    local = null;
+  }
   // 2. Invitation en attente (lien ouvert ou code tapé)
   const c = lis(K.invitation);
   if (c && !VUS.has(c)) await proposerCode(u, c);
@@ -366,9 +389,14 @@ async function parcours(u, local) {
 
 /* ---------- Ouvrir une écurie ---------- */
 function demarrer(u, e, o = {}) {
-  OUV = { id: e.id, nom: e.nom || '', commune: e.commune || '', role: e.role, crottinsDepuis: e.crottinsDepuis || (e.creeLe ? isoJour(e.creeLe) : ''), creeLe: e.creeLe || null };
+  const fantome = !!(e.fantome && ADMIN);
+  OUV = {
+    id: e.id, nom: e.nom || '', commune: e.commune || '', role: e.role, crottinsDepuis: e.crottinsDepuis || (e.creeLe ? isoJour(e.creeLe) : ''), creeLe: e.creeLe || null,
+    abonnement: e.abonnement || null, gerante: e.gerante || '', fantome
+  };
+  if (fantome) o = Object.assign({}, o, { sansIndex: true });
   const avant = IDX && IDX.ecuries[e.id] ? Object.assign({}, IDX.ecuries[e.id]) : null;
-  if (IDX && !o.horsLigne) IDX.ecuries[e.id] = { nom: OUV.nom || (avant && avant.nom) || '', role: e.role };
+  if (IDX && !o.horsLigne && !o.sansIndex) IDX.ecuries[e.id] = { nom: OUV.nom || (avant && avant.nom) || '', role: e.role };
   const rec = Object.assign({ uid: u.uid, sid: e.id }, OUV, { ecuries: listeEcuries() });
   delete rec.id;
   ecris(K.ecurie, rec);
@@ -388,19 +416,19 @@ function demarrer(u, e, o = {}) {
     return;
   }
   try { sessionStorage.removeItem('equivaldi:recharge'); } catch (x) { /* rien */ }
-  if (IDX && !o.horsLigne) {
+  if (IDX && !o.horsLigne && !o.sansIndex) {
     const maj = {};
     if (!avant || avant.nom !== IDX.ecuries[e.id].nom || avant.role !== e.role) maj.ecuries = { [e.id]: IDX.ecuries[e.id] };
     if (IDX.derniere !== e.id) maj.derniere = e.id;
     IDX.derniere = e.id;
     if (Object.keys(maj).length) setDoc(indexRef(), maj, { merge: true }).catch(() => {});
   }
-  const role = e.role;
-  Object.assign(window.EQ, { email: MAIL, role, ecurie: Object.assign({}, OUV), ecuries: listeEcuries() });
+  const role = e.role, qui = fantome ? FANTOME : { uid: u.uid, nom: u.displayName || '' };
+  Object.assign(window.EQ, { email: MAIL, role, admin: ADMIN, ecurie: Object.assign({}, OUV), ecuries: listeEcuries() });
   hide();
   window.claude._resolve('user', {
-    me: async () => ({ id: u.uid, name: u.displayName || '', email: MAIL, isOwner: role === 'gerante', canEdit: role !== 'lecture', avatarUrl: '', color: '' }),
-    id: async () => u.uid,
+    me: async () => ({ id: qui.uid, name: qui.nom, email: MAIL, isOwner: role === 'gerante', canEdit: role !== 'lecture', avatarUrl: '', color: '' }),
+    id: async () => qui.uid,
     isOwner: async () => role === 'gerante',
     canEdit: async () => role !== 'lecture',
     can: async n => n === 'data.write' ? role !== 'lecture' : false,
@@ -408,10 +436,28 @@ function demarrer(u, e, o = {}) {
   });
   window.claude._resolve('db', adaptateur(e.id));
   notifier();
+  suivreEcurie(e.id);
   if (!o.horsLigne) setTimeout(() => { verifierIndex().catch(() => {}); }, 1500);
   let a = '';
   try { a = sessionStorage.getItem(K.avis) || ''; sessionStorage.removeItem(K.avis); } catch (x) { /* rien */ }
   if (a) setTimeout(() => { if (typeof toast === 'function') toast(a); }, 700);
+}
+// La fiche de l'écurie ouverte, suivie en direct : abonnement payé, essai prolongé, nouveau nom…
+let suiviEcurie = null;
+function suivreEcurie(sid) {
+  if (suiviEcurie) suiviEcurie();
+  suiviEcurie = onSnapshot(doc(fs, 'structures', sid), s => {
+    if (!s.exists() || !OUV || OUV.id !== sid) return;
+    const n = ecurieDe(sid, s.data() || {}, OUV.role, OUV.fantome);
+    if (!n.crottinsDepuis && n.creeLe) n.crottinsDepuis = isoJour(n.creeLe);
+    const champs = ['nom', 'commune', 'crottinsDepuis', 'creeLe', 'abonnement', 'gerante'];
+    if (champs.every(k => JSON.stringify(n[k]) === JSON.stringify(OUV[k]))) return;
+    champs.forEach(k => { OUV[k] = n[k]; });
+    const l = lis(K.ecurie);
+    if (l && l.sid === sid) { const r = Object.assign(l, OUV, { sid }); delete r.id; ecris(K.ecurie, r); }
+    window.EQ.ecurie = Object.assign({}, OUV);
+    notifier();
+  }, () => {});
 }
 const avis = t => { try { const p = sessionStorage.getItem(K.avis); sessionStorage.setItem(K.avis, p ? p + ' ' + t : t); } catch (x) { /* rien */ } };
 // Les autres écuries de l'index, vérifiées sans bloquer : celle dont on a été retiré quitte le sélecteur
@@ -480,12 +526,30 @@ function ecranAccueil(u, note = '') {
       <div class="auth-choix">
         <button class="btn primary" id="aCreer">Créer mon écurie</button>
         <button class="btn" id="aCode">J'ai un code d'invitation</button>
+        ${ADMIN ? '<button class="btn" id="aAdmin">Administration : toutes les écuries</button>' : ''}
       </div>
       ${sortie}
     </div>`, root => {
     root.querySelector('#aCreer').addEventListener('click', () => ecranCreer(u, () => ecranAccueil(u)));
     root.querySelector('#aCode').addEventListener('click', () => ecranCode(u, () => ecranAccueil(u)));
+    const ad = root.querySelector('#aAdmin');
+    if (ad) ad.addEventListener('click', () => ecranAdmin(u));
     lierSortie(root);
+  });
+}
+// Administration sans écurie à soi : la liste de toutes les écuries, pour en ouvrir une
+async function ecranAdmin(u) {
+  show('<p class="auth-wait">Chargement des écuries…</p>');
+  let l = [];
+  try { l = await toutesEcuries(); } catch (e) { ecranSouci(u, e); return; }
+  show(`<div class="form">
+      <h2 class="auth-t">Toutes les écuries</h2>
+      <p class="hint">Tu les ouvres sans apparaître dans leur équipe.</p>
+      <div class="list">${l.map(s => `<button type="button" class="row" data-sid="${escH(s.id)}"><div class="row-main"><div class="row-t">${escH(s.nom || 'Sans nom')}</div><div class="row-s">${escH(s.commune || '')}</div></div></button>`).join('') || '<p class="hint">Aucune écurie pour le moment.</p>'}</div>
+      <div class="auth-links"><button type="button" class="link" id="aBack">Retour</button></div>
+    </div>`, root => {
+    root.querySelectorAll('[data-sid]').forEach(b => b.addEventListener('click', () => ouvrirAdmin(b.dataset.sid)));
+    root.querySelector('#aBack').addEventListener('click', () => ecranAccueil(u));
   });
 }
 const champsEcurie = (nom = '', commune = '') => `
@@ -617,9 +681,10 @@ async function creer({ nom, commune }) {
   commune = String(commune || '').replace(/\s+/g, ' ').trim().slice(0, 60);
   if (!nomValide(nom)) throw erreur("Le nom de l'écurie doit faire de 2 à 40 caractères.");
   const ref = doc(collection(fs, 'structures')), sid = ref.id, now = Date.now(), qui = { uid: U.uid, nom: nomDe(U) };
-  const e = { id: sid, nom, commune, role: 'gerante', crottinsDepuis: isoJour(now), creeLe: now };
+  const abonnement = { statut: 'essai', debut: now, finEssai: ajouterMois(now, 2) };   // essai de 2 mois, sans carte
+  const e = { id: sid, nom, commune, role: 'gerante', crottinsDepuis: isoJour(now), creeLe: now, abonnement, gerante: U.uid };
   const b = writeBatch(fs);
-  b.set(ref, { nom, commune, creeLe: now, creePar: qui, gerante: U.uid, crottinsDepuis: e.crottinsDepuis, abonnement: { statut: 'essai', debut: now, finEssai: now + 61 * JOUR } });
+  b.set(ref, { nom, commune, creeLe: now, creePar: qui, gerante: U.uid, crottinsDepuis: e.crottinsDepuis, abonnement });
   b.set(doc(fs, 'structures', sid, 'membres', U.uid), { email: MAIL, role: 'gerante', nom: qui.nom, depuis: now });
   b.set(indexRef(), { nom: qui.nom, email: MAIL, ecuries: { [sid]: { nom, role: 'gerante' } }, derniere: sid }, { merge: true });
   await b.commit();
@@ -911,7 +976,7 @@ async function migrer(u, v) {
     COLS.forEach(c => Object.entries(src.cols[c]).forEach(([id, d]) => ops.push({ path: `${base}/${c}/${id}`, data: clean(d) })));
     if (src.cfg) ops.push({ path: `${base}/config/reglages`, data: clean(src.cfg) });
     P.detail(4, `0 sur ${ops.length}`);
-    await ecrireParLots(ops, 18, k => P.detail(4, `${k} sur ${ops.length}`));
+    await ecrireParLots(ops, 9, k => P.detail(4, `${k} sur ${ops.length}`));   // 9 par lot : chaque écriture lit 2 documents dans les règles
     P.etape(4, 'fait', `${ops.length} ${pl(ops.length, 'fiche')}`);
     // 5. Les invitations en attente (anciennes, par adresse) deviennent des invitations par e-mail avec un code
     n = 5; P.etape(5, 'encours');
@@ -1055,8 +1120,74 @@ async function deconnexion() {
   location.reload();
 }
 
+/* ---------- Abonnement : paiement fictif en attendant Shine ou Tebex ---------- */
+// La gérante abonne son écurie (1 mois ou 1 an), à la suite de l'essai ou de l'abonnement en cours.
+async function payerFictif(formule) {
+  exigerGerante();
+  if (!['mois', 'an'].includes(formule)) throw erreur('Choisis une formule.');
+  const now = Date.now(), a = Object.assign({}, OUV.abonnement || {});
+  const depart = departAbo(a, now);
+  const nouveau = Object.assign(a, {
+    statut: 'abonnee', formule, fin: ajouterMois(depart, formule === 'an' ? 12 : 1),
+    paiement: { fournisseur: 'fictif', montant: TARIF[formule], le: now, ref: 'DEMO-' + tireCode() }
+  });
+  try { await delai(updateDoc(doc(fs, 'structures', OUV.id), { abonnement: nouveau }), 20000); }
+  catch (e) { if (estRefus(e)) throw erreur("Le paiement n'a pas pu être enregistré."); throw e; }
+  OUV.abonnement = nouveau;
+  window.EQ.ecurie = Object.assign({}, OUV);
+  notifier();
+  return nouveau;
+}
+
+/* ---------- Administration EquiValdi : toutes les écuries ---------- */
+const exigerAdmin = () => { if (!ADMIN) throw erreur("Réservé à l'administration EquiValdi."); };
+async function toutesEcuries() {
+  exigerAdmin();
+  const q = await getDocs(collection(fs, 'structures'));
+  return q.docs.map(d => Object.assign({ id: d.id }, d.data())).sort((a, b) => (b.creeLe || 0) - (a.creeLe || 0));
+}
+async function equipeDe(sid) {
+  exigerAdmin();
+  return (await getDocs(collection(fs, 'structures', sid, 'membres'))).docs.map(d => Object.assign({ uid: d.id }, d.data()));
+}
+// prolonger l'essai, enregistrer un paiement reçu (Shine, virement…), passer à vie, arrêter l'abonnement
+async function gererAbonnement(sid, action, formule) {
+  exigerAdmin();
+  const ref = doc(fs, 'structures', sid), s = await getDoc(ref);
+  if (!s.exists()) throw erreur("Cette écurie n'existe plus.");
+  const now = Date.now(), a = Object.assign({}, (s.data() || {}).abonnement || {});
+  if (action === 'essai') a.finEssai = ajouterMois(Math.max(now, a.finEssai || 0), 1);
+  else if (action === 'payer') {
+    if (!['mois', 'an'].includes(formule)) throw erreur('Choisis une formule.');
+    const depart = departAbo(a, now);
+    Object.assign(a, { statut: 'abonnee', formule, fin: ajouterMois(depart, formule === 'an' ? 12 : 1), paiement: { fournisseur: 'manuel', montant: TARIF[formule], le: now, par: MAIL } });
+  } else if (action === 'a_vie') a.statut = 'a_vie';
+  else if (action === 'arreter') Object.assign(a, { statut: 'essai', fin: 0 });
+  else throw erreur('Action inconnue.');
+  await delai(updateDoc(ref, { abonnement: a }), 20000);
+  if (OUV && OUV.id === sid) { OUV.abonnement = a; window.EQ.ecurie = Object.assign({}, OUV); notifier(); }
+  return a;
+}
+// ouvrir une écurie sans en être membre : rien n'est écrit dans son équipe ni dans l'index
+async function ouvrirAdmin(sid) {
+  exigerAdmin();
+  if (listeEcuries().some(x => x.id === sid)) return ouvrir(sid);
+  const s = await getDoc(doc(fs, 'structures', sid));
+  ecris(K.ecurie, { uid: U.uid, sid, nom: s.exists() ? (s.data() || {}).nom || '' : '', fantome: true, ecuries: listeEcuries() });
+  location.reload();
+}
+async function quitterAdmin() {
+  const x = listeEcuries();
+  if (x.length) return ouvrir(IDX && IDX.derniere && x.some(y => y.id === IDX.derniere) ? IDX.derniere : x[0].id);
+  ecris(K.ecurie, null);
+  location.reload();
+}
+
 window.EQ = {
-  email: '', role: '', ecurie: null, ecuries: [],
+  email: '', role: '', admin: false, ecurie: null, ecuries: [],
+  tarif: TARIF,
+  payerFictif,
+  toutesEcuries, equipeDe, gererAbonnement, ouvrirAdmin, quitterAdmin,
   deconnexion,
   ouvrir,
   creer: async v => { const e = await creer(v); await ouvrir(e.id); return e.id; },

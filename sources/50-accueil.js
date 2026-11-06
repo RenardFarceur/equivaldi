@@ -114,12 +114,14 @@ VIEWS.accueil = () => {
   const html = [];
   const vide = !chevaux(true).length && !pres(true).length && !list('foin').length && !list('taches').length;
   if (exCount()) html.push(`<div class="banner">${ic('info')}<div class="row-main"><b>Ce sont des exemples</b><span class="small">Trois chevaux fictifs pour découvrir le carnet. Efface-les pour commencer avec les tiens.</span></div><button type="button" class="btn small" data-act="clear-ex" data-confirm="Confirmer">Effacer</button></div>`);
+  const ba = bandeauAbo();
+  if (ba) html.push(ba);
   if (vide) {
     if (sync.mode === 'loading') html.push(`<div class="loading">${brandLogo()}<p class="note">Ouverture du carnet…</p></div>`);
     else html.push(bienvenueHtml());
     return { title: "Aujourd'hui", html: html.join(''), fab: menuAjouter };
   }
-  if (sync.readOnly) html.push(`<div class="banner ro">${ic('lock')}<div class="row-main"><b>Lecture seule</b><span class="small">${esc(RO_MSG)}</span></div></div>`);
+  if (sync.readOnly) { if (!ecurieFigee()) html.push(`<div class="banner ro">${ic('lock')}<div class="row-main"><b>Lecture seule</b><span class="small">${esc(roMsg())}</span></div></div>`); }
   else html.push(quickHtml());
   html.push(presentsHtml());
   html.push(tachesSection());

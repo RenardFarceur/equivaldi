@@ -35,12 +35,13 @@ const codeAttrs = 'class="code-in" autocomplete="off" autocapitalize="characters
 function majEcurieBtn() {
   const b = document.getElementById('ecurieBtn');
   if (!b) return false;
-  const e = ecurieOuverte(), voir = !!(window.EQ_MODE && e && e.nom && mesEcuries().length >= 2);
+  const e = ecurieOuverte(), fantome = !!(e && e.fantome), voir = !!(window.EQ_MODE && e && e.nom && (fantome || mesEcuries().length >= 2));
   b.hidden = !voir;
+  b.classList.toggle('admin', voir && fantome);
   if (!voir) return false;
-  const t = nomCourtEcurie(e.nom);
+  const t = (fantome ? 'Admin · ' : '') + nomCourtEcurie(e.nom);
   if (b.textContent !== t) b.textContent = t;
-  b.setAttribute('aria-label', `Écurie ouverte : ${e.nom}. Ouvrir « Mon écurie »`);
+  b.setAttribute('aria-label', `${fantome ? 'Mode administrateur, écurie' : 'Écurie ouverte'} : ${e.nom}. Ouvrir « Mon écurie »`);
   return true;
 }
 ACT['mon-ecurie'] = () => {
@@ -54,6 +55,12 @@ function monEcurieHtml() {
   const e = ecurieOuverte();
   if (!window.EQ_MODE || !e) return '';
   const id = idEcurie(e), g = e.role === 'gerante';
+  if (e.fantome) return section('Mon écurie', `<div class="card ecu-carte">
+      <div class="row-main"><div class="ecu-nom">${esc(e.nom || 'Écurie')}</div><div class="row-s">${esc(e.commune || 'Commune non indiquée')}</div></div>
+      <div class="wrap"><span class="pill">Administration</span><span class="small muted">tu n'apparais pas dans son équipe</span></div>
+      ${aboHtml()}
+      <div class="btnrow"><button type="button" class="btn small" data-act="adm-quitter">${ic('sortie', 'sm')}Quitter le mode administrateur</button></div>
+    </div>`);
   const autres = mesEcuries().filter(x => x.id !== id).map(x => `<div class="row">
       <span class="qa-ic menthe">${ic('barn')}</span>
       <div class="row-main"><div class="row-t">${esc(x.nom)}</div><div class="row-s">${esc(ROLE_LABEL[x.role] || '')}</div></div>
@@ -61,6 +68,7 @@ function monEcurieHtml() {
   return section('Mon écurie', `<div class="card ecu-carte">
       <div class="row-main"><div class="ecu-nom">${esc(e.nom || 'Mon écurie')}</div><div class="row-s">${esc(e.commune || 'Commune non indiquée')}</div></div>
       <div class="wrap"><span class="pill${g ? ' ok' : ''}">${esc(ROLE_LABEL[e.role] || '')}</span><span class="small muted">ton rôle dans cette écurie</span></div>
+      ${aboHtml()}
       <div class="btnrow">${g
         ? `<button type="button" class="btn small" data-act="ecu-renommer">${ic('edit', 'sm')}Modifier le nom</button><button type="button" class="btn small" data-act="ecu-gerance">${ic('users', 'sm')}Passer la gérance</button>`
         : `<button type="button" class="btn small danger" data-act="ecu-quitter">${ic('sortie', 'sm')}Quitter cette écurie</button>`}</div>
@@ -173,6 +181,10 @@ function confirmerRejoindre(inv) {
 
 /* ---------- Réglages › Ton compte ---------- */
 function equipeHtml() {
+  if (window.EQ_MODE && window.EQ && ecurieOuverte() && ecurieOuverte().fantome) return section('Ton compte', `<div class="card">
+    <div class="row-main"><div class="row-t trunc">${esc(EQ.email || '')}</div><div class="row-s">Ici, tu notes sous le nom « EquiValdi »</div></div>
+    <div class="btnrow"><button type="button" class="btn small" data-act="equipe">${ic('users', 'sm')}L'équipe et les invitations</button><button type="button" class="btn small" data-act="deconnexion">Se déconnecter</button></div>
+  </div>`);
   if (window.EQ_MODE && window.EQ) return section('Ton compte', `<div class="card">
     <div class="row-main"><div class="row-t trunc">${esc(EQ.email || '')}</div><div class="row-s">Le même compte dans toutes tes écuries</div></div>
     ${fld('Ton prénom', inp('f_moi', moiNom(), 'autocomplete="given-name" autocapitalize="words"'), "Affiché dans l'équipe et à côté des tâches que tu coches.")}
@@ -281,6 +293,7 @@ ACT['eq-copier'] = d => {
 
 /* ---------- Réglages › Crottins : interrupteur et boutique de l'écurie (gérante) ---------- */
 function crotSection() {
+  if (window.EQ_MODE && !premium()) return section('Crottins', `<div class="verrou-ligne">${verrouHtml('crottins')}</div>`);
   const actifs = crottinsActifs(), g = estGerante();
   let h = '';
   if (g) h += `<div class="list"><button type="button" class="row sw-row" role="switch" aria-checked="${actifs}" data-act="crot-onoff">

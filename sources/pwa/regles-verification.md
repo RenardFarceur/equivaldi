@@ -64,6 +64,26 @@ Entrer avec un code = un seul lot : sa fiche de membre (`via` = code), l'invitat
 | lire l'ancien carnet | anciens membres seulement (`membres/{moi}` racine existe), pendant le mois de transition | autorisé |
 | écrire `config/migration` | l'ancienne gérante seulement, et vers une écurie dont elle est gérante | seule exception |
 
+## 6. Abonnement : essai, paiement, lecture seule après l'essai
+
+Une écurie est **active** si son essai court encore, si son abonnement est payé (fin à venir), ou si elle est à vie (fondatrice, ou créée avant la mise en ligne de l'abonnement, le 6 novembre 2026 à 12 h). Écrire dans le carnet demande une écurie active.
+
+| Tentative | Règle | Résultat |
+|---|---|---|
+| écrire dans le carnet après l'essai, sans abonnement | `editeur(sid) && actif(sid)` | refusé (tout reste lisible) |
+| créer une écurie avec un essai trop long | `finEssai <= maintenant + 63 jours`, et rien d'autre dans `abonnement` | refusé |
+| créer une écurie avec une ancienne date pour passer « à vie » | `creeLe` à un jour près de maintenant | refusé |
+| la gérante se met « à vie » | paiement : seulement `statut: 'abonnee'` | refusé |
+| la gérante allonge son essai en payant | `finEssai` et `debut` inchangés | refusé |
+| la gérante paie (démonstration) | `abonnee`, formule `mois` ou `an`, `paiement.fournisseur == 'fictif'`, fin à moins de 800 jours, rien d'autre ne change dans l'écurie | autorisé |
+| un membre ou un inconnu abonne l'écurie | `gerante(sid)` faux | refusé |
+
+**Paiement de démonstration** : tant qu'il est autorisé (fonction `paiementFictif`), une gérante peut abonner son écurie sans payer. Quand Shine ou Tebex sera branché, retirer cette ligne `allow update` : l'abonnement ne sera plus écrit que par le serveur du paiement ou par l'administration.
+
+## 7. Administration EquiValdi
+
+Le compte `bennizdu03@gmail.com` (adresse confirmée) lit et écrit toutes les écuries : leur fiche (dont l'abonnement), leur équipe, leur carnet, leurs invitations, et la liste de toutes les écuries. Il n'a de fiche de membre dans aucune écurie : personne ne le voit dans son équipe. Un autre compte qui lit la liste de toutes les écuries est refusé.
+
 ## Migration
 
 - Recopie de l'équipe (cas c) : seulement par l'ancienne gérante, pour un uid qui existe dans l'ancien `membres`, avec exactement le même rôle (`equipe` ou `lecture`).
@@ -75,7 +95,7 @@ Une demande peut lire au plus 10 documents dans les règles, un lot d'écritures
 
 | Lot | Lectures par écriture | Taille du lot | Total |
 |---|---|---|---|
-| carnet (migration) | 1 (`editeur`) | 18 fiches au plus, et 5 Mo au plus | 18 |
+| carnet (migration) | 2 (`editeur`, `actif`) | 9 fiches au plus, et 5 Mo au plus | 18 |
 | équipe (migration) | 4 (`gerante`, `ancienneGerante`, ancienne fiche) | 4 fiches | 16 |
 | invitations (migration) | 1 (`gerante`) | 18 | 18 |
 | création d'une écurie | 2 | 3 écritures | 2 |

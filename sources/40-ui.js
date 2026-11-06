@@ -156,7 +156,7 @@ function openSheet(title, body, o = {}) {
   form.addEventListener('submit', e => {
     e.preventDefault();
     if (!o.onSubmit) return;
-    if (sync.readOnly && !o.local) { const el = $('#sfErr'); el.textContent = RO_MSG; el.hidden = false; return; }
+    if (sync.readOnly && !o.local) { const el = $('#sfErr'); el.textContent = roMsg(); el.hidden = false; return; }
     let r;
     try { r = o.onSubmit(form); } catch (err) { console.error(err); r = 'Erreur : ' + err.message; }
     if (typeof r === 'string') { const el = $('#sfErr'); el.textContent = r; el.hidden = false; el.scrollIntoView({ block: 'nearest' }); }
@@ -165,7 +165,7 @@ function openSheet(title, body, o = {}) {
   if (o.onDelete) {
     const b = $('#sfDel');
     b.addEventListener('click', () => {
-      if (sync.readOnly) { toast(RO_MSG, { danger: true }); return; }
+      if (sync.readOnly) { toast(roMsg(), { danger: true }); return; }
       if (b.classList.contains('armed')) { o.onDelete(); closeSheet(); return; }
       b.classList.add('armed');
       b.querySelector('span').textContent = o.delConfirm || 'Confirmer la suppression';
@@ -287,7 +287,7 @@ const horseOpts = (hs, sub) => hs.map(h => ({
    Sans fiches de membres (carnet partagé sur claude.ai), simple saisie avec suggestions. */
 function nomsConnus() {
   const s = new Map();
-  const add = n => { const v = String(n || '').trim(); if (v && !s.has(normNom(v))) s.set(normNom(v), v); };
+  const add = n => { const v = String(n || '').trim(); if (v && !s.has(normNom(v)) && normNom(v) !== 'equivaldi') s.set(normNom(v), v); };
   add(moiNom());
   list('seances').forEach(x => add(x.cavalier));
   list('concours').forEach(x => add(x.cavalier));
@@ -371,7 +371,7 @@ document.addEventListener('click', e => {
   const fn = ACT[t.dataset.act];
   if (!fn) return;
   e.preventDefault();
-  if (sync.readOnly && WRITE_ACTS.has(t.dataset.act)) { toast(RO_MSG, { danger: true }); return; }
+  if (sync.readOnly && WRITE_ACTS.has(t.dataset.act)) { toast(roMsg(), { danger: true }); return; }
   if (t.dataset.confirm && !t.classList.contains('armed')) { arm(t); return; }
   fn(t.dataset, t);
 });

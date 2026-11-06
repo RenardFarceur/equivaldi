@@ -39,9 +39,10 @@ const col = html => `<div style="display:flex;flex-direction:column;gap:12px">${
 
 VIEWS.pres = () => {
   // la carte du plan (3D ou vue de dessus), ou la liste des prés
-  const vue = (ui.presVue || (window.EQ_MODE ? 'carte' : 'liste')) === 'carte' ? 'carte' : 'liste';
-  const seg = segCtl('presVue', [['carte', 'Carte'], ['liste', 'Liste']], vue);
-  if (vue === 'carte') return { title: 'Prés', eyebrow: 'Carte des prés', html: seg + carteHtml(), fab: menuPres, fabLabel: 'Ajouter' };
+  const vue = (ui.presVue || (window.EQ_MODE && premium() ? 'carte' : 'liste')) === 'carte' ? 'carte' : 'liste';
+  const seg = segCtl('presVue', [['carte', premium() ? 'Carte' : `${ic('lock', 'sm')}Carte`], ['liste', 'Liste']], vue);
+  // la carte est réservée aux écuries abonnées : sinon, aperçu flouté et de quoi s'abonner
+  if (vue === 'carte') return { title: 'Prés', eyebrow: 'Carte des prés', html: seg + (premium() ? carteHtml() : carteVerrouHtml()), fab: menuPres, fabLabel: 'Ajouter' };
   if (!pres().length) return { title: 'Prés', eyebrow: 'Rotation de pâture', html: seg + emptyH('Aucun pré', 'Ajoute tes parcelles avec le bouton +, ou relie-les depuis la carte. Le carnet comptera les jours de pâture et de repos de chacune.'), fab: () => formPre(null), fabLabel: 'Nouveau pré' };
   return { title: 'Prés', eyebrow: 'Rotation de pâture', html: seg + presListe(), fab: menuPres, fabLabel: 'Ajouter' };
 };

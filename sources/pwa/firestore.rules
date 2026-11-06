@@ -24,6 +24,35 @@ service cloud.firestore {
     function editeur(sid) { return connecte() && get(fiche(sid, moi())).data.role in ['gerante', 'equipe']; }
     function gerante(sid) { return connecte() && get(structure(sid)).data.gerante == moi(); }
 
+    // Administration EquiValdi : gère toutes les écuries sans en être membre (n'apparaît dans aucune équipe)
+    function admin() { return connecte() && mail() == 'bennizdu03@gmail.com'; }
+
+    // Écurie active : essai en cours, abonnement payé, ou à vie (fondatrice, ou créée avant le 6 novembre 2026 à 12 h)
+    function actif(sid) {
+      let s = get(structure(sid)).data;
+      let a = s.get('abonnement', {});
+      return a.get('statut', '') in ['fondatrice', 'a_vie']
+        || s.get('creeLe', 9999999999999) < 1793962800000
+        || (a.get('statut', '') == 'abonnee' && a.get('fin', 0) > maintenant())
+        || a.get('finEssai', 0) > maintenant();
+    }
+    // Une écurie se crée maintenant (pas d'ancienne date pour passer « à vie »)
+    function creeeMaintenant() {
+      return request.resource.data.creeLe is int
+        && request.resource.data.creeLe > maintenant() - 86400000
+        && request.resource.data.creeLe < maintenant() + 86400000;
+    }
+    // Paiement de démonstration (en attendant Shine ou Tebex) : abonnement d'un mois ou d'un an,
+    // sans toucher à l'essai. À retirer quand le vrai paiement sera branché.
+    function paiementFictif(avant, a) {
+      return a.get('statut', '') == 'abonnee'
+        && a.get('formule', '') in ['mois', 'an']
+        && a.get('paiement', {}).get('fournisseur', '') == 'fictif'
+        && a.get('fin', 0) is int && a.get('fin', 0) <= maintenant() + 800 * 86400000
+        && a.get('finEssai', 0) == avant.get('finEssai', 0)
+        && a.get('debut', 0) == avant.get('debut', 0);
+    }
+
     // Ancien carnet (avant les écuries) : ses membres le lisent encore, personne n'y écrit
     function ancienMembre() { return connecte() && exists(ancienne(moi())); }
     function ancienneGerante() { return connecte() && get(ancienne(moi())).data.role == 'gerante'; }
@@ -73,21 +102,25 @@ service cloud.firestore {
     // ---------- Écuries ----------
     match /structures/{sid} {
       allow read: if membre(sid);
-      // création : par soi, gérante de sa nouvelle écurie, en essai de 62 jours au plus
+      allow read, update: if admin();
+      // création : par soi, gérante de sa nouvelle écurie, en essai de 2 mois au plus
       allow create: if connecte()
         && request.resource.data.gerante == moi()
         && request.resource.data.creePar.uid == moi()
         && request.resource.data.nom is string
         && request.resource.data.nom.size() >= 2 && request.resource.data.nom.size() <= 40
+        && creeeMaintenant()
+        && request.resource.data.abonnement.keys().hasOnly(['statut', 'debut', 'finEssai'])
         && request.resource.data.abonnement.statut == 'essai'
         && request.resource.data.abonnement.finEssai is int
-        && request.resource.data.abonnement.finEssai <= maintenant() + 62 * 86400000;
+        && request.resource.data.abonnement.finEssai <= maintenant() + 63 * 86400000;
       // « fondatrice » : seulement la première écurie, celle de Célia (migration de l'ancien carnet)
       allow create: if connecte()
         && request.resource.data.gerante == moi()
         && request.resource.data.creePar.uid == moi()
         && request.resource.data.nom is string
         && request.resource.data.nom.size() >= 2 && request.resource.data.nom.size() <= 40
+        && creeeMaintenant()
         && request.resource.data.abonnement.statut == 'fondatrice'
         && mail() == 'celiacourtois8@gmail.com';
       // mise à jour : la gérante, sans toucher à l'abonnement ; la gérance ne passe qu'à un membre existant
@@ -95,11 +128,16 @@ service cloud.firestore {
         && !touche(['abonnement', 'creePar', 'creeLe'])
         && (request.resource.data.gerante == resource.data.gerante
             || exists(fiche(sid, request.resource.data.gerante)));
+      // la gérante abonne son écurie (paiement de démonstration) : seul l'abonnement change
+      allow update: if gerante(sid)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['abonnement'])
+        && paiementFictif(resource.data.get('abonnement', {}), request.resource.data.abonnement);
       allow delete: if false;
 
       // ---------- L'équipe de l'écurie ----------
       match /membres/{uid} {
         allow read: if membre(sid);
+        allow read, write: if admin();
         allow create: if connecte() && creationEcurie(sid, uid);
         allow create: if connecte() && viaInvitation(sid, uid);
         allow create: if connecte() && recopie(sid, uid);
@@ -116,14 +154,17 @@ service cloud.firestore {
       }
 
       // ---------- Le carnet de l'écurie ----------
+      // écrire demande une écurie active : après l'essai sans abonnement, elle reste lisible
       match /{coll}/{id} {
         allow read: if coll in donnees() && membre(sid);
-        allow write: if coll in donnees() && editeur(sid);
+        allow write: if coll in donnees() && editeur(sid) && actif(sid);
+        allow read, write: if coll in donnees() && admin();
       }
     }
 
     // ---------- Invitations (par lien ou par adresse e-mail) ----------
     match /invitations/{code} {
+      allow read, write: if admin();
       // le code est le secret : toute personne connectée qui le connaît peut lire l'invitation
       // (pas les anciennes invitations, rangées sous l'adresse e-mail, qui n'a rien de secret)
       allow get: if connecte() && (resource == null || resource.data.structure is string);

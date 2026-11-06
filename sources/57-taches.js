@@ -141,7 +141,7 @@ document.addEventListener('contextmenu', e => { if (e.target.closest && e.target
 function formQui(id) {
   const tk = get('taches', id);
   if (!tk) return;
-  if (sync.readOnly) { toast(RO_MSG, { danger: true }); return; }
+  if (sync.readOnly) { toast(roMsg(), { danger: true }); return; }
   const e = tacheEtat(tk), f0 = e.done ? e.last : null;
   const moi = { uid: me.uid || null, nom: moiNom() };
   const qui0 = f0 ? faitPar(f0) : (pKey(moi) ? [moi] : []);
