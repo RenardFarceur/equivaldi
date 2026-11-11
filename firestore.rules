@@ -17,6 +17,11 @@ service cloud.firestore {
     // un champ absent ou vide
     function absent(m, champ) { return !(champ in m) || m[champ] == null; }
     function touche(champs) { return request.resource.data.diff(resource.data).affectedKeys().hasAny(champs); }
+    function seulement(champs) { return request.resource.data.diff(resource.data).affectedKeys().hasOnly(champs); }
+    // un texte d'au plus n caractères (champ facultatif : absent ou vide accepté)
+    function texte(m, champ, n) { return !(champ in m) || (m[champ] is string && m[champ].size() <= n); }
+    // une date notée maintenant (à un jour près, pour les horloges de téléphone décalées)
+    function dateMaintenant(v) { return v is int && v > maintenant() - 86400000 && v < maintenant() + 86400000; }
     function donnees() { return ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches', 'config']; }
 
     // Dans une écurie : membre (sa fiche existe), éditrice (gérante ou « Peut modifier »), gérante (celle de la structure)
@@ -132,7 +137,10 @@ service cloud.firestore {
       allow update: if gerante(sid)
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['abonnement'])
         && paiementFictif(resource.data.get('abonnement', {}), request.resource.data.abonnement);
-      allow delete: if false;
+      // dernière ouverture de l'écurie (pour l'administration) : tout membre, ce seul champ, la date du jour
+      allow update: if membre(sid) && seulement(['vu']) && dateMaintenant(request.resource.data.vu);
+      // la gérante supprime son écurie (suppression de son compte quand elle y est seule : l'appli le vérifie)
+      allow delete: if gerante(sid);
 
       // ---------- L'équipe de l'écurie ----------
       match /membres/{uid} {
@@ -151,6 +159,8 @@ service cloud.firestore {
         // la gérante retire quelqu'un (pas elle-même) ; chacun peut quitter, sauf la gérante
         allow delete: if gerante(sid) && uid != moi();
         allow delete: if connecte() && uid == moi() && get(structure(sid)).data.gerante != moi();
+        // la gérante retire sa propre fiche seulement avec l'écurie, dans le même lot
+        allow delete: if uid == moi() && gerante(sid) && !existsAfter(structure(sid));
       }
 
       // ---------- Le carnet de l'écurie ----------
@@ -158,6 +168,8 @@ service cloud.firestore {
       match /{coll}/{id} {
         allow read: if coll in donnees() && membre(sid);
         allow write: if coll in donnees() && editeur(sid) && actif(sid);
+        // la gérante vide le carnet avant de supprimer l'écurie, même après l'essai
+        allow delete: if coll in donnees() && gerante(sid);
         allow read, write: if coll in donnees() && admin();
       }
     }
@@ -193,6 +205,28 @@ service cloud.firestore {
         && !exists(fiche(resource.data.structure, moi()))
         && existsAfter(fiche(resource.data.structure, moi()));
       allow delete: if resource.data.structure is string && gerante(resource.data.structure);
+    }
+
+    // ---------- « Une idée, un souci ? » : messages à EquiValdi ----------
+    // chacun écrit les siens et lit les réponses ; l'administration lit, répond et classe
+    match /retours/{id} {
+      allow read, update, delete: if admin();
+      allow get, list: if connecte() && resource.data.uid == moi();
+      allow create: if connecte()
+        && request.resource.data.uid == moi()
+        && request.resource.data.keys().hasOnly(['uid', 'nom', 'email', 'sid', 'ecurie', 'role', 'type', 'texte', 'version', 'appareil', 'le', 'statut'])
+        && request.resource.data.type in ['idee', 'souci', 'question']
+        && request.resource.data.texte is string && request.resource.data.texte.size() >= 3 && request.resource.data.texte.size() <= 2000
+        && request.resource.data.statut == 'nouveau'
+        && dateMaintenant(request.resource.data.le)
+        && texte(request.resource.data, 'nom', 60) && texte(request.resource.data, 'email', 120)
+        && texte(request.resource.data, 'sid', 40) && texte(request.resource.data, 'ecurie', 60)
+        && texte(request.resource.data, 'role', 20) && texte(request.resource.data, 'version', 30)
+        && texte(request.resource.data, 'appareil', 200);
+      // la personne marque la réponse lue
+      allow update: if connecte() && resource.data.uid == moi() && seulement(['vuLe']) && request.resource.data.vuLe is int;
+      // et efface ses messages (suppression de son compte)
+      allow delete: if connecte() && resource.data.uid == moi();
     }
 
     // ---------- Ancien carnet (racine) : lecture seule pour ses membres ----------

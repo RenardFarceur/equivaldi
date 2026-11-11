@@ -81,6 +81,8 @@ function renvoyer(op) {
 }
 
 function loadCache() {
+  // écurie d'exemple : un carnet tout neuf à chaque visite, daté d'aujourd'hui (68-exemple.js)
+  if (ECURIE && ECURIE.demo && SID === 'exemple' && !lsGet(CACHE_KEY)) lsSet(CACHE_KEY, donneesExemple());
   const c = lsGet(CACHE_KEY);
   if (c && typeof c === 'object') {
     [...COLS, ...EXTRA].forEach(k => { S[k] = (c[k] && typeof c[k] === 'object') ? c[k] : {}; });
@@ -272,12 +274,13 @@ function updateSync() {
   const b = document.getElementById('sync');
   if (!b) return;
   const n = outbox.length;
-  b.className = 'sync ' + (sync.mode === 'local' ? 'local' : n ? 'wait' : sync.mode === 'cloud' ? 'ok' : '');
+  b.className = 'sync ' + (ECURIE && ECURIE.demo ? 'ok' : sync.mode === 'local' ? 'local' : n ? 'wait' : sync.mode === 'cloud' ? 'ok' : '');
   const r = document.getElementById('settingsBtn');
   if (r) r.setAttribute('aria-label', 'Réglages. ' + syncText());
 }
 function syncText() {
   const n = outbox.length;
+  if (ECURIE && ECURIE.demo) return "Écurie d'exemple : rien n'est enregistré, tout repart à zéro quand tu la quittes.";
   if (sync.mode === 'local') return n
     ? `Enregistré sur ce téléphone. ${n} ${pl(n, 'modification')} en attente d'envoi.`
     : 'Enregistré sur ce téléphone uniquement (pas de connexion au carnet en ligne).';
@@ -297,7 +300,9 @@ function cfg() {
     repos: Number.isFinite(c.repos) ? c.repos : 35,
     paturage: Number.isFinite(c.paturage) ? c.paturage : 10,
     boutique: Array.isArray(c.boutique) ? c.boutique : null,   // null : la liste de départ
-    crottins: c.crottins !== false                              // points crottins dans cette écurie
+    crottins: c.crottins !== false,                             // points crottins dans cette écurie
+    // rubriques gardées par la gérante (66-rubriques.js) : tout est affiché tant que rien n'est choisi
+    rubriques: Object.assign({ pres: true, foin: true, concours: true, seances: true }, c.rubriques && typeof c.rubriques === 'object' ? c.rubriques : {})
   };
 }
 

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mentions légales · EquiValdi</title>
+<meta name="description" content="Mentions légales d'EquiValdi, carnet d'écurie.">
+<meta name="theme-color" content="#EEF1EB" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0D1611" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32.png?v=c">
+<style>
+@font-face{font-family:"Outfit";font-style:normal;font-weight:400;font-display:swap;src:url(../fonts/outfit-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Outfit";font-style:normal;font-weight:500;font-display:swap;src:url(../fonts/outfit-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Outfit";font-style:normal;font-weight:600;font-display:swap;src:url(../fonts/outfit-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:600;font-display:swap;src:url(../fonts/barlow-condensed-latin-600-normal.woff2) format("woff2")}
+:root{--bg:#EEF1EB;--surface:#FFFFFF;--ink:#16211A;--ink-2:#4C5850;--line:#D2D9CD;--accent:#2B6340;--accent-strong:#1E4A30;--accent-soft:#D9E8DC;--hay-soft:#F7E6CA;--hay-ink:#7A5410;--zz:#5DB075;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0D1611;--surface:#15211A;--ink:#E8EFE9;--ink-2:#A7B5AB;--line:#2B3C31;--accent:#9FD6AE;--accent-strong:#C2E8CD;--accent-soft:#1E3828;--hay-soft:#382A15;--hay-ink:#F0B45C;--zz:#9FD6AE;color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 "Outfit",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--accent-strong);font-weight:500;text-underline-offset:3px}
+.page{max-width:760px;margin:0 auto;padding:0 16px 48px}
+.haut{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 0}
+.marque{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.marque img{width:40px;height:40px;border-radius:11px;flex:none}
+.marque b{display:block;font-weight:600;font-size:18px;line-height:1.1}
+.marque small{display:block;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--ink-2)}
+.ouvrir{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border-radius:999px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;font-size:15px;white-space:nowrap}
+@media (prefers-color-scheme:dark){.ouvrir{color:#0D1611}}
+.onglets{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 20px}
+.onglets a{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none;font-size:15px}
+.onglets a[aria-current="page"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-strong);font-weight:600}
+main{background:var(--surface);border:1.5px solid var(--line);border-radius:20px;padding:24px 20px 28px}
+h1{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;font-size:clamp(28px,7vw,38px);line-height:1.1;margin:0 0 6px;text-wrap:balance}
+.maj{margin:0 0 20px;color:var(--ink-2);font-size:14px}
+h2{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;font-size:19px;letter-spacing:.1em;text-transform:uppercase;margin:30px 0 8px;display:flex;align-items:center;gap:8px;color:var(--ink)}
+h2::before{content:"";width:6px;height:14px;flex:none;border-radius:2px;background:var(--zz)}
+h3{font-size:16px;font-weight:600;margin:18px 0 4px}
+p,li{max-width:68ch}
+p{margin:0 0 10px}
+ul{margin:0 0 10px;padding-left:22px}
+li{margin:0 0 4px}
+.bref{background:var(--accent-soft);border-radius:14px;padding:14px 16px;margin:0 0 8px}
+.bref ul{margin:0}
+.formulaire{border-left:3px solid var(--line);padding:4px 0 4px 14px;margin:10px 0;color:var(--ink)}
+.formulaire p{margin:0 0 6px}
+mark.manque{background:var(--hay-soft);color:var(--hay-ink);font-weight:600;border-radius:6px;padding:0 5px}
+table{border-collapse:collapse;width:100%;margin:8px 0 12px;font-size:15px}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-top:1px solid var(--line)}
+th{font-weight:600;width:34%}
+.tableau{overflow-x:auto}
+footer{margin-top:24px;color:var(--ink-2);font-size:14px;text-align:center}
+footer p{margin:4px auto}
+@media (max-width:420px){main{padding:20px 16px 24px}.ouvrir{padding:0 12px}}
+</style>
+</head>
+<body>
+<div class="page">
+<header class="haut">
+  <a class="marque" href="../"><img src="../icons/icon-192.png?v=c" alt="" width="40" height="40"><span><b>EquiValdi</b><small>Carnet d'écurie</small></span></a>
+  <a class="ouvrir" href="../">Ouvrir l'appli</a>
+</header>
+<nav class="onglets" aria-label="Pages légales"><a href="mentions-legales.html" aria-current="page">Mentions légales</a><a href="conditions.html">Conditions</a><a href="confidentialite.html">Confidentialité</a></nav>
+<main>
+<h1>Mentions légales</h1>
+<p class="maj">Dernière mise à jour : 11 novembre 2026</p>
+<h2>Éditeur</h2>
+<p>L'application EquiValdi (carnet d'écurie), accessible à l'adresse <a href="https://renardfarceur.github.io/equivaldi/">renardfarceur.github.io/equivaldi</a>, est éditée par :</p>
+<p><b>Célia Courtois</b>, entrepreneur individuel (EI), au régime de la micro-entreprise<br>
+Immatriculation : <mark class="manque">[à compléter : numéro SIREN et registre d'immatriculation]</mark><br>
+Adresse : <mark class="manque">[à compléter : adresse postale]</mark><br>
+Téléphone : <mark class="manque">[à compléter : téléphone]</mark><br>
+E-mail : <mark class="manque">[à compléter : adresse e-mail de contact]</mark><br>
+TVA non applicable, article 293 B du Code général des impôts.</p>
+
+<h2>Directrice de la publication</h2>
+<p>Célia Courtois</p>
+
+<h2>Hébergement</h2>
+<p>Les pages de l'application sont hébergées par <b>GitHub, Inc.</b> (service GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis — <a href="https://github.com">github.com</a>.</p>
+<p>Les comptes et les données des écuries sont hébergés par <b>Google LLC</b> (Firebase), 1600 Amphitheatre Parkway, Mountain View, CA 94043, États-Unis — téléphone : +1 650 253 0000 — <a href="https://firebase.google.com">firebase.google.com</a>.</p>
+
+<h2>Propriété intellectuelle</h2>
+<p>Le nom EquiValdi, le logo (le cheval dessiné), les textes, les illustrations et le code de l'application appartiennent à Célia Courtois. Toute reproduction ou réutilisation sans autorisation écrite est interdite.</p>
+<p>Les polices Outfit et Barlow Condensed sont distribuées sous licence SIL Open Font License 1.1 ; elles sont hébergées avec l'application.</p>
+<p>Ce que vous saisissez dans un carnet (fiches, photos, notes) reste à vous et à votre écurie : voir les <a href="conditions.html">conditions d'utilisation et de vente</a>.</p>
+
+<h2>Données personnelles</h2>
+<p>Voir la <a href="confidentialite.html">politique de confidentialité</a>.</p>
+
+<h2>Contact</h2>
+<p>Par e-mail : <mark class="manque">[à compléter : adresse e-mail de contact]</mark>, ou depuis l'application : Réglages › Une idée, un souci ?</p>
+</main>
+<footer><p>EquiValdi · carnet d'écurie · © 2026 Célia Courtois</p></footer>
+</div>
+</body>
+</html>

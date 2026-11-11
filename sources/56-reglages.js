@@ -16,15 +16,18 @@ VIEWS.reglages = () => {
   if (!validISO(fin) || fin <= t) fin = `${+t.slice(0, 4) + 1}-${C.finSaison}`;
   const rap = SOINS.filter(T => T.id !== 'autre').map(T =>
     `<div class="row"><div class="row-main"><div class="row-t">${T.label}</div><div class="row-s">${dureeTxt(C.rappels[T.id])}</div></div>${rinp('r_' + T.id, C.rappels[T.id] || '', 'Intervalle en jours : ' + T.label)}</div>`).join('');
-  let html = monEcurieHtml() + adminSection() + equipeHtml() + crotSection() + section('Rappels de soins', `<div class="list">${rap}</div><p class="note">Nombre de jours entre deux soins. 0 ou vide : pas de rappel. Un soin peut aussi porter sa propre date de rappel. Ces réglages sont communs à toutes les personnes du carnet.</p>`);
-  html += section('Alertes et prés', `<div class="list">
+  let html = monEcurieHtml() + adminSection() + rubriquesHtml() + equipeHtml() + crotSection() + section('Rappels de soins', `<div class="list">${rap}</div><p class="note">Nombre de jours entre deux soins. 0 ou vide : pas de rappel. Un soin peut aussi porter sa propre date de rappel. Ces réglages sont communs à toutes les personnes du carnet.</p>`);
+  // rubriques masquées : leurs réglages restent dans la page (cachés) pour être enregistrés tels quels
+  const P = rub('pres'), cache = on => on ? '' : ' hidden';
+  html += section(P ? 'Alertes et prés' : 'Alertes', `<div class="list">
     <div class="row"><div class="row-main"><div class="row-t">Prévenir avant l'échéance</div><div class="row-s">Soins à prévoir sur l'accueil</div></div>${rinp('c_alerte', C.alerte, "Jours d'avance")}</div>
-    <div class="row"><div class="row-main"><div class="row-t">Repos visé d'un pré</div><div class="row-s">Avant d'y remettre des chevaux</div></div>${rinp('c_repos', C.repos, 'Jours de repos visés')}</div>
-    <div class="row"><div class="row-main"><div class="row-t">Pâture maximum</div><div class="row-s">Au-delà, l'accueil propose de changer de pré</div></div>${rinp('c_pat', C.paturage, 'Jours de pâture maximum')}</div>
-  </div><p class="note">Chaque pré peut avoir ses propres durées dans sa fiche.</p>`);
-  html += section('Foin', `<div class="list" id="balles">${C.balles.map(balleRow).join('')}</div>
+    <div class="row"${cache(P)}><div class="row-main"><div class="row-t">Repos visé d'un pré</div><div class="row-s">Avant d'y remettre des chevaux</div></div>${rinp('c_repos', C.repos, 'Jours de repos visés')}</div>
+    <div class="row"${cache(P)}><div class="row-main"><div class="row-t">Pâture maximum</div><div class="row-s">Au-delà, l'accueil propose de changer de pré</div></div>${rinp('c_pat', C.paturage, 'Jours de pâture maximum')}</div>
+  </div>${P ? '<p class="note">Chaque pré peut avoir ses propres durées dans sa fiche.</p>' : ''}`);
+  const foin = section('Foin', `<div class="list" id="balles">${C.balles.map(balleRow).join('')}</div>
     <button type="button" class="link" data-act="add-balle" style="align-self:flex-start">${ic('plus', 'sm')}Ajouter un type de balle</button>
     <div class="list"><div class="row"><div class="row-main"><div class="row-t">Fin de saison du foin</div><div class="row-s">Date de mise à l'herbe, pour calculer le besoin</div></div><input class="rinput" type="date" id="c_fin" value="${fin}" style="width:auto" aria-label="Fin de saison du foin"></div></div>`);
+  html += rub('foin') ? foin : `<div hidden>${foin}</div>`;
   html += `<button type="button" class="btn primary" data-act="save-cfg">${ic('check', 'sm')}Enregistrer les réglages</button>`;
   const gerant = me.owner !== false && !sync.readOnly;
   html += section('Sauvegarde', `<div class="btnrow"><button type="button" class="btn" data-act="export">${ic('download', 'sm')}Exporter</button>${gerant ? `<label class="btn" for="imp">${ic('upload', 'sm')}Restaurer</label><input type="file" id="imp" class="vh" accept=".json,application/json">` : ''}</div>
@@ -32,7 +35,7 @@ VIEWS.reglages = () => {
   const nEx = exCount();
   if (gerant) html += section('Données', `<div class="btnrow">${nEx ? `<button type="button" class="btn" data-act="clear-ex" data-confirm="Confirmer">Effacer les ${nEx} exemples</button>` : ''}<button type="button" class="btn danger" data-act="wipe" data-confirm="Vraiment tout effacer ?">${ic('trash', 'sm')}Tout effacer</button></div>
     <p class="note">Efface les données pour toutes les personnes qui partagent le carnet.</p>`);
-  html += `<div class="about">${brandLogo()}</div>`;
+  html += retoursHtml() + aProposHtml();
   return { title: 'Réglages', eyebrow: 'EquiValdi', html, fab: null };
 };
 ACT['add-balle'] = () => {

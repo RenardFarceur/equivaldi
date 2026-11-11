@@ -72,6 +72,7 @@ function aboHtml() {
 function bandeauAbo() {
   const e = ecurieOuverte();
   if (!window.EQ_MODE || !e) return '';
+  if (e.demo) return bandeauExemple();
   if (e.fantome) return `<div class="banner admin pile">${ic('lock')}<div class="row-main"><b>Mode administrateur · ${esc(e.nom || '')}</b><span class="small">Tu n'apparais pas dans l'équipe ; ce que tu notes est signé « EquiValdi ».</span></div><button type="button" class="btn small" data-act="adm-quitter">Quitter</button></div>`;
   const st = aboEtat(e), g = e.role === 'gerante';
   if (st.code === 'expiree') return `<div class="banner ro pile">${ic('lock')}<div class="row-main"><b>Essai terminé · lecture seule</b><span class="small">${esc(figeeMsg())}</span></div>${g ? `<button type="button" class="btn small primary" data-act="abonner" data-raison="fin">S'abonner</button>` : ''}</div>`;
@@ -119,9 +120,11 @@ function feuillePaiement(fo) {
   const suite = st.code === 'essai' ? `<p class="note">Tout se débloque tout de suite, et ton essai n'est pas perdu : ${fo === 'an' ? "l'année payée commence" : 'le mois payé commence'} le ${dJour(st.fin)}, à la fin de l'essai.</p>`
     : st.code === 'abonnee' ? `<p class="note">${fo === 'an' ? "L'année s'ajoute" : "Le mois s'ajoute"} à la suite de l'abonnement en cours (jusqu'au ${dJour(st.fin)}).</p>` : '';
   openSheet('Paiement', `<div class="abo-demo"><span class="pill warn">Démo</span><p class="note" style="color:var(--ink)">Paiement fictif : aucun argent n'est débité. Le vrai paiement passera par Shine ou Tebex.</p></div>
-    <div class="abo-recap"><div class="row-main"><b>${esc(e.nom || 'Écurie')}</b><span class="small muted">Abonnement ${fo === 'an' ? 'annuel' : 'mensuel'}</span><span class="small muted">jusqu'au ${dJour(finPrevue(e, fo))}</span></div><b class="abo-prix">${m} €</b></div>${suite}`, {
+    <div class="abo-recap"><div class="row-main"><b>${esc(e.nom || 'Écurie')}</b><span class="small muted">Abonnement ${fo === 'an' ? 'annuel' : 'mensuel'}</span><span class="small muted">jusqu'au ${dJour(finPrevue(e, fo))}</span></div><b class="abo-prix">${m} €</b></div>${suite}
+    <p class="note">${m} € TTC, TVA non applicable (article 293 B du CGI). Pas de renouvellement automatique : à la fin de la période, l'écurie repasse en lecture seule jusqu'au paiement suivant.</p>
+    <label class="check"><input type="checkbox" id="f_cgv"><span>J'ai lu et j'accepte les <a href="${esc(EQ.legal ? EQ.legal.conditions : './legal/conditions.html')}" target="_blank" rel="noopener">conditions de vente</a>.</span></label>`, {
     submit: `Payer ${m} € (démo)`, local: true,
-    onSubmit: () => envoi(EQ.payerFictif(fo), a => {
+    onSubmit: () => !$('#f_cgv').checked ? 'Coche la case pour accepter les conditions de vente.' : envoi(EQ.payerFictif(fo), a => {
       closeSheet();
       toast(`Merci ! ${e.nom || "L'écurie"} est abonnée jusqu'au ${dJour(a.fin)}.`, { fete: true });
       render();
@@ -138,8 +141,8 @@ function adminSection() {
 let ADM = null, admEnCours = null;
 function chargerAdmin() {
   if (admEnCours) return admEnCours;
-  admEnCours = EQ.toutesEcuries().then(l => { ADM = { t: Date.now(), liste: l }; },
-    () => { ADM = ADM || { t: Date.now(), liste: [], erreur: true }; toast('Impossible de charger les écuries : vérifie ta connexion.', { danger: true }); })
+  admEnCours = Promise.all([EQ.toutesEcuries(), EQ.tousRetours().catch(() => [])]).then(([l, r]) => { ADM = { t: Date.now(), liste: l, retours: r }; },
+    () => { ADM = ADM || { t: Date.now(), liste: [], retours: [], erreur: true }; toast('Impossible de charger les écuries : vérifie ta connexion.', { danger: true }); })
     .then(() => { admEnCours = null; rerenderSoon(); });
   return admEnCours;
 }
@@ -150,8 +153,20 @@ VIEWS.admin = () => {
   if (!ADM) { chargerAdmin(); return Object.assign(T, { html: '<p class="note">Chargement des écuries…</p>' }); }
   const tous = ADM.liste.map(s => ({ s, st: aboEtat(s) }));
   const n = (...c) => tous.filter(x => c.includes(x.st.code)).length;
-  const f = ['essai', 'abo', 'expiree'].includes(ui.admFiltre) ? ui.admFiltre : 'toutes';
-  const vis = tous.filter(x => f === 'toutes' || (f === 'abo' ? ['abonnee', 'a_vie'].includes(x.st.code) : x.st.code === f));
+  const f = ['essai', 'abo', 'expiree', 'calmes'].includes(ui.admFiltre) ? ui.admFiltre : 'toutes';
+  // dernière ouverture notée par l'appli (structures.vu, depuis le 11 novembre 2026)
+  const ilYa = s => Number.isFinite(s.vu) ? Math.max(0, Math.floor((Date.now() - s.vu) / 86400000)) : null;
+  const calme = s => ilYa(s) == null || ilYa(s) > 14;
+  const vis = tous.filter(x => f === 'toutes' || (f === 'abo' ? ['abonnee', 'a_vie'].includes(x.st.code) : f === 'calmes' ? calme(x.s) : x.st.code === f));
+  const actives7 = tous.filter(x => ilYa(x.s) != null && ilYa(x.s) <= 7).length;
+  // messages « Une idée, un souci ? » : les nouveaux d'abord
+  const msgs = (ADM.retours || []).slice().sort((a, b) => ((a.statut === 'nouveau') ? 0 : 1) - ((b.statut === 'nouveau') ? 0 : 1) || (b.le || 0) - (a.le || 0));
+  const nNouv = msgs.filter(r => r.statut === 'nouveau').length;
+  const blocMsgs = msgs.length ? section(`Messages${nNouv ? ` <span class="count">${nNouv}</span>` : ''}`, `<div class="list">${msgs.slice(0, 12).map(r => {
+    const T = RETOUR_TYPES.find(x => x.v === r.type) || RETOUR_TYPES[0];
+    return `<button type="button" class="row" data-act="adm-msg" data-id="${esc(r.id)}">${lead(T.ic)}<div class="row-main"><div class="row-t trunc">${esc(r.texte)}</div><div class="row-s">${esc([r.nom, r.ecurie, dShort(isoOf(new Date(r.le || 0)))].filter(Boolean).join(' · '))}</div></div>
+      <span class="pill ${r.statut === 'nouveau' ? 'warn' : r.statut === 'repondu' ? 'ok' : ''}">${r.statut === 'nouveau' ? 'Nouveau' : r.statut === 'repondu' ? 'Répondu' : 'Traité'}</span></button>`;
+  }).join('')}</div>`) : '';
   const parMois = tous.filter(x => x.st.code === 'abonnee').reduce((t, x) => t + (x.st.formule === 'an' ? ABO.an / 12 : ABO.mois), 0);
   const ouv = idEcurie(ecurieOuverte());
   // les cartes des prés demandées à EquiValdi, les plus anciennes d'abord
@@ -162,7 +177,7 @@ VIEWS.admin = () => {
   const rows = vis.map(({ s, st }) => {
     const b = admBadge(st), quand = s.creeLe ? 'créée le ' + dShort(isoOf(new Date(s.creeLe))) : '';
     return `<button type="button" class="row" data-act="adm-ecurie" data-sid="${esc(s.id)}"><span class="qa-ic menthe">${ic('barn')}</span>
-      <div class="row-main"><div class="row-t">${esc(s.nom || 'Sans nom')}${s.id === ouv ? ' <span class="pill ok">Ouverte</span>' : ''}</div><div class="row-s">${esc([s.commune, quand, s.creePar && s.creePar.nom ? 'par ' + s.creePar.nom : ''].filter(Boolean).join(' · '))}</div></div>
+      <div class="row-main"><div class="row-t">${esc(s.nom || 'Sans nom')}${s.id === ouv ? ' <span class="pill ok">Ouverte</span>' : ''}</div><div class="row-s">${esc([s.commune, quand, s.creePar && s.creePar.nom ? 'par ' + s.creePar.nom : '', ilYa(s) == null ? '' : ilYa(s) === 0 ? "ouverte aujourd'hui" : `ouverte il y a ${nJ(ilYa(s))}`].filter(Boolean).join(' · '))}</div></div>
       <span class="pill ${b[0]}">${esc(b[1])}</span></button>`;
   }).join('');
   return Object.assign(T, {
@@ -170,9 +185,10 @@ VIEWS.admin = () => {
         <div class="stat"><b>${tous.length}</b><span>${pl(tous.length, 'écurie')}</span></div>
         <div class="stat"><b>${n('essai')}</b><span>en essai</span></div>
         <div class="stat"><b>${n('abonnee', 'a_vie')}</b><span>${pl(n('abonnee', 'a_vie'), 'abonnée')}</span></div></div>
-      <p class="note">${n('a_vie')} à vie · ${n('expiree')} ${pl(n('expiree'), 'expirée')} · environ ${num(parMois, 0)} € par mois d'abonnements en cours (paiements de démonstration compris).</p>
+      <p class="note">${n('a_vie')} à vie · ${n('expiree')} ${pl(n('expiree'), 'expirée')} · ${actives7} ${pl(actives7, 'ouverte')} ces 7 derniers jours · environ ${num(parMois, 0)} € par mois d'abonnements en cours (paiements de démonstration compris).</p>
+      ${blocMsgs}
       ${aDessiner}
-      ${segCtl('admFiltre', [['toutes', 'Toutes'], ['essai', 'Essai'], ['abo', 'Abonnées'], ['expiree', 'Expirées']], f)}
+      ${segCtl('admFiltre', [['toutes', 'Toutes'], ['essai', 'Essai'], ['abo', 'Abonnées'], ['expiree', 'Expirées'], ['calmes', 'Calmes']], f, 'scroll')}
       <div class="list">${rows || '<div class="row"><div class="row-s">Aucune écurie ici.</div></div>'}</div>
       <button type="button" class="link" data-act="adm-actualiser" style="align-self:flex-start">Actualiser</button>`
   });
@@ -233,3 +249,27 @@ function carteAdm(s) {
 }
 ACT['adm-carte'] = d => { toast('Ouverture du plan…'); EQ.ouvrirAdmin(d.sid, 'carte'); };
 ACT['adm-quitter'] = () => { if (window.EQ) EQ.quitterAdmin(); };
+/* Un message « Une idée, un souci ? » : le texte, d'où il vient, et la réponse (lue par la personne dans ses réglages) */
+ACT['adm-msg'] = d => {
+  const r = ADM && (ADM.retours || []).find(x => x.id === d.id);
+  if (!r) return;
+  const T = RETOUR_TYPES.find(x => x.v === r.type) || RETOUR_TYPES[0];
+  const ligne = (t, v) => v ? `<div class="row"><div class="row-main"><div class="row-s">${t}</div><div class="row-t">${esc(v)}</div></div></div>` : '';
+  const majListe = msg => { ADM = null; chargerAdmin().then(() => toast(msg)); };
+  openSheet(T.l, `<div class="box"><p class="msg-texte">${esc(r.texte)}</p></div>
+    <div class="list">${ligne('De', [r.nom, r.email].filter(Boolean).join(' · '))}${ligne('Écurie', [r.ecurie, ROLE_LABEL[r.role]].filter(Boolean).join(' · '))}${ligne('Envoyé le', jourHeure(r.le || 0))}${ligne('Téléphone', r.appareil)}${ligne('Version', r.version)}</div>
+    ${r.reponse ? `<div class="box ok"><p class="small muted">Ta réponse · ${esc(jourHeure(r.reponse.le))} · ${r.vuLe ? 'lue' : 'pas encore lue'}</p><p class="msg-texte">${esc(r.reponse.texte)}</p></div>` : ''}
+    ${fld(r.reponse ? 'Nouvelle réponse' : 'Réponse', area('f_arep', '', 'rows="5" maxlength="2000"'), 'Elle apparaît dans les réglages de la personne, avec une notification à sa prochaine ouverture.')}
+    <button type="button" class="btn small" data-act="adm-msg-classer" data-id="${esc(r.id)}" data-s="${r.statut === 'traite' ? (r.reponse ? 'repondu' : 'nouveau') : 'traite'}" style="align-self:flex-start">${r.statut === 'traite' ? 'Rouvrir' : 'Marquer traité'}</button>`, {
+    submit: 'Envoyer la réponse', local: true,
+    onSubmit: () => {
+      if (!val('f_arep')) return 'Écris la réponse.';
+      return envoi(EQ.repondreRetour(r.id, val('f_arep')), () => { closeSheet(); majListe('Réponse envoyée'); }, "La réponse n'a pas pu partir : vérifie ta connexion.");
+    }
+  });
+};
+ACT['adm-msg-classer'] = (d, el) => {
+  if (el) el.disabled = true;
+  EQ.classerRetour(d.id, d.s).then(() => { closeSheet(); ADM = null; chargerAdmin(); toast(d.s === 'traite' ? 'Message classé' : 'Message rouvert'); },
+    () => { if (el && el.isConnected) el.disabled = false; toast("Ça n'a pas marché : vérifie ta connexion.", { danger: true }); });
+};

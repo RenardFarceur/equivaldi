@@ -53,8 +53,11 @@ function rationsDuJour() {
 VIEWS.cheval = p => {
   const h = cheval(p.id);
   if (!h) return { title: 'Cheval', html: empty('Fiche introuvable', 'Ce cheval a été supprimé.') };
-  const sub = ['fiche', 'ration', 'soins', 'entrainement', 'concours'].includes(p.sub) ? p.sub : 'fiche';
-  let html = segCtl('sub', [['fiche', 'Fiche'], ['ration', 'Ration'], ['soins', 'Soins'], ['entrainement', 'Entraînement'], ['concours', 'Concours']], sub, 'scroll');
+  // Entraînement et Concours suivent les rubriques gardées par la gérante (66-rubriques.js)
+  const subs = [['fiche', 'Fiche'], ['ration', 'Ration'], ['soins', 'Soins'], ['entrainement', 'Entraînement'], ['concours', 'Concours']]
+    .filter(([k]) => (k !== 'entrainement' || rub('seances')) && (k !== 'concours' || rub('concours')));
+  const sub = subs.some(([k]) => k === p.sub) ? p.sub : 'fiche';
+  let html = segCtl('sub', subs, sub, 'scroll');
   let fab = () => formSoin(null, { hid: h.id }), fabLabel = 'Ajouter un soin';
   if (sub === 'fiche') html += ficheHtml(h);
   if (sub === 'ration') { html += rationHtml(h); fab = () => formRation(h.id, null); fabLabel = 'Ajouter un aliment'; }

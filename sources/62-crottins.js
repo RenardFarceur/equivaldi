@@ -489,13 +489,11 @@ ACT['crot-regles'] = () => {
     ${ligne('avec', 'Tâche à plusieurs', 'Appui long sur la case, ou le bouton à droite d’une tâche cochée : les crottins se partagent à parts égales', '')}
     ${ligne('shoe', 'Rendez-vous géré', 'Maréchal, véto, dentiste, ostéo · vaccin +15 · vermifuge +8', `+${CROT.soins.marechal}`)}
     ${ligne('cal', 'Rendez-vous prévu puis honoré', 'En plus du soin', `+${CROT.rdv}`)}
-    ${ligne('rosette', 'Concours fait', 'Pour le cavalier', `+${CROT.concours}`)}
-    ${ligne('rosette', 'Podium', `3e +${CROT.podium[3]} · 2e +${CROT.podium[2]}`, `+${CROT.podium[1]}`)}
-    ${ligne('timer', 'Séance de travail', 'Une par cheval et par jour', `+${CROT.seance}`)}
-    ${ligne('tool', 'Entretien de pré', 'Hersage, clôtures, fauche…', `+${CROT.entretien}`)}
-    ${ligne('bale', 'Foin rentré', 'Livraison ou récolte', `+${CROT.livraison[0]} à ${CROT.livraison[2]}`)}
-    ${ligne('bale', 'Balle entamée', `${CROT.ballesJour} par jour au plus`, `+${CROT.balle}`)}
-    ${ligne('move', 'Chevaux déplacés', 'Un par cheval et par jour', `+${CROT.deplacement}`)}
+    ${rub('concours') ? ligne('rosette', 'Concours fait', 'Pour le cavalier', `+${CROT.concours}`) + ligne('rosette', 'Podium', `3e +${CROT.podium[3]} · 2e +${CROT.podium[2]}`, `+${CROT.podium[1]}`) : ''}
+    ${rub('seances') ? ligne('timer', 'Séance de travail', 'Une par cheval et par jour', `+${CROT.seance}`) : ''}
+    ${rub('pres') ? ligne('tool', 'Entretien de pré', 'Hersage, clôtures, fauche…', `+${CROT.entretien}`) : ''}
+    ${rub('foin') ? ligne('bale', 'Foin rentré', 'Livraison ou récolte', `+${CROT.livraison[0]} à ${CROT.livraison[2]}`) + ligne('bale', 'Balle entamée', `${CROT.ballesJour} par jour au plus`, `+${CROT.balle}`) : ''}
+    ${rub('pres') ? ligne('move', 'Chevaux déplacés', 'Un par cheval et par jour', `+${CROT.deplacement}`) : ''}
   </div>
   <p class="note">Annuler une action retire ses crottins. Ce qui est noté trop tard ne rapporte rien : une semaine au plus après coup, deux jours pour les déplacements et les balles entamées. Le compteur part du ${dFull(crotDebut())}.</p>`);
 };

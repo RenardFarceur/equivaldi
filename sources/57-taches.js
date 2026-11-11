@@ -226,7 +226,7 @@ function formTache(id, pre = {}) {
     ${grp('Fréquence', chips('freq', [{ v: 'jour', l: 'Chaque jour' }, { v: 'jours', l: 'Tous les … jours' }, { v: 'une', l: 'Une seule fois' }], tk.freq || 'jour'))}
     <div id="w_n"${tk.freq === 'jours' ? '' : ' hidden'}>${fld('Tous les combien de jours ?', inp('f_n', tk.n || 3, 'inputmode="numeric" autocomplete="off"'), '7 pour une fois par semaine.')}</div>
     <div id="w_date"${tk.freq === 'une' ? '' : ' hidden'}>${fld('À faire le', inp('f_date', tk.date, 'type="date"'), 'Facultatif.')}</div>
-    ${ps.length ? grp('Pré', chips('pre', ps.map(p => ({ v: p.id, l: p.nom })), tk.preId ? [tk.preId] : [], { optional: true }), 'Facultatif.') : ''}
+    ${ps.length && rub('pres') ? grp('Pré', chips('pre', ps.map(p => ({ v: p.id, l: p.nom })), tk.preId ? [tk.preId] : [], { optional: true }), 'Facultatif.') : ''}
     ${hs.length ? grp('Cheval', chips('h', horseOpts(hs), tk.horseId ? [tk.horseId] : [], { optional: true }), 'Facultatif.') : ''}
     ${pickPerson('resp', "Qui s'en charge", tk.resp || null, { autre: false, hint: "Facultatif. Vide : toute l'équipe." })}
     ${grp('Effort', chips('effort', EFFORTS.map(x => ({ v: x.id, l: x.label })), tk.effort || 'normal'), '<span id="w_pts"></span>')}
@@ -261,7 +261,7 @@ function formTache(id, pre = {}) {
         if (!Number.isInteger(n) || n < 1 || n > 365) return 'Indique un nombre de jours entre 1 et 365.';
       }
       const date = freq === 'une' ? val('f_date') : '';
-      Object.assign(tk, { titre, freq, n, date: validISO(date) ? date : null, preId: chipVal(f, 'pre'), horseId: chipVal(f, 'h'), resp: readPerson('resp'), effort: chipVal(f, 'effort') || 'normal', notes: val('f_notes') });
+      Object.assign(tk, { titre, freq, n, date: validISO(date) ? date : null, preId: document.querySelector('[data-chips="pre"]') ? chipVal(f, 'pre') : (tk.preId || null), horseId: chipVal(f, 'h'), resp: readPerson('resp'), effort: chipVal(f, 'effort') || 'normal', notes: val('f_notes') });
       if (!Array.isArray(tk.fait)) tk.fait = [];
       put('taches', tk);
       toast(ex ? 'Tâche enregistrée' : 'Tâche ajoutée');

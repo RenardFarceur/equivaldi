@@ -63,6 +63,21 @@ Le tracé s'enregistre au fil de l'eau : on peut s'arrêter et reprendre plus ta
 
 **Ou EquiValdi la dessine** : une fois le plan envoyé, *EquiValdi la dessine pour moi*, avec une note (numéros des prés, où sont la piste, la carrière, les abris et les abreuvoirs ; le plus sûr est d'annoter la capture avant de l'envoyer). L'onglet *Prés* affiche « Ta carte est en préparation » jusqu'à ce qu'elle soit publiée.
 
+## Démarrer, exemple, rubriques (11 novembre 2026)
+
+- **Bien démarrer** : sur l'accueil d'une écurie de moins de 2 mois, une liste de premiers pas qui se cochent toute seule (rubriques, chevaux, prés, tâches, soins, équipe). *Masquer* la range sur ce téléphone.
+- **Écurie d'exemple** : *Visiter l'écurie d'exemple* sur l'écran de connexion (sans compte), dans *Bien démarrer*, ou par le lien `https://renardfarceur.github.io/equivaldi/?exemple` (site, QR code). Cinq chevaux, la carte des prés, une rotation, des soins, des concours et une équipe inventés. On visite en tant que Camille, la gérante ; tout se touche, rien ne part en ligne, tout repart à zéro en sortant (*Créer mon compte*, *Quitter l'exemple* ou *Revenir à mon écurie*). Le contenu est fabriqué par `sources/68-exemple.js`.
+- **Rubriques** : la gérante masque Prés, Foin, Concours ou Entraînement pour toute l'écurie (*Réglages* › *Rubriques*). Onglets, actions rapides, alertes, agenda, fiches et barème des crottins suivent. Rien n'est effacé.
+
+## Messages, conditions et compte
+
+- **Une idée, un souci ?** (*Réglages*) : le message part chez EquiValdi avec le prénom, l'adresse, l'écurie, le rôle et le modèle du téléphone. L'administration le lit en tête de son écran (ou de la console) et répond ; la réponse apparaît dans les réglages de la personne, avec une notification à l'ouverture.
+- **Dernière activité** : l'appli note sur l'écurie la date de la dernière ouverture (une fois par 12 h au plus). La console d'administration affiche « ouverte il y a N j », le nombre d'écuries ouvertes sur 7 jours et un filtre *Calmes* (rien depuis 14 jours).
+- **Pages légales** : `legal/mentions-legales.html`, `legal/conditions.html` (utilisation et vente), `legal/confidentialite.html`, liées depuis la connexion, la création de compte, le paiement et *Réglages* › À propos. Les coordonnées viennent de `sources/legal/identite.json` : un champ vide s'affiche en jaune « à compléter ». À faire relire par un juriste avant le vrai paiement.
+- **Acceptation** : case obligatoire à la création du compte, et une fois pour les comptes d'avant (bandeau sur l'accueil) ; notée dans `utilisateurs/{uid}.conditions`. Case des conditions de vente avant de payer.
+- **Mes données, supprimer mon compte** (*Réglages* › *Ton compte*) : téléchargement JSON (compte, fiches, messages) ; suppression avec le mot de passe. Une gérante seule dans son écurie la supprime avec tout son carnet ; avec une équipe, elle passe d'abord la gérance.
+- **Polices** : Outfit et Barlow Condensed sont hébergées avec l'appli (`fonts/`, licence SIL OFL) : plus rien n'est chargé chez Google Fonts.
+
 ## Points crottins
 
 Chaque coup de main rapporte des crottins (compteur en haut de l'écran, qui ouvre la boutique) : tâches cochées (une tâche rare rapporte plus qu'une quotidienne), rendez-vous gérés, concours et podiums, séances, entretien des prés, foin. Annuler une action retire ses crottins. Les récompenses s'échangent dans la boutique ; la gérante marque le bon *offert* une fois la récompense donnée.
@@ -75,3 +90,4 @@ Chaque écurie a ses crottins : ils comptent à partir de sa création, et la g�
 - `sw.js` : fonctionnement sans réseau
 - `manifest.webmanifest`, `icons/` : installation et icônes Cheval-feuille
 - `firestore.rules` : règles d'accès à coller dans Firebase
+- `legal/` : mentions légales, conditions d'utilisation et de vente, confidentialité ; `fonts/` : polices

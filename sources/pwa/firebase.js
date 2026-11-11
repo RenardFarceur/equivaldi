@@ -4,7 +4,8 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
 import {
   getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
-  sendEmailVerification, sendPasswordResetEmail, signOut, updateProfile
+  sendEmailVerification, sendPasswordResetEmail, signOut, updateProfile,
+  deleteUser, reauthenticateWithCredential, EmailAuthProvider
 } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js';
 import {
   initializeFirestore, getFirestore, persistentLocalCache, persistentMultipleTabManager,
@@ -42,6 +43,11 @@ const K = {
 // clés de l'ancien carnet (avant les écuries)
 const ANC = { cache: 'carnet-ecurie:cache:v1', file: 'carnet-ecurie:outbox:v1', role: 'equivaldi:role:v1' };
 const lis = k => { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (x) { return null; } };
+// écurie d'exemple ouverte sur ce téléphone (bridge.js) : ni connexion ni base, tout reste ici
+const DEMO = (() => { const l = lis(K.ecurie); return !!(l && l.demo && l.sid === 'exemple'); })();
+// version des conditions d'utilisation et de vente acceptées (legal/conditions.html)
+const CONDITIONS = '2026-11';
+const CGU_LOCAL = 'equivaldi:conditions';
 const ecris = (k, v) => { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); return true; } catch (x) { return false; } };
 const COLS = ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches'];
 const JOUR = 86400000;
@@ -151,17 +157,32 @@ const sortie = '<div class="auth-links"><button type="button" class="link" id="a
 const lierSortie = root => { const b = root.querySelector('#aOut'); if (b) b.addEventListener('click', deconnexion); };
 const noteInvitation = () => lis(K.invitation) ? `<div class="box ok"><p class="note" style="color:var(--ink)">Tu as reçu une invitation : connecte-toi, ou crée ton compte, pour rejoindre l'écurie.</p></div>` : '';
 const attente = () => show('<p class="auth-wait">Ouverture du carnet…</p>');
+const LEGAL = { mentions: './legal/mentions-legales.html', conditions: './legal/conditions.html', confidentialite: './legal/confidentialite.html' };
+const lienLegal = (k, t) => `<a href="${LEGAL[k]}" target="_blank" rel="noopener">${t}</a>`;
+const liensLegaux = `<p class="auth-legal">${lienLegal('mentions', 'Mentions légales')} · ${lienLegal('conditions', 'Conditions')} · ${lienLegal('confidentialite', 'Confidentialité')}</p>`;
+const blocExemple = `<div class="auth-exemple"><button type="button" class="btn" id="aEx">Visiter l'écurie d'exemple</button><p class="hint">Sans compte : une écurie déjà remplie, pour tout essayer. Rien n'est enregistré.</p></div>`;
+const lierExemple = root => { const b = root.querySelector('#aEx'); if (b) b.addEventListener('click', () => window.eqExemple && window.eqExemple.entrer()); };
+// message laissé avant un rechargement (compte supprimé…), montré une fois sur l'écran de connexion
+const avisConnexion = () => {
+  let a = '';
+  try { a = sessionStorage.getItem(K.avis) || ''; sessionStorage.removeItem(K.avis); } catch (x) { /* rien */ }
+  return a ? `<div class="box ok"><p class="note" style="color:var(--ink)">${escH(a)}</p></div>` : '';
+};
 
 function ecranConnexion() {
   show(`<form class="form" id="aForm" novalidate>
       <h2 class="auth-t">Connexion</h2>
+      ${avisConnexion()}
       ${noteInvitation()}
       ${field('aMail', 'Adresse e-mail', 'email', 'autocomplete="email" required')}
       ${field('aPass', 'Mot de passe', 'password', 'autocomplete="current-password" required')}
       ${errBox}
       <button class="btn primary" type="submit">Se connecter</button>
       <div class="auth-links"><button type="button" class="link" id="aNew">Créer un compte</button><button type="button" class="link" id="aLost">Mot de passe oublié</button></div>
+      ${lis(K.invitation) ? '' : blocExemple}
+      ${liensLegaux}
     </form>`, root => {
+    lierExemple(root);
     root.querySelector('#aForm').addEventListener('submit', e => {
       e.preventDefault();
       busy(e.submitter || root.querySelector('[type=submit]'), async () => {
@@ -186,14 +207,18 @@ function ecranCreation() {
       ${field('aMail', 'Adresse e-mail', 'email', 'autocomplete="email" required')}
       ${field('aPass', 'Mot de passe (6 caractères minimum)', 'password', 'autocomplete="new-password" required')}
       <p class="hint">Si tu as été invitée ou invité par e-mail, utilise cette adresse.</p>
+      <label class="check auth-cgu"><input type="checkbox" id="aCgu" required><span>J'accepte les ${lienLegal('conditions', "conditions d'utilisation")} et la ${lienLegal('confidentialite', 'politique de confidentialité')}.</span></label>
       ${errBox}
       <button class="btn primary" type="submit">Créer mon compte</button>
       <div class="auth-links"><button type="button" class="link" id="aBack">J'ai déjà un compte</button></div>
+      ${liensLegaux}
     </form>`, root => {
     root.querySelector('#aForm').addEventListener('submit', e => {
       e.preventDefault();
       const nom = root.querySelector('#aNom').value.trim();
       if (!nom) { setErr(root, 'Indique ton prénom.'); return; }
+      if (!root.querySelector('#aCgu').checked) { setErr(root, "Coche la case pour accepter les conditions d'utilisation."); return; }
+      ecris(CGU_LOCAL, { version: CONDITIONS, le: Date.now() });
       busy(root.querySelector('[type=submit]'), async () => {
         try {
           const c = await createUserWithEmailAndPassword(auth, root.querySelector('#aMail').value.trim(), root.querySelector('#aPass').value);
@@ -251,6 +276,7 @@ const message = (titre, texte) => new Promise(fin => show(`<div class="form">
 /* ---------- La personne connectée et ses écuries ---------- */
 let U = null, MAIL = '', IDX = null, OUV = null;   // compte, adresse, index personnel, écurie ouverte
 let ADMIN = false;                                  // compte d'administration EquiValdi
+let CGU_A_FAIRE = false;                            // conditions d'utilisation pas encore acceptées (comptes d'avant)
 // invitations remises « à plus tard » : plus reproposées pendant cette visite, même après un rechargement
 const VUS = (() => {
   const k = 'equivaldi:plus-tard';
@@ -273,12 +299,17 @@ const tente = p => p.then(v => ({ v }), e => ({ e }));
 async function lireIndex(u) {
   const s = await getDoc(doc(fs, 'utilisateurs', u.uid));
   const base = { nom: nomDe(u), email: adresse(u) };
+  // conditions acceptées à la création du compte (case cochée sur ce téléphone) : notées avec l'index
+  const cgu = lis(CGU_LOCAL), acceptees = cgu && cgu.version === CONDITIONS ? { version: CONDITIONS, le: cgu.le || Date.now() } : null;
   if (!s.exists()) {
-    setDoc(doc(fs, 'utilisateurs', u.uid), Object.assign({ ecuries: {} }, base), { merge: true }).catch(() => {});
-    return Object.assign({ ecuries: {}, derniere: null }, base);
+    const v = Object.assign({ ecuries: {} }, base, acceptees ? { conditions: acceptees } : {});
+    setDoc(doc(fs, 'utilisateurs', u.uid), v, { merge: true }).then(() => ecris(CGU_LOCAL, null)).catch(() => {});
+    return Object.assign({ derniere: null }, v);
   }
-  const d = s.data() || {};
-  if (d.email !== base.email || !d.nom) setDoc(doc(fs, 'utilisateurs', u.uid), { email: base.email, nom: d.nom || base.nom }, { merge: true }).catch(() => {});
+  const d = s.data() || {}, maj = {};
+  if (d.email !== base.email || !d.nom) Object.assign(maj, { email: base.email, nom: d.nom || base.nom });
+  if (acceptees && !(d.conditions && d.conditions.version === CONDITIONS)) { maj.conditions = acceptees; d.conditions = acceptees; }
+  if (Object.keys(maj).length) setDoc(doc(fs, 'utilisateurs', u.uid), maj, { merge: true }).then(() => { if (maj.conditions) ecris(CGU_LOCAL, null); }).catch(() => {});
   return Object.assign({}, d, { ecuries: (d.ecuries && typeof d.ecuries === 'object') ? Object.assign({}, d.ecuries) : {} });
 }
 const retirerDeLIndex = sids => {
@@ -346,6 +377,7 @@ async function parcours(u, local) {
     catch (e2) { if (estRefus(e2)) { await reglesAnciennes(u, e2); return; } throw e2; }
   }
   IDX = idx;
+  CGU_A_FAIRE = !(idx.conditions && idx.conditions.version === CONDITIONS);
   // Administration : l'écurie ouverte depuis « Toutes les écuries », sans en être membre
   if (ADMIN && local && local.fantome && preLocal) {
     const x = await preLocal;
@@ -425,7 +457,7 @@ function demarrer(u, e, o = {}) {
     if (Object.keys(maj).length) setDoc(indexRef(), maj, { merge: true }).catch(() => {});
   }
   const role = e.role, qui = fantome ? FANTOME : { uid: u.uid, nom: u.displayName || '' };
-  Object.assign(window.EQ, { email: MAIL, role, admin: ADMIN, ecurie: Object.assign({}, OUV), ecuries: listeEcuries() });
+  Object.assign(window.EQ, { email: MAIL, role, admin: ADMIN, ecurie: Object.assign({}, OUV), ecuries: listeEcuries(), conditionsAFaire: CGU_A_FAIRE && !fantome });
   hide();
   window.claude._resolve('user', {
     me: async () => ({ id: qui.uid, name: qui.nom, email: MAIL, isOwner: role === 'gerante', canEdit: role !== 'lecture', avatarUrl: '', color: '' }),
@@ -439,6 +471,7 @@ function demarrer(u, e, o = {}) {
   notifier();
   suivreEcurie(e.id);
   if (!o.horsLigne) setTimeout(() => { verifierIndex().catch(() => {}); }, 1500);
+  if (!fantome) { noterVisite(e.id); setTimeout(verifierReponses, 2500); }
   let a = '';
   try { a = sessionStorage.getItem(K.avis) || ''; sessionStorage.removeItem(K.avis); } catch (x) { /* rien */ }
   if (a) setTimeout(() => { if (typeof toast === 'function') toast(a); }, 700);
@@ -489,12 +522,12 @@ async function ouvrir(sid) {
 }
 // Une écurie perdue ou quittée : sa copie locale et ses envois en attente n'ont plus lieu d'être
 function oublierEcurie(sid) {
-  try { [K.cache(sid), K.file(sid), K.role(sid)].forEach(k => localStorage.removeItem(k)); } catch (x) { /* rien */ }
+  try { [K.cache(sid), K.file(sid), K.role(sid), 'equivaldi:vu:' + sid].forEach(k => localStorage.removeItem(k)); } catch (x) { /* rien */ }
   const l = lis(K.ecurie);
   if (l && l.sid === sid) ecris(K.ecurie, null);
 }
 function purgerEcuries() {
-  const pref = [ANC.cache, ANC.file, ANC.role, K.ecurie];
+  const pref = [ANC.cache, ANC.file, ANC.role, K.ecurie, 'equivaldi:vu'];
   try { Object.keys(localStorage).filter(k => pref.some(p => k === p || k.startsWith(p + ':'))).forEach(k => localStorage.removeItem(k)); } catch (x) { /* rien */ }
 }
 // Accès retiré pendant l'utilisation (la base refuse les lectures) : on vérifie, puis on prévient
@@ -529,8 +562,11 @@ function ecranAccueil(u, note = '') {
         <button class="btn" id="aCode">J'ai un code d'invitation</button>
         ${ADMIN ? '<button class="btn" id="aAdmin">Administration : toutes les écuries</button>' : ''}
       </div>
+      ${blocExemple}
       ${sortie}
+      ${liensLegaux}
     </div>`, root => {
+    lierExemple(root);
     root.querySelector('#aCreer').addEventListener('click', () => ecranCreer(u, () => ecranAccueil(u)));
     root.querySelector('#aCode').addEventListener('click', () => ecranCode(u, () => ecranAccueil(u)));
     const ad = root.querySelector('#aAdmin');
@@ -541,8 +577,12 @@ function ecranAccueil(u, note = '') {
 // Administration sans écurie à soi : la liste de toutes les écuries, pour en ouvrir une
 async function ecranAdmin(u) {
   show('<p class="auth-wait">Chargement des écuries…</p>');
-  let l = [];
-  try { l = await toutesEcuries(); } catch (e) { ecranSouci(u, e); return; }
+  let l = [], msgs = [];
+  try { [l, msgs] = await Promise.all([toutesEcuries(), tousRetours().catch(() => [])]); } catch (e) { ecranSouci(u, e); return; }
+  // les messages « Une idée, un souci ? » : les nouveaux en tête
+  const nouveaux = msgs.filter(r => r.statut === 'nouveau').length;
+  const blocMsgs = msgs.length ? `<h3 class="auth-sous">Messages${nouveaux ? ` · ${nouveaux} ${nouveaux > 1 ? 'nouveaux' : 'nouveau'}` : ''}</h3>
+      <div class="list">${msgs.slice(0, 30).map(r => `<button type="button" class="row" data-msg="${escH(r.id)}"><div class="row-main"><div class="row-t">${escH(court(r.texte, 70))}</div><div class="row-s">${escH([r.nom, r.ecurie, new Date(r.le || 0).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })].filter(Boolean).join(' · '))}</div></div><span class="pill${r.statut === 'nouveau' ? ' warn' : r.statut === 'repondu' ? ' ok' : ''}">${r.statut === 'nouveau' ? 'Nouveau' : r.statut === 'repondu' ? 'Répondu' : 'Traité'}</span></button>`).join('')}</div>` : '';
   // les cartes des prés demandées à EquiValdi d'abord (les plus anciennes en tête) : « Dessiner » ouvre l'éditeur
   const cartes = l.filter(s => s.carteDemande && s.carteDemande.statut === 'demandee').sort((a, b) => a.carteDemande.le - b.carteDemande.le);
   const jour = ms => new Date(ms).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
@@ -552,13 +592,42 @@ async function ecranAdmin(u) {
   show(`<div class="form">
       <h2 class="auth-t">${cartes.length ? 'Administration' : 'Toutes les écuries'}</h2>
       <p class="hint">Tu ouvres les écuries sans apparaître dans leur équipe.</p>
+      ${blocMsgs}
       ${aDessiner}
       <div class="list">${l.map(s => `<button type="button" class="row" data-sid="${escH(s.id)}"><div class="row-main"><div class="row-t">${escH(s.nom || 'Sans nom')}</div><div class="row-s">${escH(s.commune || '')}</div></div></button>`).join('') || '<p class="hint">Aucune écurie pour le moment.</p>'}</div>
       <div class="auth-links"><button type="button" class="link" id="aBack">Retour</button></div>
     </div>`, root => {
     root.querySelectorAll('[data-sid]').forEach(b => b.addEventListener('click', () => ouvrirAdmin(b.dataset.sid)));
     root.querySelectorAll('[data-carte]').forEach(b => b.addEventListener('click', () => ouvrirAdmin(b.dataset.carte, 'carte')));
+    root.querySelectorAll('[data-msg]').forEach(b => b.addEventListener('click', () => ecranMessage(u, msgs.find(r => r.id === b.dataset.msg))));
     root.querySelector('#aBack').addEventListener('click', () => ecranAccueil(u));
+  });
+}
+// Un message, son contexte, et la réponse (visible par la personne dans ses réglages)
+function ecranMessage(u, r) {
+  if (!r) { ecranAdmin(u); return; }
+  const TYPES = { idee: 'Une idée', souci: 'Un souci', question: 'Une question' };
+  const quand = ms => new Date(ms || 0).toLocaleString('fr-FR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+  const ligne = (t, v) => v ? `<div class="row"><div class="row-main"><div class="row-s">${t}</div><div class="row-t">${escH(v)}</div></div></div>` : '';
+  show(`<div class="form">
+      <h2 class="auth-t">${escH(TYPES[r.type] || 'Message')}</h2>
+      <div class="box"><p style="white-space:pre-wrap">${escH(r.texte)}</p></div>
+      <div class="list">${ligne('De', [r.nom, r.email].filter(Boolean).join(' · '))}${ligne('Écurie', [r.ecurie, ROLES[r.role]].filter(Boolean).join(' · '))}${ligne('Envoyé le', quand(r.le))}${ligne('Téléphone', r.appareil)}${ligne('Version', r.version)}</div>
+      ${r.reponse ? `<div class="box ok"><p class="note" style="color:var(--ink)"><b>Ta réponse du ${escH(quand(r.reponse.le))}</b> ${r.vuLe ? '(lue)' : '(pas encore lue)'}</p><p style="white-space:pre-wrap">${escH(r.reponse.texte)}</p></div>` : ''}
+      <label class="field"><span>${r.reponse ? 'Nouvelle réponse' : 'Réponse'}</span><textarea id="aRep" rows="5" maxlength="2000"></textarea></label>
+      ${errBox}
+      <button class="btn primary" id="aEnv">Envoyer la réponse</button>
+      <div class="auth-links"><button type="button" class="link" id="aBack">Retour</button><button type="button" class="link" id="aCl">${r.statut === 'traite' ? 'Rouvrir' : 'Marquer traité'}</button></div>
+    </div>`, root => {
+    root.querySelector('#aEnv').addEventListener('click', e => busy(e.currentTarget, async () => {
+      try { await repondreRetour(r.id, root.querySelector('#aRep').value); ecranAdmin(u); }
+      catch (x) { setErr(root, errTxt(x)); }
+    }));
+    root.querySelector('#aCl').addEventListener('click', e => busy(e.currentTarget, async () => {
+      try { await classerRetour(r.id, r.statut === 'traite' ? (r.reponse ? 'repondu' : 'nouveau') : 'traite'); ecranAdmin(u); }
+      catch (x) { setErr(root, errTxt(x)); }
+    }));
+    root.querySelector('#aBack').addEventListener('click', () => ecranAdmin(u));
   });
 }
 const champsEcurie = (nom = '', commune = '') => `
@@ -1219,12 +1288,193 @@ async function quitterAdmin() {
   location.reload();
 }
 
+/* ---------- Dernière activité de l'écurie (pour l'administration) ----------
+   Une fois toutes les 12 heures au plus, la personne qui ouvre l'écurie note la date : la console
+   d'administration voit ainsi les écuries actives et celles qui ne servent plus. */
+function noterVisite(sid) {
+  const k = 'equivaldi:vu:' + sid, l = Number(lis(k)) || 0, now = Date.now();
+  if (now - l < 12 * 3600000) return;
+  updateDoc(doc(fs, 'structures', sid), { vu: now }).then(() => ecris(k, now)).catch(() => {});
+}
+
+/* ---------- « Une idée, un souci ? » : messages à EquiValdi et réponses ---------- */
+const TYPES_RETOUR = ['idee', 'souci', 'question'];
+const court = (v, n) => String(v || '').replace(/\s+/g, ' ').trim().slice(0, n);
+async function envoyerRetour({ type, texte }) {
+  if (!U) throw erreur('Connecte-toi pour écrire à EquiValdi.');
+  const t = String(texte || '').trim().slice(0, 2000);
+  if (t.length < 3) throw erreur('Écris quelques mots.');
+  const ref = doc(collection(fs, 'retours'));
+  const r = {
+    uid: U.uid, nom: court(moiQui().nom, 60), email: court(MAIL, 120),
+    sid: OUV ? OUV.id : '', ecurie: OUV ? court(OUV.nom, 60) : '', role: OUV && !OUV.fantome ? OUV.role : '',
+    type: TYPES_RETOUR.includes(type) ? type : 'idee', texte: t,
+    version: court(window.EQ_VERSION, 30), appareil: court(navigator.userAgent, 200), le: Date.now(), statut: 'nouveau'
+  };
+  try { await delai(setDoc(ref, r), 15000); }
+  catch (e) { if (estRefus(e)) throw erreur("Le message n'a pas pu partir : les règles d'accès de la base ne sont pas à jour."); throw e; }
+  return Object.assign({ id: ref.id }, r);
+}
+async function mesRetours() {
+  if (!U) return [];
+  const q = await getDocs(query(collection(fs, 'retours'), where('uid', '==', U.uid)));
+  return q.docs.map(d => Object.assign({ id: d.id }, d.data())).sort((a, b) => (b.le || 0) - (a.le || 0));
+}
+async function retourVu(id) {
+  await updateDoc(doc(fs, 'retours', id), { vuLe: Date.now() });
+  window.EQ.reponses = Math.max(0, (window.EQ.reponses || 0) - 1);
+  notifier();
+}
+// au démarrage : une réponse d'EquiValdi pas encore lue ? (une seule fois par visite)
+function verifierReponses() {
+  if (!U || !OUV || OUV.fantome) return;
+  mesRetours().then(l => {
+    const n = l.filter(r => r.reponse && !r.vuLe).length;
+    window.EQ.reponses = n;
+    notifier();
+    let dit = false;
+    try { dit = sessionStorage.getItem('equivaldi:reponse-vue') === '1'; sessionStorage.setItem('equivaldi:reponse-vue', '1'); } catch (x) { /* rien */ }
+    if (n && !dit && typeof toast === 'function') toast(n > 1 ? `EquiValdi a répondu à ${n} de tes messages : Réglages.` : 'EquiValdi a répondu à ton message : Réglages.');
+  }).catch(() => {});
+}
+// administration : tous les messages, la réponse, le classement
+async function tousRetours() {
+  exigerAdmin();
+  const q = await getDocs(collection(fs, 'retours'));
+  return q.docs.map(d => Object.assign({ id: d.id }, d.data())).sort((a, b) => (b.le || 0) - (a.le || 0));
+}
+async function repondreRetour(id, texte) {
+  exigerAdmin();
+  const t = String(texte || '').trim().slice(0, 2000);
+  if (!t) throw erreur('Écris la réponse.');
+  const reponse = { texte: t, le: Date.now() };
+  await delai(updateDoc(doc(fs, 'retours', id), { reponse, statut: 'repondu', vuLe: deleteField() }), 15000);
+  return reponse;
+}
+async function classerRetour(id, statut) {
+  exigerAdmin();
+  if (!['nouveau', 'repondu', 'traite'].includes(statut)) throw erreur('État inconnu.');
+  await delai(updateDoc(doc(fs, 'retours', id), { statut }), 15000);
+}
+
+/* ---------- Conditions d'utilisation : les comptes créés avant les acceptent une fois ---------- */
+async function accepterConditions() {
+  if (!U) return;
+  const v = { version: CONDITIONS, le: Date.now() };
+  await delai(setDoc(indexRef(), { conditions: v }, { merge: true }), 15000);
+  if (IDX) IDX.conditions = v;
+  CGU_A_FAIRE = false;
+  window.EQ.conditionsAFaire = false;
+  notifier();
+}
+
+/* ---------- Mes données et suppression du compte (RGPD) ---------- */
+// les écuries de l'index, vérifiées sur la base : celles que je gère seule (supprimées avec mon compte),
+// celles que je gère avec d'autres (la gérance doit d'abord passer), celles dont je suis membre (je les quitte)
+async function analyseSuppression() {
+  if (!U) throw erreur('Connecte-toi d\'abord.');
+  const res = { bloquees: [], supprimees: [], quittees: [] };
+  for (const x of listeEcuries()) {
+    let st;
+    try { st = await getDoc(doc(fs, 'structures', x.id)); }
+    catch (e) { if (estRefus(e)) continue; throw e; }
+    if (!st.exists()) continue;
+    const d = st.data() || {}, e = { id: x.id, nom: d.nom || x.nom };
+    if (d.gerante !== U.uid) { res.quittees.push(e); continue; }
+    const m = await getDocs(collection(fs, 'structures', x.id, 'membres'));
+    (m.size > 1 ? res.bloquees : res.supprimees).push(e);
+  }
+  return res;
+}
+async function mesDonnees() {
+  if (!U) throw erreur('Connecte-toi d\'abord.');
+  const out = { app: 'equivaldi', type: 'donnees-personnelles', exporte: new Date().toISOString(), compte: { uid: U.uid, email: MAIL, prenom: nomDe(U) }, index: null, ecuries: [], messages: [] };
+  try { const s = await getDoc(indexRef()); out.index = s.exists() ? s.data() : null; } catch (e) { /* hors ligne */ }
+  for (const x of listeEcuries()) {
+    try { const f = await getDoc(doc(fs, 'structures', x.id, 'membres', U.uid)); out.ecuries.push({ id: x.id, nom: x.nom, role: x.role, fiche: f.exists() ? f.data() : null }); }
+    catch (e) { out.ecuries.push({ id: x.id, nom: x.nom, role: x.role, fiche: null }); }
+  }
+  try { out.messages = (await mesRetours()).map(r => { const o = Object.assign({}, r); delete o.uid; return o; }); } catch (e) { /* rien */ }
+  return out;
+}
+const lots = async (refs, fn) => { for (let i = 0; i < refs.length; i += 400) { const b = writeBatch(fs); refs.slice(i, i + 400).forEach(r => fn(b, r)); await b.commit(); } };
+// une écurie dont je suis la seule personne : son carnet, ses invitations, puis l'écurie et ma fiche (même lot)
+async function effacerEcurie(sid) {
+  for (const c of [...COLS, 'config']) {
+    const q = await getDocs(collection(fs, 'structures', sid, c));
+    await lots(q.docs.map(d => d.ref), (b, r) => b.delete(r));
+  }
+  const inv = await getDocs(query(collection(fs, 'invitations'), where('structure', '==', sid)));
+  await lots(inv.docs.map(d => d.ref), (b, r) => b.delete(r));
+  const b = writeBatch(fs);
+  b.delete(doc(fs, 'structures', sid, 'membres', U.uid));
+  b.delete(doc(fs, 'structures', sid));
+  await b.commit();
+  oublierEcurie(sid);
+}
+async function supprimerCompte(motDePasse) {
+  if (!U || !auth.currentUser) throw erreur('Connecte-toi d\'abord.');
+  if (ADMIN) throw erreur("Le compte d'administration ne se supprime pas depuis l'appli.");
+  // Firebase demande une connexion récente : le mot de passe confirme que c'est bien toi
+  try { await reauthenticateWithCredential(auth.currentUser, EmailAuthProvider.credential(auth.currentUser.email, String(motDePasse || ''))); }
+  catch (e) { throw (e && ['auth/invalid-credential', 'auth/wrong-password', 'auth/missing-password'].includes(e.code)) ? erreur('Mot de passe incorrect.') : e; }
+  const a = await analyseSuppression();
+  if (a.bloquees.length) throw erreur(`Passe d'abord la gérance ${a.bloquees.map(x => deNom(x.nom)).join(' et ')} à quelqu'un de l'équipe.`);
+  for (const x of a.supprimees) await effacerEcurie(x.id);
+  for (const x of a.quittees) {
+    try { await deleteDoc(doc(fs, 'structures', x.id, 'membres', U.uid)); } catch (e) { if (!estRefus(e)) throw e; }
+    oublierEcurie(x.id);
+  }
+  const r = await getDocs(query(collection(fs, 'retours'), where('uid', '==', U.uid)));
+  await lots(r.docs.map(d => d.ref), (b, x) => b.delete(x));
+  await deleteDoc(indexRef());
+  await deleteUser(auth.currentUser);
+  purgerEcuries();
+  try { ['carnet-ecurie:moi:v1', CGU_LOCAL, 'carnet-ecurie:ui:v1'].forEach(k => localStorage.removeItem(k)); Object.keys(localStorage).filter(k => k.startsWith('equivaldi:vu:')).forEach(k => localStorage.removeItem(k)); } catch (x) { /* rien */ }
+  avis(a.supprimees.length ? `Ton compte a été supprimé, avec ${a.supprimees.map(x => x.nom).join(', ')} et tout son carnet.` : 'Ton compte a été supprimé.');
+  location.reload();
+}
+
+/* ---------- Écurie d'exemple : l'appli tourne sans compte ni base ---------- */
+const PAS_EXEMPLE = "C'est l'écurie d'exemple : rien n'est enregistré ici. Crée ton écurie pour le faire pour de vrai.";
+function demarrerExemple() {
+  const l = lis(K.ecurie) || {};
+  OUV = {
+    id: 'exemple', nom: l.nom || "Écurie d'exemple", commune: '', role: 'gerante', crottinsDepuis: l.crottinsDepuis || '', creeLe: l.creeLe || null,
+    abonnement: { statut: 'a_vie' }, gerante: 'ex-camille', carteDemande: null, fantome: false, demo: true, retour: !!l.retour
+  };
+  const non = async () => { throw erreur(PAS_EXEMPLE); };
+  Object.keys(window.EQ).forEach(k => { if (typeof window.EQ[k] === 'function') window.EQ[k] = non; });
+  Object.assign(window.EQ, {
+    email: '', role: 'gerante', admin: false, demo: true, ecurie: Object.assign({}, OUV), ecuries: [], conditionsAFaire: false, reponses: 0,
+    lien: () => location.origin + location.pathname, code: joli, tarif: TARIF,
+    carteFaite: async () => null,
+    invitations: async () => [],
+    membres: async () => (typeof list === 'function' ? list('membres') : []).map(m => Object.assign({ uid: m.id, moi: m.id === 'ex-camille', email: '' }, m)),
+    bon: async (uid, id, data) => { if (typeof bonLocal === 'function') bonLocal(uid, id, data); },
+    deconnexion: async () => window.eqExemple.quitter(),
+    ouvrir: async () => window.eqExemple.quitter(),
+    quitterAdmin: async () => window.eqExemple.quitter()
+  });
+  hide();
+  window.claude._resolve('user', {
+    me: async () => ({ id: 'ex-camille', name: 'Camille', email: '', isOwner: true, canEdit: true, avatarUrl: '', color: '' }),
+    id: async () => 'ex-camille', isOwner: async () => true, canEdit: async () => true,
+    can: async n => n === 'data.write', profiles: async ids => Object.fromEntries([].concat(ids).map(i => [i, { id: i, name: '' }]))
+  });
+  window.claude._resolve('db', null);
+  notifier();
+}
+
 window.EQ = {
   email: '', role: '', admin: false, ecurie: null, ecuries: [],
   tarif: TARIF,
   payerFictif,
   toutesEcuries, equipeDe, gererAbonnement, ouvrirAdmin, quitterAdmin,
   demanderCarte, carteFaite,
+  envoyerRetour, mesRetours, retourVu, tousRetours, repondreRetour, classerRetour,
+  accepterConditions, analyseSuppression, mesDonnees, supprimerCompte,
+  conditions: CONDITIONS, legal: LEGAL, demo: false, reponses: 0, conditionsAFaire: false,
   deconnexion,
   ouvrir,
   creer: async v => { const e = await creer(v); await ouvrir(e.id); return e.id; },
@@ -1266,13 +1516,22 @@ window.EQ = {
   code: joli
 };
 
-// rien de l'écurie n'est connu sur ce téléphone : on attend la connexion derrière l'écran d'accueil
-if (!window.EQ_SID) attente();
-onAuthStateChanged(auth, u => {
-  if (!u) { ecranConnexion(); return; }
-  if (!u.emailVerified) { ecranVerification(u); return; }
-  entrer(u);
-});
+if (DEMO) demarrerExemple();
+else {
+  // rien de l'écurie n'est connu sur ce téléphone : on attend la connexion derrière l'écran d'accueil
+  if (!window.EQ_SID) attente();
+  onAuthStateChanged(auth, u => {
+    if (!u) {
+      // en quittant l'écurie d'exemple par « Créer mon compte »
+      let apres = '';
+      try { apres = sessionStorage.getItem('equivaldi:apres-exemple') || ''; sessionStorage.removeItem('equivaldi:apres-exemple'); } catch (x) { /* rien */ }
+      if (apres === 'compte') ecranCreation(); else ecranConnexion();
+      return;
+    }
+    if (!u.emailVerified) { ecranVerification(u); return; }
+    entrer(u);
+  });
+}
 
 /* ---------- Hors ligne : mise en cache de l'appli ---------- */
 if ('serviceWorker' in navigator) {

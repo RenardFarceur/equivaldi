@@ -44,9 +44,9 @@ function rowFil(it, dansFiche = false) {
 VIEWS.equipe = () => {
   const P = periode(ui.eqPer), B = bilan(P.from), ms = membres();
   let html = perSeg();
-  html += `<div class="stats">
+  html += `<div class="stats${rub('seances') ? '' : ' deux'}">
     <div class="stat"><b>${B.taches}</b><span>${pl(B.taches, 'tâche cochée', 'tâches cochées')}</span></div>
-    <div class="stat"><b>${B.seances}</b><span>${pl(B.seances, 'séance', 'séances')} de travail</span></div>
+    ${rub('seances') ? `<div class="stat"><b>${B.seances}</b><span>${pl(B.seances, 'séance', 'séances')} de travail</span></div>` : ''}
     <div class="stat"><b>${eurRond(B.total)}</b><span>de dépenses</span></div></div>`;
   if (crottinsActifs()) html += section(`Crottins ${P.label}`, classementCrottins(P), `<button type="button" class="link" data-act="boutique">Boutique ${ic('next', 'sm')}</button>`);
   // les membres, puis les personnes hors équipe qui apparaissent dans le carnet (demi-pension, cavalier, payeur…)
@@ -92,9 +92,9 @@ VIEWS.membre = p => {
     ${!crottinsActifs() ? '' : `<div class="wrap crot-ligne">${crottinSvg('s')}<b>${num(soldeDe(pe.k), 0)}</b><span class="small muted">${pl(soldeDe(pe.k), 'crottin')} · ${esc(rangDe(crottinsDe(pe.k).gagnes).r.nom)}</span></div>`}
     ${btns ? `<div class="btnrow">${btns}</div>` : ''}</div></div>`;
   html += perSeg();
-  html += `<div class="stats">
+  html += `<div class="stats${rub('seances') ? '' : ' deux'}">
     <div class="stat"><b>${a ? a.taches : 0}</b><span>${pl(a ? a.taches : 0, 'tâche cochée', 'tâches cochées')}</span></div>
-    <div class="stat"><b>${a ? a.seances : 0}</b><span>${pl(a ? a.seances : 0, 'séance')}${a && a.minutes ? ' · ' + durTxt(a.minutes) : ''}</span></div>
+    ${rub('seances') ? `<div class="stat"><b>${a ? a.seances : 0}</b><span>${pl(a ? a.seances : 0, 'séance')}${a && a.minutes ? ' · ' + durTxt(a.minutes) : ''}</span></div>` : ''}
     <div class="stat"><b>${eurRond(a ? a.dep : 0)}</b><span>de dépenses</span></div></div>`;
   const { own, dps } = chevauxDe(pe.k);
   const rowH = (h, sub) => `<button type="button" class="row" data-act="open-cheval" data-id="${h.id}">${av(h)}<div class="row-main"><div class="row-t">${esc(h.nom)}</div><div class="row-s">${esc(sub)}</div></div><span class="row-end">${ic('next', 'sm')}</span></button>`;

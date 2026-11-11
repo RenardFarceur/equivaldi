@@ -14,7 +14,10 @@ const ACT = {};
 let currentFab = null;
 
 function renderTabs() {
-  setHTML($('#tabs'), TABS.map(t =>
+  // les onglets des rubriques masquées par la gérante disparaissent (66-rubriques.js)
+  const vus = TABS.filter(t => ongletVisible(t.id)), el = $('#tabs'), cols = `repeat(${vus.length},minmax(0,1fr))`;
+  if (el.style.gridTemplateColumns !== cols) el.style.gridTemplateColumns = cols;
+  setHTML(el, vus.map(t =>
     `<button type="button" data-act="tab" data-tab="${t.id}"${nav.tab === t.id ? ' aria-current="page"' : ''}><span class="tab-ic">${ic(t.icon)}</span><span>${t.label}</span></button>`
   ).join(''));
 }
@@ -78,6 +81,7 @@ function glisse(root, fn) {
   });
 }
 function render() {
+  if (!nav.stack.length && !ongletVisible(nav.tab)) nav.tab = 'accueil';   // rubrique masquée entre-temps
   const top = nav.stack[nav.stack.length - 1];
   let v;
   try { syncPhotos(); } catch (e) { console.error(e); }
@@ -121,6 +125,7 @@ function render() {
 let rrTimer = null;
 function rerenderSoon() { clearTimeout(rrTimer); rrTimer = setTimeout(render, 40); }
 function go(tab) {
+  if (!ongletVisible(tab)) tab = 'accueil';
   if (nav.tab === tab && !nav.stack.length) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
   nav.tab = tab; nav.stack = []; ui.tab = tab; saveUi();
   entree = 'tab'; render(); window.scrollTo(0, 0);

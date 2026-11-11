@@ -1,0 +1,12 @@
+{
+  "_lisezmoi": "Coordonnées de l'éditrice, reprises dans les trois pages légales. Un champ vide s'affiche en jaune « à compléter ». Reconstruire avec python3 sources/build-pwa.py.",
+  "nom": "Célia Courtois",
+  "statut": "entrepreneur individuel (EI), au régime de la micro-entreprise",
+  "immatriculation": "",
+  "adresse": "",
+  "telephone": "",
+  "email": "",
+  "mediateur": "",
+  "maj": "11 novembre 2026",
+  "version": "2026-11"
+}

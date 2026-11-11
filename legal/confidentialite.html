@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Politique de confidentialité · EquiValdi</title>
+<meta name="description" content="Politique de confidentialité d'EquiValdi, carnet d'écurie.">
+<meta name="theme-color" content="#EEF1EB" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0D1611" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32.png?v=c">
+<style>
+@font-face{font-family:"Outfit";font-style:normal;font-weight:400;font-display:swap;src:url(../fonts/outfit-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Outfit";font-style:normal;font-weight:500;font-display:swap;src:url(../fonts/outfit-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Outfit";font-style:normal;font-weight:600;font-display:swap;src:url(../fonts/outfit-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:600;font-display:swap;src:url(../fonts/barlow-condensed-latin-600-normal.woff2) format("woff2")}
+:root{--bg:#EEF1EB;--surface:#FFFFFF;--ink:#16211A;--ink-2:#4C5850;--line:#D2D9CD;--accent:#2B6340;--accent-strong:#1E4A30;--accent-soft:#D9E8DC;--hay-soft:#F7E6CA;--hay-ink:#7A5410;--zz:#5DB075;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0D1611;--surface:#15211A;--ink:#E8EFE9;--ink-2:#A7B5AB;--line:#2B3C31;--accent:#9FD6AE;--accent-strong:#C2E8CD;--accent-soft:#1E3828;--hay-soft:#382A15;--hay-ink:#F0B45C;--zz:#9FD6AE;color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 "Outfit",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--accent-strong);font-weight:500;text-underline-offset:3px}
+.page{max-width:760px;margin:0 auto;padding:0 16px 48px}
+.haut{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 0}
+.marque{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.marque img{width:40px;height:40px;border-radius:11px;flex:none}
+.marque b{display:block;font-weight:600;font-size:18px;line-height:1.1}
+.marque small{display:block;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--ink-2)}
+.ouvrir{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border-radius:999px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;font-size:15px;white-space:nowrap}
+@media (prefers-color-scheme:dark){.ouvrir{color:#0D1611}}
+.onglets{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 20px}
+.onglets a{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none;font-size:15px}
+.onglets a[aria-current="page"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-strong);font-weight:600}
+main{background:var(--surface);border:1.5px solid var(--line);border-radius:20px;padding:24px 20px 28px}
+h1{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;font-size:clamp(28px,7vw,38px);line-height:1.1;margin:0 0 6px;text-wrap:balance}
+.maj{margin:0 0 20px;color:var(--ink-2);font-size:14px}
+h2{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;font-size:19px;letter-spacing:.1em;text-transform:uppercase;margin:30px 0 8px;display:flex;align-items:center;gap:8px;color:var(--ink)}
+h2::before{content:"";width:6px;height:14px;flex:none;border-radius:2px;background:var(--zz)}
+h3{font-size:16px;font-weight:600;margin:18px 0 4px}
+p,li{max-width:68ch}
+p{margin:0 0 10px}
+ul{margin:0 0 10px;padding-left:22px}
+li{margin:0 0 4px}
+.bref{background:var(--accent-soft);border-radius:14px;padding:14px 16px;margin:0 0 8px}
+.bref ul{margin:0}
+.formulaire{border-left:3px solid var(--line);padding:4px 0 4px 14px;margin:10px 0;color:var(--ink)}
+.formulaire p{margin:0 0 6px}
+mark.manque{background:var(--hay-soft);color:var(--hay-ink);font-weight:600;border-radius:6px;padding:0 5px}
+table{border-collapse:collapse;width:100%;margin:8px 0 12px;font-size:15px}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-top:1px solid var(--line)}
+th{font-weight:600;width:34%}
+.tableau{overflow-x:auto}
+footer{margin-top:24px;color:var(--ink-2);font-size:14px;text-align:center}
+footer p{margin:4px auto}
+@media (max-width:420px){main{padding:20px 16px 24px}.ouvrir{padding:0 12px}}
+</style>
+</head>
+<body>
+<div class="page">
+<header class="haut">
+  <a class="marque" href="../"><img src="../icons/icon-192.png?v=c" alt="" width="40" height="40"><span><b>EquiValdi</b><small>Carnet d'écurie</small></span></a>
+  <a class="ouvrir" href="../">Ouvrir l'appli</a>
+</header>
+<nav class="onglets" aria-label="Pages légales"><a href="mentions-legales.html">Mentions légales</a><a href="conditions.html">Conditions</a><a href="confidentialite.html" aria-current="page">Confidentialité</a></nav>
+<main>
+<h1>Politique de confidentialité</h1>
+<p class="maj">Dernière mise à jour : 11 novembre 2026</p>
+<div class="bref">
+<p><b>En bref</b> :</p>
+<ul>
+<li>Vos données servent à faire marcher votre carnet d'écurie, rien d'autre : ni publicité, ni revente, ni traceur.</li>
+<li>Seule votre écurie voit son carnet. L'éditeur y accède seulement pour le support et les abonnements.</li>
+<li>Vous pouvez télécharger vos données et supprimer votre compte depuis l'application.</li>
+</ul>
+</div>
+
+<h2>Responsable du traitement</h2>
+<p>Célia Courtois, entrepreneur individuel (EI), au régime de la micro-entreprise, <mark class="manque">[à compléter : adresse postale]</mark>. Contact pour vos données : <mark class="manque">[à compléter : adresse e-mail de contact]</mark>.</p>
+
+<h2>Les données traitées</h2>
+<div class="tableau"><table>
+<tr><th>Votre compte</th><td>Adresse e-mail, prénom, mot de passe (chiffré par Firebase, jamais visible par personne), date d'acceptation des conditions, liste de vos écuries et votre rôle dans chacune.</td></tr>
+<tr><th>Votre fiche dans l'équipe</th><td>Facultatif : téléphone, jours de présence, matériel, notes, couleur de pastille. Vos bons de la boutique des crottins.</td></tr>
+<tr><th>Le carnet de l'écurie</th><td>Chevaux (photos comprises), rations, soins, séances, concours, prés, foin, tâches cochées et par qui, dépenses notées et qui les a payées, demi-pensions, carte des prés et plan envoyé. Chaque saisie garde le prénom de la personne qui l'a faite.</td></tr>
+<tr><th>Vos messages à EquiValdi</th><td>Le message, la réponse, et pour pouvoir vous aider : prénom, adresse e-mail, écurie, rôle, modèle de téléphone, version de l'application.</td></tr>
+<tr><th>L'abonnement</th><td>Formule, montant, dates et référence du paiement. Les coordonnées bancaires restent chez le prestataire de paiement.</td></tr>
+<tr><th>Données techniques</th><td>Date de la dernière ouverture de l'écurie. Firebase Authentication enregistre aussi des données de connexion (adresse IP, appareil) pour la sécurité des comptes.</td></tr>
+</table></div>
+
+<h2>Pourquoi, et sur quelle base</h2>
+<ul>
+<li><b>Faire fonctionner le carnet</b> (compte, écuries, équipe, partage, sauvegarde) : exécution du contrat que vous acceptez en créant votre compte (article 6.1.b du RGPD).</li>
+<li><b>Répondre à vos messages</b> et assurer le support : exécution du contrat.</li>
+<li><b>Gérer les abonnements et tenir la comptabilité</b> : exécution du contrat et obligations légales (article 6.1.c).</li>
+<li><b>Protéger les comptes et suivre l'activité des écuries</b> (dernière ouverture), pour améliorer le service : intérêt légitime (article 6.1.f).</li>
+</ul>
+
+<h2>Qui y a accès</h2>
+<ul>
+<li><b>Les membres de votre écurie</b>, selon leur rôle : le carnet, et les fiches de l'équipe.</li>
+<li><b>L'éditeur</b>, pour le support, la gestion des abonnements et le dessin d'une carte des prés demandée par la gérante.</li>
+<li><b>Les prestataires techniques</b>, qui agissent pour notre compte : Google (Firebase : comptes et base de données), GitHub (hébergement des pages, qui voit l'adresse IP au chargement), et le prestataire de paiement quand le paiement en ligne sera ouvert.</li>
+</ul>
+<p>Vos données ne sont ni vendues, ni louées, ni utilisées pour de la publicité.</p>
+
+<h2>Transferts hors de l'Union européenne</h2>
+<p>Firebase Authentication fonctionne depuis des serveurs situés aux États-Unis, et GitHub, Inc. est une société américaine. Google LLC et GitHub, Inc. adhèrent au cadre de protection des données UE–États-Unis (Data Privacy Framework), reconnu par la décision d'adéquation de la Commission européenne du 10 juillet 2023, et appliquent les clauses contractuelles types de la Commission.</p>
+
+<h2>Combien de temps</h2>
+<ul>
+<li><b>Compte</b> : tant qu'il existe. Supprimé dès que vous le demandez ; il disparaît ensuite des sauvegardes de Google dans les délais propres à Google.</li>
+<li><b>Carnet d'une écurie</b> : tant que l'écurie existe. Une écurie restée en lecture seule (essai ou abonnement terminé) peut être supprimée 24 mois après, après un message à sa gérante.</li>
+<li><b>Ce que vous avez noté dans une écurie que vous quittez</b> : reste dans son carnet, à votre prénom, car il fait partie de l'historique de l'écurie.</li>
+<li><b>Messages à EquiValdi</b> : 3 ans après le dernier échange, ou jusqu'à la suppression de votre compte.</li>
+<li><b>Paiements</b> : 10 ans, comme l'exige la loi pour les pièces comptables.</li>
+</ul>
+
+<h2>Sur votre téléphone</h2>
+<p>L'application garde sur le téléphone une copie du carnet (pour marcher sans réseau), les modifications en attente d'envoi, vos préférences d'affichage et votre session de connexion. Ce stockage est indispensable au fonctionnement : il ne demande pas de consentement (article 82 de la loi Informatique et Libertés). Il n'y a ni cookie publicitaire, ni mesure d'audience, ni police chargée chez un tiers. La déconnexion efface ces données du téléphone.</p>
+
+<h2>Sécurité</h2>
+<p>Les échanges sont chiffrés (HTTPS). Les règles d'accès de la base réservent chaque carnet aux membres de son écurie, selon leur rôle. Les mots de passe sont gérés par Firebase et ne sont jamais vus par l'éditeur.</p>
+
+<h2>Vos droits</h2>
+<p>Vous pouvez accéder à vos données, les rectifier, les effacer, en limiter l'usage, vous y opposer et les récupérer dans un format lisible (portabilité). Vous pouvez aussi donner des directives sur leur sort après votre décès.</p>
+<ul>
+<li>Dans l'application : Réglages › Ton compte (modifier ton prénom, télécharger mes données, supprimer mon compte) ; Réglages › Sauvegarde pour exporter le carnet de l'écurie.</li>
+<li>Par e-mail : <mark class="manque">[à compléter : adresse e-mail de contact]</mark>. Nous répondons dans un délai d'un mois.</li>
+</ul>
+<p>Si vous estimez que vos droits ne sont pas respectés, vous pouvez adresser une réclamation à la CNIL : <a href="https://www.cnil.fr">www.cnil.fr</a>.</p>
+
+<h2>Modifications</h2>
+<p>Cette politique peut évoluer avec l'application. Vous êtes informé dans l'application de tout changement important.</p>
+</main>
+<footer><p>EquiValdi · carnet d'écurie · © 2026 Célia Courtois</p></footer>
+</div>
+</body>
+</html>

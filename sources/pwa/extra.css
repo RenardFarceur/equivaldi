@@ -27,3 +27,11 @@ img{max-width:100%}
 #aEtat.ok{color:var(--accent-strong);font-weight:600;font-size:16px}
 @keyframes eq-tourne{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.auth-etapes li.encours i{animation:none;border-top-color:var(--accent)}}
+/* Écran de connexion : écurie d'exemple, pages légales, acceptation des conditions */
+.auth-exemple{display:flex;flex-direction:column;gap:8px;padding-top:4px;border-top:1px solid var(--line)}
+.auth-exemple .btn{margin-top:16px}
+.auth-legal{text-align:center;font-size:13px;color:var(--ink-2)}
+.auth-legal a,.auth-cgu a{color:var(--accent-strong);font-weight:600}
+.auth-cgu{align-items:flex-start}
+.auth-cgu input{flex:none;margin-top:2px}
+.auth-cgu span{font-weight:500;line-height:1.35}

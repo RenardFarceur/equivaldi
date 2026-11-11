@@ -69,7 +69,8 @@ function planDe(src) {
   if (c) return c;
   if (!window.EQ_MODE) return PLAN_VALDI;
   const e = ecurieOuverte();
-  return e && e.abonnement && e.abonnement.statut === 'fondatrice' ? PLAN_VALDI : null;
+  // l'écurie fondatrice garde le plan d'origine, que l'écurie d'exemple montre aussi
+  return e && (e.demo || (e.abonnement && e.abonnement.statut === 'fondatrice')) ? PLAN_VALDI : null;
 }
 // identité du plan (la copie locale est recopiée à chaque synchronisation : on compare la date de publication)
 function cleDe(src) {

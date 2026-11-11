@@ -35,13 +35,14 @@ const codeAttrs = 'class="code-in" autocomplete="off" autocapitalize="characters
 function majEcurieBtn() {
   const b = document.getElementById('ecurieBtn');
   if (!b) return false;
-  const e = ecurieOuverte(), fantome = !!(e && e.fantome), voir = !!(window.EQ_MODE && e && e.nom && (fantome || mesEcuries().length >= 2));
+  const e = ecurieOuverte(), fantome = !!(e && e.fantome), demo = !!(e && e.demo), voir = !!(window.EQ_MODE && e && e.nom && (fantome || demo || mesEcuries().length >= 2));
   b.hidden = !voir;
   b.classList.toggle('admin', voir && fantome);
+  b.classList.toggle('demo', voir && demo);
   if (!voir) return false;
-  const t = (fantome ? 'Admin · ' : '') + nomCourtEcurie(e.nom);
+  const t = (fantome ? 'Admin · ' : demo ? 'Exemple · ' : '') + nomCourtEcurie(e.nom);
   if (b.textContent !== t) b.textContent = t;
-  b.setAttribute('aria-label', `${fantome ? 'Mode administrateur, écurie' : 'Écurie ouverte'} : ${e.nom}. Ouvrir « Mon écurie »`);
+  b.setAttribute('aria-label', `${fantome ? 'Mode administrateur, écurie' : demo ? "Écurie d'exemple" : 'Écurie ouverte'} : ${e.nom}. Ouvrir « Mon écurie »`);
   return true;
 }
 ACT['mon-ecurie'] = () => {
@@ -55,6 +56,7 @@ function monEcurieHtml() {
   const e = ecurieOuverte();
   if (!window.EQ_MODE || !e) return '';
   const id = idEcurie(e), g = e.role === 'gerante';
+  if (e.demo) return exempleCarteHtml();
   if (e.fantome) return section('Mon écurie', `<div class="card ecu-carte">
       <div class="row-main"><div class="ecu-nom">${esc(e.nom || 'Écurie')}</div><div class="row-s">${esc(e.commune || 'Commune non indiquée')}</div></div>
       <div class="wrap"><span class="pill">Administration</span><span class="small muted">tu n'apparais pas dans son équipe</span></div>
@@ -181,6 +183,7 @@ function confirmerRejoindre(inv) {
 
 /* ---------- Réglages › Ton compte ---------- */
 function equipeHtml() {
+  if (window.EQ_MODE && estExemple()) return '';
   if (window.EQ_MODE && window.EQ && ecurieOuverte() && ecurieOuverte().fantome) return section('Ton compte', `<div class="card">
     <div class="row-main"><div class="row-t trunc">${esc(EQ.email || '')}</div><div class="row-s">Ici, tu notes sous le nom « EquiValdi »</div></div>
     <div class="btnrow"><button type="button" class="btn small" data-act="equipe">${ic('users', 'sm')}L'équipe et les invitations</button><button type="button" class="btn small" data-act="deconnexion">Se déconnecter</button></div>
@@ -193,6 +196,10 @@ function equipeHtml() {
       <button type="button" class="btn small" data-act="ma-fiche">${ic('user', 'sm')}Ma fiche</button>
       ${estGerante() ? `<button type="button" class="btn small" data-act="equipe">${ic('users', 'sm')}L'équipe et les invitations</button>` : ''}
       <button type="button" class="btn small" data-act="deconnexion">Se déconnecter</button>
+    </div>
+    <div class="btnrow compte-rgpd">
+      <button type="button" class="link" data-act="mes-donnees">${ic('download', 'sm')}Télécharger mes données</button>
+      ${EQ.admin ? '' : `<button type="button" class="link danger" data-act="supprimer-compte">${ic('trash', 'sm')}Supprimer mon compte</button>`}
     </div>
   </div>`);
   return section('Gérer à plusieurs', `<div class="card">
@@ -259,6 +266,7 @@ ACT['eq-mail'] = async (d, el) => {
   if (el) el.disabled = true;
   try {
     await EQ.inviter(mail, role);
+    demInvite();
     equipeSheet(`${mail} est invité. En se connectant avec cette adresse, la personne trouvera l'invitation.`, `Rejoins l'écurie ${e.nom || ''} sur EquiValdi : ${EQ.lien()} (crée ton compte avec ${mail}).`);
   } catch (err) {
     if (el && el.isConnected) el.disabled = false;
@@ -279,6 +287,7 @@ ACT['eq-lien'] = async (d, el) => {
   let r;
   try { r = await EQ.inviterLien(role); }
   catch (e) { if (el && el.isConnected) el.disabled = false; sheetErr(eqMsg(e, "Le lien n'a pas pu être créé : vérifie ta connexion.")); return; }
+  demInvite();
   const ec = ecurieOuverte() || {}, txt = `Rejoins l'écurie ${ec.nom || ''} sur EquiValdi : ${r.url}`;
   openSheet('Invitation prête', `<div class="inv-code"><span class="flabel">Code d'invitation</span><b id="invCode">${esc(EQ.code(r.code))}</b><span class="small muted">${esc(ROLE_LABEL[role] || '')} · valable 7 jours, une seule fois</span></div>
     <div class="btnrow"><button type="button" class="btn primary" data-act="eq-partager" data-txt="${esc(txt)}">${ic('partage', 'sm')}Partager le lien</button><button type="button" class="btn" data-act="eq-copier" data-txt="${esc(txt)}">${ic('copy', 'sm')}Copier</button></div>

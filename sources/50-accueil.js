@@ -10,14 +10,15 @@ function alerts() {
   });
   list('soins').filter(s => s.statut === 'prevu' && s.date < t && cheval(s.horseId) && !cheval(s.horseId).archive).forEach(s =>
     out.push({ sev: 'warn', icon: soinIcon(s), t: `${hNom(s.horseId)} · ${soinLabel(s)}`, s: `Rendez-vous du ${dShort(s.date)} : à confirmer`, act: `data-act="edit-soin" data-id="${s.id}"`, ord: diffDays(t, s.date) }));
-  pres().forEach(p => {
+  // les rubriques masquées par la gérante n'ont pas d'alertes (66-rubriques.js)
+  if (rub('pres')) pres().forEach(p => {
     const st = preStatus(p);
     if (!st.occupe || !st.over) return;
     const nx = prePret(p.id);
     const tip = nx ? ` · ${nx.p.nom} ${nx.s.jamais ? 'est libre' : 'repose depuis ' + nJ(nx.s.repos)}` : '';
     out.push({ sev: 'warn', icon: 'fence', t: `${p.nom} · ${nJ(st.days)} de pâture`, s: `Maximum prévu : ${st.max} j${tip}`, act: `data-act="move-from" data-id="${p.id}"`, ord: st.max - st.days });
   });
-  list('concours').forEach(c => {
+  if (rub('concours')) list('concours').forEach(c => {
     const h = cheval(c.horseId);
     if (!h || c.statut === 'forfait') return;
     const n = diffDays(t, c.date), nom = c.lieu || c.discipline || 'Concours';
@@ -31,10 +32,10 @@ function alerts() {
     }
     if (n < 0 && n >= -30 && !hasResult(c)) out.push({ sev: 'info', icon: 'rosette', t: `${h.nom} · ${nom}`, s: `Résultat du ${dShort(c.date)} à saisir`, act, ord: 50 });
   });
-  list('seances').filter(s => s.statut === 'prevu' && validISO(s.date) && s.date < t && cheval(s.horseId) && !cheval(s.horseId).archive).forEach(s =>
+  if (rub('seances')) list('seances').filter(s => s.statut === 'prevu' && validISO(s.date) && s.date < t && cheval(s.horseId) && !cheval(s.horseId).archive).forEach(s =>
     out.push({ sev: 'info', icon: 'timer', t: `${hNom(s.horseId)} · ${s.type || 'Séance'}${s.coach ? ' avec ' + s.coach : ''}`, s: `Séance prévue le ${dShort(s.date)} : à confirmer`, act: `data-act="edit-seance" data-id="${s.id}"`, ord: 40 }));
   const A = autonomie();
-  if (A.rate && A.days != null && A.days < 30) out.push({ sev: A.days < 10 ? 'danger' : 'warn', icon: 'bale', t: `Foin : environ ${nJ(Math.floor(A.days))} de stock`, s: `Au rythme de ${num(A.rate, 0)} kg par jour`, act: 'data-act="go" data-tab="foin"', ord: A.days - 30 });
+  if (rub('foin') && A.rate && A.days != null && A.days < 30) out.push({ sev: A.days < 10 ? 'danger' : 'warn', icon: 'bale', t: `Foin : environ ${nJ(Math.floor(A.days))} de stock`, s: `Au rythme de ${num(A.rate, 0)} kg par jour`, act: 'data-act="go" data-tab="foin"', ord: A.days - 30 });
   const rank = { danger: 0, warn: 1, info: 2 };
   return out.sort((a, b) => rank[a.sev] - rank[b.sev] || a.ord - b.ord);
 }
@@ -44,9 +45,9 @@ function agenda() {
   const t = todayISO(), lim = addDays(t, 30), C = cfg(), items = [];
   list('soins').filter(s => s.statut === 'prevu' && s.date >= t && s.date <= lim && cheval(s.horseId)).forEach(s =>
     items.push({ d: s.date, icon: soinIcon(s), t: `${soinLabel(s)} · ${hNom(s.horseId)}`, s: [s.praticien, s.notes].filter(Boolean).join(' · ') || 'Rendez-vous prévu', act: `data-act="edit-soin" data-id="${s.id}"` }));
-  list('concours').filter(c => c.date >= t && c.date <= lim && c.statut !== 'forfait').forEach(c =>
+  if (rub('concours')) list('concours').filter(c => c.date >= t && c.date <= lim && c.statut !== 'forfait').forEach(c =>
     items.push({ d: c.date, icon: 'rosette', t: `${c.lieu || 'Concours'} · ${hNom(c.horseId)}`, s: [c.discipline, nivLabel(c.niveau), c.epreuve].filter(Boolean).join(' · ') || 'Concours', act: `data-act="edit-concours" data-id="${c.id}"` }));
-  list('seances').filter(s => s.statut === 'prevu' && validISO(s.date) && s.date >= t && s.date <= lim && cheval(s.horseId)).forEach(s =>
+  if (rub('seances')) list('seances').filter(s => s.statut === 'prevu' && validISO(s.date) && s.date >= t && s.date <= lim && cheval(s.horseId)).forEach(s =>
     items.push({ d: s.date, h: s.heure || '', icon: 'timer', t: `${s.type || 'Séance'}${s.coach ? ' avec ' + s.coach : ''} · ${hNom(s.horseId)}`, s: [heureTxt(s.heure), s.lieu, nomDe({ uid: s.cavalierUid, nom: s.cavalier })].filter(Boolean).join(' · ') || 'Séance prévue', act: `data-act="edit-seance" data-id="${s.id}"` }));
   rappels().filter(r => !r.planned && r.days > C.alerte && r.due <= lim).forEach(r =>
     items.push({ d: r.due, icon: r.type.icon, t: `Rappel ${r.type.short} · ${r.h.nom}`, s: `Dernier le ${dShort(r.last.date)}`, act: `data-act="new" data-what="soin" data-hid="${r.h.id}" data-type="${r.type.id}"` }));
@@ -94,21 +95,13 @@ function quickHtml() {
   const n7 = list('seances').filter(s => s.statut !== 'prevu' && validISO(s.date) && s.date > addDays(t, -7) && s.date <= t).length;
   // grosses touches « autocollant » : pastille de couleur irrégulière, comme dessinée à la main
   const qa = (act, icon, tint, t1, t2) => `<button type="button" class="qa" ${act}><span class="qa-ic ${tint}">${ic(icon)}</span><span>${t1}<small>${esc(t2)}</small></span></button>`;
-  return `<div class="quick">
-    ${qa('data-act="new" data-what="soin"', 'syringe', 'ciel', 'Soin / RDV', 'vaccin, maréchal, véto')}
-    ${qa('data-act="new" data-what="seance"', 'timer', 'menthe', 'Séance', n7 ? `${n7} ${pl(n7, 'séance')} sur 7 jours` : 'plat, saut, longe, cours')}
-    ${qa('data-act="new" data-what="move"', 'move', 'prairie', 'Déplacer', occN ? `${occN} ${pl(occN, 'pré occupé', 'prés occupés')}` : 'rotation des prés')}
-    ${qa('data-act="foin-out-pick"', 'bale', 'paille', 'Balle entamée', `${nB} ${pl(nB, 'balle')} en stock`)}
-  </div>`;
-}
-function bienvenueHtml() {
-  const step = (n, t, s, what) => `<button type="button" class="row" data-act="new" data-what="${what}"><span class="lead"><b class="big" style="font-size:20px">${n}</b></span><div class="row-main"><div class="row-t">${t}</div><div class="row-s">${s}</div></div><span class="row-end">${ic('plus', 'sm')}</span></button>`;
-  return `<div class="welcome">${brandLogo()}</div>` + section('Pour commencer', `<div class="list">
-    ${step(1, 'Ajoute tes chevaux', 'Nom, date de naissance, puis ration et soins', 'cheval')}
-    ${step(2, 'Ajoute tes prés', 'Surface, jours de repos visés', 'pre')}
-    ${step(3, 'Place les chevaux au pré', 'Le carnet compte ensuite les jours de pâture et de repos', 'move')}
-    ${step(4, 'Saisis ton stock de foin', 'Rounds ou petites bottes, achetés ou récoltés', 'foin')}
-  </div>`);
+  // seulement les rubriques gardées par la gérante (66-rubriques.js)
+  const qs = [qa('data-act="new" data-what="soin"', 'syringe', 'ciel', 'Soin / RDV', 'vaccin, maréchal, véto')];
+  if (rub('seances')) qs.push(qa('data-act="new" data-what="seance"', 'timer', 'menthe', 'Séance', n7 ? `${n7} ${pl(n7, 'séance')} sur 7 jours` : 'plat, saut, longe, cours'));
+  if (rub('pres')) qs.push(qa('data-act="new" data-what="move"', 'move', 'prairie', 'Déplacer', occN ? `${occN} ${pl(occN, 'pré occupé', 'prés occupés')}` : 'rotation des prés'));
+  if (rub('foin')) qs.push(qa('data-act="foin-out-pick"', 'bale', 'paille', 'Balle entamée', `${nB} ${pl(nB, 'balle')} en stock`));
+  if (qs.length < 3) qs.push(qa('data-act="new" data-what="tache"', 'tasks', 'menthe', 'Tâche', 'foin, eau, box, clôtures'));
+  return `<div class="quick${qs.length % 2 ? ' impair' : ''}">${qs.join('')}</div>`;
 }
 VIEWS.accueil = () => {
   const html = [];
@@ -116,36 +109,40 @@ VIEWS.accueil = () => {
   if (exCount()) html.push(`<div class="banner">${ic('info')}<div class="row-main"><b>Ce sont des exemples</b><span class="small">Trois chevaux fictifs pour découvrir le carnet. Efface-les pour commencer avec les tiens.</span></div><button type="button" class="btn small" data-act="clear-ex" data-confirm="Confirmer">Effacer</button></div>`);
   const ba = bandeauAbo();
   if (ba) html.push(ba);
+  const cg = bandeauConditions();
+  if (cg) html.push(cg);
   if (vide) {
     if (sync.mode === 'loading') html.push(`<div class="loading">${brandLogo()}<p class="note">Ouverture du carnet…</p></div>`);
-    else html.push(bienvenueHtml());
+    else html.push(`<div class="welcome">${brandLogo()}</div>` + demarrageHtml(true));
     return { title: "Aujourd'hui", html: html.join(''), fab: menuAjouter };
   }
   if (sync.readOnly) { if (!ecurieFigee()) html.push(`<div class="banner ro">${ic('lock')}<div class="row-main"><b>Lecture seule</b><span class="small">${esc(roMsg())}</span></div></div>`); }
   else html.push(quickHtml());
+  html.push(demarrageHtml());
   html.push(presentsHtml());
   html.push(tachesSection());
   const al = alerts();
   html.push(section('À traiter', al.length ? `<div class="list">${al.map(rowAlert).join('')}</div>`
     : emptyH("Rien d'urgent", "Les rappels de soins, les prés à changer et les concours à préparer s'afficheront ici.")));
-  html.push(section('Au pré', auPreHtml(), `<button type="button" class="link" data-act="go" data-tab="pres">Rotation ${ic('next', 'sm')}</button>`));
+  if (rub('pres')) html.push(section('Au pré', auPreHtml(), `<button type="button" class="link" data-act="go" data-tab="pres">Rotation ${ic('next', 'sm')}</button>`));
   html.push(section('Les 30 prochains jours', agendaHtml(agenda())));
-  html.push(section('Foin', foinMini()));
+  if (rub('foin')) html.push(section('Foin', foinMini()));
   return { title: "Aujourd'hui", html: html.join(''), fab: menuAjouter };
 };
 
 function menuAjouter() {
   const mi = (what, icon, t, s) => `<button type="button" class="row" data-act="new" data-what="${what}">${lead(icon)}<div class="row-main"><div class="row-t">${t}</div><div class="row-s">${s}</div></div></button>`;
+  const P = rub('pres'), F = rub('foin'), C = rub('concours'), E = rub('seances');
   openSheet('Ajouter', `<div class="list">
     ${mi('soin', 'syringe', 'Soin ou rendez-vous', 'Vaccin, vermifuge, maréchal, dentiste, véto…')}
-    ${mi('seance', 'timer', 'Séance de travail', 'Plat, obstacle, longe, cours avec coach…')}
+    ${E ? mi('seance', 'timer', 'Séance de travail', 'Plat, obstacle, longe, cours avec coach…') : ''}
     ${mi('tache', 'tasks', 'Tâche à cocher', 'Foin, eau, clôtures… visible par toute l\'équipe')}
-    ${mi('move', 'move', 'Déplacer des chevaux', 'Changer de pré ou rentrer au box')}
-    ${mi('foin', 'bale', 'Mouvement de foin', 'Livraison, récolte ou balle entamée')}
-    ${mi('concours', 'rosette', 'Concours', 'Sortie prévue ou résultat')}
-    ${mi('entretien', 'tool', 'Entretien de pré', 'Hersage, fauche des refus, clôtures…')}
+    ${P ? mi('move', 'move', 'Déplacer des chevaux', 'Changer de pré ou rentrer au box') : ''}
+    ${F ? mi('foin', 'bale', 'Mouvement de foin', 'Livraison, récolte ou balle entamée') : ''}
+    ${C ? mi('concours', 'rosette', 'Concours', 'Sortie prévue ou résultat') : ''}
+    ${P ? mi('entretien', 'tool', 'Entretien de pré', 'Hersage, fauche des refus, clôtures…') : ''}
     ${mi('cheval', 'shoe', 'Cheval', 'Nouvelle fiche')}
-    ${mi('pre', 'fence', 'Pré', 'Nouvelle parcelle')}
+    ${P ? mi('pre', 'fence', 'Pré', 'Nouvelle parcelle') : ''}
   </div>`);
 }
 
