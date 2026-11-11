@@ -49,6 +49,7 @@ VIEWS.equipe = () => {
     ${rub('seances') ? `<div class="stat"><b>${B.seances}</b><span>${pl(B.seances, 'séance', 'séances')} de travail</span></div>` : ''}
     <div class="stat"><b>${eurRond(B.total)}</b><span>de dépenses</span></div></div>`;
   if (crottinsActifs()) html += section(`Crottins ${P.label}`, classementCrottins(P), `<button type="button" class="link" data-act="boutique">Boutique ${ic('next', 'sm')}</button>`);
+  html += pensionSection();   // relevés des propriétaires en pension (70-pension.js)
   // les membres, puis les personnes hors équipe qui apparaissent dans le carnet (demi-pension, cavalier, payeur…)
   const keys = new Set(ms.map(m => 'u:' + m.id)), autres = new Set();
   const voir = k => { if (k && k !== '_' && !keys.has(k)) autres.add(k); };

@@ -10,7 +10,8 @@ const RUBRIQUES = [
   { id: 'seances', label: 'Entraînement', court: "L'entraînement", icon: 'timer', s: 'Séances de travail, cours et coachs' }
 ];
 const rub = id => cfg().rubriques[id] !== false;
-const ongletVisible = id => !['pres', 'foin', 'concours'].includes(id) || rub(id);
+// un propriétaire en pension ne voit que ses chevaux et ses relevés (70-pension.js)
+const ongletVisible = id => estProprio() ? ['accueil', 'chevaux', 'releves'].includes(id) : id !== 'releves' && (!['pres', 'foin', 'concours'].includes(id) || rub(id));
 WRITE_ACTS.add('rub-onoff');
 
 /* La gérante choisit (version installable) ; dans le carnet partagé sur claude.ai, la personne qui l'a créé */

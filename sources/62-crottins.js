@@ -34,7 +34,7 @@ function boutique() {
     .sort((a, b) => a.prix - b.prix);
 }
 /* Points crottins dans cette écurie (activés par défaut) ; ils comptent à partir de sa date de départ */
-const crottinsActifs = () => cfg().crottins && premium();   // coupés par la gérante, ou écurie pas encore abonnée
+const crottinsActifs = () => cfg().crottins && premium() && !estProprio();   // coupés par la gérante, ou écurie pas encore abonnée
 function crotDebut() {
   const e = ecurieOuverte(), d = e && e.crottinsDepuis;
   return typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d) ? d : CROT.debut;

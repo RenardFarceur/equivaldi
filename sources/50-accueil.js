@@ -104,6 +104,7 @@ function quickHtml() {
   return `<div class="quick${qs.length % 2 ? ' impair' : ''}">${qs.join('')}</div>`;
 }
 VIEWS.accueil = () => {
+  if (estProprio()) return accueilProprio();
   const html = [];
   const vide = !chevaux(true).length && !pres(true).length && !list('foin').length && !list('taches').length;
   if (exCount()) html.push(`<div class="banner">${ic('info')}<div class="row-main"><b>Ce sont des exemples</b><span class="small">Trois chevaux fictifs pour découvrir le carnet. Efface-les pour commencer avec les tiens.</span></div><button type="button" class="btn small" data-act="clear-ex" data-confirm="Confirmer">Effacer</button></div>`);

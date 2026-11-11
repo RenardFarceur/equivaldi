@@ -11,6 +11,8 @@ const rinp = (id, v, aria) => `<input class="rinput" id="${id}" inputmode="numer
 const balleRow = b => `<div class="row" data-bid="${esc(b.id)}"><input class="rinput b-nom" style="flex:1;width:auto;text-align:left" value="${esc(b.nom)}" aria-label="Nom du type de balle" autocomplete="off"><input class="rinput b-poids" inputmode="decimal" value="${esc(b.poids)}" aria-label="Poids moyen en kg" autocomplete="off"><span class="muted small">kg</span><button type="button" class="iconbtn" data-act="del-balle" aria-label="Retirer ce type">${ic('trash', 'sm')}</button></div>`;
 
 VIEWS.reglages = () => {
+  // propriétaire en pension : son écurie, son compte, les messages, rien des réglages du carnet
+  if (estProprio()) return { title: 'Réglages', eyebrow: 'EquiValdi', html: monEcurieHtml() + equipeHtml() + retoursHtml() + aProposHtml(), fab: null };
   const C = cfg(), t = todayISO();
   let fin = `${t.slice(0, 4)}-${C.finSaison}`;
   if (!validISO(fin) || fin <= t) fin = `${+t.slice(0, 4) + 1}-${C.finSaison}`;

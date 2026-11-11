@@ -69,12 +69,18 @@ ACT['edit-cheval'] = d => formCheval(d.id);
 function formProp(hid) {
   const h = cheval(hid);
   if (!h) return;
-  openSheet(`Propriétaire de ${h.nom}`, pickPerson('prop', 'Propriétaire', propRef(h), { ph: 'Prénom et nom', hint: "Une personne de l'équipe, ou « Autre personne » si elle n'a pas de compte." }), {
+  const pe = pensionDe(h);
+  openSheet(`Propriétaire de ${h.nom}`, pickPerson('prop', 'Propriétaire', propRef(h), { ph: 'Prénom et nom', hint: "Une personne de l'équipe, ou « Autre personne » si elle n'a pas de compte. Invitée avec le rôle « Propriétaire », elle voit ce cheval dans l'appli." })
+    + `<div class="grid2">${fld('Pension (€ par mois)', inp('f_pens', pe ? String(pe.montant) : '', 'inputmode="decimal" placeholder="Aucune"'))}${fld('Depuis le', inp('f_pensd', pe && pe.depuis ? pe.depuis : '', 'type="date"'))}</div>
+      <p class="note">Avec une pension, le propriétaire reçoit chaque mois un relevé : la pension, plus les soins, cours et engagements avancés par l'écurie (Équipe › Pension).</p>`, {
     onSubmit: () => {
       const r = readPerson('prop'), cur = cheval(hid);
       if (!cur) return;
-      put('chevaux', Object.assign({}, cur, { proprietaire: r ? r.nom : '', propUid: r ? r.uid : null }));
-      toast(r ? `Propriétaire : ${nomCourt(r)}` : 'Propriétaire retiré');
+      const mt = parseFloat(String(val('f_pens')).replace(',', '.'));
+      if (val('f_pens') && !(Number.isFinite(mt) && mt >= 0)) return 'Indique le montant de la pension en euros.';
+      const pension = Number.isFinite(mt) && mt > 0 ? { montant: Math.round(mt * 100) / 100, depuis: validISO(val('f_pensd')) ? val('f_pensd') : null } : null;
+      put('chevaux', Object.assign({}, cur, { proprietaire: r ? r.nom : '', propUid: r ? r.uid : null, pension }));
+      toast(r ? `Propriétaire : ${nomCourt(r)}${pension ? ` · pension ${eur(pension.montant)} par mois` : ''}` : 'Propriétaire retiré');
     }
   });
 }

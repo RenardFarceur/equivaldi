@@ -26,6 +26,9 @@ service cloud.firestore {
 
     // Dans une écurie : membre (sa fiche existe), éditrice (gérante ou « Peut modifier »), gérante (celle de la structure)
     function membre(sid) { return connecte() && exists(fiche(sid, moi())); }
+    // l'équipe (gérante, « Peut modifier », « Lecture seule ») : tout le carnet. Un « Propriétaire » est membre,
+    // mais ne lit que les fiches partagées de ses chevaux et ses relevés (partages, releves).
+    function equipier(sid) { return connecte() && get(fiche(sid, moi())).data.role in ['gerante', 'equipe', 'lecture']; }
     function editeur(sid) { return connecte() && get(fiche(sid, moi())).data.role in ['gerante', 'equipe']; }
     function gerante(sid) { return connecte() && get(structure(sid)).data.gerante == moi(); }
 
@@ -76,7 +79,7 @@ service cloud.firestore {
       let inv = get(invitation(code)).data;
       return inv.structure == sid
         && inv.role == request.resource.data.role
-        && inv.role in ['equipe', 'lecture']
+        && inv.role in ['equipe', 'lecture', 'proprio']
         && absent(inv, 'utiliseePar')
         && (absent(inv, 'expire') || inv.expire > maintenant())
         && (absent(inv, 'email') || inv.email == mail())
@@ -144,7 +147,9 @@ service cloud.firestore {
 
       // ---------- L'équipe de l'écurie ----------
       match /membres/{uid} {
-        allow read: if membre(sid);
+        allow read: if equipier(sid);
+        // un propriétaire lit sa fiche et celle de la gérante (pour la joindre)
+        allow get: if membre(sid) && (uid == moi() || uid == get(structure(sid)).data.gerante);
         allow read, write: if admin();
         allow create: if connecte() && creationEcurie(sid, uid);
         allow create: if connecte() && viaInvitation(sid, uid);
@@ -163,10 +168,26 @@ service cloud.firestore {
         allow delete: if uid == moi() && gerante(sid) && !existsAfter(structure(sid));
       }
 
+      // ---------- Pension : ce que voit chaque propriétaire ----------
+      // une fiche par cheval (sa fiche, ses soins, séances, concours, où il est), tenue à jour par l'équipe
+      match /partages/{hid} {
+        allow read: if equipier(sid);
+        allow get, list: if membre(sid) && resource.data.proprio == moi();
+        allow write: if editeur(sid) && (request.resource == null || request.resource.data.proprio is string);
+        allow read, write: if admin();
+      }
+      // les relevés mensuels : préparés et envoyés par la gérante, lus par leur propriétaire
+      match /releves/{rid} {
+        allow read: if equipier(sid);
+        allow get, list: if membre(sid) && resource.data.proprio == moi();
+        allow write: if gerante(sid);
+        allow read, write: if admin();
+      }
+
       // ---------- Le carnet de l'écurie ----------
       // écrire demande une écurie active : après l'essai sans abonnement, elle reste lisible
       match /{coll}/{id} {
-        allow read: if coll in donnees() && membre(sid);
+        allow read: if coll in donnees() && equipier(sid);
         allow write: if coll in donnees() && editeur(sid) && actif(sid);
         // la gérante vide le carnet avant de supprimer l'écurie, même après l'essai
         allow delete: if coll in donnees() && gerante(sid);
@@ -187,7 +208,7 @@ service cloud.firestore {
       allow create: if connecte()
         && request.resource.data.structure is string
         && gerante(request.resource.data.structure)
-        && request.resource.data.role in ['equipe', 'lecture']
+        && request.resource.data.role in ['equipe', 'lecture', 'proprio']
         && absent(request.resource.data, 'utiliseePar')
         && ((('email' in request.resource.data) && request.resource.data.email is string)
             || (request.resource.data.expire is int && request.resource.data.expire <= maintenant() + 8 * 86400000));

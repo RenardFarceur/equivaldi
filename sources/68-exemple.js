@@ -23,7 +23,7 @@ function donneesExemple() {
       bons: { bl1: { item: 'biere', nom: 'Une bière offerte', prix: 150, t: ts(d(-9), 18), statut: 'offert', offertLe: ts(d(-8), 19), offertPar: { uid: 'ex-camille', nom: 'Camille' } } } },
     'ex-hugo': { id: 'ex-hugo', nom: 'Hugo', role: 'equipe', couleur: 5, dispo: [1, 4, 0], tel: '06 39 98 56 78', depuis: ts(d(-300)), materiel: 'Selle de dressage, filet d’Ulysse',
       bons: { bh1: { item: 'biere', nom: 'Une bière offerte', prix: 150, t: ts(d(-2), 20), statut: 'attente' } } },
-    'ex-ines': { id: 'ex-ines', nom: 'Inès', role: 'lecture', couleur: 6, dispo: [6], depuis: ts(d(-150)), notes: 'Propriétaire de Pistache' }
+    'ex-ines': { id: 'ex-ines', nom: 'Inès', role: 'proprio', couleur: 6, dispo: [6], depuis: ts(d(-150)), notes: 'Propriétaire de Pistache' }
   };
   out.cfg = {
     rubriques: { pres: true, foin: true, concours: true, seances: true },
@@ -39,14 +39,14 @@ function donneesExemple() {
   const r = (aliment, qte, unite, repas) => ({ id: 'r' + (++n), aliment, qte, unite, repas });
   add('chevaux', { id: 'ex-tornade', nom: 'Tornade', naissance: '2015-04-12', sexe: 'Jument', race: 'Selle Français', robe: 'Bai', taille: 165, poids: 560, couleur: 0, proprietaire: 'Camille', propUid: 'ex-camille',
     notes: 'Ferrée des antérieurs. Couverture imperméable dès les premiers froids.', ration: [r('Foin', 5, 'kg', ['matin', 'soir']), r('Granulés', 1.5, 'L', ['matin', 'soir']), r('CMV (minéraux)', 50, 'g', ['matin'])], creePar: par('camille', d(-400)) });
-  add('chevaux', { id: 'ex-pistache', nom: 'Pistache', naissance: '2012-05-20', sexe: 'Hongre', race: 'Connemara', robe: 'Gris', taille: 146, poids: 400, couleur: 2, proprietaire: 'Inès', propUid: 'ex-ines',
+  add('chevaux', { id: 'ex-pistache', nom: 'Pistache', naissance: '2012-05-20', sexe: 'Hongre', race: 'Connemara', robe: 'Gris', taille: 146, poids: 400, couleur: 2, proprietaire: 'Inès', propUid: 'ex-ines', pension: { montant: 320, depuis: '2024-09-01' },
     notes: 'Poney de Léa en demi-pension. Craint les tondeuses.', ration: [r('Foin', 4, 'kg', ['matin', 'soir']), r('Luzerne', 0.5, 'kg', ['soir']), r('CMV (minéraux)', 40, 'g', ['matin'])],
     dp: [{ id: 'dp1', qui: { uid: 'ex-lea', nom: 'Léa' }, jours: [3, 6], part: 120, debut: d(-200), fin: null, notes: 'Cours avec Julie le samedi' }], creePar: par('camille', d(-150)) });
   add('chevaux', { id: 'ex-ulysse', nom: 'Ulysse', naissance: '2016-03-08', sexe: 'Hongre', race: 'Anglo-Arabe', robe: 'Alezan', taille: 163, poids: 515, couleur: 1, proprietaire: 'Hugo', propUid: 'ex-hugo',
     notes: 'Sort en dressage avec Hugo.', ration: [r('Foin', 6, 'kg', ['matin', 'soir']), r('Floconnés', 1, 'L', ['soir']), r('Huile', 0.1, 'L', ['soir'])], creePar: par('hugo', d(-300)) });
   add('chevaux', { id: 'ex-bergamote', nom: 'Bergamote', naissance: '2018-06-01', sexe: 'Jument', race: 'Haflinger', robe: 'Alezan', taille: 147, poids: 470, couleur: 4, proprietaire: 'Camille', propUid: 'ex-camille',
     notes: 'Gourmande : pas de granulés, foin au filet.', ration: [r('Foin', 4, 'kg', ['matin', 'soir'])], creePar: par('camille', d(-400)) });
-  add('chevaux', { id: 'ex-joker', nom: 'Joker', naissance: '2008-07-14', sexe: 'Hongre', race: 'Trotteur Français', robe: 'Bai brun', taille: 160, poids: 490, couleur: 3, proprietaire: 'M. Bernard', propUid: null,
+  add('chevaux', { id: 'ex-joker', nom: 'Joker', naissance: '2008-07-14', sexe: 'Hongre', race: 'Trotteur Français', robe: 'Bai brun', taille: 160, poids: 490, couleur: 3, proprietaire: 'M. Bernard', propUid: null, pension: { montant: 260, depuis: '2023-04-01' },
     notes: 'À la retraite au pré. Arthrose légère : complément pour les articulations.', ration: [r('Foin', 5, 'kg', ['matin', 'soir']), r('Complément', 30, 'g', ['matin'])], creePar: par('camille', d(-380)) });
 
   /* Les prés : ceux de la carte d'origine, reliés par leur numéro, plus la carrière et la piste */

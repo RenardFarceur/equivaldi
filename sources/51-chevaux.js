@@ -73,11 +73,11 @@ const rowRappel = r => `<button type="button" class="row" ${r.planned ? `data-ac
 function ficheHtml(h) {
   const t = todayISO(), w = horseWhere(h.id), has = hasPhoto(h);
   const loc = `<div class="card hhead">
-    <button type="button" class="avbtn" data-act="photo" data-id="${h.id}" aria-label="${has ? 'Changer la photo' : 'Ajouter une photo'} de ${esc(h.nom)}">${av(h, 'xl')}<span class="cam">${ic('camera')}</span></button>
+    ${sync.readOnly ? `<span class="avbtn">${av(h, 'xl')}</span>` : `<button type="button" class="avbtn" data-act="photo" data-id="${h.id}" aria-label="${has ? 'Changer la photo' : 'Ajouter une photo'} de ${esc(h.nom)}">${av(h, 'xl')}<span class="cam">${ic('camera')}</span></button>`}
     <div class="row-main hhead-main">
       <div class="row-t">${ic(w.pre ? 'fence' : 'barn', 'sm')}<span>${esc(w.txt)}</span></div>
       <div class="row-s">${w.place ? `Depuis le ${dShort(w.place.debut)} · ${nJ(diffDays(w.place.debut, t))}` : 'Pas dans un pré'}</div>
-      <button type="button" class="btn small" data-act="new" data-what="move" data-hid="${h.id}">${ic('move', 'sm')}Déplacer</button>
+      ${sync.readOnly ? '' : `<button type="button" class="btn small" data-act="new" data-what="move" data-hid="${h.id}">${ic('move', 'sm')}Déplacer</button>`}
     </div></div>`;
   const R = rappels(h.id).slice(0, 3);
   const rap = R.length ? section('Prochains soins', `<div class="list">${R.map(rowRappel).join('')}</div>`, `<button type="button" class="link" data-act="seg" data-k="sub" data-v="soins">Tout voir ${ic('next', 'sm')}</button>`) : '';
@@ -98,7 +98,7 @@ function ficheHtml(h) {
 function proprieteHtml(h) {
   const t = todayISO(), pr = propRef(h), mp = refMembre(pr), rows = [];
   rows.push(pr
-    ? crow(`data-act="edit-prop" data-id="${h.id}"`, `${pav(pr)}<span class="row-main"><span class="row-t">${esc(nomDe(pr))}${estMoi(pr) ? ' <span class="pill ok">Toi</span>' : ''}</span><span class="row-s">Propriétaire${mp ? '' : ' · hors équipe'}</span></span>`, mp && mp.tel, nomDe(pr))
+    ? crow(`data-act="edit-prop" data-id="${h.id}"`, `${pav(pr)}<span class="row-main"><span class="row-t">${esc(nomDe(pr))}${estMoi(pr) ? ' <span class="pill ok">Toi</span>' : ''}</span><span class="row-s">${esc(['Propriétaire' + (mp ? (mp.role === 'proprio' ? ' · voit ce cheval dans l\'appli' : '') : ' · hors équipe'), pensionDe(h) ? `pension ${eur(pensionDe(h).montant)} / mois` : ''].filter(Boolean).join(' · '))}</span></span>`, mp && mp.tel, nomDe(pr))
     : `<button type="button" class="row" data-act="edit-prop" data-id="${h.id}">${lead('user')}<div class="row-main"><div class="row-t">Propriétaire</div><div class="row-s">Non renseigné : touche pour l'indiquer</div></div><span class="row-end">${ic('next', 'sm')}</span></button>`);
   dpsDe(h).sort((a, b) => (dpActive(b) - dpActive(a)) || String(b.debut || '').localeCompare(String(a.debut || ''))).forEach(x => {
     const fini = validISO(x.fin) && x.fin < t, futur = validISO(x.debut) && x.debut > t, mx = refMembre(x.qui);

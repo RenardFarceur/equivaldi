@@ -78,6 +78,12 @@ Le tracé s'enregistre au fil de l'eau : on peut s'arrêter et reprendre plus ta
 - **Mes données, supprimer mon compte** (*Réglages* › *Ton compte*) : téléchargement JSON (compte, fiches, messages) ; suppression avec le mot de passe. Une gérante seule dans son écurie la supprime avec tout son carnet ; avec une équipe, elle passe d'abord la gérance.
 - **Polices** : Outfit et Barlow Condensed sont hébergées avec l'appli (`fonts/`, licence SIL OFL) : plus rien n'est chargé chez Google Fonts.
 
+## Propriétaires en pension
+
+- **Rôle « Propriétaire »** : à choisir en invitant quelqu'un (lien, code ou e-mail) ou en changeant son rôle dans *L'équipe*. La personne voit seulement ses chevaux (fiche, ration, soins, séances, concours, pré du moment) et ses relevés : trois onglets, *Accueil*, *Chevaux*, *Relevés*. Rien d'autre de l'écurie (autres chevaux, tâches, dépenses, équipe) n'est lisible, même en interrogeant la base directement.
+- **Fiches partagées** : pour chaque cheval dont le propriétaire a ce rôle, l'appli de l'équipe tient à jour `structures/{id}/partages/{cheval}` dès que le carnet change ; le propriétaire ne lit que ces fiches-là.
+- **Pension** : montant par mois dans la fiche du cheval (*Propriété* › propriétaire). *Équipe* › *Pension* liste chaque propriétaire avec le total du mois : la pension, plus les soins, cours et engagements avancés par l'écurie (payés par quelqu'un d'autre que le propriétaire). La gérante écarte une ligne, en ajoute une, puis *Envoyer à …* (le propriétaire le voit dans *Relevés*), *Copier le texte* (pour un propriétaire sans compte) et *Marquer réglé*. Relevés dans `structures/{id}/releves/{proprio}_{mois}`.
+
 ## Points crottins
 
 Chaque coup de main rapporte des crottins (compteur en haut de l'écran, qui ouvre la boutique) : tâches cochées (une tâche rare rapporte plus qu'une quotidienne), rendez-vous gérés, concours et podiums, séances, entretien des prés, foin. Annuler une action retire ses crottins. Les récompenses s'échangent dans la boutique ; la gérante marque le bon *offert* une fois la récompense donnée.

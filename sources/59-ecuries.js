@@ -70,7 +70,7 @@ function monEcurieHtml() {
   return section('Mon écurie', `<div class="card ecu-carte">
       <div class="row-main"><div class="ecu-nom">${esc(e.nom || 'Mon écurie')}</div><div class="row-s">${esc(e.commune || 'Commune non indiquée')}</div></div>
       <div class="wrap"><span class="pill${g ? ' ok' : ''}">${esc(ROLE_LABEL[e.role] || '')}</span><span class="small muted">ton rôle dans cette écurie</span></div>
-      ${aboHtml()}
+      ${estProprio() ? '<p class="note">Tu vois tes chevaux et tes relevés de pension. Le carnet de l\'écurie reste à son équipe.</p>' : aboHtml()}
       <div class="btnrow">${g
         ? `<button type="button" class="btn small" data-act="ecu-renommer">${ic('edit', 'sm')}Modifier le nom</button><button type="button" class="btn small" data-act="ecu-gerance">${ic('users', 'sm')}Passer la gérance</button>`
         : `<button type="button" class="btn small danger" data-act="ecu-quitter">${ic('sortie', 'sm')}Quitter cette écurie</button>`}</div>
@@ -175,7 +175,7 @@ function confirmerRejoindre(inv) {
   const cur = ecurieOuverte();
   openSheet(`Rejoindre ${inv.structureNom || "l'écurie"}`, `<p class="note" style="color:var(--ink)">${esc((inv.par && inv.par.nom) || 'La gérante')} t'invite à rejoindre <b>${esc(inv.structureNom || '')}</b>.</p>
     <div class="wrap"><span class="pill ok">${esc(ROLE_LABEL[inv.role] || '')}</span></div>
-    <p class="note">${inv.role === 'lecture' ? 'Tu pourras tout consulter, sans rien modifier.' : 'Tu pourras tout noter dans cette écurie.'}${cur && cur.nom ? ` Tu restes dans ${esc(cur.nom)}.` : ''}</p>`, {
+    <p class="note">${inv.role === 'proprio' ? 'Tu verras tes chevaux et tes relevés de pension.' : inv.role === 'lecture' ? 'Tu pourras tout consulter, sans rien modifier.' : 'Tu pourras tout noter dans cette écurie.'}${cur && cur.nom ? ` Tu restes dans ${esc(cur.nom)}.` : ''}</p>`, {
     submit: 'Rejoindre', local: true,
     onSubmit: () => envoi(EQ.rejoindre(inv.code), x => { toast(`Bienvenue dans ${x.nom || "l'écurie"} !`, { fete: true }); EQ.ouvrir(x.sid); }, "Ça n'a pas marché : vérifie ta connexion.")
   });
@@ -227,10 +227,11 @@ async function equipeSheet(msg = '', copier = '') {
   let mb = [], inv = [];
   try { [mb, inv] = await Promise.all([EQ.membres(), EQ.invitations()]); }
   catch (e) { toast("Impossible de charger l'équipe : vérifie ta connexion.", { danger: true }); return; }
-  const now = Date.now(), ordre = m => ({ gerante: 0, equipe: 1, lecture: 2 }[m.role] ?? 3);
+  const now = Date.now(), ordre = m => ({ gerante: 0, equipe: 1, lecture: 2, proprio: 3 }[m.role] ?? 4);
+  const autresRoles = r => [['equipe', 'Peut modifier'], ['lecture', 'Lecture seule'], ['proprio', 'Propriétaire']].filter(([v]) => v !== r);
   const lignes = mb.sort((a, b) => ordre(a) - ordre(b) || String(a.nom || a.email).localeCompare(String(b.nom || b.email), 'fr')).map(m => `<div class="row"><div class="row-main">
       <div class="row-t">${esc(m.nom || m.email)}${m.moi ? ' <span class="pill ok">Toi</span>' : ''}</div><div class="row-s">${esc(m.email)} · ${esc(ROLE_LABEL[m.role] || m.role)}</div>
-      ${m.role === 'gerante' ? '' : `<div class="wrap" style="margin-top:6px"><button type="button" class="btn small" data-act="eq-role" data-uid="${esc(m.uid)}" data-role="${m.role === 'lecture' ? 'equipe' : 'lecture'}">${m.role === 'lecture' ? 'Passer en « Peut modifier »' : 'Passer en lecture seule'}</button><button type="button" class="btn small danger" data-act="eq-del" data-uid="${esc(m.uid)}" data-confirm="Confirmer le retrait">Retirer</button></div>`}
+      ${m.role === 'gerante' ? '' : `<div class="wrap" style="margin-top:6px">${autresRoles(m.role).map(([v, l]) => `<button type="button" class="btn small" data-act="eq-role" data-uid="${esc(m.uid)}" data-role="${v}">${l}</button>`).join('')}<button type="button" class="btn small danger" data-act="eq-del" data-uid="${esc(m.uid)}" data-confirm="Confirmer le retrait">Retirer</button></div>`}
     </div></div>`).join('');
   const attente = inv.map(i => {
     const lien = !i.email, fini = !!(i.expire && i.expire <= now);
@@ -243,7 +244,8 @@ async function equipeSheet(msg = '', copier = '') {
     ${inv.length ? grp('Invitations en attente', `<div class="list">${attente}</div>`) : ''}
     <div class="box inv-box">
       <span class="flabel">Inviter quelqu'un</span>
-      ${chips('invrole', [{ v: 'equipe', l: 'Peut modifier' }, { v: 'lecture', l: 'Lecture seule' }], 'equipe')}
+      ${chips('invrole', [{ v: 'equipe', l: 'Peut modifier' }, { v: 'lecture', l: 'Lecture seule' }, { v: 'proprio', l: 'Propriétaire' }], 'equipe')}
+      <p class="note">« Propriétaire » : pour un cheval en pension. La personne voit seulement ses chevaux et ses relevés, rien d'autre de l'écurie.</p>
       <button type="button" class="btn primary" data-act="eq-lien">${ic('partage', 'sm')}Partager un lien d'invitation</button>
       <p class="note">Valable 7 jours, pour une seule personne. Son code peut aussi se taper dans l'appli.</p>
       ${fld('Ou par adresse e-mail', inp('f_inv', '', 'type="email" autocomplete="off" placeholder="prenom@exemple.fr" enterkeyhint="send"'))}

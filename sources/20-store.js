@@ -99,6 +99,7 @@ function loadCache() {
 }
 let cacheTimer = null;
 function saveCache() {
+  if (typeof partagesBientot === 'function') partagesBientot();   // fiches des propriétaires (70-pension.js)
   clearTimeout(cacheTimer);
   cacheTimer = setTimeout(() => {
     const o = { cfg: S.cfg, carte: S.carte };

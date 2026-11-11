@@ -99,6 +99,35 @@ La carte d'une écurie est une donnée de l'écurie : `config/carte` (la carte p
 
 Une carte lue dans la base est remise au propre avant d'être dessinée (identifiants simples, nombres, textes sans balises ni guillemets), et l'image du plan n'est acceptée que comme image JPEG, PNG ou WebP : un membre « Peut modifier » ne peut rien glisser dans la carte qui s'exécute chez les autres.
 
+## 9. Messages, dernière activité, suppression du compte (11 novembre 2026)
+
+| Demande | Règle | Résultat |
+|---|---|---|
+| écrire un message à EquiValdi | `retours` : création avec son propre `uid`, champs connus, texte de 3 à 2 000 caractères, statut « nouveau », date du jour | permis ; refusé au nom d'un autre, trop long, ou déjà « répondu » |
+| lire ses messages et les réponses | `get, list` si `resource.data.uid == moi()` (requête `where uid ==`) | permis ; la liste de tous les messages est refusée |
+| lire le message de quelqu'un d'autre | `uid` différent | refusé |
+| marquer une réponse lue | mise à jour du seul champ `vuLe` | permis à l'auteur |
+| répondre, classer | `admin()` | administration seulement |
+| noter la dernière ouverture | `structures/{id}` : tout membre (même lecture seule), seul le champ `vu`, à la date du jour à un jour près | permis ; refusé avec un autre champ (`nom`…) |
+| supprimer une écurie | `delete` si `gerante(sid)` (l'appli ne le propose que si la gérante y est seule) | refusé à tout autre compte |
+| vider le carnet avant | `delete` des données si `gerante(sid)`, même après l'essai | gérante seulement |
+| retirer sa fiche de gérante | seulement si l'écurie disparaît dans le même lot (`!existsAfter`) | une gérante ne peut pas abandonner une écurie qui reste |
+| effacer ses messages | `delete` par l'auteur | permis |
+
+## 10. Propriétaires en pension (rôle « proprio »)
+
+| Demande | Règle | Résultat |
+|---|---|---|
+| lire le carnet (chevaux, soins, tâches…) | `equipier(sid)` : gérante, « Peut modifier », « Lecture seule » | un propriétaire est refusé, même cheval par cheval |
+| lire l'équipe | `equipier(sid)` ; un propriétaire lit seulement sa fiche et celle de la gérante (`get`) | la liste des membres lui est refusée |
+| lire les réglages, la carte | données de l'écurie : `equipier(sid)` | refusé au propriétaire (ses rappels viennent de sa fiche partagée) |
+| lire ses fiches partagées | `partages` : `resource.data.proprio == moi()`, requête `where proprio ==` | permis ; la liste de toutes les fiches lui est refusée |
+| écrire une fiche partagée | `editeur(sid)`, champ `proprio` obligatoire | l'équipe seulement (pas d'abonnement exigé, pour pouvoir retirer un accès) |
+| lire ses relevés | `releves` : même règle que les fiches partagées | permis à son propriétaire |
+| écrire un relevé | `gerante(sid)` | la gérante seulement (« Peut modifier » refusé) |
+| inviter avec ce rôle | invitations : `role in ['equipe', 'lecture', 'proprio']` | permis à la gérante |
+| écrire quoi que ce soit dans le carnet | `editeur(sid)` faux pour `proprio` | refusé |
+
 ## Migration
 
 - Recopie de l'équipe (cas c) : seulement par l'ancienne gérante, pour un uid qui existe dans l'ancien `membres`, avec exactement le même rôle (`equipe` ou `lecture`).

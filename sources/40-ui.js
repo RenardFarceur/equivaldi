@@ -6,7 +6,8 @@ const TABS = [
   { id: 'pres', label: 'Prés', icon: 'fence' },
   { id: 'foin', label: 'Foin', icon: 'bale' },
   { id: 'concours', label: 'Concours', icon: 'rosette' },
-  { id: 'equipe', label: 'Équipe', icon: 'users' }
+  { id: 'equipe', label: 'Équipe', icon: 'users' },
+  { id: 'releves', label: 'Relevés', icon: 'euro' }   // propriétaires en pension seulement (70-pension.js)
 ];
 const nav = { tab: TABS.some(t => t.id === ui.tab) ? ui.tab : 'accueil', stack: [], savedY: 0 };
 const VIEWS = {};

@@ -51,7 +51,10 @@ const CGU_LOCAL = 'equivaldi:conditions';
 const ecris = (k, v) => { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); return true; } catch (x) { return false; } };
 const COLS = ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches'];
 const JOUR = 86400000;
-const ROLES = { gerante: 'Gérante', equipe: 'Peut modifier', lecture: 'Lecture seule' };
+const ROLES = { gerante: 'Gérante', equipe: 'Peut modifier', lecture: 'Lecture seule', proprio: 'Propriétaire' };
+const ROLES_INVITES = ['equipe', 'lecture', 'proprio'];
+const roleInvite = r => ROLES_INVITES.includes(r) ? r : 'equipe';
+const ecrit = role => role === 'gerante' || role === 'equipe';
 // Administration EquiValdi : ce compte gère toutes les écuries sans en être membre (les règles d'accès le connaissent aussi).
 // Dans une écurie dont il n'est pas membre, il agit sous le nom « EquiValdi » et n'apparaît dans aucune équipe.
 const ADMIN_MAIL = 'bennizdu03@gmail.com';
@@ -124,6 +127,80 @@ function adaptateur(sid) {
         e => { refus(e); if (err) err({ code: code(e), message: e.message }); })
     })
   };
+}
+
+/* Propriétaire en pension : le carnet est lu dans les fiches partagées de ses chevaux (partages, une par
+   cheval, tenues à jour par l'équipe). Une seule écoute, redistribuée aux collections que l'appli attend ;
+   l'équipe se réduit à sa fiche et à celle de la gérante. Rien d'autre de l'écurie n'est lisible. */
+function adaptateurProprio(sid, gerante) {
+  const A = adaptateur(sid), base = 'structures/' + sid;
+  const abos = new Set();
+  let dernier = null, stop = null;
+  const ecoute = f => {
+    abos.add(f);
+    if (!stop) stop = onSnapshot(query(collection(fs, base + '/partages'), where('proprio', '==', U.uid)), { includeMetadataChanges: true },
+      q => { dernier = q; abos.forEach(g => g(q)); },
+      e => { if (estRefus(e)) verifierAccesBientot(); abos.forEach(g => g(null, e)); });
+    else if (dernier) f(dernier);
+    return () => abos.delete(f);
+  };
+  const meta = q => ({ fromCache: !!(q && q.metadata.fromCache), hasPendingWrites: false });
+  const docs = (q, c) => {
+    const vus = new Map();
+    (q ? q.docs : []).forEach(d => { const x = d.data() || {}; ((x.donnees || {})[c] || []).forEach(o => { if (o && typeof o.id === 'string' && !vus.has(o.id)) vus.set(o.id, o); }); });
+    return [...vus.values()].map(o => ({ id: o.id, exists: true, data: () => o, metadata: meta(q) }));
+  };
+  const coll = c => ({
+    path: c,
+    doc: id => A.collection(c).doc(id),
+    onSnapshot: (next, err) => {
+      if (c === 'membres') {
+        // sa fiche et celle de la gérante
+        const ids = [...new Set([U.uid, gerante].filter(Boolean))], vus = {};
+        const emet = () => { const l = ids.map(i => vus[i]).filter(x => x && x.exists); next({ docs: l, size: l.length, empty: !l.length, metadata: { fromCache: false, hasPendingWrites: false } }); };
+        const stops = ids.map(i => A.doc('membres/' + i).onSnapshot(s => { vus[i] = s; emet(); }, e => { vus[i] = null; emet(); }));
+        return () => stops.forEach(f => f && f());
+      }
+      return ecoute((q, e) => { if (e) { if (err) err({ code: code(e), message: e.message }); return; } const l = docs(q, c); next({ docs: l, size: l.length, empty: !l.length, metadata: meta(q) }); });
+    }
+  });
+  return {
+    sid, proprio: true,
+    doc: path => {
+      if (path === 'config/reglages' || path === 'config/carte') {
+        const r = A.doc(path);
+        return Object.assign({}, r, {
+          onSnapshot: (next, err) => ecoute((q, e) => {
+            if (e) { if (err) err({ code: code(e), message: e.message }); return; }
+            const cfg = path === 'config/reglages' ? (q && q.docs.map(d => (d.data() || {}).cfg).find(Boolean)) : null;
+            next({ id: path.split('/')[1], exists: !!cfg, data: () => cfg, metadata: meta(q) });
+          })
+        });
+      }
+      return A.doc(path);
+    },
+    collection: coll
+  };
+}
+// L'équipe tient les fiches partagées (une par cheval de propriétaire) et la gérante les relevés
+const exigerEquipe = () => { if (!OUV || !(ecrit(OUV.role) || OUV.fantome)) throw erreur("Seule l'équipe de l'écurie peut faire ça."); };
+async function partages() {
+  exigerEquipe();
+  const q = await getDocs(collection(fs, 'structures', OUV.id, 'partages'));
+  return q.docs.map(d => Object.assign({ id: d.id }, d.data()));
+}
+async function ecrirePartage(hid, data) { exigerEquipe(); await setDoc(doc(fs, 'structures', OUV.id, 'partages', hid), JSON.parse(JSON.stringify(data))); }
+async function effacerPartage(hid) { exigerEquipe(); await deleteDoc(doc(fs, 'structures', OUV.id, 'partages', hid)); }
+async function releves() {
+  if (!OUV) return [];
+  const c = collection(fs, 'structures', OUV.id, 'releves');
+  const q = OUV.role === 'proprio' && !OUV.fantome ? await getDocs(query(c, where('proprio', '==', U.uid))) : await getDocs(c);
+  return q.docs.map(d => Object.assign({ id: d.id }, d.data()));
+}
+async function ecrireReleve(id, data) {
+  if (!OUV || !(OUV.role === 'gerante' || OUV.fantome)) throw erreur('Seule la gérante envoie les relevés.');
+  if (!/^[A-Za-z0-9_-]{1,80}$/.test(id)) throw erreur('Relevé inconnu.');
+  await delai(setDoc(doc(fs, 'structures', OUV.id, 'releves', id), JSON.parse(JSON.stringify(data))), 15000);
 }
 
 /* ---------- Écrans de connexion (logo vertical, au-dessus de l'appli) ---------- */
@@ -276,6 +353,7 @@ const message = (titre, texte) => new Promise(fin => show(`<div class="form">
 /* ---------- La personne connectée et ses écuries ---------- */
 let U = null, MAIL = '', IDX = null, OUV = null;   // compte, adresse, index personnel, écurie ouverte
 let ADMIN = false;                                  // compte d'administration EquiValdi
+let SUPPRESSION = false;                            // compte en cours de suppression
 let CGU_A_FAIRE = false;                            // conditions d'utilisation pas encore acceptées (comptes d'avant)
 // invitations remises « à plus tard » : plus reproposées pendant cette visite, même après un rechargement
 const VUS = (() => {
@@ -460,14 +538,14 @@ function demarrer(u, e, o = {}) {
   Object.assign(window.EQ, { email: MAIL, role, admin: ADMIN, ecurie: Object.assign({}, OUV), ecuries: listeEcuries(), conditionsAFaire: CGU_A_FAIRE && !fantome });
   hide();
   window.claude._resolve('user', {
-    me: async () => ({ id: qui.uid, name: qui.nom, email: MAIL, isOwner: role === 'gerante', canEdit: role !== 'lecture', avatarUrl: '', color: '' }),
+    me: async () => ({ id: qui.uid, name: qui.nom, email: MAIL, isOwner: role === 'gerante', canEdit: ecrit(role), avatarUrl: '', color: '' }),
     id: async () => qui.uid,
     isOwner: async () => role === 'gerante',
-    canEdit: async () => role !== 'lecture',
-    can: async n => n === 'data.write' ? role !== 'lecture' : false,
+    canEdit: async () => ecrit(role),
+    can: async n => n === 'data.write' ? ecrit(role) : false,
     profiles: async ids => Object.fromEntries([].concat(ids).map(i => [i, { id: i, name: '' }]))
   });
-  window.claude._resolve('db', adaptateur(e.id));
+  window.claude._resolve('db', role === 'proprio' && !fantome ? adaptateurProprio(e.id, e.gerante) : adaptateur(e.id));
   notifier();
   suivreEcurie(e.id);
   if (!o.horsLigne) setTimeout(() => { verifierIndex().catch(() => {}); }, 1500);
@@ -686,7 +764,7 @@ function ecranCode(u, retour) {
 function proposer(u, inv, o = {}) {
   const role = ROLES[inv.role] || inv.role;
   const qui = inv.par && inv.par.nom ? escH(inv.par.nom) : 'La gérante';
-  const quoi = inv.role === 'lecture' ? 'Tu pourras tout consulter, sans rien modifier.' : 'Tu pourras tout noter : chevaux, soins, prés, foin, concours et tâches.';
+  const quoi = inv.role === 'proprio' ? 'Tu verras ton cheval : ses soins, ses séances, ses concours, où il est au pré, et tes relevés de pension.' : inv.role === 'lecture' ? 'Tu pourras tout consulter, sans rien modifier.' : 'Tu pourras tout noter : chevaux, soins, prés, foin, concours et tâches.';
   return new Promise(fin => show(`<div class="form">
       <h2 class="auth-t">Rejoindre ${escH(inv.structureNom || "l'écurie")}</h2>
       <p>${qui} t'invite à rejoindre <b>${escH(inv.structureNom || "l'écurie")}</b>.</p>
@@ -728,7 +806,7 @@ async function lireInvitation(saisie) {
   if (inv.utiliseePar) throw erreur(inv.utiliseePar === U.uid ? 'Tu as déjà rejoint cette écurie avec ce code.' : "Ce code a déjà servi : il ne marche qu'une fois. Demande un nouveau lien à la gérante.", { deja: inv.utiliseePar === U.uid });
   if (inv.expire && inv.expire <= Date.now()) throw erreur("Cette invitation a expiré (un lien reste valable 7 jours). Demande-en une nouvelle à la gérante.");
   if (inv.email && String(inv.email).toLowerCase() !== MAIL) throw erreur("Cette invitation a été faite pour une autre adresse e-mail. Connecte-toi avec l'adresse invitée.");
-  if (!['equipe', 'lecture'].includes(inv.role) || typeof inv.structure !== 'string') throw erreur("Cette invitation n'est pas valable.");
+  if (!ROLES_INVITES.includes(inv.role) || typeof inv.structure !== 'string') throw erreur("Cette invitation n'est pas valable.");
   return inv;
 }
 // Rejoindre = un seul lot : sa fiche de membre, l'invitation marquée utilisée, l'index
@@ -750,7 +828,7 @@ async function invitationsMail() {
   const q = await getDocs(query(collection(fs, 'invitations'), where('email', '==', MAIL)));
   const now = Date.now();
   return q.docs.map(d => Object.assign({ code: d.id }, d.data()))
-    .filter(i => !i.utiliseePar && (!i.expire || i.expire > now) && ['equipe', 'lecture'].includes(i.role) && typeof i.structure === 'string')
+    .filter(i => !i.utiliseePar && (!i.expire || i.expire > now) && ROLES_INVITES.includes(i.role) && typeof i.structure === 'string')
     .sort((a, b) => (a.le || 0) - (b.le || 0));
 }
 // Créer une écurie = un seul lot : la structure, sa propre fiche de gérante, l'index
@@ -1400,7 +1478,7 @@ async function mesDonnees() {
 const lots = async (refs, fn) => { for (let i = 0; i < refs.length; i += 400) { const b = writeBatch(fs); refs.slice(i, i + 400).forEach(r => fn(b, r)); await b.commit(); } };
 // une écurie dont je suis la seule personne : son carnet, ses invitations, puis l'écurie et ma fiche (même lot)
 async function effacerEcurie(sid) {
-  for (const c of [...COLS, 'config']) {
+  for (const c of [...COLS, 'config', 'partages', 'releves']) {
     const q = await getDocs(collection(fs, 'structures', sid, c));
     await lots(q.docs.map(d => d.ref), (b, r) => b.delete(r));
   }
@@ -1428,6 +1506,7 @@ async function supprimerCompte(motDePasse) {
   const r = await getDocs(query(collection(fs, 'retours'), where('uid', '==', U.uid)));
   await lots(r.docs.map(d => d.ref), (b, x) => b.delete(x));
   await deleteDoc(indexRef());
+  SUPPRESSION = true;   // l'écran de connexion attend le rechargement (qui montre le message)
   await deleteUser(auth.currentUser);
   purgerEcuries();
   try { ['carnet-ecurie:moi:v1', CGU_LOCAL, 'carnet-ecurie:ui:v1'].forEach(k => localStorage.removeItem(k)); Object.keys(localStorage).filter(k => k.startsWith('equivaldi:vu:')).forEach(k => localStorage.removeItem(k)); } catch (x) { /* rien */ }
@@ -1472,6 +1551,7 @@ window.EQ = {
   payerFictif,
   toutesEcuries, equipeDe, gererAbonnement, ouvrirAdmin, quitterAdmin,
   demanderCarte, carteFaite,
+  partages, ecrirePartage, effacerPartage, releves, ecrireReleve,
   envoyerRetour, mesRetours, retourVu, tousRetours, repondreRetour, classerRetour,
   accepterConditions, analyseSuppression, mesDonnees, supprimerCompte,
   conditions: CONDITIONS, legal: LEGAL, demo: false, reponses: 0, conditionsAFaire: false,
@@ -1488,7 +1568,7 @@ window.EQ = {
   renommer,
   passerGerance,
   inviterLien: async role => {
-    const c = await nouvelleInvitation({ role: role === 'lecture' ? 'lecture' : 'equipe', expire: Date.now() + 7 * JOUR });
+    const c = await nouvelleInvitation({ role: roleInvite(role), expire: Date.now() + 7 * JOUR });
     return { code: c, url: location.origin + location.pathname + '?invitation=' + c };
   },
   inviter: async (email, role) => {
@@ -1498,7 +1578,7 @@ window.EQ = {
     const [ls, mb] = await Promise.all([invitations(), window.EQ.membres()]);
     if (mb.some(m => String(m.email || '').toLowerCase() === mail)) throw erreur('Cette adresse fait déjà partie de l\'écurie.');
     if (ls.some(i => i.email === mail)) throw erreur('Cette adresse a déjà une invitation en attente.');
-    const c = await nouvelleInvitation({ role: role === 'lecture' ? 'lecture' : 'equipe', email: mail });
+    const c = await nouvelleInvitation({ role: roleInvite(role), email: mail });
     return { code: c };
   },
   invitations,
@@ -1506,7 +1586,7 @@ window.EQ = {
   membres: async () => (await getDocs(collection(fs, 'structures', OUV.id, 'membres'))).docs.map(d => Object.assign({ uid: d.id, moi: !!U && d.id === U.uid }, d.data())),
   changerRole: async (uid, role) => {
     exigerGerante();
-    if (!['equipe', 'lecture'].includes(role)) throw erreur('Pour la gérance, utilise « Passer la gérance ».');
+    if (!ROLES_INVITES.includes(role)) throw erreur('Pour la gérance, utilise « Passer la gérance ».');
     await updateDoc(doc(fs, 'structures', OUV.id, 'membres', uid), { role });
   },
   retirerMembre,
@@ -1522,6 +1602,7 @@ else {
   if (!window.EQ_SID) attente();
   onAuthStateChanged(auth, u => {
     if (!u) {
+      if (SUPPRESSION) return;
       // en quittant l'écurie d'exemple par « Créer mon compte »
       let apres = '';
       try { apres = sessionStorage.getItem('equivaldi:apres-exemple') || ''; sessionStorage.removeItem('equivaldi:apres-exemple'); } catch (x) { /* rien */ }
