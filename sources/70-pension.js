@@ -11,7 +11,7 @@ const pensionDe = h => (h && h.pension && Number(h.pension.montant) > 0) ? { mon
 
 /* ----- Fiches partagées : écrites par l'équipe dès que le carnet change ----- */
 const peutPartager = () => !!(window.EQ_MODE && window.EQ && typeof EQ.ecrirePartage === 'function' && !estExemple() && !sync.readOnly
-  && sync.mode === 'cloud' && ecurieOuverte() && (['gerante', 'equipe'].includes(EQ.role) || ecurieOuverte().fantome));
+  && sync.mode === 'cloud' && ecurieOuverte() && (['gerante', 'equipe'].includes(EQ.role) || ecurieOuverte().fantome) && offrePro());
 // sérialisation stable (clés triées) : deux téléphones de l'équipe calculent la même empreinte
 const stable = v => Array.isArray(v) ? '[' + v.map(stable).join(',') + ']'
   : v && typeof v === 'object' ? '{' + Object.keys(v).filter(k => v[k] !== undefined).sort().map(k => JSON.stringify(k) + ':' + stable(v[k])).join(',') + '}'
@@ -128,6 +128,7 @@ function pensionSection() {
   if (estProprio()) return '';
   const ps = proprietairesPension();
   if (!ps.length) return '';
+  if (!offrePro()) return section('Pension', `<div class="verrou-ligne">${verrouHtml('pension')}</div>`);
   if (window.EQ_MODE && !REL) chargerReleves();
   const m = /^\d{4}-\d{2}$/.test(ui.relMois || '') ? ui.relMois : moisDe();
   const rows = ps.map(P => {

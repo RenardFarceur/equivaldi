@@ -2,9 +2,13 @@
 /* ---------- Abonnement de l'écurie (version installable) ----------
    Essai gratuit de 2 mois, sans carte. Pendant l'essai : tout le carnet, 2 chevaux au plus ; la carte des prés
    et les points crottins sont réservés aux écuries abonnées. Après l'essai sans abonnement : lecture seule
-   (tout reste consultable et exportable). Abonnement : 10 €/mois ou 100 €/an, payé par la gérante
-   (paiement fictif en attendant Shine ou Tebex). Écuries créées avant le 6 novembre 2026 à 12 h : abonnées à vie. */
-const ABO = { mois: 10, an: 100, chevaux: 2, aVieAvant: 1793962800000, rappel: 14 };
+   (tout reste consultable et exportable). Deux formules, payées par la gérante (paiement fictif en attendant
+   Shine ou Tebex) : « À la maison » 5 €/mois ou 50 €/an ; « Pro » 20 €/mois ou 200 €/an, avec les propriétaires
+   en pension et leurs relevés (décidé par Célia le 12 novembre 2026). L'essai comprend la pension.
+   Écuries créées avant le 6 novembre 2026 à 12 h : Pro à vie. */
+const ABO = { offres: { maison: { mois: 5, an: 50, nom: 'À la maison' }, pro: { mois: 20, an: 200, nom: 'Pro' } }, chevaux: 2, aVieAvant: 1793962800000, rappel: 14 };
+const prixAbo = (offre, fo) => (ABO.offres[offre] || ABO.offres.maison)[fo === 'an' ? 'an' : 'mois'];
+const offreDe = a => a && a.offre === 'pro' ? 'pro' : 'maison';   // abonnements payés avant les deux formules : « À la maison »
 // « 6 janvier », avec l'année quand la date est loin (« 20 février 2028 »)
 const dJour = ms => fmt(isoOf(new Date(ms)), Math.abs(ms - Date.now()) > 300 * 86400000 ? { day: 'numeric', month: 'long', year: 'numeric' } : { day: 'numeric', month: 'long' });
 
@@ -15,7 +19,7 @@ function aboEtat(e) {
   if (!e || (!e.abonnement && !e.creeLe)) return { code: 'inconnu' };
   const a = e.abonnement || {}, now = Date.now();
   if (a.statut === 'fondatrice' || a.statut === 'a_vie' || (e.creeLe && e.creeLe < ABO.aVieAvant)) return { code: 'a_vie' };
-  if (a.statut === 'abonnee' && a.fin > now) return { code: 'abonnee', formule: a.formule, fin: a.fin, paiement: a.paiement || null };
+  if (a.statut === 'abonnee' && a.fin > now) return { code: 'abonnee', formule: a.formule, offre: offreDe(a), fin: a.fin, paiement: a.paiement || null };
   if (a.finEssai > now) return { code: 'essai', fin: a.finEssai, jours: Math.max(1, Math.ceil((a.finEssai - now) / 86400000)) };
   return { code: 'expiree', fin: Math.max(a.finEssai || 0, a.fin || 0) };
 }
@@ -25,6 +29,13 @@ function premium() {
   if (e && e.fantome) return true;
   const c = aboEtat(e).code;
   return c !== 'essai' && c !== 'expiree';
+}
+/* Formule Pro (propriétaires en pension, relevés) : à vie, pendant l'essai, ou abonnée Pro */
+function offrePro() {
+  const e = ecurieOuverte();
+  if (!window.EQ_MODE || (e && (e.fantome || e.demo))) return true;
+  const st = aboEtat(e);
+  return st.code === 'a_vie' || st.code === 'essai' || st.code === 'inconnu' || (st.code === 'abonnee' && st.offre === 'pro');
 }
 function ecurieFigee() {
   const e = ecurieOuverte();
@@ -37,14 +48,14 @@ function figeeMsg() {
     : "L'essai gratuit de l'écurie est terminé : la gérante peut l'abonner pour continuer à noter. Tout reste consultable.";
 }
 function aboResume(st) {
-  if (st.code === 'a_vie') return { titre: 'Abonnée à vie', detail: 'Toutes les fonctions, pour toujours.', ic: 'rosette', ton: 'ok' };
+  if (st.code === 'a_vie') return { titre: 'Pro à vie', detail: 'Toutes les fonctions, pour toujours.', ic: 'rosette', ton: 'ok' };
   if (st.code === 'abonnee') return {
-    titre: `Abonnée · formule ${st.formule === 'an' ? 'annuelle' : 'mensuelle'}`, ic: 'check', ton: 'ok',
+    titre: `${ABO.offres[st.offre].nom} · ${st.formule === 'an' ? 'annuel' : 'mensuel'}`, ic: 'check', ton: 'ok',
     detail: `Payée jusqu'au ${dJour(st.fin)}${st.paiement && st.paiement.fournisseur === 'fictif' ? ' (paiement de démonstration)' : ''}.`
   };
   if (st.code === 'essai') return {
     titre: `Essai gratuit · encore ${st.jours} ${pl(st.jours, 'jour')}`, ic: 'clock', ton: st.jours <= ABO.rappel ? 'warn' : '',
-    detail: `Jusqu'au ${dJour(st.fin)}, sans carte. ${ABO.chevaux} chevaux au plus ; la carte des prés et les points crottins viennent avec l'abonnement.`
+    detail: `Jusqu'au ${dJour(st.fin)}, sans carte. ${ABO.chevaux} chevaux au plus ; la carte des prés et les points crottins viennent avec l'abonnement. La pension est comprise dans l'essai.`
   };
   if (st.code === 'expiree') return { titre: 'Essai terminé · lecture seule', detail: `Depuis le ${dJour(st.fin)}. Tout reste consultable et exportable.`, ic: 'lock', ton: 'danger' };
   return null;
@@ -53,7 +64,8 @@ const RAISONS = {
   chevaux: { t: 'Plus de 2 chevaux', p: "Pendant l'essai, l'écurie compte 2 chevaux au plus. Abonnée, elle en accueille autant que tu veux." },
   carte: { t: 'La carte des prés', p: "La carte en 3D, l'état des prés en couleur et les chevaux à faire glisser sont réservés aux écuries abonnées." },
   crottins: { t: 'Les points crottins', p: "Les crottins, la boutique et le classement de l'équipe sont réservés aux écuries abonnées." },
-  fin: { t: 'Essai terminé', p: "Abonne l'écurie pour continuer à noter. Tout reste consultable en attendant." }
+  fin: { t: 'Essai terminé', p: "Abonne l'écurie pour continuer à noter. Tout reste consultable en attendant." },
+  pension: { t: 'Propriétaires en pension', p: "Le rôle « Propriétaire » (chaque propriétaire voit ses chevaux) et les relevés de pension viennent avec la formule Pro." }
 };
 
 /* Réglages › Mon écurie : l'état de l'abonnement */
@@ -65,7 +77,7 @@ function aboHtml() {
   const g = e.role === 'gerante' && !e.fantome, ouvert = st.code === 'essai' || st.code === 'expiree';
   const btn = e.fantome ? `<button type="button" class="btn small" data-act="adm-ecurie" data-sid="${esc(idEcurie(e))}">Gérer</button>`
     : g && ouvert ? `<button type="button" class="btn small primary" data-act="abonner">S'abonner</button>`
-    : g && st.code === 'abonnee' ? `<button type="button" class="btn small" data-act="abonner">Prolonger</button>` : '';
+    : g && st.code === 'abonnee' ? `<button type="button" class="btn small" data-act="abonner">${st.offre === 'pro' ? 'Prolonger' : 'Prolonger ou passer Pro'}</button>` : '';
   return `<div class="abo-etat ${r.ton}">${ic(r.ic)}<div class="row-main"><b>${esc(r.titre)}</b><span class="small">${esc(r.detail)}</span>${!g && !e.fantome && ouvert ? `<span class="small">Seule la gérante peut abonner l'écurie.</span>` : ''}</div>${btn}</div>`;
 }
 /* Accueil : mode administrateur, fin d'essai proche (gérante), essai terminé (tout le monde) */
@@ -83,7 +95,7 @@ function bandeauAbo() {
 function verrouHtml(raison) {
   const r = RAISONS[raison], e = ecurieOuverte() || {};
   return `<div class="verrou-voile"><span class="qa-ic paille">${ic('lock')}</span><b>${esc(r.t)}</b><p class="small">${esc(r.p)}</p>
-    ${e.role === 'gerante' ? `<button type="button" class="btn small primary" data-act="abonner" data-raison="${raison}">S'abonner</button>` : `<p class="small muted">Demande à la gérante d'abonner l'écurie.</p>`}</div>`;
+    ${e.role === 'gerante' ? `<button type="button" class="btn small primary" data-act="abonner" data-raison="${raison}">${raison === 'pension' && aboEtat(e).code === 'abonnee' ? 'Passer Pro' : "S'abonner"}</button>` : `<p class="small muted">Demande à la gérante d'abonner l'écurie.</p>`}</div>`;
 }
 /* La carte des prés, floutée sous le voile */
 function carteVerrouHtml() { return `<div class="verrou-carte"><div class="carte" data-key="carte" data-garde></div>${verrouHtml('carte')}</div>`; }
@@ -95,36 +107,45 @@ ACT.abonner = d => {
   if (e.fantome) { ACT['adm-ecurie']({ sid: idEcurie(e) }); return; }
   const r = RAISONS[d && d.raison] || null, st = aboEtat(e);
   const intro = r ? `<p class="note" style="color:var(--ink)">${esc(r.p)}</p>` : '';
+  const M = ABO.offres.maison, P = ABO.offres.pro;
   if (e.role !== 'gerante') {
-    openSheet(r ? r.t : 'Abonnement', `${intro}<p class="note">Seule la gérante de ${esc(e.nom || "l'écurie")} peut l'abonner : ${ABO.mois} € par mois ou ${ABO.an} € par an.</p>`);
+    openSheet(r ? r.t : 'Abonnement', `${intro}<p class="note">Seule la gérante de ${esc(e.nom || "l'écurie")} peut l'abonner : « ${M.nom} » ${M.mois} € par mois, ou « ${P.nom} » ${P.mois} € par mois avec la pension.</p>`);
     return;
   }
-  const plan = (v, prix, per, plus) => ({ v, html: `<b>${prix} €</b><span>${per}</span><small>${plus}</small>`, aria: `${prix} euros ${per}` });
+  // la formule proposée : Pro si l'écurie a déjà des pensions ou des propriétaires, ou si on vient pour ça
+  const veutPro = (d && d.raison === 'pension') || (st.code === 'abonnee' ? st.offre === 'pro' : (typeof proprietairesPension === 'function' && proprietairesPension().length > 0) || membres().some(m => m.role === 'proprio'));
+  const offre = (v, o, plus) => ({ v, html: `<span class="abo-nom">${o.nom}</span><b>${o.mois} €</b><span>par mois</span><small>${plus}</small>`, aria: `${o.nom}, ${o.mois} euros par mois` });
   openSheet(st.code === 'abonnee' ? "Prolonger l'abonnement" : "Abonner l'écurie", `${intro}
-    <div class="abo-plans">${chips('formule', [plan('mois', ABO.mois, 'par mois', 'Sans engagement'), plan('an', ABO.an, 'par an', '2 mois offerts')], 'an')}</div>
-    <ul class="abo-plus">${['Chevaux sans limite', 'Carte des prés en 3D', 'Points crottins et boutique', "Toute l'équipe, en direct"].map(x => `<li>${ic('check', 'sm')}${x}</li>`).join('')}</ul>
-    ${st.code === 'abonnee' ? `<p class="note">Payée jusqu'au ${dJour(st.fin)} : la nouvelle période s'ajoute à la suite.</p>` : ''}`, {
+    <div class="abo-plans">${chips('offre', [offre('maison', M, 'Tes chevaux, ton équipe'), offre('pro', P, 'Avec les propriétaires en pension')], veutPro ? 'pro' : 'maison')}</div>
+    <ul class="abo-plus">${['Chevaux sans limite', 'Carte des prés en 3D', 'Points crottins et boutique', "Toute l'équipe, en direct"].map(x => `<li>${ic('check', 'sm')}${x}</li>`).join('')}
+      <li class="abo-pro">${ic('check', 'sm')}<span><b>Pro</b> : propriétaires en pension, chacun voit ses chevaux ; relevés mensuels</span></li></ul>
+    ${grp('Paiement', chips('formule', [{ v: 'mois', l: 'Chaque mois' }, { v: 'an', l: "À l'année · 2 mois offerts" }], 'an'))}
+    ${st.code === 'abonnee' ? `<p class="note">Payée jusqu'au ${dJour(st.fin)} (${ABO.offres[st.offre].nom}). En gardant la formule, la nouvelle période s'ajoute à la suite. En changeant de formule, elle commence tout de suite, et les jours qui restent sont convertis à leur valeur.</p>` : ''}`, {
     submit: 'Continuer vers le paiement', local: true,
-    onSubmit: f => { const fo = chipVal(f, 'formule'); if (!fo) return 'Choisis une formule.'; feuillePaiement(fo); return false; }
+    onSubmit: f => { const of = chipVal(f, 'offre'), fo = chipVal(f, 'formule'); if (!of || !fo) return 'Choisis une formule.'; feuillePaiement(fo, of); return false; }
   });
 };
-// même calcul que l'enregistrement : la période payée vient à la suite de l'essai ou de l'abonnement en cours
-function finPrevue(e, fo) {
-  const a = (e && e.abonnement) || {}, now = Date.now();
-  const d = new Date(Math.max(now, a.finEssai || 0, a.statut === 'abonnee' ? a.fin || 0 : 0)), j = d.getDate();
+// même calcul que l'enregistrement (firebase.js › periodeAbo) : à la suite de l'essai ou de la période en cours ;
+// en changeant de formule, tout de suite, avec les jours restants convertis au prix de la nouvelle formule
+function finPrevue(e, fo, of = 'maison') {
+  const a = (e && e.abonnement) || {}, now = Date.now(), en = a.statut === 'abonnee' && (a.fin || 0) > now, change = en && offreDe(a) !== of;
+  const d = new Date(Math.max(now, a.finEssai || 0, en && !change ? a.fin : 0)), j = d.getDate();
   d.setMonth(d.getMonth() + (fo === 'an' ? 12 : 1)); if (d.getDate() < j) d.setDate(0);
-  return d.getTime();
+  let fin = d.getTime();
+  if (change) fin += Math.round((a.fin - Math.max(now, a.finEssai || 0)) * prixAbo(offreDe(a), 'mois') / prixAbo(of, 'mois'));
+  return Math.min(fin, now + 790 * 86400000);
 }
-function feuillePaiement(fo) {
-  const e = ecurieOuverte() || {}, m = ABO[fo], st = aboEtat(e);
+function feuillePaiement(fo, of = 'maison') {
+  const e = ecurieOuverte() || {}, m = prixAbo(of, fo), st = aboEtat(e);
   const suite = st.code === 'essai' ? `<p class="note">Tout se débloque tout de suite, et ton essai n'est pas perdu : ${fo === 'an' ? "l'année payée commence" : 'le mois payé commence'} le ${dJour(st.fin)}, à la fin de l'essai.</p>`
-    : st.code === 'abonnee' ? `<p class="note">${fo === 'an' ? "L'année s'ajoute" : "Le mois s'ajoute"} à la suite de l'abonnement en cours (jusqu'au ${dJour(st.fin)}).</p>` : '';
+    : st.code === 'abonnee' && st.offre === of ? `<p class="note">${fo === 'an' ? "L'année s'ajoute" : "Le mois s'ajoute"} à la suite de l'abonnement en cours (jusqu'au ${dJour(st.fin)}).</p>`
+    : st.code === 'abonnee' ? `<p class="note">Changement de formule : « ${ABO.offres[of].nom} » commence tout de suite, et les jours qui restaient sont ajoutés à leur valeur.</p>` : '';
   openSheet('Paiement', `<div class="abo-demo"><span class="pill warn">Démo</span><p class="note" style="color:var(--ink)">Paiement fictif : aucun argent n'est débité. Le vrai paiement passera par Shine ou Tebex.</p></div>
-    <div class="abo-recap"><div class="row-main"><b>${esc(e.nom || 'Écurie')}</b><span class="small muted">Abonnement ${fo === 'an' ? 'annuel' : 'mensuel'}</span><span class="small muted">jusqu'au ${dJour(finPrevue(e, fo))}</span></div><b class="abo-prix">${m} €</b></div>${suite}
+    <div class="abo-recap"><div class="row-main"><b>${esc(e.nom || 'Écurie')}</b><span class="small muted">${ABO.offres[of].nom} · ${fo === 'an' ? 'annuel' : 'mensuel'}</span><span class="small muted">jusqu'au ${dJour(finPrevue(e, fo, of))}</span></div><b class="abo-prix">${m} €</b></div>${suite}
     <p class="note">${m} € TTC, TVA non applicable (article 293 B du CGI). Pas de renouvellement automatique : à la fin de la période, l'écurie repasse en lecture seule jusqu'au paiement suivant.</p>
     <label class="check"><input type="checkbox" id="f_cgv"><span>J'ai lu et j'accepte les <a href="${esc(EQ.legal ? EQ.legal.conditions : './legal/conditions.html')}" target="_blank" rel="noopener">conditions de vente</a>.</span></label>`, {
     submit: `Payer ${m} € (démo)`, local: true,
-    onSubmit: () => !$('#f_cgv').checked ? 'Coche la case pour accepter les conditions de vente.' : envoi(EQ.payerFictif(fo), a => {
+    onSubmit: () => !$('#f_cgv').checked ? 'Coche la case pour accepter les conditions de vente.' : envoi(EQ.payerFictif(fo, of), a => {
       closeSheet();
       toast(`Merci ! ${e.nom || "L'écurie"} est abonnée jusqu'au ${dJour(a.fin)}.`, { fete: true });
       render();
@@ -146,7 +167,7 @@ function chargerAdmin() {
     .then(() => { admEnCours = null; rerenderSoon(); });
   return admEnCours;
 }
-const admBadge = st => ({ a_vie: ['ok', 'À vie'], abonnee: ['ok', st.formule === 'an' ? 'Annuel' : 'Mensuel'], essai: [st.jours <= ABO.rappel ? 'warn' : '', `Essai · ${st.jours} j`], expiree: ['danger', 'Expirée'] }[st.code] || ['', '?']);
+const admBadge = st => ({ a_vie: ['ok', 'À vie'], abonnee: ['ok', `${st.offre === 'pro' ? 'Pro' : 'Maison'} · ${st.formule === 'an' ? 'an' : 'mois'}`], essai: [st.jours <= ABO.rappel ? 'warn' : '', `Essai · ${st.jours} j`], expiree: ['danger', 'Expirée'] }[st.code] || ['', '?']);
 VIEWS.admin = () => {
   const T = { title: 'Toutes les écuries', eyebrow: 'Administration', fab: null };
   if (!window.EQ || !EQ.admin) return Object.assign(T, { html: emptyH('Réservé', "Cette page est réservée à l'administration EquiValdi.") });
@@ -167,7 +188,7 @@ VIEWS.admin = () => {
     return `<button type="button" class="row" data-act="adm-msg" data-id="${esc(r.id)}">${lead(T.ic)}<div class="row-main"><div class="row-t trunc">${esc(r.texte)}</div><div class="row-s">${esc([r.nom, r.ecurie, dShort(isoOf(new Date(r.le || 0)))].filter(Boolean).join(' · '))}</div></div>
       <span class="pill ${r.statut === 'nouveau' ? 'warn' : r.statut === 'repondu' ? 'ok' : ''}">${r.statut === 'nouveau' ? 'Nouveau' : r.statut === 'repondu' ? 'Répondu' : 'Traité'}</span></button>`;
   }).join('')}</div>`) : '';
-  const parMois = tous.filter(x => x.st.code === 'abonnee').reduce((t, x) => t + (x.st.formule === 'an' ? ABO.an / 12 : ABO.mois), 0);
+  const parMois = tous.filter(x => x.st.code === 'abonnee').reduce((t, x) => t + (x.st.formule === 'an' ? prixAbo(x.st.offre, 'an') / 12 : prixAbo(x.st.offre, 'mois')), 0);
   const ouv = idEcurie(ecurieOuverte());
   // les cartes des prés demandées à EquiValdi, les plus anciennes d'abord
   const cartes = tous.filter(x => x.s.carteDemande && x.s.carteDemande.statut === 'demandee').sort((a, b) => a.s.carteDemande.le - b.s.carteDemande.le);
@@ -218,8 +239,7 @@ ACT['adm-ecurie'] = async d => {
     <button type="button" class="btn${s.carteDemande && s.carteDemande.statut === 'demandee' ? '' : ' primary'}" data-act="adm-ouvrir" data-sid="${esc(s.id)}">${ic('next', 'sm')}Ouvrir l'écurie</button>
     ${grp('Abonnement', `<div class="btnrow">
       ${bt('essai', "Prolonger l'essai d'un mois")}
-      ${bt('payer', `Paiement reçu · 1 mois (${ABO.mois} €)`, ' data-f="mois"')}
-      ${bt('payer', `Paiement reçu · 1 an (${ABO.an} €)`, ' data-f="an"')}
+      ${['maison', 'pro'].map(o => bt('payer', `Reçu · ${ABO.offres[o].nom} 1 mois (${prixAbo(o, 'mois')} €)`, ` data-f="mois" data-o="${o}"`) + bt('payer', `Reçu · ${ABO.offres[o].nom} 1 an (${prixAbo(o, 'an')} €)`, ` data-f="an" data-o="${o}"`)).join('')}
       ${st.code !== 'a_vie' ? bt('a_vie', 'Passer à vie', ' data-confirm="Confirmer : à vie"') : ''}
       ${st.code === 'abonnee' ? `<button type="button" class="btn small danger" data-act="adm-action" data-sid="${esc(s.id)}" data-a="arreter" data-confirm="Confirmer l'arrêt">Arrêter l'abonnement</button>` : ''}
     </div>`)}
@@ -228,7 +248,7 @@ ACT['adm-ecurie'] = async d => {
 ACT['adm-action'] = async (d, el) => {
   if (el) el.disabled = true;
   try {
-    await EQ.gererAbonnement(d.sid, d.a, d.f);
+    await EQ.gererAbonnement(d.sid, d.a, d.f, d.o);
     ADM = null;
     await chargerAdmin();
     toast('Abonnement mis à jour');

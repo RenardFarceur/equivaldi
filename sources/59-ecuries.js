@@ -228,7 +228,7 @@ async function equipeSheet(msg = '', copier = '') {
   try { [mb, inv] = await Promise.all([EQ.membres(), EQ.invitations()]); }
   catch (e) { toast("Impossible de charger l'équipe : vérifie ta connexion.", { danger: true }); return; }
   const now = Date.now(), ordre = m => ({ gerante: 0, equipe: 1, lecture: 2, proprio: 3 }[m.role] ?? 4);
-  const autresRoles = r => [['equipe', 'Peut modifier'], ['lecture', 'Lecture seule'], ['proprio', 'Propriétaire']].filter(([v]) => v !== r);
+  const autresRoles = r => [['equipe', 'Peut modifier'], ['lecture', 'Lecture seule'], ['proprio', 'Propriétaire']].filter(([v]) => v !== r && (v !== 'proprio' || offrePro()));
   const lignes = mb.sort((a, b) => ordre(a) - ordre(b) || String(a.nom || a.email).localeCompare(String(b.nom || b.email), 'fr')).map(m => `<div class="row"><div class="row-main">
       <div class="row-t">${esc(m.nom || m.email)}${m.moi ? ' <span class="pill ok">Toi</span>' : ''}</div><div class="row-s">${esc(m.email)} · ${esc(ROLE_LABEL[m.role] || m.role)}</div>
       ${m.role === 'gerante' ? '' : `<div class="wrap" style="margin-top:6px">${autresRoles(m.role).map(([v, l]) => `<button type="button" class="btn small" data-act="eq-role" data-uid="${esc(m.uid)}" data-role="${v}">${l}</button>`).join('')}<button type="button" class="btn small danger" data-act="eq-del" data-uid="${esc(m.uid)}" data-confirm="Confirmer le retrait">Retirer</button></div>`}
@@ -244,8 +244,8 @@ async function equipeSheet(msg = '', copier = '') {
     ${inv.length ? grp('Invitations en attente', `<div class="list">${attente}</div>`) : ''}
     <div class="box inv-box">
       <span class="flabel">Inviter quelqu'un</span>
-      ${chips('invrole', [{ v: 'equipe', l: 'Peut modifier' }, { v: 'lecture', l: 'Lecture seule' }, { v: 'proprio', l: 'Propriétaire' }], 'equipe')}
-      <p class="note">« Propriétaire » : pour un cheval en pension. La personne voit seulement ses chevaux et ses relevés, rien d'autre de l'écurie.</p>
+      ${chips('invrole', [{ v: 'equipe', l: 'Peut modifier' }, { v: 'lecture', l: 'Lecture seule' }].concat(offrePro() ? [{ v: 'proprio', l: 'Propriétaire' }] : []), 'equipe')}
+      <p class="note">${offrePro() ? "« Propriétaire » : pour un cheval en pension. La personne voit seulement ses chevaux et ses relevés, rien d'autre de l'écurie." : "Propriétaires en pension (chacun voit ses chevaux, relevés mensuels) : avec la formule Pro."}</p>
       <button type="button" class="btn primary" data-act="eq-lien">${ic('partage', 'sm')}Partager un lien d'invitation</button>
       <p class="note">Valable 7 jours, pour une seule personne. Son code peut aussi se taper dans l'appli.</p>
       ${fld('Ou par adresse e-mail', inp('f_inv', '', 'type="email" autocomplete="off" placeholder="prenom@exemple.fr" enterkeyhint="send"'))}

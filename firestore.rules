@@ -55,6 +55,7 @@ service cloud.firestore {
     function paiementFictif(avant, a) {
       return a.get('statut', '') == 'abonnee'
         && a.get('formule', '') in ['mois', 'an']
+        && a.get('offre', 'maison') in ['maison', 'pro']
         && a.get('paiement', {}).get('fournisseur', '') == 'fictif'
         && a.get('fin', 0) is int && a.get('fin', 0) <= maintenant() + 800 * 86400000
         && a.get('finEssai', 0) == avant.get('finEssai', 0)

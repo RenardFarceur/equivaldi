@@ -36,9 +36,9 @@ Quand tu as au moins deux écuries, le nom court de celle qui est ouverte s'affi
 
 - **Essai gratuit de 2 mois, sans carte bancaire**, dès la création d'une écurie. Pendant l'essai : tout le carnet, avec 2 chevaux au plus ; la carte des prés et les points crottins sont réservés aux écuries abonnées (aperçu et bouton *S'abonner*).
 - **Après l'essai sans abonnement** : lecture seule. Tout reste consultable et exportable ; la gérante voit *S'abonner*, les autres membres un message.
-- **Formules** : 10 € par mois ou 100 € par an (2 mois offerts), payées par la gérante dans *Réglages* › *Mon écurie* › *S'abonner*. Payer pendant l'essai ne fait rien perdre : tout se débloque tout de suite, et la période payée commence à la fin de l'essai (de même, un nouveau paiement s'ajoute à la suite de l'abonnement en cours).
-- **Paiement fictif pour l'instant** (« Payer 10 € (démo) », rien n'est débité). Pour brancher Shine ou Tebex : remplacer l'étape *Paiement* (`feuillePaiement` dans `sources/61-abonnement.js`) par le lien de paiement du prestataire ; faire enregistrer l'abonnement par un serveur qui reçoit la confirmation du paiement, ou par l'administration (*Paiement reçu*) ; puis retirer des règles la ligne du paiement de démonstration (`paiementFictif`).
-- **À vie** : l'écurie fondatrice et toutes celles créées avant le 6 novembre 2026 à 12 h.
+- **Formules** (depuis le 12 novembre 2026) : « À la maison » 5 € par mois ou 50 € par an ; « Pro » 20 € par mois ou 200 € par an, avec les propriétaires en pension et leurs relevés (2 mois offerts à l'année). Changer de formule prend effet tout de suite, les jours restants convertis au prix de la nouvelle. L'essai comprend la pension. Payées par la gérante dans *Réglages* › *Mon écurie* › *S'abonner*. Payer pendant l'essai ne fait rien perdre : tout se débloque tout de suite, et la période payée commence à la fin de l'essai (de même, un nouveau paiement s'ajoute à la suite de l'abonnement en cours).
+- **Paiement fictif pour l'instant** (« Payer 5 € (démo) », rien n'est débité). Pour brancher Shine ou Tebex : remplacer l'étape *Paiement* (`feuillePaiement` dans `sources/61-abonnement.js`) par le lien de paiement du prestataire ; faire enregistrer l'abonnement par un serveur qui reçoit la confirmation du paiement, ou par l'administration (*Paiement reçu*) ; puis retirer des règles la ligne du paiement de démonstration (`paiementFictif`).
+- **À vie** (formule Pro) : l'écurie fondatrice et toutes celles créées avant le 6 novembre 2026 à 12 h.
 
 ## Administration
 
@@ -78,7 +78,7 @@ Le tracé s'enregistre au fil de l'eau : on peut s'arrêter et reprendre plus ta
 - **Mes données, supprimer mon compte** (*Réglages* › *Ton compte*) : téléchargement JSON (compte, fiches, messages) ; suppression avec le mot de passe. Une gérante seule dans son écurie la supprime avec tout son carnet ; avec une équipe, elle passe d'abord la gérance.
 - **Polices** : Outfit et Barlow Condensed sont hébergées avec l'appli (`fonts/`, licence SIL OFL) : plus rien n'est chargé chez Google Fonts.
 
-## Propriétaires en pension
+## Propriétaires en pension (formule Pro)
 
 - **Rôle « Propriétaire »** : à choisir en invitant quelqu'un (lien, code ou e-mail) ou en changeant son rôle dans *L'équipe*. La personne voit seulement ses chevaux (fiche, ration, soins, séances, concours, pré du moment) et ses relevés : trois onglets, *Accueil*, *Chevaux*, *Relevés*. Rien d'autre de l'écurie (autres chevaux, tâches, dépenses, équipe) n'est lisible, même en interrogeant la base directement.
 - **Fiches partagées** : pour chaque cheval dont le propriétaire a ce rôle, l'appli de l'équipe tient à jour `structures/{id}/partages/{cheval}` dès que le carnet change ; le propriétaire ne lit que ces fiches-là.

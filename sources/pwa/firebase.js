@@ -60,10 +60,20 @@ const ecrit = role => role === 'gerante' || role === 'equipe';
 const ADMIN_MAIL = 'bennizdu03@gmail.com';
 const FANTOME = { uid: 'equivaldi', nom: 'EquiValdi' };
 // Abonnement : essai de 2 mois sans carte, puis 10 €/mois ou 100 €/an
-const TARIF = { mois: 10, an: 100 };
+// deux formules (décidé le 12 novembre 2026) : « À la maison » et « Pro » (propriétaires en pension, relevés)
+const TARIF = { maison: { mois: 5, an: 50 }, pro: { mois: 20, an: 200 } };
+const OFFRES = ['maison', 'pro'];
+const offreDe = a => a && a.offre === 'pro' ? 'pro' : 'maison';
+// fin de la période payée : à la suite de l'essai ou de la période en cours ; en changeant de formule, tout de suite,
+// avec les jours restants convertis au prix de la nouvelle (790 jours au plus, sous la limite des règles)
+function periodeAbo(a, now, formule, offre) {
+  const en = a.statut === 'abonnee' && (a.fin || 0) > now, change = en && offreDe(a) !== offre;
+  let fin = ajouterMois(Math.max(now, a.finEssai || 0, en && !change ? a.fin : 0), formule === 'an' ? 12 : 1);
+  if (change) fin += Math.round((a.fin - Math.max(now, a.finEssai || 0)) * TARIF[offreDe(a)].mois / TARIF[offre].mois);
+  return Math.min(fin, now + 790 * JOUR);
+}
 const ajouterMois = (ms, n) => { const d = new Date(ms), j = d.getDate(); d.setMonth(d.getMonth() + n); if (d.getDate() < j) d.setDate(0); return d.getTime(); };
 // une période payée commence après ce qui court déjà : l'essai, ou l'abonnement en cours (payer tôt ne fait rien perdre)
-const departAbo = (a, now) => Math.max(now, a.finEssai || 0, a.statut === 'abonnee' ? a.fin || 0 : 0);
 const attendre = ms => new Promise(r => setTimeout(r, ms));
 const deux = n => String(n).padStart(2, '0');
 const isoJour = ms => { const d = new Date(ms); return `${d.getFullYear()}-${deux(d.getMonth() + 1)}-${deux(d.getDate())}`; };
@@ -1278,14 +1288,13 @@ async function deconnexion() {
 
 /* ---------- Abonnement : paiement fictif en attendant Shine ou Tebex ---------- */
 // La gérante abonne son écurie (1 mois ou 1 an), à la suite de l'essai ou de l'abonnement en cours.
-async function payerFictif(formule) {
+async function payerFictif(formule, offre = 'maison') {
   exigerGerante();
-  if (!['mois', 'an'].includes(formule)) throw erreur('Choisis une formule.');
+  if (!['mois', 'an'].includes(formule) || !OFFRES.includes(offre)) throw erreur('Choisis une formule.');
   const now = Date.now(), a = Object.assign({}, OUV.abonnement || {});
-  const depart = departAbo(a, now);
   const nouveau = Object.assign(a, {
-    statut: 'abonnee', formule, fin: ajouterMois(depart, formule === 'an' ? 12 : 1),
-    paiement: { fournisseur: 'fictif', montant: TARIF[formule], le: now, ref: 'DEMO-' + tireCode() }
+    statut: 'abonnee', formule, offre, fin: periodeAbo(a, now, formule, offre),
+    paiement: { fournisseur: 'fictif', montant: TARIF[offre][formule], le: now, ref: 'DEMO-' + tireCode() }
   });
   try { await delai(updateDoc(doc(fs, 'structures', OUV.id), { abonnement: nouveau }), 20000); }
   catch (e) { if (estRefus(e)) throw erreur("Le paiement n'a pas pu être enregistré."); throw e; }
@@ -1307,16 +1316,15 @@ async function equipeDe(sid) {
   return (await getDocs(collection(fs, 'structures', sid, 'membres'))).docs.map(d => Object.assign({ uid: d.id }, d.data()));
 }
 // prolonger l'essai, enregistrer un paiement reçu (Shine, virement…), passer à vie, arrêter l'abonnement
-async function gererAbonnement(sid, action, formule) {
+async function gererAbonnement(sid, action, formule, offre = 'maison') {
   exigerAdmin();
   const ref = doc(fs, 'structures', sid), s = await getDoc(ref);
   if (!s.exists()) throw erreur("Cette écurie n'existe plus.");
   const now = Date.now(), a = Object.assign({}, (s.data() || {}).abonnement || {});
   if (action === 'essai') a.finEssai = ajouterMois(Math.max(now, a.finEssai || 0), 1);
   else if (action === 'payer') {
-    if (!['mois', 'an'].includes(formule)) throw erreur('Choisis une formule.');
-    const depart = departAbo(a, now);
-    Object.assign(a, { statut: 'abonnee', formule, fin: ajouterMois(depart, formule === 'an' ? 12 : 1), paiement: { fournisseur: 'manuel', montant: TARIF[formule], le: now, par: MAIL } });
+    if (!['mois', 'an'].includes(formule) || !OFFRES.includes(offre)) throw erreur('Choisis une formule.');
+    Object.assign(a, { statut: 'abonnee', formule, offre, fin: periodeAbo(a, now, formule, offre), paiement: { fournisseur: 'manuel', montant: TARIF[offre][formule], le: now, par: MAIL } });
   } else if (action === 'a_vie') a.statut = 'a_vie';
   else if (action === 'arreter') Object.assign(a, { statut: 'essai', fin: 0 });
   else throw erreur('Action inconnue.');
