@@ -63,6 +63,9 @@ Le tracé s'enregistre au fil de l'eau : on peut s'arrêter et reprendre plus ta
 
 **Ou EquiValdi la dessine** : une fois le plan envoyé, *EquiValdi la dessine pour moi*, avec une note (numéros des prés, où sont la piste, la carrière, les abris et les abreuvoirs ; le plus sûr est d'annoter la capture avant de l'envoyer). L'onglet *Prés* affiche « Ta carte est en préparation » jusqu'à ce qu'elle soit publiée.
 
+
+**Depuis une adresse (12 novembre 2026)** : à la première étape, la gérante cherche l'adresse de l'écurie (géocodage de la Géoplateforme de l'IGN) ou prend sa position. La vue aérienne de l'IGN (photographies aériennes, 4 × 4 tuiles, ≈ 420 m de côté au niveau 18) s'affiche nord en haut ; on la décale d'une tuile avec les flèches, *Plus large* / *Plus près*, puis *Utiliser cette vue* : l'échelle est posée toute seule (barre de 50 m) et on passe directement au tracé des prés. Le plan enregistré (`config/plan`, `source: 'ign'`) ne garde que les coordonnées des tuiles, relues chez l'IGN. L'envoi d'une image reste possible.
+
 ## Démarrer, exemple, rubriques (11 novembre 2026)
 
 - **Bien démarrer** : sur l'accueil d'une écurie de moins de 2 mois, une liste de premiers pas qui se cochent toute seule (rubriques, chevaux, prés, tâches, soins, équipe). *Masquer* la range sur ce téléphone.

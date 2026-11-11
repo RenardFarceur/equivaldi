@@ -20,8 +20,26 @@ const ED_SURFACES = ['pre', 'carriere', 'verger'];
 const ED = {
   sid: null, etape: null, img: null, imgEtat: '', chargement: null, t: null,
   cur: null, sel: null, som: null, vue: null, host: null, svg: null, ro: null, W: 0, H: 0,
-  apercu: null, apercuV: 0, sauveT: null
+  apercu: null, apercuV: 0, sauveT: null, cadrage: false, geo: null
 };
+/* Vue aérienne de l'IGN (Géoplateforme, photographies aériennes, licence ouverte) : une adresse ou la position
+   du téléphone, puis un carré de 4 × 4 tuiles (≈ 420 m de côté au niveau 18), nord en haut, échelle connue. Le plan
+   enregistré ne garde que les coordonnées des tuiles : les images sont relues chez l'IGN. */
+const IGN = { n: 4, zMin: 16, zMax: 19, z: 18, tuile: 256 };
+const ignUrl = (z, x, y) => `https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&TILEMATRIXSET=PM&TILEMATRIX=${z | 0}&TILEROW=${y | 0}&TILECOL=${x | 0}&FORMAT=image/jpeg`;
+const lonX = (lon, z) => (lon + 180) / 360 * 2 ** z;
+const latY = (lat, z) => { const r = lat * Math.PI / 180; return (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * 2 ** z; };
+const xLon = (x, z) => x / 2 ** z * 360 - 180;
+const yLat = (y, z) => { const n = Math.PI - 2 * Math.PI * y / 2 ** z; return 180 / Math.PI * Math.atan(Math.sinh(n)); };
+const ignMpp = (lat, z) => 156543.03392 * Math.cos(lat * Math.PI / 180) / 2 ** z;   // mètres par pixel
+const ignOk = g => !!g && [g.z, g.x0, g.y0, g.n].every(Number.isInteger) && g.z >= IGN.zMin && g.z <= IGN.zMax && g.n >= 1 && g.n <= 6
+  && g.x0 >= 0 && g.y0 >= 0 && g.x0 + g.n <= 2 ** g.z && g.y0 + g.n <= 2 ** g.z;
+// le carré de tuiles centré sur un point
+function ignCadre(lat, lon, z) {
+  const fx = lonX(lon, z), fy = latY(lat, z), n = IGN.n;
+  const g = { z, n, x0: Math.max(0, Math.round(fx - n / 2)), y0: Math.max(0, Math.round(fy - n / 2)) };
+  return { img: { ign: g, w: n * IGN.tuile, h: n * IGN.tuile, lat, lon }, cx: (fx - g.x0) * IGN.tuile, cy: (fy - g.y0) * IGN.tuile };
+}
 const r1 = v => Math.round(v * 10) / 10;
 const edDist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 const edEl = id => (ED.t && ED.t.els.find(e => e.id === id)) || null;
@@ -232,7 +250,7 @@ function edPrepare() {
   if (ED.sid === sid && ED.t) return;
   clearTimeout(ED.sauveT);
   const tr = S.carte && S.carte.trace;
-  Object.assign(ED, { sid, etape: null, img: null, imgEtat: '', chargement: null, cur: null, sel: null, som: null, vue: null, apercu: null, sauveT: null,
+  Object.assign(ED, { sid, etape: null, img: null, imgEtat: '', chargement: null, cur: null, sel: null, som: null, vue: null, apercu: null, sauveT: null, cadrage: false, geo: null,
     t: nettoieTrace(tr) });
 }
 ACT['carte-editer'] = () => {
@@ -270,7 +288,7 @@ async function edFichier(f) {
   ED.imgEtat = 'prep'; render();
   try {
     const im = await edReduire(f);
-    Object.assign(ED, { img: im, vue: null, etape: 'echelle', cur: null, sel: null, som: null, apercu: null, t: { w: im.w, h: im.h, ech: null, rot: 0, els: [] } });
+    Object.assign(ED, { img: im, vue: null, etape: 'echelle', cur: null, sel: null, som: null, apercu: null, cadrage: false, geo: null, t: { w: im.w, h: im.h, ech: null, rot: 0, els: [] } });
     edEnvoyerPlan();
     edSauve(true);
   } catch (e) {
@@ -284,7 +302,9 @@ function edEnvoyerPlan() {
   if (!im) return;
   if (!DB) { ED.imgEtat = 'attente'; return; }
   ED.imgEtat = 'envoi';
-  DB.doc('config/plan').set({ image: im.src, w: im.w, h: im.h, le: Date.now(), par: moiRef() }).then(
+  const doc = im.ign ? Object.assign({ source: 'ign', lat: im.lat, lon: im.lon, w: im.w, h: im.h, le: Date.now(), par: moiRef() }, im.ign)
+    : { image: im.src, w: im.w, h: im.h, le: Date.now(), par: moiRef() };
+  DB.doc('config/plan').set(doc).then(
     () => { if (ED.img === im) { ED.imgEtat = 'ok'; rerenderSoon(); } },
     () => { if (ED.img === im) { ED.imgEtat = 'erreur'; rerenderSoon(); toast("Le plan n'a pas pu être envoyé : vérifie ta connexion.", { danger: true }); } });
 }
@@ -299,6 +319,11 @@ function edCharger() {
       ED.img = { src: d.image, w: d.w, h: d.h };
       ED.imgEtat = 'ok';
       if (!ED.t.w) Object.assign(ED.t, { w: d.w, h: d.h });
+    } else if (d && d.source === 'ign' && ignOk({ z: d.z, x0: d.x0, y0: d.y0, n: d.n }) && Number.isFinite(d.lat) && Number.isFinite(d.lon)) {
+      const g = { z: d.z, x0: d.x0, y0: d.y0, n: d.n };
+      ED.img = { ign: g, w: g.n * IGN.tuile, h: g.n * IGN.tuile, lat: d.lat, lon: d.lon };
+      ED.imgEtat = 'ok';
+      if (!ED.t.w) Object.assign(ED.t, { w: ED.img.w, h: ED.img.h });
     } else ED.imgEtat = 'absent';
   }, () => { if (ED.sid === sid) ED.imgEtat = 'erreur-lecture'; }).then(() => { ED.chargement = null; rerenderSoon(); });
 }
@@ -318,13 +343,14 @@ function edSauve(now) {
 function edEtape() {
   // un plan déjà envoyé se relit dès que la base répond
   if (!ED.img) return ED.imgEtat === 'charge' || ED.imgEtat === 'prep' || (!DB && ED.t && ED.t.w && !ED.imgEtat) ? 'charge' : 'plan';
+  if (ED.cadrage && ED.img.ign) return 'cadrage';
   // l'échelle n'est prise qu'une fois sa longueur confirmée (« Valider l'échelle »)
   if (ED.etape === 'echelle' || !edEchelle(ED.t) || !ED.t.ech.ok) return 'echelle';
   if (ED.etape === 'apercu' && planOk(ED.apercu)) return 'apercu';
   return 'trace';
 }
-const ED_TITRES = { charge: 'Le plan', plan: 'Le plan', echelle: "L'échelle", trace: 'Les espaces', apercu: 'La maquette' };
-const ED_PAS = { charge: 1, plan: 1, echelle: 2, trace: 3, apercu: 4 };
+const ED_TITRES = { charge: 'Le plan', plan: 'Le plan', cadrage: 'La vue aérienne', echelle: "L'échelle", trace: 'Les espaces', apercu: 'La maquette' };
+const ED_PAS = { charge: 1, plan: 1, cadrage: 1, echelle: 2, trace: 3, apercu: 4 };
 VIEWS.carteEd = () => {
   const T = { title: 'Ma carte des prés', eyebrow: 'Prés', fab: null };
   if (!edPeut()) return Object.assign(T, { html: emptyH('Réservé à la gérante', "La gérante crée la carte de l'écurie à partir d'un plan.") });
@@ -345,6 +371,8 @@ VIEWS.carteEd = () => {
 function edExigences() {
   return `<div class="ed-exig">
     <h3>Le plan de tes prés</h3>
+    <p><b>Le plus simple :</b> cherche l'adresse de l'écurie (ou ta position si tu y es). La vue aérienne de l'IGN arrive avec son échelle et le nord en haut : il ne reste qu'à toucher les coins des prés.</p>
+    <p><b>Ou envoie ton propre plan :</b></p>
     <ol>
       <li><b>Une vue du dessus.</b> Une capture de Géoportail (photographies aériennes, conseillé), de Google Maps en vue satellite, ou un plan dessiné à l'échelle.</li>
       <li><b>Tout l'espace, en entier.</b> Tous les prés, la piste, la carrière, les abris et les abreuvoirs.</li>
@@ -377,8 +405,23 @@ function edDemandable() {
 function edPanneau(et) {
   const e = ecurieOuverte() || {}, t = ED.t;
   if (et === 'charge') return `<p class="note">Un instant…</p>`;
-  if (et === 'plan') return `${edFichierBtn('Choisir le plan')}
-    ${ED.imgEtat === 'erreur-lecture' ? `<p class="small muted">Le plan déjà envoyé n'a pas pu être relu : vérifie ta connexion, ou choisis-le à nouveau.</p>` : ''}`;
+  if (et === 'plan') {
+    const G = ED.geo || {};
+    const res = (G.res || []).map((r, i) => `<button type="button" class="row" data-act="ed-geo" data-i="${i}">${lead('home')}<div class="row-main"><div class="row-t">${esc(r.label)}</div></div><span class="row-end">${ic('next', 'sm')}</span></button>`).join('');
+    return `<div class="ed-ligne ed-adr"><input id="edAdr" value="${esc(G.q || '')}" placeholder="Adresse ou commune de l'écurie" autocomplete="street-address" enterkeyhint="search" aria-label="Adresse de l'écurie">
+      <button type="button" class="btn primary" data-act="ed-chercher"${G.charge ? ' disabled' : ''}>${G.charge ? 'Recherche…' : 'Chercher'}</button></div>
+      ${res ? `<div class="list">${res}</div>` : G.vide ? `<p class="small muted">Rien trouvé : essaie avec la commune, ou ta position.</p>` : ''}
+      <div class="btnrow"><button type="button" class="btn small" data-act="ed-position">${ic('cible', 'sm')}Ma position</button>${edFichierBtn('Envoyer mon plan', 'btn small')}</div>
+      ${ED.imgEtat === 'erreur-lecture' ? `<p class="small muted">Le plan déjà envoyé n'a pas pu être relu : vérifie ta connexion, ou choisis-le à nouveau.</p>` : ''}`;
+  }
+  if (et === 'cadrage') {
+    const z = ED.img.ign.z;
+    return `<p class="ed-aide"><b>Cadre tes prés.</b> Fais glisser la vue ; les flèches décalent le carré si les prés débordent. Tout doit tenir dedans.</p>
+      <div class="ed-fleches">${[['n', '↑', 'Vers le nord'], ['o', '←', "Vers l'ouest"], ['e', '→', "Vers l'est"], ['s', '↓', 'Vers le sud']].map(([d, t, a]) => `<button type="button" class="btn small" data-act="ed-decale" data-d="${d}" aria-label="${a}">${t}</button>`).join('')}
+      <button type="button" class="btn small" data-act="ed-ignz" data-z="-1"${z <= IGN.zMin ? ' disabled' : ''}>Plus large</button><button type="button" class="btn small" data-act="ed-ignz" data-z="1"${z >= IGN.zMax ? ' disabled' : ''}>Plus près</button></div>
+      <div class="btnrow"><button type="button" class="btn primary" data-act="ed-ign-ok">${ic('check', 'sm')}Utiliser cette vue</button><button type="button" class="btn small" data-act="ed-nouveau-plan">Autre adresse</button></div>
+      <p class="small muted">≈ ${num(ignMpp(ED.img.lat, z) * ED.img.w, 0)} m de côté · Photographies aériennes © IGN</p>`;
+  }
   if (et === 'echelle') {
     const E = t.ech || {}, ok = E.a && E.b;
     return `<p class="ed-aide"><b>Pose l'échelle.</b> ${ok ? 'Ajuste les deux bouts si besoin, puis indique la longueur.' : `Touche les deux bouts de la barre d'échelle${E.a ? ' : encore un' : ''} (ou d'une longueur que tu connais). Écarte deux doigts pour zoomer.`}</p>
@@ -447,7 +490,20 @@ function edMonte(host) {
   host.innerHTML = `<svg class="ed-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Ton plan"><image class="ed-img" x="0" y="0" width="${Number(ED.img.w)}" height="${Number(ED.img.h)}" preserveAspectRatio="none"/><g class="ed-els"></g><g class="ed-curg"></g><g class="ed-ech"></g><g class="ed-hs"></g></svg>
     <div class="ed-outils c-zoom"><button type="button" data-edzoom="1" aria-label="Rapprocher">${ic('plus', 'sm')}</button><button type="button" data-edzoom="-1" aria-label="Éloigner">${ic('minus', 'sm')}</button><button type="button" data-edzoom="0" aria-label="Tout voir">${ic('cible', 'sm')}</button></div>`;
   ED.svg = host.querySelector('svg');
-  ED.svg.querySelector('.ed-img').setAttribute('href', ED.img.src);   // l'image du plan : jamais écrite dans le HTML
+  if (ED.img.ign) {
+    // les tuiles de l'IGN, posées côte à côte (adresses construites avec des nombres seulement)
+    const g = ED.img.ign, T = IGN.tuile, im = ED.svg.querySelector('.ed-img'), NS = 'http://www.w3.org/2000/svg';
+    for (let j = 0; j < g.n; j++) for (let i = 0; i < g.n; i++) {
+      const t = document.createElementNS(NS, 'image');
+      ['x', i * T, 'y', j * T, 'width', T + .5, 'height', T + .5].reduce((a, v, k, l) => { if (k % 2 === 0) t.setAttribute(v, l[k + 1]); return a; }, 0);
+      t.setAttribute('preserveAspectRatio', 'none');
+      t.setAttribute('class', 'ed-tuile');
+      t.setAttribute('href', ignUrl(g.z, g.x0 + i, g.y0 + j));
+      im.parentNode.insertBefore(t, im);
+    }
+    im.remove();
+    host.insertAdjacentHTML('beforeend', '<span class="ed-credit">© IGN</span>');
+  } else ED.svg.querySelector('.ed-img').setAttribute('href', ED.img.src);   // l'image du plan : jamais écrite dans le HTML
   host.querySelectorAll('[data-edzoom]').forEach(b => b.addEventListener('click', () => {
     const z = Number(b.dataset.edzoom);
     if (!z) ED.vue = null; else edZoomA(ED.W / 2, ED.H / 2, z > 0 ? 1.6 : 1 / 1.6);
@@ -724,10 +780,69 @@ ACT['ed-echelle-ok'] = () => {
 };
 ACT['ed-reechelle'] = () => { ED.cur = null; ED.sel = null; ED.etape = 'echelle'; render(); };
 ACT['ed-nouveau-plan'] = () => {
-  Object.assign(ED, { img: null, imgEtat: 'absent', vue: null, etape: null, cur: null, sel: null, som: null, apercu: null, t: { w: 0, h: 0, ech: null, rot: 0, els: [] } });
+  Object.assign(ED, { img: null, imgEtat: 'absent', vue: null, etape: null, cur: null, sel: null, som: null, apercu: null, cadrage: false, geo: null, t: { w: 0, h: 0, ech: null, rot: 0, els: [] } });
   edSauve(true); render();
 };
 ACT['ed-renvoyer'] = () => { edEnvoyerPlan(); render(); };
+/* ----- Vue aérienne de l'IGN ----- */
+function edCadrer(lat, lon, z = IGN.z) {
+  const c = ignCadre(lat, lon, z);
+  Object.assign(ED, { img: c.img, imgEtat: '', cadrage: true, geo: null, etape: null, cur: null, sel: null, som: null, apercu: null, vue: { k: 1.4, cx: c.cx, cy: c.cy }, t: { w: c.img.w, h: c.img.h, ech: null, rot: 0, els: [] } });
+  render();
+}
+ACT['ed-chercher'] = async () => {
+  const q = (val('edAdr') || '').trim();
+  if (q.length < 3) { toast("Écris l'adresse ou la commune de l'écurie.", { danger: true }); return; }
+  ED.geo = { q, charge: true }; render();
+  try {
+    const r = await fetch(`https://data.geopf.fr/geocodage/search?q=${encodeURIComponent(q)}&limit=5`);
+    if (!r.ok) throw new Error(String(r.status));
+    const j = await r.json();
+    const res = (j.features || []).map(f => ({ label: String((f.properties && f.properties.label) || '').slice(0, 120), lon: Number(f.geometry && f.geometry.coordinates[0]), lat: Number(f.geometry && f.geometry.coordinates[1]) }))
+      .filter(x => x.label && Number.isFinite(x.lat) && Number.isFinite(x.lon) && Math.abs(x.lat) < 85);
+    if (res.length === 1) { edCadrer(res[0].lat, res[0].lon); return; }
+    ED.geo = { q, res, vide: !res.length };
+  } catch (e) {
+    ED.geo = { q };
+    toast("La recherche n'a pas marché : vérifie ta connexion, ou utilise ta position.", { danger: true });
+  }
+  render();
+};
+ACT['ed-geo'] = d => { const r = ED.geo && ED.geo.res && ED.geo.res[Number(d.i)]; if (r) edCadrer(r.lat, r.lon); };
+ACT['ed-position'] = () => {
+  if (!navigator.geolocation) { toast("Ce téléphone ne donne pas sa position : cherche l'adresse.", { danger: true }); return; }
+  toast('Recherche de ta position…');
+  navigator.geolocation.getCurrentPosition(p => edCadrer(p.coords.latitude, p.coords.longitude),
+    () => toast("Position refusée ou introuvable : cherche plutôt l'adresse.", { danger: true }), { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+};
+// le centre de la vue, en coordonnées géographiques
+function edCentre() {
+  const g = ED.img.ign, v = edVue();
+  return { lon: xLon(g.x0 + v.cx / IGN.tuile, g.z), lat: yLat(g.y0 + v.cy / IGN.tuile, g.z) };
+}
+ACT['ed-decale'] = d => {
+  if (!ED.img || !ED.img.ign) return;
+  const g = ED.img.ign, k = { n: [0, -1], s: [0, 1], o: [-1, 0], e: [1, 0] }[d.d] || [0, 0], c = edCentre();
+  const T = IGN.tuile, x = lonX(c.lon, g.z) + k[0], y = latY(c.lat, g.z) + k[1];
+  edCadrer(yLat(y, g.z), xLon(x, g.z), g.z);
+  ED.vue.k = edVue().k;
+};
+ACT['ed-ignz'] = d => {
+  if (!ED.img || !ED.img.ign) return;
+  const z = Math.min(IGN.zMax, Math.max(IGN.zMin, ED.img.ign.z + Number(d.z))), c = edCentre();
+  edCadrer(c.lat, c.lon, z);
+};
+ACT['ed-ign-ok'] = () => {
+  if (!ED.img || !ED.img.ign) return;
+  const im = ED.img, mpp = ignMpp(im.lat, im.ign.z), L = 50 / mpp, a = [r1(im.w * .06), r1(im.h * .94)];
+  // l'échelle est connue : une barre de 50 m posée en bas à gauche, déjà validée
+  ED.t = { w: im.w, h: im.h, ech: { a, b: [r1(a[0] + L), a[1]], m: 50, ok: true }, rot: 0, els: [] };
+  Object.assign(ED, { cadrage: false, etape: null, cur: null, sel: null, som: null, apercu: null });
+  edEnvoyerPlan();
+  edSauve(true);
+  render();
+  toast("Vue enregistrée, avec son échelle. Ajoute maintenant tes prés.");
+};
 ACT['ed-apercu'] = () => {
   const p = planDepuisTrace(ED.t);
   if (!p) { toast('Trace au moins un pré, la carrière ou la piste.', { danger: true }); return; }
@@ -787,6 +902,7 @@ ACT['ed-demander'] = () => {
 document.addEventListener('input', e => {
   if (e.target && e.target.id === 'edM' && ED.t && ED.t.ech) { const v = parseNum(e.target.value); if (v > 0) { ED.t.ech.m = v; edDessine(); } }
 });
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target && e.target.id === 'edAdr') { e.preventDefault(); ACT['ed-chercher'](); } });
 document.addEventListener('change', e => {
   const id = e.target && e.target.id;
   if (id === 'edFichier') { const f = e.target.files && e.target.files[0]; e.target.value = ''; edFichier(f); return; }
