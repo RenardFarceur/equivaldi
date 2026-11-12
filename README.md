@@ -110,6 +110,12 @@ Le tracé s'enregistre au fil de l'eau : on peut s'arrêter et reprendre plus ta
 - **Le QR code** contient seulement l'adresse de l'appli avec les identifiants de l'écurie et du cheval (`?cheval=écurie.cheval`, `?pre=écurie.pré`), aucune donnée du carnet. Scanné par un membre de l'écurie, il ouvre la fiche (après connexion si besoin, et en ouvrant la bonne écurie quand on en a plusieurs) ; pour les autres, un message dit de demander une invitation. Sur iPhone, le lien s'ouvre dans Safari, où il faut se connecter une fois.
 - Le QR code est fabriqué dans l'appli (aucun service extérieur), et vérifié par un lecteur indépendant dans les tests.
 
+## Agenda du téléphone
+
+- **Mon agenda** (accueil, à côté des 30 prochains jours, ou Réglages › *À imprimer, à exporter*) : crée un fichier `.ics` avec les soins et rendez-vous prévus, les rappels à prévoir (vaccins, vermifuge, maréchal…), les concours et leurs clôtures d'engagement, les séances prévues (à l'heure) et les échéances des documents, sur douze mois. Choix des chevaux et de l'alarme (la veille à 18 h, le jour même à 8 h, ou aucune) ; une échéance de document prévient aussi un mois avant.
+- Sur iPhone, le fichier s'ouvre et l'agenda propose « Ajouter tout » ; ailleurs il est téléchargé (ou partagé avec *Partager le fichier*).
+- Ce n'est pas un abonnement (il faudrait un serveur) : on refait l'export quand de nouveaux rendez-vous sont notés. Le téléphone retient ce qu'il a déjà exporté : *Seulement les nouveautés* évite les doublons.
+
 ## Points crottins
 
 Chaque coup de main rapporte des crottins (compteur en haut de l'écran, qui ouvre la boutique) : tâches cochées (une tâche rare rapporte plus qu'une quotidienne), rendez-vous gérés, concours et podiums, séances, entretien des prés, foin. Annuler une action retire ses crottins. Les récompenses s'échangent dans la boutique ; la gérante marque le bon *offert* une fois la récompense donnée.

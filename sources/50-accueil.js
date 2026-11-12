@@ -134,7 +134,7 @@ VIEWS.accueil = () => {
   html.push(section('À traiter', al.length ? `<div class="list">${al.map(rowAlert).join('')}</div>`
     : emptyH("Rien d'urgent", "Les rappels de soins, les prés à changer et les concours à préparer s'afficheront ici.")));
   if (rub('pres')) html.push(section('Au pré', auPreHtml(), `<button type="button" class="link" data-act="go" data-tab="pres">Rotation ${ic('next', 'sm')}</button>`));
-  html.push(section('Les 30 prochains jours', agendaHtml(agenda())));
+  html.push(section('Les 30 prochains jours', agendaHtml(agenda()), `<button type="button" class="link" data-act="agenda-ics">${ic('cal', 'sm')}Mon agenda</button>`));
   if (rub('foin')) html.push(section('Foin', foinMini()));
   return { title: "Aujourd'hui", html: html.join(''), fab: menuAjouter };
 };

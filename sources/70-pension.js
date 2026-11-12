@@ -238,7 +238,7 @@ function accueilProprio() {
   }).join('')}</div>`));
   const al = alerts().filter(a => !/data-act="(pre|open-pre|move|foin|foin-out-pick|open-stock)"/.test(a.act || '') && !/^Foin/.test(a.t || ''));
   html.push(section('À surveiller', al.length ? `<div class="list">${al.map(rowAlert).join('')}</div>` : emptyH('Tout est à jour', 'Les rappels de vaccins, de vermifuge et de maréchal de tes chevaux s\'afficheront ici.')));
-  html.push(section('Les 30 prochains jours', agendaHtml(agenda())));
+  html.push(section('Les 30 prochains jours', agendaHtml(agenda()), `<button type="button" class="link" data-act="agenda-ics">${ic('cal', 'sm')}Mon agenda</button>`));
   if (!REL) chargerReleves();
   const r = (REL || []).slice().sort((a, b) => String(b.mois).localeCompare(String(a.mois)))[0];
   if (r) html.push(section('Dernier relevé', `<div class="list">${ligneReleveProprio(r)}</div>`, `<button type="button" class="link" data-act="go" data-tab="releves">Tous ${ic('next', 'sm')}</button>`));

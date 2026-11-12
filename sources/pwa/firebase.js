@@ -610,12 +610,12 @@ async function ouvrir(sid) {
 }
 // Une écurie perdue ou quittée : sa copie locale et ses envois en attente n'ont plus lieu d'être
 function oublierEcurie(sid) {
-  try { [K.cache(sid), K.file(sid), K.role(sid), 'equivaldi:vu:' + sid].forEach(k => localStorage.removeItem(k)); } catch (x) { /* rien */ }
+  try { [K.cache(sid), K.file(sid), K.role(sid), 'equivaldi:vu:' + sid, 'equivaldi:ics:' + sid].forEach(k => localStorage.removeItem(k)); } catch (x) { /* rien */ }
   const l = lis(K.ecurie);
   if (l && l.sid === sid) ecris(K.ecurie, null);
 }
 function purgerEcuries() {
-  const pref = [ANC.cache, ANC.file, ANC.role, K.ecurie, 'equivaldi:vu'];
+  const pref = [ANC.cache, ANC.file, ANC.role, K.ecurie, 'equivaldi:vu', 'equivaldi:ics'];
   try { Object.keys(localStorage).filter(k => pref.some(p => k === p || k.startsWith(p + ':'))).forEach(k => localStorage.removeItem(k)); } catch (x) { /* rien */ }
 }
 // Accès retiré pendant l'utilisation (la base refuse les lectures) : on vérifie, puis on prévient
