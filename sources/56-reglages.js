@@ -108,7 +108,7 @@ document.addEventListener('change', e => {
   e.target.value = '';
 });
 function confirmImport(d) {
-  const lab = { chevaux: 'chevaux', soins: 'soins', pres: 'prés', places: 'séjours au pré', entretiens: 'entretiens', foin: 'mouvements de foin', concours: 'concours', seances: 'séances de travail', taches: 'tâches' };
+  const lab = { chevaux: 'chevaux', soins: 'soins', pres: 'prés', places: 'séjours au pré', entretiens: 'entretiens', foin: 'mouvements de foin', concours: 'concours', seances: 'séances de travail', taches: 'tâches', stocks: 'articles et mouvements de stock' };
   const rows = COLS.map(k => `<div class="row"><div class="row-main"><div class="row-t">${Array.isArray(d[k]) ? d[k].length : 0} ${lab[k]}</div></div></div>`).join('');
   openSheet('Restaurer la sauvegarde', `<p class="note">Sauvegarde du ${d.exporte ? dFull(String(d.exporte).slice(0, 10)) : 'jour inconnu'} :</p><div class="list">${rows}</div><p class="note">Tes données actuelles seront remplacées par celles du fichier.</p>`, {
     submit: 'Remplacer mes données', onSubmit: () => doImport(d)

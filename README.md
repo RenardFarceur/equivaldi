@@ -95,6 +95,14 @@ Le tracé s'enregistre au fil de l'eau : on peut s'arrêter et reprendre plus ta
 - **Surface par cheval** : chaque pré occupé affiche la surface par cheval. Dans les réglages (Alertes et prés), un minimum par cheval (par exemple 0,5 ha) fait signaler un pré trop chargé ; vide, pas d'alerte.
 - Tout est rangé dans la fiche du cheval : la propriétaire en pension le voit, la sauvegarde l'emporte.
 
+## Autres stocks et relevé en PDF
+
+- **Autres stocks** (onglet Foin › *Autres stocks*) : granulés, CMV, luzerne, copeaux, paille, produits de soin… Chaque article a son conditionnement (sac de 25 kg, seau de 10 kg…). Touche − à chaque sac ouvert, + à chaque livraison (prix et fournisseur facultatifs), *Recompter* pour corriger le stock.
+- **Durée du stock** : un aliment lié aux rations (en kg, g ou litres) calcule tout seul combien de jours il reste ; sinon, les sacs ouverts sur deux semaines donnent le rythme. L'accueil prévient quand le stock tient moins de 14 jours, passe sous le seuil choisi ou est épuisé.
+- Les livraisons avec un prix comptent dans les dépenses de l'onglet Équipe. La rubrique s'appelle désormais « Foin et stocks » ; la masquer masque aussi les autres stocks.
+- **Relevé de pension en PDF** : bouton *PDF* sur chaque relevé (gérante), et *Imprimer ou enregistrer en PDF* côté propriétaire. Le relevé rappelle qu'il ne tient pas lieu de facture.
+- Base : nouvelle collection `structures/{id}/stocks` (articles et mouvements) : **les règles Firestore sont à recoller**.
+
 ## Points crottins
 
 Chaque coup de main rapporte des crottins (compteur en haut de l'écran, qui ouvre la boutique) : tâches cochées (une tâche rare rapporte plus qu'une quotidienne), rendez-vous gérés, concours et podiums, séances, entretien des prés, foin. Annuler une action retire ses crottins. Les récompenses s'échangent dans la boutique ; la gérante marque le bon *offert* une fois la récompense donnée.

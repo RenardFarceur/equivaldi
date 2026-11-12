@@ -154,6 +154,7 @@ VIEWS.releve = p => {
   const actions = g ? `<div class="btnrow">
       ${P.uid && !(env && env.statut === 'regle') ? `<button type="button" class="btn primary" data-act="rel-envoyer" data-cle="${esc(P.cle)}" data-m="${m}">${ic('partage', 'sm')}${env ? 'Renvoyer' : 'Envoyer'} à ${esc(P.nom)}</button>` : ''}
       <button type="button" class="btn" data-act="rel-copier" data-cle="${esc(P.cle)}" data-m="${m}">${ic('copy', 'sm')}Copier le texte</button>
+      <button type="button" class="btn" data-act="rel-pdf" data-cle="${esc(P.cle)}" data-m="${m}">${ic('download', 'sm')}PDF</button>
       ${env && env.statut === 'regle' ? `<button type="button" class="btn" data-act="rel-regle" data-cle="${esc(P.cle)}" data-m="${m}" data-s="envoye">Pas encore réglé</button>` : `<button type="button" class="btn" data-act="rel-regle" data-cle="${esc(P.cle)}" data-m="${m}" data-s="regle">${ic('check', 'sm')}Marquer réglé</button>`}
     </div>` : '';
   return {
@@ -235,7 +236,7 @@ function accueilProprio() {
     return `<button type="button" class="row" data-act="open-cheval" data-id="${h.id}">${av(h, 'm')}<div class="row-main"><div class="row-t">${esc(h.nom)}</div>
       <div class="row-s">${esc([ou, s7 ? `${s7} ${pl2(s7, 'séance')} cette semaine` : '', ds ? `${soinLabel(ds)} le ${dShort(ds.date)}` : ''].filter(Boolean).join(' · '))}</div></div><span class="row-end">${ic('next', 'sm')}</span></button>`;
   }).join('')}</div>`));
-  const al = alerts().filter(a => !/data-act="(pre|open-pre|move|foin|foin-out-pick)"/.test(a.act || '') && !/^Foin/.test(a.t || ''));
+  const al = alerts().filter(a => !/data-act="(pre|open-pre|move|foin|foin-out-pick|open-stock)"/.test(a.act || '') && !/^Foin/.test(a.t || ''));
   html.push(section('À surveiller', al.length ? `<div class="list">${al.map(rowAlert).join('')}</div>` : emptyH('Tout est à jour', 'Les rappels de vaccins, de vermifuge et de maréchal de tes chevaux s\'afficheront ici.')));
   html.push(section('Les 30 prochains jours', agendaHtml(agenda())));
   if (!REL) chargerReleves();
@@ -261,5 +262,31 @@ VIEWS.relProprio = p => {
     html: section(esc((r.chevaux || []).join(', ')), `<div class="list">${(r.lignes || []).map(l => `<div class="row rel-l"><div class="row-main"><div class="row-t">${esc(l.libelle)}</div><div class="row-s">${esc([l.type === 'pension' ? moisTxt(r.mois) : dShort(l.date), l.avance ? 'avancé par ' + l.avance : ''].filter(Boolean).join(' · '))}</div></div><b class="rel-mt">${eur(l.montant)}</b></div>`).join('')}</div>
       <div class="rel-total"><span>Total</span><b>${eur(r.total)}</b></div>
       <p class="note">${r.statut === 'regle' ? `Réglé le ${dShort(isoOf(new Date(r.regleLe || r.envoyeLe)))}. Merci !` : `Envoyé le ${dShort(isoOf(new Date(r.envoyeLe)))} par ${esc((r.par && r.par.nom) || 'la gérante')}. À régler directement à l'écurie.`}</p>`)
+      + `<div class="btnrow"><button type="button" class="btn" data-act="rel-pdf-p" data-id="${esc(r.id)}">${ic('download', 'sm')}Imprimer ou enregistrer en PDF</button></div>`
   };
+};
+
+/* ----- Relevé en PDF (impression : 71-sante.js) ----- */
+function releveDocHtml(o) {
+  const e = ecurieOuverte() || {}, lignes = (o.lignes || []).filter(l => !l.exclu);
+  const etat = o.statut === 'regle' ? `Réglé le ${dFull(isoOf(new Date(o.regleLe || o.envoyeLe)))}.` : o.envoyeLe ? `Envoyé le ${dFull(isoOf(new Date(o.envoyeLe)))}. À régler à l'écurie.` : '';
+  return `<article class="carnet releve-doc">
+    <header class="cn-tete"><div><p class="cn-sur">Relevé de pension · ${esc(moisTxt(o.mois))}</p><h2>${esc(o.nom)}</h2></div><p class="cn-date">Édité le ${dFull(todayISO())}</p></header>
+    <dl class="cn-id">${e.nom ? `<dt>Écurie</dt><dd>${esc([e.nom, e.commune].filter(Boolean).join(', '))}</dd>` : ''}<dt>${(o.chevaux || []).length > 1 ? 'Chevaux' : 'Cheval'}</dt><dd>${esc((o.chevaux || []).join(', ') || '—')}</dd><dt>Période</dt><dd>${esc(moisTxt(o.mois))}</dd></dl>
+    <section class="cn-bloc"><table><thead><tr><th>Date</th><th>Détail</th><th class="cn-mt">Montant</th></tr></thead><tbody>
+      ${lignes.map(l => `<tr><td>${l.type === 'pension' ? esc(moisTxt(o.mois)) : esc(dFull(l.date))}</td><td>${esc(l.libelle)}${l.avance ? `<br><span class="cn-vide">avancé par ${esc(l.avance)}</span>` : ''}</td><td class="cn-mt">${eur(l.montant)}</td></tr>`).join('') || '<tr><td colspan="3">Rien ce mois-ci</td></tr>'}
+    </tbody><tfoot><tr><th colspan="2">Total</th><th class="cn-mt">${eur(o.total)}</th></tr></tfoot></table></section>
+    ${etat ? `<p class="cn-txt">${etat}</p>` : ''}
+    <footer class="cn-pied">Relevé établi par ${esc(e.nom || "l'écurie")} avec EquiValdi : il récapitule la pension et les frais avancés du mois, il ne tient pas lieu de facture.</footer>
+  </article>`;
+}
+ACT['rel-pdf'] = d => {
+  const P = trouveP(d);
+  if (!P) return;
+  const R = releveDe(P, d.m), env = releveEnvoye(P.cle, d.m);
+  imprimer(releveDocHtml({ nom: P.nom, mois: d.m, chevaux: P.chevaux.map(h => h.nom), lignes: R.lignes, total: R.total, statut: env && env.statut, envoyeLe: env && env.envoyeLe, regleLe: env && env.regleLe }), `Relevé ${moisTxt(d.m)} ${P.nom}`);
+};
+ACT['rel-pdf-p'] = d => {
+  const r = (REL || []).find(x => x.id === d.id);
+  if (r) imprimer(releveDocHtml(r), `Relevé ${moisTxt(r.mois)} ${r.nom || ''}`.trim());
 };

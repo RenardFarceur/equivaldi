@@ -128,6 +128,13 @@ Une carte lue dans la base est remise au propre avant d'être dessinée (identif
 | inviter avec ce rôle | invitations : `role in ['equipe', 'lecture', 'proprio']` | permis à la gérante |
 | écrire quoi que ce soit dans le carnet | `editeur(sid)` faux pour `proprio` | refusé |
 
+## 11. Autres stocks (12 novembre 2026)
+
+| Demande | Règle | Résultat |
+|---|---|---|
+| lire, écrire les stocks | `stocks` ajouté à `donnees()` : mêmes droits que le foin | équipe en lecture, gérante et « Peut modifier » en écriture (écurie active) ; refusé au propriétaire |
+| santé du cheval (pesées, documents) | dans la fiche du cheval (`chevaux`) | aucune règle nouvelle |
+
 ## Migration
 
 - Recopie de l'équipe (cas c) : seulement par l'ancienne gérante, pour un uid qui existe dans l'ancien `membres`, avec exactement le même rôle (`equipe` ou `lecture`).

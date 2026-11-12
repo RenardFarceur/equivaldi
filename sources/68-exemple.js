@@ -12,7 +12,7 @@ function donneesExemple() {
   const jourSem = iso => new Date(iso + 'T12:00:00').getDay();
   const M = { camille: { uid: 'ex-camille', nom: 'Camille' }, lea: { uid: 'ex-lea', nom: 'Léa' }, hugo: { uid: 'ex-hugo', nom: 'Hugo' }, ines: { uid: 'ex-ines', nom: 'Inès' } };
   const par = (q, iso, h = 9) => Object.assign({}, M[q], { t: ts(iso, h) });
-  const out = { cfg: null, carte: null, chevaux: {}, soins: {}, pres: {}, places: {}, entretiens: {}, foin: {}, concours: {}, seances: {}, taches: {}, membres: {} };
+  const out = { cfg: null, carte: null, chevaux: {}, soins: {}, pres: {}, places: {}, entretiens: {}, foin: {}, concours: {}, seances: {}, taches: {}, stocks: {}, membres: {} };
   let n = 0;
   const add = (coll, o) => { const id = o.id || `ex-${coll}-${++n}`; out[coll][id] = Object.assign({ id, maj: Date.now() }, o); return id; };
 
@@ -162,6 +162,20 @@ function donneesExemple() {
   tache({ titre: 'Ramasser les crottins au pré', freq: 'jours', n: 7, effort: 'leger', preId: P.p6 }, [[-5, 'lea', 11, ['hugo']], [-12, 'hugo', 11], [-19, 'lea', 11], [-26, 'camille', 11]]);
   tache({ titre: 'Graisser les sabots de Joker', freq: 'jours', n: 2, effort: 'leger', horseId: 'ex-joker' }, jours(-21, -1, 2).map(a => [a, 'hugo', 18]));
   tache({ titre: 'Commander le foin', freq: 'une', date: d(5), effort: 'leger', resp: { uid: 'ex-camille', nom: 'Camille' }, notes: '18 rounds chez M. Petit' }, []);
+
+  /* Autres stocks (72-stocks.js) : les granulés s'ouvrent tous les 4 jours et vont manquer, le reste suit les rations */
+  const art = o => add('stocks', Object.assign({ kind: 'article', seuil: null, aliment: '' }, o));
+  const mvt = (a, j, sens, qte, x = {}) => add('stocks', Object.assign({ kind: 'mvt', article: a, date: d(j), sens, qte }, x));
+  const gr = art({ id: 'ex-st-gran', nom: 'Granulés', cat: 'aliment', unite: 'sac', contenance: 25, cu: 'kg', seuil: 2 });
+  mvt(gr, -44, 'in', 10, { prix: 16.9, origine: 'Coopérative de Chauvigny', payePar: paye('camille') });
+  jours(-32, -4, 4).forEach(a => mvt(gr, a, 'out', 1));
+  const cmv = art({ id: 'ex-st-cmv', nom: 'CMV (minéraux)', cat: 'aliment', unite: 'seau', contenance: 10, cu: 'kg', aliment: 'CMV (minéraux)', seuil: 1 });
+  mvt(cmv, -60, 'in', 3, { prix: 42, origine: 'Sellerie du Haut-Poitou', payePar: paye('camille') });
+  const luz = art({ id: 'ex-st-luz', nom: 'Luzerne', cat: 'aliment', unite: 'sac', contenance: 20, cu: 'kg', aliment: 'Luzerne' });
+  mvt(luz, -30, 'in', 2, { prix: 14.5, origine: 'Coopérative de Chauvigny', payePar: paye('ines') });
+  const cop = art({ id: 'ex-st-cop', nom: 'Copeaux', cat: 'litiere', unite: 'ballot', contenance: 20, cu: 'kg', seuil: 3 });
+  mvt(cop, -50, 'in', 14, { prix: 9.8, origine: 'Coopérative de Chauvigny', payePar: paye('camille') });
+  jours(-48, -3, 5).forEach(a => mvt(cop, a, 'out', 1));
   return out;
 }
 

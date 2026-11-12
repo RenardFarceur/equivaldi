@@ -427,10 +427,11 @@ function presentsAujourdhui() {
 /* ---------- Dépenses : soins, cours, engagements, foin, et qui a payé ---------- */
 const CATS = [
   { id: 'soins', label: 'Soins', icon: 'stetho' }, { id: 'cours', label: 'Cours', icon: 'timer' },
-  { id: 'concours', label: 'Concours', icon: 'rosette' }, { id: 'foin', label: 'Foin', icon: 'bale' }
+  { id: 'concours', label: 'Concours', icon: 'rosette' }, { id: 'foin', label: 'Foin', icon: 'bale' },
+  { id: 'stocks', label: 'Aliments et litière', icon: 'sac' }
 ];
 const catDe = id => CATS.find(c => c.id === id) || CATS[0];
-const ACT_DEP = { soins: 'edit-soin', seances: 'edit-seance', concours: 'edit-concours', foin: 'edit-foin' };
+const ACT_DEP = { soins: 'edit-soin', seances: 'edit-seance', concours: 'edit-concours', foin: 'edit-foin', stocks: 'edit-mvt' };
 function depenses(from = null) {
   const out = [], ok = d => validISO(d) && (!from || d >= from);
   const add = (coll, o, cat, v, label, d) => { if (v > 0 && ok(d)) out.push({ coll, id: o.id, cat, d, v, qui: o.payePar || null, hid: o.horseId || null, label }); };
@@ -439,6 +440,8 @@ function depenses(from = null) {
   // un engagement compte une fois payé : statut « Engagé » ou résultat saisi
   list('concours').forEach(c => { if (c.statut === 'engage' || hasResult(c)) add('concours', c, 'concours', Number(c.frais) || 0, c.lieu || 'Concours', c.date); });
   list('foin').forEach(m => { if (m.sens === 'in') add('foin', m, 'foin', (Number(m.nb) || 0) * (Number(m.prix) || 0), `${m.nb} ${balleNom(m.balle, m.nb)}`, m.date); });
+  // autres stocks (72-stocks.js) : les livraisons avec un prix
+  list('stocks').forEach(m => { const a = m.kind === 'mvt' && m.sens === 'in' && !m.inventaire && get('stocks', m.article); if (a) add('stocks', m, 'stocks', (Number(m.qte) || 0) * (Number(m.prix) || 0), `${a.nom} · ${qteTxt(a, Number(m.qte) || 0)}`, m.date); });
   return out.sort((a, b) => b.d.localeCompare(a.d));
 }
 function periode(p) {

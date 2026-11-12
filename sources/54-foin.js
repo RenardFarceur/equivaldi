@@ -11,9 +11,13 @@ function rowFoin(m) {
   return `<button type="button" class="row" data-act="edit-foin" data-id="${m.id}"><span class="lead ${isIn ? 'in' : 'out'}">${ic(isIn ? 'plus' : 'minus')}</span><div class="row-main"><div class="row-t">${isIn ? 'Entrée' : 'Sortie'} · ${m.nb} ${esc(balleNom(m.balle, m.nb))} ${exTag(m)}</div><div class="row-s">${esc(sub)}</div></div></button>`;
 }
 VIEWS.foin = () => {
+  // deux vues : les balles de foin, et les autres stocks (aliments, litière, produits : 72-stocks.js)
+  const seg = segCtl('foinVue', [['foin', 'Foin'], ['stocks', 'Autres stocks']], ui.foinVue === 'stocks' ? 'stocks' : 'foin');
+  if (ui.foinVue === 'stocks') return { title: 'Stocks', eyebrow: 'Hors foin', html: seg + stocksHtml(),
+    fab: sync.readOnly ? null : () => (articles().length ? formMvt(null, { sens: 'in' }) : formArticle(null)), fabLabel: 'Entrée de stock' };
   const A = autonomie(), st = A.st, t = todayISO();
   const types = Object.values(st.by).filter(x => !x.orphan || x.n !== 0);
-  let html = `<div class="hero"><div class="eyebrow">Stock estimé</div><div><span class="big">${num(st.kg / 1000, 1)}</span><span class="unit"> t de foin</span></div>
+  let html = seg + `<div class="hero"><div class="eyebrow">Stock estimé</div><div><span class="big">${num(st.kg / 1000, 1)}</span><span class="unit"> t de foin</span></div>
     ${types.map(x => `<div class="bale-row" data-key="b-${esc(x.b.id)}"><div class="row-main"><div class="row-t">${esc(x.b.nom)}</div><div class="row-s">≈ ${num(x.poidsMoy, 0)} kg la balle</div></div>
       <span class="big" aria-label="${x.n} en stock">${x.n}</span>
       <button type="button" class="stepbtn out" data-act="foin-out" data-balle="${esc(x.b.id)}" aria-label="Entamer une balle : ${esc(x.b.nom)}">${ic('minus')}</button>

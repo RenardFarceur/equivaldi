@@ -22,7 +22,7 @@ service cloud.firestore {
     function texte(m, champ, n) { return !(champ in m) || (m[champ] is string && m[champ].size() <= n); }
     // une date notée maintenant (à un jour près, pour les horloges de téléphone décalées)
     function dateMaintenant(v) { return v is int && v > maintenant() - 86400000 && v < maintenant() + 86400000; }
-    function donnees() { return ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches', 'config']; }
+    function donnees() { return ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches', 'stocks', 'config']; }
 
     // Dans une écurie : membre (sa fiche existe), éditrice (gérante ou « Peut modifier »), gérante (celle de la structure)
     function membre(sid) { return connecte() && exists(fiche(sid, moi())); }

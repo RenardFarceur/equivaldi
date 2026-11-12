@@ -859,6 +859,13 @@ body.lock .toast{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto}
 .cn-vide{color:var(--ctl)}
 .cn-rien,.cn-txt{margin:0;font-size:14px;color:var(--ink-2)}
 .cn-pied{font-size:12px;color:var(--ink-2);border-top:1px solid var(--line);padding-top:8px}
+.stock-card{padding:4px 14px 12px}
+.stock-card .stock-row:first-child{border-top:0;margin-top:0}
+.stock-main{flex:1;min-width:0;display:flex;align-items:center;gap:12px;background:none;border:0;padding:4px 0;margin:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.stock-main .row-t{font-weight:600}
+.row-s.sev-warn{color:var(--warn)}.row-s.sev-danger{color:var(--danger)}
+.cn-bloc .cn-mt{text-align:right;white-space:nowrap}
+.cn-bloc tfoot th{border-top:2px solid var(--ink);padding-top:8px;font-size:15px;color:var(--ink)}
 #impression{display:none}
 @media print{
   @page{margin:14mm 12mm}

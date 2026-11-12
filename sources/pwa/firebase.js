@@ -49,7 +49,7 @@ const DEMO = (() => { const l = lis(K.ecurie); return !!(l && l.demo && l.sid ==
 const CONDITIONS = '2026-11';
 const CGU_LOCAL = 'equivaldi:conditions';
 const ecris = (k, v) => { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); return true; } catch (x) { return false; } };
-const COLS = ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches'];
+const COLS = ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches', 'stocks'];
 const JOUR = 86400000;
 const ROLES = { gerante: 'Gérante', equipe: 'Peut modifier', lecture: 'Lecture seule', proprio: 'Propriétaire' };
 const ROLES_INVITES = ['equipe', 'lecture', 'proprio'];

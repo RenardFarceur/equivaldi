@@ -43,6 +43,7 @@ function alerts() {
   const A = autonomie();
   if (rub('foin') && A.rate && A.days != null && A.days < 30) out.push({ sev: A.days < 10 ? 'danger' : 'warn', icon: 'bale', t: `Foin : environ ${nJ(Math.floor(A.days))} de stock`, s: `Au rythme de ${num(A.rate, 0)} kg par jour`, act: 'data-act="go" data-tab="foin"', ord: A.days - 30 });
   alertesSante(out);   // documents du cheval à renouveler (71-sante.js)
+  alertesStocks(out);  // aliments, litière, produits (72-stocks.js)
   const rank = { danger: 0, warn: 1, info: 2 };
   return out.sort((a, b) => rank[a.sev] - rank[b.sev] || a.ord - b.ord);
 }

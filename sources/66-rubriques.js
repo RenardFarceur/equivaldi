@@ -5,7 +5,7 @@
    Le choix est rangé dans les réglages communs (config/reglages › rubriques). */
 const RUBRIQUES = [
   { id: 'pres', label: 'Prés et rotation', court: 'Les prés', icon: 'fence', s: 'Onglet Prés, carte, déplacements, pâture et repos' },
-  { id: 'foin', label: 'Foin', court: 'Le foin', icon: 'bale', s: 'Stock de balles, balles entamées, autonomie' },
+  { id: 'foin', label: 'Foin et stocks', court: 'Le foin et les stocks', icon: 'bale', s: 'Balles de foin, aliments, litière, autonomie' },
   { id: 'concours', label: 'Concours', court: 'Les concours', icon: 'rosette', s: 'Sorties, engagements, résultats, vaccins exigés' },
   { id: 'seances', label: 'Entraînement', court: "L'entraînement", icon: 'timer', s: 'Séances de travail, cours et coachs' }
 ];

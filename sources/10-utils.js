@@ -119,6 +119,7 @@ const ICONS = {
   doc: '<path d="M6 3h8l4 4v14H6Z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>',
   poids: '<path d="M5 8h14l1.5 12h-17Z"/><circle cx="12" cy="5" r="2"/><path d="M12 11.5v2.5l2-1.5"/>',
   partage: '<circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="m8.2 10.9 7.6-3.8M8.2 13.1l7.6 3.8"/>',
+  sac: '<path d="M7 6.5h10l2 14H5Z"/><path d="M7.5 6.5 6.5 3.5h11l-1 3"/><path d="M9.5 12.5h5"/>',
   card: '<rect x="3.5" y="5" width="17" height="14" rx="2.5"/><circle cx="9" cy="11" r="2.3"/><path d="M5.8 16.3c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4M14.5 10h3.5M14.5 13.5h3.5"/>'
 };
 const durTxt = m => {

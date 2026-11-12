@@ -363,7 +363,7 @@ const crow = (act, inner, tel, who) => `<div class="crow"><button type="button" 
 
 /* ---------- Évènements ---------- */
 /* Actions qui écrivent directement : bloquées en lecture seule */
-const WRITE_ACTS = new Set(['tick', 'tache-qui', 'carte-relier', 'carte-creer', 'add-sugg', 'new', 'fab', 'photo', 'move-from', 'move-to', 'foin-out', 'foin-out-pick', 'copy-ration', 'clear-ex', 'wipe', 'save-cfg', 'add-balle', 'del-balle']);
+const WRITE_ACTS = new Set(['tick', 'tache-qui', 'carte-relier', 'carte-creer', 'add-sugg', 'new', 'fab', 'photo', 'move-from', 'move-to', 'foin-out', 'foin-out-pick', 'copy-ration', 'clear-ex', 'wipe', 'save-cfg', 'add-balle', 'del-balle', 'stock-out', 'stock-sugg', 'stock-compter']);
 function arm(t) {
   const orig = t.innerHTML;
   t.classList.add('armed');
