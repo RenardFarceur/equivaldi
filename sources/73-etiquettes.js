@@ -204,7 +204,7 @@ function carteBox(h) {
 function cartePre(p) {
   const e = ecurieOuverte() || {};
   return `<div class="etq etq-pre">
-    <div class="etq-nom"><b>${esc(p.nom)}</b><span>${esc([typeEspace(p).label, p.surface ? `${num(p.surface, 2)} ha` : ''].filter(Boolean).join(' · '))}</span></div>
+    <div class="etq-nom"><b>${esc(p.nom)}</b><span>${esc([typeEspace(p).label !== p.nom ? typeEspace(p).label : '', p.surface ? `${num(p.surface, 2)} ha` : ''].filter(Boolean).join(' · '))}</span></div>
     ${QR.svg(lienEtiquette('pre', p.id), `QR code du pré ${p.nom}`)}
     <span class="etq-scan">Scanne pour voir qui y est, déplacer des chevaux${e.nom ? ' · ' + esc(e.nom) : ''}</span>
   </div>`;
