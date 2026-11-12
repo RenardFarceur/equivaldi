@@ -104,6 +104,8 @@ VIEWS.pre = p => {
   if (pre.notes) html += `<div class="card"><div class="eyebrow">Notes</div><div style="white-space:pre-wrap">${esc(pre.notes)}</div></div>`;
   html += `<div class="btnrow"><button type="button" class="btn" data-act="edit-pre" data-id="${pre.id}">${ic('edit', 'sm')}Modifier le pré</button></div>`;
   const eyebrow = [sansRotation(pre) ? typeEspace(pre).label : '', pre.surface ? `${num(pre.surface, 2)} ha` : '', pre.archive ? 'archivé' : ''].filter(Boolean).join(' · ') || 'Pré';
+  // étiquette à fixer à l'entrée du pré (73-etiquettes.js)
+  html += `<div class="list"><button type="button" class="row" data-act="etiquettes" data-genre="pres" data-id="${pre.id}">${lead('qr')}<div class="row-main"><div class="row-t">Étiquette du pré</div><div class="row-s">Avec un QR code, à fixer à l'entrée</div></div><span class="row-end">${ic('next', 'sm')}</span></button></div>`;
   return { title: pre.nom, eyebrow, html, fab: () => formEntretien(null, { pid: pre.id }), fabLabel: 'Ajouter un entretien' };
 };
 

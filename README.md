@@ -103,6 +103,13 @@ Le tracé s'enregistre au fil de l'eau : on peut s'arrêter et reprendre plus ta
 - **Relevé de pension en PDF** : bouton *PDF* sur chaque relevé (gérante), et *Imprimer ou enregistrer en PDF* côté propriétaire. Le relevé rappelle qu'il ne tient pas lieu de facture.
 - Base : nouvelle collection `structures/{id}/stocks` (articles et mouvements) : **les règles Firestore sont à recoller**.
 
+## Étiquettes à imprimer (QR codes)
+
+- **Fiche de box** (fiche du cheval › *Fiche de box*, ou Réglages › *Étiquettes à imprimer*) : nom, race, ration repas par repas, « À savoir » et un QR code. Grande (2 par page A4) ou petite (4 par page). À glisser dans une pochette sur la porte du box ; réimprimer quand la ration change.
+- **Étiquettes des prés** (fiche du pré › *Étiquette du pré*) : nom, surface et QR code, 4 par page.
+- **Le QR code** contient seulement l'adresse de l'appli avec les identifiants de l'écurie et du cheval (`?cheval=écurie.cheval`, `?pre=écurie.pré`), aucune donnée du carnet. Scanné par un membre de l'écurie, il ouvre la fiche (après connexion si besoin, et en ouvrant la bonne écurie quand on en a plusieurs) ; pour les autres, un message dit de demander une invitation. Sur iPhone, le lien s'ouvre dans Safari, où il faut se connecter une fois.
+- Le QR code est fabriqué dans l'appli (aucun service extérieur), et vérifié par un lecteur indépendant dans les tests.
+
 ## Points crottins
 
 Chaque coup de main rapporte des crottins (compteur en haut de l'écran, qui ouvre la boutique) : tâches cochées (une tâche rare rapporte plus qu'une quotidienne), rendez-vous gérés, concours et podiums, séances, entretien des prés, foin. Annuler une action retire ses crottins. Les récompenses s'échangent dans la boutique ; la gérante marque le bon *offert* une fois la récompense donnée.

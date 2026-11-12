@@ -625,7 +625,7 @@ body.ed-ouvert{overflow:hidden}
 .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .check{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:600}
 .check input{width:22px;height:22px;accent-color:var(--accent)}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips,.chips-libres{display:flex;flex-wrap:wrap;gap:8px}
 .chip{min-height:44px;padding:0 14px;border-radius:999px;border:2px solid var(--line);background:var(--surface);font-weight:500;font-size:15px;display:inline-flex;align-items:center;gap:8px;color:var(--ink);text-align:left;transition:background .15s,border-color .15s,box-shadow .15s,transform .2s var(--spring)}
 .chip .ic{color:var(--accent)}
 .chip:active{transform:scale(.93)}
@@ -866,6 +866,45 @@ body.lock .toast{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto}
 .row-s.sev-warn{color:var(--warn)}.row-s.sev-danger{color:var(--danger)}
 .cn-bloc .cn-mt{text-align:right;white-space:nowrap}
 .cn-bloc tfoot th{border-top:2px solid var(--ink);padding-top:8px;font-size:15px;color:var(--ink)}
+/* Étiquettes à imprimer (73-etiquettes.js) : tailles en cqw, la même carte à l'écran et sur le papier */
+.etq-apercu{display:grid;gap:14px}
+.etq-apercu.etq-a6{grid-template-columns:repeat(2,minmax(0,1fr))}
+.etq{container-type:inline-size;background:#fff;color:#16211A;border:1.5px dashed #9AA59C;border-radius:12px;padding:4.5cqw;display:flex;flex-direction:column;gap:3cqw;overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-family:var(--f-body)}
+.etq-apercu.etq-a5 .etq{aspect-ratio:182/128}
+.etq-apercu.etq-a6 .etq{aspect-ratio:88/128}
+.etq-tete{display:flex;align-items:center;gap:3.5cqw}
+.etq .av.xl{width:13cqw;height:13cqw;font-size:6cqw;flex:none}
+.etq-nom{display:flex;flex-direction:column;min-width:0}
+.etq-nom b{font-family:var(--f-display);font-weight:600;font-size:8cqw;line-height:1;overflow-wrap:anywhere}
+.etq-nom span{font-size:3.2cqw;color:#4C5850;margin-top:.8cqw}
+.etq-corps{flex:1;display:flex;flex-direction:column;gap:2.5cqw;min-height:0;overflow:hidden}
+.etq-ration{display:grid;grid-template-columns:repeat(auto-fit,minmax(28cqw,1fr));gap:2cqw}
+.etq-repas{border-top:.6cqw solid #2B6340;padding-top:1.2cqw}
+.etq-repas span,.etq-savoir span{font-family:var(--f-display);font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:3cqw;color:#2B6340}
+.etq-repas ul{list-style:none;margin:.8cqw 0 0;padding:0;font-size:3.2cqw;line-height:1.3}
+.etq-repas b{white-space:nowrap}
+.etq-savoir p{margin:.6cqw 0 0;font-size:3cqw;line-height:1.3}
+.etq-vide{font-size:3.4cqw;color:#4C5850;margin:0}
+.etq-tete .qr{margin-left:auto}
+.etq-pied{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5cqw 3cqw;font-size:2.6cqw;color:#4C5850;border-top:1px solid #D2D9CD;padding-top:1.5cqw}
+.etq-scan{font-size:2.6cqw;color:#2B6340;font-weight:600}
+.etq .qr{width:18cqw;height:18cqw;flex:none;display:block}
+.etq-a6 .etq-box .etq-tete{gap:2.5cqw}
+.etq-a6 .etq-box .etq-nom{flex:1;min-width:0}
+.etq-a6 .etq-box .etq-nom b{font-size:9cqw}
+.etq-a6 .etq-box .etq-nom span{font-size:3.6cqw}
+.etq-a6 .etq-box .av.xl{width:14cqw;height:14cqw;font-size:7cqw}
+.etq-a6 .etq-box .qr{width:28cqw;height:28cqw}
+.etq-a6 .etq-box .etq-ration{grid-template-columns:1fr}
+.etq-a6 .etq-box .etq-repas ul{font-size:6cqw}.etq-a6 .etq-box .etq-repas span,.etq-a6 .etq-box .etq-savoir span{font-size:4.6cqw}
+.etq-a6 .etq-box .etq-savoir p{font-size:5cqw}
+.etq-a6 .etq-box .etq-pied,.etq-a6 .etq-box .etq-scan{font-size:3.6cqw}
+.etq-pre{align-items:center;justify-content:center;text-align:center}
+.etq-pre .etq-nom{align-items:center}
+.etq-pre .etq-nom b{font-size:14cqw}.etq-pre .etq-nom span{font-size:5cqw}
+.etq-pre .qr{width:62cqw;height:62cqw}
+.etq-pre .etq-scan{font-size:4.2cqw;max-width:80cqw}
+.etq-a5 .etq-pre .qr{width:34cqw;height:34cqw}.etq-a5 .etq-pre .etq-nom b{font-size:10cqw}.etq-a5 .etq-pre .etq-scan{font-size:3cqw}
 #impression{display:none}
 @media print{
   @page{margin:14mm 12mm}
@@ -875,5 +914,10 @@ body.lock .toast{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto}
   #impression .carnet{--ink:#000;--ink-2:#444;--line:#bbb;--accent:#2B6340;--surface:#fff;--ctl:#888;border:0;padding:0;border-radius:0;background:#fff}
   #impression .cn-bloc h3{break-after:avoid}
   #impression tr{break-inside:avoid}
+  #impression .etq-page{display:grid;gap:6mm;height:268mm;break-after:page;page-break-after:always}
+  #impression .etq-page:last-child{break-after:auto;page-break-after:auto}
+  #impression .etq-page.etq-a5{grid-template-rows:1fr 1fr}
+  #impression .etq-page.etq-a6{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+  #impression .etq{height:100%;border-color:#bbb}
 }
 </style>
