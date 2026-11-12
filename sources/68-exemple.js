@@ -38,10 +38,16 @@ function donneesExemple() {
   /* Les chevaux */
   const r = (aliment, qte, unite, repas) => ({ id: 'r' + (++n), aliment, qte, unite, repas });
   add('chevaux', { id: 'ex-tornade', nom: 'Tornade', naissance: '2015-04-12', sexe: 'Jument', race: 'Selle Français', robe: 'Bai', taille: 165, poids: 560, couleur: 0, proprietaire: 'Camille', propUid: 'ex-camille',
-    notes: 'Ferrée des antérieurs. Couverture imperméable dès les premiers froids.', ration: [r('Foin', 5, 'kg', ['matin', 'soir']), r('Granulés', 1.5, 'L', ['matin', 'soir']), r('CMV (minéraux)', 50, 'g', ['matin'])], creePar: par('camille', d(-400)) });
+    notes: 'Ferrée des antérieurs. Couverture imperméable dès les premiers froids.', ration: [r('Foin', 5, 'kg', ['matin', 'soir']), r('Granulés', 1.5, 'L', ['matin', 'soir']), r('CMV (minéraux)', 50, 'g', ['matin'])], creePar: par('camille', d(-400)),
+    // santé (71-sante.js) : quelques pesées et ses papiers, l'assurance à renouveler bientôt
+    pesees: [[-240, 548, 3], [-180, 541, 3], [-120, 552, null], [-75, 566, 4], [-30, 572, 4], [-6, 560, 3]].map(([j, kg, nec], i) => ({ id: `ex-pz${i}`, d: d(j), poids: kg, nec, tour: null, estime: false, note: j === -75 ? 'Retour du pré d\'été' : j === -6 ? 'Granulés réduits' : '' })),
+    documents: [{ id: 'ex-doc1', type: 'assurance', nom: 'Mortalité et frais vétérinaires', numero: 'EQ-48213', echeance: d(18), note: '' },
+      { id: 'ex-doc2', type: 'livret', nom: '', numero: '25012345X', echeance: null, note: 'Rangé dans le casier de Camille' }] });
   add('chevaux', { id: 'ex-pistache', nom: 'Pistache', naissance: '2012-05-20', sexe: 'Hongre', race: 'Connemara', robe: 'Gris', taille: 146, poids: 400, couleur: 2, proprietaire: 'Inès', propUid: 'ex-ines', pension: { montant: 320, depuis: '2024-09-01' },
     notes: 'Poney de Léa en demi-pension. Craint les tondeuses.', ration: [r('Foin', 4, 'kg', ['matin', 'soir']), r('Luzerne', 0.5, 'kg', ['soir']), r('CMV (minéraux)', 40, 'g', ['matin'])],
-    dp: [{ id: 'dp1', qui: { uid: 'ex-lea', nom: 'Léa' }, jours: [3, 6], part: 120, debut: d(-200), fin: null, notes: 'Cours avec Julie le samedi' }], creePar: par('camille', d(-150)) });
+    dp: [{ id: 'dp1', qui: { uid: 'ex-lea', nom: 'Léa' }, jours: [3, 6], part: 120, debut: d(-200), fin: null, notes: 'Cours avec Julie le samedi' }], creePar: par('camille', d(-150)),
+    pesees: [{ id: 'ex-pz9', d: d(-20), poids: 405, nec: 3, tour: 165, estime: true, note: '' }],
+    documents: [{ id: 'ex-doc3', type: 'contrat', nom: 'Pension au box', numero: '', echeance: d(160), note: 'Avec Inès, renouvelable chaque année' }] });
   add('chevaux', { id: 'ex-ulysse', nom: 'Ulysse', naissance: '2016-03-08', sexe: 'Hongre', race: 'Anglo-Arabe', robe: 'Alezan', taille: 163, poids: 515, couleur: 1, proprietaire: 'Hugo', propUid: 'ex-hugo',
     notes: 'Sort en dressage avec Hugo.', ration: [r('Foin', 6, 'kg', ['matin', 'soir']), r('Floconnés', 1, 'L', ['soir']), r('Huile', 0.1, 'L', ['soir'])], creePar: par('hugo', d(-300)) });
   add('chevaux', { id: 'ex-bergamote', nom: 'Bergamote', naissance: '2018-06-01', sexe: 'Jument', race: 'Haflinger', robe: 'Alezan', taille: 147, poids: 470, couleur: 4, proprietaire: 'Camille', propUid: 'ex-camille',

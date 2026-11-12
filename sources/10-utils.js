@@ -116,6 +116,9 @@ const ICONS = {
   lock: '<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>',
   phone: '<path d="M6.6 3.5h3l1.6 4.4-2.1 1.4a11.5 11.5 0 0 0 5.6 5.6l1.4-2.1 4.4 1.6v3a2 2 0 0 1-2.2 2A16.5 16.5 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z"/>',
   euro: '<path d="M18.5 6.2A7.6 7.6 0 0 0 13.6 4.5 7.6 7.6 0 0 0 6 12a7.6 7.6 0 0 0 7.6 7.5 7.6 7.6 0 0 0 4.9-1.7"/><path d="M3.5 10h10M3.5 14h8"/>',
+  doc: '<path d="M6 3h8l4 4v14H6Z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>',
+  poids: '<path d="M5 8h14l1.5 12h-17Z"/><circle cx="12" cy="5" r="2"/><path d="M12 11.5v2.5l2-1.5"/>',
+  partage: '<circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="m8.2 10.9 7.6-3.8M8.2 13.1l7.6 3.8"/>',
   card: '<rect x="3.5" y="5" width="17" height="14" rx="2.5"/><circle cx="9" cy="11" r="2.3"/><path d="M5.8 16.3c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4M14.5 10h3.5M14.5 13.5h3.5"/>'
 };
 const durTxt = m => {

@@ -92,7 +92,7 @@ function ficheHtml(h) {
   const dl = items.length ? `<dl class="dl">${items.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`
     : empty('Fiche à compléter', 'Date de naissance, race, robe, n° SIRE, transpondeur…');
   const notes = h.notes ? `<div class="card"><div class="eyebrow">Notes</div><div style="white-space:pre-wrap">${esc(h.notes)}</div></div>` : '';
-  return loc + tks + rap + proprieteHtml(h) + depensesChevalHtml(h) + section('Identité', dl + notes, `<button type="button" class="link" data-act="edit-cheval" data-id="${h.id}">${ic('edit', 'sm')}Modifier</button>`);
+  return loc + tks + rap + proprieteHtml(h) + depensesChevalHtml(h) + section('Identité', dl + notes, `<button type="button" class="link" data-act="edit-cheval" data-id="${h.id}">${ic('edit', 'sm')}Modifier</button>`) + documentsHtml(h);
 }
 /* Propriété : à qui est le cheval, qui le prend en demi-pension, à quelles conditions */
 function proprieteHtml(h) {
@@ -161,7 +161,9 @@ function soinsHtml(h) {
   const cost = ss.filter(s => s.date.startsWith(yr) && s.statut !== 'prevu').reduce((a, s) => a + (Number(s.cout) || 0), 0);
   const hist = ss.length ? `<div class="list">${ss.map(rowSoin).join('')}</div>${cost ? `<p class="note">Dépenses de soins en ${yr} : <b>${num(cost, 2)} €</b></p>` : ''}`
     : emptyH('Aucun soin enregistré', 'Utilise le bouton + pour noter un vaccin, un vermifuge, le passage du maréchal…');
-  return section('Rappels', rap) + section('Historique', hist);
+  // santé (71-sante.js) : le carnet à imprimer, puis le poids et l'état corporel
+  const carnet = `<div class="list"><button type="button" class="row" data-act="carnet" data-id="${h.id}">${lead('doc')}<div class="row-main"><div class="row-t">Carnet de santé</div><div class="row-s">Pour le vétérinaire, à imprimer ou enregistrer en PDF</div></div><span class="row-end">${ic('next', 'sm')}</span></button></div>`;
+  return carnet + section('Rappels', rap) + poidsHtml(h) + section('Historique', hist);
 }
 function rowSoin(s) {
   const sub = [dFull(s.date), s.praticien, s.produit].filter(Boolean).join(' · ');

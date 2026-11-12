@@ -25,6 +25,7 @@ VIEWS.reglages = () => {
     <div class="row"><div class="row-main"><div class="row-t">Prévenir avant l'échéance</div><div class="row-s">Soins à prévoir sur l'accueil</div></div>${rinp('c_alerte', C.alerte, "Jours d'avance")}</div>
     <div class="row"${cache(P)}><div class="row-main"><div class="row-t">Repos visé d'un pré</div><div class="row-s">Avant d'y remettre des chevaux</div></div>${rinp('c_repos', C.repos, 'Jours de repos visés')}</div>
     <div class="row"${cache(P)}><div class="row-main"><div class="row-t">Pâture maximum</div><div class="row-s">Au-delà, l'accueil propose de changer de pré</div></div>${rinp('c_pat', C.paturage, 'Jours de pâture maximum')}</div>
+    <div class="row"${cache(P)}><div class="row-main"><div class="row-t">Surface minimum par cheval</div><div class="row-s">En dessous, l'accueil signale le pré chargé. Vide : pas d'alerte</div></div><input class="rinput" id="c_ha" inputmode="decimal" autocomplete="off" placeholder="0,5" value="${C.haMin ? esc(String(C.haMin).replace('.', ',')) : ''}" aria-label="Surface minimum par cheval, en hectares"><span class="muted small">ha</span></div>
   </div>${P ? '<p class="note">Chaque pré peut avoir ses propres durées dans sa fiche.</p>' : ''}`);
   const foin = section('Foin', `<div class="list" id="balles">${C.balles.map(balleRow).join('')}</div>
     <button type="button" class="link" data-act="add-balle" style="align-self:flex-start">${ic('plus', 'sm')}Ajouter un type de balle</button>
@@ -62,12 +63,14 @@ ACT['save-cfg'] = () => {
   }
   const alerte = parseNum(val('c_alerte')), repos = parseNum(val('c_repos')), paturage = parseNum(val('c_pat'));
   if (!(alerte >= 0) || !(repos >= 1) || !(paturage >= 1)) { toast('Vérifie les nombres de jours des alertes et des prés.', { danger: true }); return; }
+  const rawHa = val('c_ha'), haMin = rawHa === '' ? 0 : parseNum(rawHa);
+  if (haMin == null || haMin < 0 || haMin > 20) { toast('La surface minimum par cheval se donne en hectares, par exemple 0,5.', { danger: true }); return; }
   const balles = $$('#balles [data-bid]').map(r => ({ id: r.dataset.bid, nom: $('.b-nom', r).value.trim(), poids: parseNum($('.b-poids', r).value) }));
   if (!balles.length) { toast('Garde au moins un type de balle.', { danger: true }); return; }
   if (balles.some(b => !b.nom || !(b.poids > 0))) { toast("Chaque type de balle a besoin d'un nom et d'un poids.", { danger: true }); return; }
   const fs = val('c_fin');
   // les autres réglages communs (contacts utiles…) sont gardés tels quels
-  putCfg(Object.assign({}, S.cfg || {}, { rappels, alerte: Math.round(alerte), repos: Math.round(repos), paturage: Math.round(paturage), balles, finSaison: validISO(fs) ? fs.slice(5) : C.finSaison }));
+  putCfg(Object.assign({}, S.cfg || {}, { rappels, alerte: Math.round(alerte), repos: Math.round(repos), paturage: Math.round(paturage), haMin, balles, finSaison: validISO(fs) ? fs.slice(5) : C.finSaison }));
   toast('Réglages enregistrés');
 };
 ACT.export = async () => {

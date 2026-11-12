@@ -831,4 +831,42 @@ body.lock .toast{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto}
 .ed-fleches .btn[data-act="ed-decale"]{min-width:44px;font-size:18px}
 .ed-zone{position:relative}
 .ed-credit{position:absolute;right:8px;bottom:8px;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.85);color:#16211A;font-size:11px;font-weight:600;pointer-events:none}
+/* Santé du cheval : poids, documents, carnet de santé (71-sante.js) */
+.card.poids{padding:14px 14px 8px;display:flex;flex-direction:column;gap:6px}
+.poids-r{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.poids-r b{font-family:var(--f-display);font-size:30px;font-weight:600;line-height:1}
+.poids-r span{color:var(--ink-2);font-size:14px}
+.poids-r .ecart{color:var(--warn);font-weight:600}
+.card.poids .note{margin:0}
+.courbe{width:100%;height:auto;display:block}
+.courbe .c-grille{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4}
+.courbe .c-txt{fill:var(--ink-2);font:500 11px var(--f-body)}
+.courbe .c-ligne{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.courbe .c-pt{fill:var(--surface);stroke:var(--accent);stroke-width:2}
+.courbe .c-pt.dern{fill:var(--accent)}
+.row-s .charge{color:var(--warn)}
+.carnet{background:var(--surface);border:var(--bw) solid var(--line);border-radius:var(--r);padding:18px 16px;display:flex;flex-direction:column;gap:16px;color:var(--ink)}
+.cn-tete{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--accent);padding-bottom:10px}
+.cn-tete h2{margin:0;font-family:var(--f-display);font-size:32px;font-weight:600;line-height:1}
+.cn-sur{margin:0 0 4px;font-family:var(--f-display);letter-spacing:.14em;text-transform:uppercase;font-size:13px;color:var(--accent)}
+.cn-date{margin:0;color:var(--ink-2);font-size:13px}
+.cn-id{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;margin:0;font-size:14px}
+.cn-id dt{color:var(--ink-2)}.cn-id dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.cn-bloc h3{margin:0 0 6px;font-family:var(--f-display);font-size:15px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.cn-bloc table{width:100%;border-collapse:collapse;font-size:13px}
+.cn-bloc th{text-align:left;font-weight:600;color:var(--ink-2);border-bottom:1px solid var(--line);padding:4px 6px 4px 0}
+.cn-bloc td{border-bottom:1px solid var(--line);padding:5px 6px 5px 0;vertical-align:top;overflow-wrap:anywhere}
+.cn-vide{color:var(--ctl)}
+.cn-rien,.cn-txt{margin:0;font-size:14px;color:var(--ink-2)}
+.cn-pied{font-size:12px;color:var(--ink-2);border-top:1px solid var(--line);padding-top:8px}
+#impression{display:none}
+@media print{
+  @page{margin:14mm 12mm}
+  body>*:not(#impression){display:none!important}
+  html,body{background:#fff!important;height:auto!important;overflow:visible!important}
+  #impression{display:block;color:#000}
+  #impression .carnet{--ink:#000;--ink-2:#444;--line:#bbb;--accent:#2B6340;--surface:#fff;--ctl:#888;border:0;padding:0;border-radius:0;background:#fff}
+  #impression .cn-bloc h3{break-after:avoid}
+  #impression tr{break-inside:avoid}
+}
 </style>

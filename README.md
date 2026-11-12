@@ -87,6 +87,14 @@ Le tracé s'enregistre au fil de l'eau : on peut s'arrêter et reprendre plus ta
 - **Fiches partagées** : pour chaque cheval dont le propriétaire a ce rôle, l'appli de l'équipe tient à jour `structures/{id}/partages/{cheval}` dès que le carnet change ; le propriétaire ne lit que ces fiches-là.
 - **Pension** : montant par mois dans la fiche du cheval (*Propriété* › propriétaire). *Équipe* › *Pension* liste chaque propriétaire avec le total du mois : la pension, plus les soins, cours et engagements avancés par l'écurie (payés par quelqu'un d'autre que le propriétaire). La gérante écarte une ligne, en ajoute une, puis *Envoyer à …* (le propriétaire le voit dans *Relevés*), *Copier le texte* (pour un propriétaire sans compte) et *Marquer réglé*. Relevés dans `structures/{id}/releves/{proprio}_{mois}`.
 
+## Santé du cheval
+
+- **Poids et état** (onglet Soins de chaque cheval) : une pesée note le poids, le tour de poitrine et l'état corporel (0 à 5, grille de l'IFCE). Sans balance, le tour de poitrine suffit : le poids est estimé avec les formules de l'INRA (chevaux de selle, poneys, traits ; à 25 kg près, il faut la taille dans la fiche). Une courbe montre l'évolution, et le poids de la fiche suit la dernière pesée.
+- **Documents** (onglet Fiche) : assurance, livret, carte d'immatriculation, certificat sanitaire, contrat… avec numéro et échéance. L'accueil prévient un mois avant, puis signale le document échu.
+- **Carnet de santé** (onglet Soins) : identité, rappels, vaccins, vermifuges, soins et visites, poids, ration, documents, sur une page à montrer au vétérinaire, à imprimer ou à enregistrer en PDF.
+- **Surface par cheval** : chaque pré occupé affiche la surface par cheval. Dans les réglages (Alertes et prés), un minimum par cheval (par exemple 0,5 ha) fait signaler un pré trop chargé ; vide, pas d'alerte.
+- Tout est rangé dans la fiche du cheval : la propriétaire en pension le voit, la sauvegarde l'emporte.
+
 ## Points crottins
 
 Chaque coup de main rapporte des crottins (compteur en haut de l'écran, qui ouvre la boutique) : tâches cochées (une tâche rare rapporte plus qu'une quotidienne), rendez-vous gérés, concours et podiums, séances, entretien des prés, foin. Annuler une action retire ses crottins. Les récompenses s'échangent dans la boutique ; la gérante marque le bon *offert* une fois la récompense donnée.

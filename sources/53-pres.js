@@ -1,5 +1,9 @@
 
 /* ---------- Prés : rotation, repos, entretien ---------- */
+/* Surface par cheval dans un pré occupé ; sous le minimum choisi dans les réglages, le pré est signalé chargé */
+const haTxt = v => v >= 1 ? `${num(v, v >= 10 ? 0 : 1)} ha` : `${num(Math.round(v * 100), 0)} ares`;
+const haParCheval = (p, s) => `${haTxt(p.surface / s.horses.length)} par cheval`;
+const preCharge = (p, s) => { const m = cfg().haMin; return !!(m && s.occupe && !s.sansRotation && p.surface > 0 && s.horses.length && p.surface / s.horses.length < m - 1e-9); };
 function statusPill(s) {
   if (s.sansRotation) return `<span class="pill sable">${s.occupe ? 'Occupée' : 'Libre'}</span>`;
   if (s.occupe) return s.over ? '<span class="pill warn">À changer</span>' : '<span class="pill hay">En pâture</span>';
@@ -8,7 +12,7 @@ function statusPill(s) {
 }
 function pcard({ p, s }, detail = false) {
   const sub = s.sansRotation ? [typeEspace(p).label, p.surface ? `${num(p.surface, 2)} ha` : ''].filter(Boolean).join(' · ')
-    : (p.surface ? `${num(p.surface, 2)} ha` : 'Surface non renseignée') + (s.occupe && p.surface ? ` · ${num(s.horses.length / p.surface, 1)} cheval/ha` : '');
+    : (p.surface ? `${num(p.surface, 2)} ha` : 'Surface non renseignée') + (s.occupe && p.surface && s.horses.length ? ` · ${preCharge(p, s) ? `<b class="charge">${haParCheval(p, s)}</b>` : haParCheval(p, s)}` : '');
   const inner = `<div class="row-main"><div class="row-t">${esc(p.nom)} ${exTag(p)}</div><div class="row-s">${sub}</div></div>${statusPill(s)}`;
   const head = detail ? `<div class="pcard-h">${inner}</div>` : `<button type="button" class="pcard-h" data-act="open-pre" data-id="${p.id}">${inner}</button>`;
   if (s.sansRotation) {

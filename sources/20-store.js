@@ -300,6 +300,7 @@ function cfg() {
     alerte: Number.isFinite(c.alerte) ? c.alerte : 14,
     repos: Number.isFinite(c.repos) ? c.repos : 35,
     paturage: Number.isFinite(c.paturage) ? c.paturage : 10,
+    haMin: Number.isFinite(c.haMin) && c.haMin > 0 ? c.haMin : 0,   // surface minimum par cheval (ha), 0 : pas d'alerte
     boutique: Array.isArray(c.boutique) ? c.boutique : null,   // null : la liste de départ
     crottins: c.crottins !== false,                             // points crottins dans cette écurie
     // rubriques gardées par la gérante (66-rubriques.js) : tout est affiché tant que rien n'est choisi

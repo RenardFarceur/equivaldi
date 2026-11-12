@@ -18,6 +18,12 @@ function alerts() {
     const tip = nx ? ` · ${nx.p.nom} ${nx.s.jamais ? 'est libre' : 'repose depuis ' + nJ(nx.s.repos)}` : '';
     out.push({ sev: 'warn', icon: 'fence', t: `${p.nom} · ${nJ(st.days)} de pâture`, s: `Maximum prévu : ${st.max} j${tip}`, act: `data-act="move-from" data-id="${p.id}"`, ord: st.max - st.days });
   });
+  // pré trop chargé pour sa surface (minimum par cheval choisi dans les réglages, désactivé par défaut)
+  if (rub('pres')) pres().forEach(p => {
+    const st = preStatus(p);
+    if (!preCharge(p, st)) return;
+    out.push({ sev: 'warn', icon: 'fence', t: `${p.nom} · ${st.horses.length} ${pl(st.horses.length, 'cheval', 'chevaux')} sur ${haTxt(p.surface)}`, s: `${haParCheval(p, st)}, sous le minimum de ${haTxt(C.haMin)}`, act: `data-act="open-pre" data-id="${p.id}"`, ord: 5 });
+  });
   if (rub('concours')) list('concours').forEach(c => {
     const h = cheval(c.horseId);
     if (!h || c.statut === 'forfait') return;
@@ -36,6 +42,7 @@ function alerts() {
     out.push({ sev: 'info', icon: 'timer', t: `${hNom(s.horseId)} · ${s.type || 'Séance'}${s.coach ? ' avec ' + s.coach : ''}`, s: `Séance prévue le ${dShort(s.date)} : à confirmer`, act: `data-act="edit-seance" data-id="${s.id}"`, ord: 40 }));
   const A = autonomie();
   if (rub('foin') && A.rate && A.days != null && A.days < 30) out.push({ sev: A.days < 10 ? 'danger' : 'warn', icon: 'bale', t: `Foin : environ ${nJ(Math.floor(A.days))} de stock`, s: `Au rythme de ${num(A.rate, 0)} kg par jour`, act: 'data-act="go" data-tab="foin"', ord: A.days - 30 });
+  alertesSante(out);   // documents du cheval à renouveler (71-sante.js)
   const rank = { danger: 0, warn: 1, info: 2 };
   return out.sort((a, b) => rank[a.sev] - rank[b.sev] || a.ord - b.ord);
 }
