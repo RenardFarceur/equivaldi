@@ -1423,6 +1423,12 @@ function verifierReponses() {
     if (n && !dit && typeof toast === 'function') toast(n > 1 ? `EquiValdi a répondu à ${n} de tes messages : Réglages.` : 'EquiValdi a répondu à ton message : Réglages.');
   }).catch(() => {});
 }
+// administration : les réponses au questionnaire public (questionnaire.html)
+async function reponsesSondage() {
+  exigerAdmin();
+  const q = await getDocs(collection(fs, 'sondage'));
+  return q.docs.map(d => Object.assign({ id: d.id }, d.data())).sort((a, b) => (b.le || 0) - (a.le || 0));
+}
 // administration : tous les messages, la réponse, le classement
 async function tousRetours() {
   exigerAdmin();
@@ -1560,7 +1566,7 @@ window.EQ = {
   toutesEcuries, equipeDe, gererAbonnement, ouvrirAdmin, quitterAdmin,
   demanderCarte, carteFaite,
   partages, ecrirePartage, effacerPartage, releves, ecrireReleve,
-  envoyerRetour, mesRetours, retourVu, tousRetours, repondreRetour, classerRetour,
+  envoyerRetour, mesRetours, retourVu, tousRetours, reponsesSondage, repondreRetour, classerRetour,
   accepterConditions, analyseSuppression, mesDonnees, supprimerCompte,
   conditions: CONDITIONS, legal: LEGAL, demo: false, reponses: 0, conditionsAFaire: false,
   deconnexion,

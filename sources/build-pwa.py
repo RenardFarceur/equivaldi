@@ -78,6 +78,8 @@ for nom, court in PAGES:
     nav = ''.join(f'<a href="{n}.html"{" aria-current=\"page\"" if n == nom else ""}>{c}</a>' for n, c in PAGES)
     page = gabarit.replace('{{titre}}', titre).replace('{{nav}}', nav).replace('{{contenu}}', frag.split('-->', 1)[1].strip())
     open(os.path.join(OUT, 'legal', nom + '.html'), 'w', encoding='utf-8').write(remplir(page))
+# questionnaire public : page autonome, réponses dans la collection « sondage »
+shutil.copy(os.path.join(SRC, 'questionnaire.html'), os.path.join(OUT, 'questionnaire.html'))
 manifest = {
     'name': "EquiValdi · Carnet d'écurie", 'short_name': 'EquiValdi', 'lang': 'fr',
     'description': "Chevaux, rations, soins, entraînement, prés, foin, concours, tâches partagées, équipe et demi-pensions.",

@@ -135,6 +135,14 @@ Une carte lue dans la base est remise au propre avant d'être dessinée (identif
 | lire, écrire les stocks | `stocks` ajouté à `donnees()` : mêmes droits que le foin | équipe en lecture, gérante et « Peut modifier » en écriture (écurie active) ; refusé au propriétaire |
 | santé du cheval (pesées, documents) | dans la fiche du cheval (`chevaux`) | aucune règle nouvelle |
 
+## 12. Questionnaire public (12 novembre 2026)
+
+| Demande | Règle | Résultat |
+|---|---|---|
+| répondre sans compte | `sondage` : `create` pour tous, champs listés, `v == 1`, profil connu, date du jour, textes et listes bornés, prix de 0 à 1 000 | accepté |
+| champ en trop, profil inconnu | `keys().hasOnly`, `profil in [...]` | refusé |
+| lire, effacer | `admin()` seulement | refusé à tous les autres, comptes compris |
+
 ## Migration
 
 - Recopie de l'équipe (cas c) : seulement par l'ancienne gérante, pour un uid qui existe dans l'ancien `membres`, avec exactement le même rôle (`equipe` ou `lecture`).

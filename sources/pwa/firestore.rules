@@ -229,6 +229,23 @@ service cloud.firestore {
       allow delete: if resource.data.structure is string && gerante(resource.data.structure);
     }
 
+    // ---------- Questionnaire public (questionnaire.html) : tout le monde répond, sans compte ; l'administration lit ----------
+    function liste(m, champ, n) { return !(champ in m) || (m[champ] is list && m[champ].size() <= n); }
+    function prix(m, champ) { return !(champ in m) || m[champ] == null || (m[champ] is number && m[champ] >= 0 && m[champ] <= 1000); }
+    match /sondage/{id} {
+      allow read, delete: if admin();
+      allow create: if request.resource.data.keys().hasOnly(['v', 'le', 'profil', 'nb', 'dep', 'soucis', 'outils', 'appli', 'temps', 'interet', 'prio', 'prixBon', 'prixCher', 'remarque', 'email', 'beta', 'source'])
+        && request.resource.data.v == 1
+        && request.resource.data.profil in ['maison', 'pension', 'gerant', 'club', 'aucun']
+        && dateMaintenant(request.resource.data.le)
+        && liste(request.resource.data, 'soucis', 12) && liste(request.resource.data, 'outils', 10)
+        && texte(request.resource.data, 'nb', 10) && texte(request.resource.data, 'dep', 40) && texte(request.resource.data, 'appli', 80)
+        && texte(request.resource.data, 'temps', 10) && texte(request.resource.data, 'interet', 10) && texte(request.resource.data, 'prio', 20)
+        && texte(request.resource.data, 'remarque', 1000) && texte(request.resource.data, 'email', 120) && texte(request.resource.data, 'source', 40)
+        && prix(request.resource.data, 'prixBon') && prix(request.resource.data, 'prixCher')
+        && (!('beta' in request.resource.data) || request.resource.data.beta is bool);
+    }
+
     // ---------- « Une idée, un souci ? » : messages à EquiValdi ----------
     // chacun écrit les siens et lit les réponses ; l'administration lit, répond et classe
     match /retours/{id} {

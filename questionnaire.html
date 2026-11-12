@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Questionnaire · EquiValdi</title>
+<meta name="description" content="Trois minutes pour dire comment tu t'organises avec tes chevaux, et ce qui t'aiderait.">
+<meta name="theme-color" content="#EEF1EB" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0D1611" media="(prefers-color-scheme: dark)">
+<meta property="og:title" content="EquiValdi · 3 minutes pour les cavaliers et les écuries">
+<meta property="og:description" content="Comment tu t'organises avec tes chevaux, et ce qui t'aiderait. Réponses anonymes.">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png?v=c">
+<style>
+@font-face{font-family:"Outfit";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/outfit-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Outfit";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/outfit-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Outfit";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/outfit-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Barlow Condensed";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/barlow-condensed-latin-600-normal.woff2) format("woff2")}
+/* Une seule colonne de cartes-questions, comme une fiche de l'appli ; les choix sont des pastilles à toucher */
+:root{--bg:#EEF1EB;--surface:#FFFFFF;--ink:#16211A;--ink-2:#4C5850;--line:#D2D9CD;--accent:#2B6340;--accent-strong:#1E4A30;--accent-soft:#D9E8DC;--hay-soft:#F7E6CA;--hay-ink:#7A5410;--danger:#B3261E;--sur-accent:#FFFFFF;
+  --f-corps:"Outfit",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--f-titre:"Barlow Condensed","Arial Narrow",sans-serif;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0D1611;--surface:#15211A;--ink:#E8EFE9;--ink-2:#A7B5AB;--line:#2B3C31;--accent:#9FD6AE;--accent-strong:#C2E8CD;--accent-soft:#1E3828;--hay-soft:#382A15;--hay-ink:#F0B45C;--danger:#F2B8B5;--sur-accent:#0D1611;color-scheme:dark}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--f-corps)}
+.page{max-width:680px;margin:0 auto;padding-block:0 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.haut{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:16px}
+.marque{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.marque img{width:40px;height:40px;border-radius:11px;flex:none}
+.marque b{display:block;font-weight:600;font-size:18px;line-height:1.1}
+.marque small{display:block;font-family:var(--f-titre);font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--ink-2)}
+.duree{font-family:var(--f-titre);font-weight:600;letter-spacing:.12em;text-transform:uppercase;font-size:13px;color:var(--hay-ink);background:var(--hay-soft);border-radius:999px;padding:4px 12px;white-space:nowrap}
+h1{font-family:var(--f-titre);font-weight:600;font-size:clamp(30px,8vw,42px);line-height:1.05;margin:8px 0 10px;text-wrap:balance}
+.intro{margin:0 0 20px;color:var(--ink-2);max-width:60ch}
+form{display:flex;flex-direction:column;gap:14px}
+fieldset,.carte{margin:0;background:var(--surface);border:1.5px solid var(--line);border-radius:18px;padding:16px 16px 18px;min-width:0}
+legend,.q{float:left;width:100%;padding:0;font-weight:600;font-size:17px;line-height:1.3;margin:0 0 4px}
+legend+*{clear:both}
+.aide{clear:both;margin:0 0 10px;color:var(--ink-2);font-size:14px}
+.choix{clear:both;display:flex;flex-wrap:wrap;gap:8px}
+.choix label{position:relative;display:inline-flex}
+.choix input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.choix span{display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;border:1.5px solid var(--line);border-radius:999px;background:var(--surface);font-size:15px;line-height:1.25;cursor:pointer;transition:background .15s,border-color .15s}
+.choix input:checked+span{background:var(--accent);border-color:var(--accent);color:var(--sur-accent);font-weight:500}
+.choix input:focus-visible+span{outline:3px solid var(--accent);outline-offset:2px}
+.colonne{flex-direction:column;align-items:stretch}
+.colonne span{border-radius:14px;width:100%}
+.champ{display:flex;flex-direction:column;gap:6px;clear:both}
+.champ+.champ{margin-top:12px}
+.champ label{font-size:15px;color:var(--ink-2)}
+input[type=text],input[type=email],input[type=number],textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;min-height:46px}
+textarea{min-height:90px;resize:vertical}
+input:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.prix{display:grid;grid-template-columns:1fr 1fr;gap:12px;clear:both}
+.prix .champ+.champ{margin-top:0}
+.euros{position:relative}
+.euros input{padding-right:64px;font-variant-numeric:tabular-nums}
+.euros::after{content:"€ / mois";position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--ink-2);font-size:14px;pointer-events:none}
+.case{display:flex;gap:10px;align-items:flex-start;font-size:15px;clear:both;margin-top:10px}
+.case input{width:22px;height:22px;flex:none;margin:1px 0 0;accent-color:var(--accent)}
+.note{font-size:13px;color:var(--ink-2);margin:8px 0 0;clear:both}
+.envoi{display:flex;flex-direction:column;gap:10px;align-items:stretch}
+button{font:inherit;font-weight:600;font-size:17px;min-height:52px;border:0;border-radius:999px;background:var(--accent);color:var(--sur-accent);cursor:pointer;padding:0 24px}
+button:disabled{opacity:.6;cursor:default}
+button:focus-visible{outline:3px solid var(--accent-strong);outline-offset:3px}
+.erreur{color:var(--danger);font-weight:500;margin:0}
+.merci{text-align:left}
+.merci h2{font-family:var(--f-titre);font-weight:600;font-size:30px;margin:0 0 6px}
+.merci p{margin:0 0 10px;max-width:60ch}
+.merci a{color:var(--accent-strong);font-weight:600;text-underline-offset:3px}
+footer{margin-top:24px;color:var(--ink-2);font-size:13px}
+footer a{color:inherit}
+[hidden]{display:none!important}
+@media (max-width:420px){.prix{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="page">
+<header class="haut">
+  <a class="marque" href="./"><img src="icons/icon-192.png?v=c" alt="" width="40" height="40"><span><b>EquiValdi</b><small>Carnet d'écurie</small></span></a>
+  <span class="duree">3 minutes</span>
+</header>
+
+<div id="vueForm">
+<h1>Comment t'organises-tu avec tes chevaux ?</h1>
+<p class="intro">Je prépare une appli pour tenir le carnet d'une écurie sur le téléphone : soins, prés, foin, équipe, propriétaires. Tes réponses m'aident à savoir ce qui compte vraiment. C'est anonyme, sauf si tu laisses ton e-mail à la fin.</p>
+
+<form id="f" novalidate>
+  <fieldset>
+    <legend>Où vivent les chevaux dont tu t'occupes ?</legend>
+    <p class="aide">Choisis ce qui te ressemble le plus.</p>
+    <div class="choix colonne" data-nom="profil">
+      <label><input type="radio" name="profil" value="maison"><span>Chez moi, ou sur un terrain à moi ou que je loue</span></label>
+      <label><input type="radio" name="profil" value="pension"><span>En pension chez quelqu'un (je suis propriétaire)</span></label>
+      <label><input type="radio" name="profil" value="gerant"><span>Je tiens une pension ou une écurie de propriétaires</span></label>
+      <label><input type="radio" name="profil" value="club"><span>Je travaille dans un centre équestre ou un poney-club</span></label>
+      <label><input type="radio" name="profil" value="aucun"><span>Je n'ai pas de cheval à m'occuper</span></label>
+    </div>
+  </fieldset>
+
+  <div id="suite" hidden>
+  <div style="display:flex;flex-direction:column;gap:14px">
+  <fieldset>
+    <legend id="qNb">Combien de chevaux ?</legend>
+    <div class="choix" data-nom="nb">
+      <label><input type="radio" name="nb" value="1"><span>1</span></label>
+      <label><input type="radio" name="nb" value="2-3"><span>2 ou 3</span></label>
+      <label><input type="radio" name="nb" value="4-10"><span>4 à 10</span></label>
+      <label><input type="radio" name="nb" value="11-30"><span>11 à 30</span></label>
+      <label><input type="radio" name="nb" value="30+"><span>Plus de 30</span></label>
+    </div>
+    <div class="champ" style="margin-top:12px"><label for="dep">Ton département (facultatif)</label><input type="text" id="dep" maxlength="40" inputmode="text" autocomplete="off" placeholder="ex. Vienne, 86"></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Qu'est-ce qui te prend la tête aujourd'hui ?</legend>
+    <p class="aide">Plusieurs réponses possibles.</p>
+    <div class="choix" data-nom="soucis">
+      <label><input type="checkbox" name="soucis" value="rappels"><span>Penser aux vaccins, vermifuges, maréchal</span></label>
+      <label><input type="checkbox" name="soucis" value="pres"><span>La rotation des prés</span></label>
+      <label><input type="checkbox" name="soucis" value="foin"><span>Le stock de foin</span></label>
+      <label><input type="checkbox" name="soucis" value="aliments"><span>Les aliments et la litière</span></label>
+      <label><input type="checkbox" name="soucis" value="rations"><span>Les rations de chacun</span></label>
+      <label><input type="checkbox" name="soucis" value="equipe"><span>Qui fait quoi, qui a nourri</span></label>
+      <label><input type="checkbox" name="soucis" value="nouvelles"><span>Donner des nouvelles aux propriétaires</span></label>
+      <label><input type="checkbox" name="soucis" value="factures"><span>Facturer la pension et les frais avancés</span></label>
+      <label><input type="checkbox" name="soucis" value="depenses"><span>Suivre ce que coûtent les chevaux</span></label>
+      <label><input type="checkbox" name="soucis" value="concours"><span>Les concours et les engagements</span></label>
+      <label><input type="checkbox" name="soucis" value="rien"><span>Rien de tout ça</span></label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Avec quoi t'organises-tu aujourd'hui ?</legend>
+    <p class="aide">Plusieurs réponses possibles.</p>
+    <div class="choix" data-nom="outils">
+      <label><input type="checkbox" name="outils" value="papier"><span>Livret, cahier, papier</span></label>
+      <label><input type="checkbox" name="outils" value="tableau"><span>Tableau blanc à l'écurie</span></label>
+      <label><input type="checkbox" name="outils" value="agenda"><span>Agenda du téléphone</span></label>
+      <label><input type="checkbox" name="outils" value="tableur"><span>Excel, Google Sheets</span></label>
+      <label><input type="checkbox" name="outils" value="messagerie"><span>Groupe WhatsApp, Messenger</span></label>
+      <label><input type="checkbox" name="outils" value="appli"><span>Une appli</span></label>
+      <label><input type="checkbox" name="outils" value="tete"><span>Tout dans ma tête</span></label>
+    </div>
+    <div class="champ" id="wAppli" hidden style="margin-top:12px"><label for="appli">Laquelle ?</label><input type="text" id="appli" maxlength="80" autocomplete="off" placeholder="ex. Equilab"></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Combien de temps par semaine passes-tu à t'organiser ?</legend>
+    <p class="aide">Rappels, plannings, messages, comptes : pas le temps passé avec les chevaux.</p>
+    <div class="choix" data-nom="temps">
+      <label><input type="radio" name="temps" value="-30"><span>Moins de 30 min</span></label>
+      <label><input type="radio" name="temps" value="30-60"><span>30 min à 1 h</span></label>
+      <label><input type="radio" name="temps" value="1-3"><span>1 à 3 h</span></label>
+      <label><input type="radio" name="temps" value="3+"><span>Plus de 3 h</span></label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Une appli qui rassemble tout ça sur ton téléphone, ça t'intéresserait ?</legend>
+    <div class="choix" data-nom="interet">
+      <label><input type="radio" name="interet" value="non"><span>Pas vraiment</span></label>
+      <label><input type="radio" name="interet" value="peutetre"><span>Peut-être</span></label>
+      <label><input type="radio" name="interet" value="oui"><span>Oui</span></label>
+      <label><input type="radio" name="interet" value="essayer"><span>Oui, et je veux l'essayer</span></label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Et ce qui compterait le plus ?</legend>
+    <div class="choix" data-nom="prio">
+      <label><input type="radio" name="prio" value="rappels"><span>Ne plus rien oublier pour les soins</span></label>
+      <label><input type="radio" name="prio" value="pres-foin"><span>Gérer les prés et le foin</span></label>
+      <label><input type="radio" name="prio" value="equipe"><span>Coordonner l'équipe</span></label>
+      <label><input type="radio" name="prio" value="proprietaires"><span>Tenir les propriétaires au courant</span></label>
+      <label><input type="radio" name="prio" value="argent"><span>Suivre l'argent : pensions, frais, dépenses</span></label>
+      <label><input type="radio" name="prio" value="simple"><span>Que ce soit simple, sans formation</span></label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Parlons prix</legend>
+    <p class="aide">Pour un abonnement mensuel. Une réponse au jugé suffit ; laisse vide si tu ne sais pas.</p>
+    <div class="prix">
+      <div class="champ"><label for="prixBon">Une bonne affaire à</label><div class="euros"><input type="number" id="prixBon" min="0" max="1000" step="1" inputmode="numeric" placeholder="ex. 5"></div></div>
+      <div class="champ"><label for="prixCher">Trop cher à partir de</label><div class="euros"><input type="number" id="prixCher" min="0" max="1000" step="1" inputmode="numeric" placeholder="ex. 15"></div></div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Un mot de plus ? (facultatif)</legend>
+    <div class="champ"><label for="remarque">Ce qui te manque, une galère, une idée…</label><textarea id="remarque" maxlength="1000"></textarea></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Tester l'appli en avant-première ?</legend>
+    <p class="aide">Laisse ton e-mail si tu veux être prévenu·e de l'essai gratuit. Sinon, ta réponse reste anonyme.</p>
+    <div class="champ"><label for="email">Ton e-mail (facultatif)</label><input type="email" id="email" maxlength="120" autocomplete="email" placeholder="prenom@exemple.fr"></div>
+    <label class="case" id="wBeta" hidden><input type="checkbox" id="beta"><span>J'accepte d'être contacté·e par EquiValdi au sujet de l'essai. Mon adresse sert seulement à ça et elle est effacée à la fin de la phase d'essai, au plus tard dans 12 mois. Pour la faire effacer avant, il suffit de répondre au premier message.</span></label>
+  </fieldset>
+  </div>
+  </div>
+
+  <div class="envoi">
+    <p class="erreur" id="err" role="alert" hidden></p>
+    <button type="submit" id="go">Envoyer mes réponses</button>
+    <p class="note">Les réponses sont enregistrées sur les serveurs de Google (Firebase) pour EquiValdi et lues seulement par sa créatrice, <span id="nom">Célia Courtois</span>. Aucune publicité, aucune revente.</p>
+  </div>
+</form>
+</div>
+
+<div id="vueMerci" class="carte merci" hidden>
+  <h2>Merci !</h2>
+  <p id="merciTxt">Tes réponses sont bien arrivées. Elles vont vraiment servir à construire l'appli.</p>
+  <p>Tu peux découvrir EquiValdi tout de suite avec une écurie d'exemple, sans compte : <a href="./?exemple">voir l'écurie d'exemple</a>.</p>
+  <p>Si tu as un groupe de cavaliers ou une écurie, tu peux leur transmettre ce questionnaire : plus il y a de réponses, plus l'appli sera juste.</p>
+</div>
+
+<footer><p>EquiValdi · carnet d'écurie · <a href="legal/confidentialite.html">Confidentialité</a></p></footer>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
+import { getFirestore, collection, doc, setDoc } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js';
+
+const app = initializeApp({
+  apiKey: 'AIzaSyDCv_7VGRnPbszuajk1dPGfeEa15_nNB1M', authDomain: 'equivaldi.firebaseapp.com', projectId: 'equivaldi',
+  storageBucket: 'equivaldi.firebasestorage.app', messagingSenderId: '438472603797', appId: '1:438472603797:web:670fef2053cebb0772c39c'
+}, 'questionnaire');
+const fs = getFirestore(app);
+const $ = s => document.querySelector(s);
+const FAIT = 'equivaldi:questionnaire:fait';
+const f = $('#f');
+
+// déjà répondu depuis ce téléphone : on dit merci, avec la possibilité de répondre encore
+try { if (localStorage.getItem(FAIT)) { montrerMerci("Tu as déjà répondu depuis ce téléphone : merci ! "); } } catch (e) { /* stockage indisponible */ }
+
+const val = n => (f.querySelector(`input[name="${n}"]:checked`) || {}).value || '';
+const vals = n => [...f.querySelectorAll(`input[name="${n}"]:checked`)].map(i => i.value);
+const MOTS_NB = { maison: 'Combien de chevaux chez toi ?', pension: 'Combien de chevaux as-tu en pension ?', gerant: 'Combien de chevaux dans ton écurie ?', club: 'Combien de chevaux et poneys au club ?' };
+
+f.addEventListener('change', e => {
+  const p = val('profil');
+  $('#suite').hidden = !p || p === 'aucun';
+  if (MOTS_NB[p]) $('#qNb').textContent = MOTS_NB[p];
+  $('#wAppli').hidden = !vals('outils').includes('appli');
+  // « Rien de tout ça » exclut le reste
+  if (e.target.name === 'soucis') {
+    const rien = f.querySelector('input[name="soucis"][value="rien"]');
+    if (e.target === rien && rien.checked) f.querySelectorAll('input[name="soucis"]').forEach(i => { if (i !== rien) i.checked = false; });
+    else if (e.target !== rien && e.target.checked) rien.checked = false;
+  }
+});
+$('#email').addEventListener('input', () => { $('#wBeta').hidden = !$('#email').value.trim(); });
+
+const nombre = id => { const v = $(id).value.trim().replace(',', '.'); if (!v) return null; const n = Number(v); return Number.isFinite(n) && n >= 0 && n <= 1000 ? Math.round(n * 100) / 100 : NaN; };
+function erreur(t, el) { const e = $('#err'); e.textContent = t; e.hidden = false; if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+
+f.addEventListener('submit', async ev => {
+  ev.preventDefault();
+  $('#err').hidden = true;   // l'erreur reste affichée jusqu'au prochain envoi : pas de saut de page sous le doigt
+  const profil = val('profil');
+  if (!profil) return erreur("Dis d'abord où vivent les chevaux dont tu t'occupes (première question).", f.querySelector('fieldset'));
+  const d = { v: 1, le: Date.now(), profil };
+  const src = new URLSearchParams(location.search).get('s');
+  if (src) d.source = src.slice(0, 40);
+  if (profil !== 'aucun') {
+    const pb = nombre('#prixBon'), pc = nombre('#prixCher');
+    if (Number.isNaN(pb) || Number.isNaN(pc)) return erreur('Les prix se donnent en euros par mois, par exemple 5.', $('#prixBon'));
+    const email = $('#email').value.trim();
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return erreur("L'adresse e-mail ne semble pas complète : vérifie-la, ou laisse le champ vide.", $('#email'));
+    if (email && !$('#beta').checked) return erreur("Pour être prévenu·e de l'essai, coche la case sous ton e-mail, ou laisse le champ vide.", $('#beta'));
+    Object.assign(d, { nb: val('nb'), dep: $('#dep').value.trim().slice(0, 40), soucis: vals('soucis'), outils: vals('outils'),
+      appli: vals('outils').includes('appli') ? $('#appli').value.trim().slice(0, 80) : '', temps: val('temps'), interet: val('interet'),
+      prio: val('prio'), prixBon: pb, prixCher: pc, remarque: $('#remarque').value.trim().slice(0, 1000) });
+    if (email) Object.assign(d, { email: email.slice(0, 120), beta: true });
+  }
+  const b = $('#go');
+  b.disabled = true; b.textContent = 'Envoi…';
+  try {
+    await Promise.race([setDoc(doc(collection(fs, 'sondage')), d), new Promise((_, ko) => setTimeout(() => ko(new Error('délai')), 15000))]);
+    try { localStorage.setItem(FAIT, String(Date.now())); } catch (e) { /* rien */ }
+    montrerMerci(profil === 'aucun' ? "Merci d'avoir pris le temps ! Ce questionnaire vise surtout les personnes qui s'occupent de chevaux. " : '');
+  } catch (e) {
+    erreur("L'envoi n'a pas marché. Vérifie ta connexion et réessaie : tes réponses sont toujours là.");
+    b.disabled = false; b.textContent = 'Envoyer mes réponses';
+  }
+});
+
+function montrerMerci(avant) {
+  $('#vueForm').hidden = true; $('#vueMerci').hidden = false;
+  if (avant) $('#merciTxt').textContent = avant + 'Tes réponses aident à construire une appli qui colle à la vraie vie des écuries.';
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>

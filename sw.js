@@ -1,5 +1,5 @@
 /* EquiValdi : garde l'appli disponible sans réseau. Les données passent par Firebase, qui a son propre cache. */
-const VERSION = 'equivaldi-20261112115244';
+const VERSION = 'equivaldi-20261112172722';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png', './icons/favicon-32.png',
   './fonts/outfit-latin-400-normal.woff2', './fonts/outfit-latin-500-normal.woff2', './fonts/outfit-latin-600-normal.woff2',
   './fonts/barlow-condensed-latin-500-normal.woff2', './fonts/barlow-condensed-latin-600-normal.woff2'];

@@ -208,6 +208,7 @@ VIEWS.admin = () => {
         <div class="stat"><b>${n('abonnee', 'a_vie')}</b><span>${pl(n('abonnee', 'a_vie'), 'abonnée')}</span></div></div>
       <p class="note">${n('a_vie')} à vie · ${n('expiree')} ${pl(n('expiree'), 'expirée')} · ${actives7} ${pl(actives7, 'ouverte')} ces 7 derniers jours · environ ${num(parMois, 0)} € par mois d'abonnements en cours (paiements de démonstration compris).</p>
       ${blocMsgs}
+      <div class="list"><button type="button" class="row" data-act="open-sondage">${lead('doc')}<div class="row-main"><div class="row-t">Questionnaire</div><div class="row-s">Les réponses au questionnaire public, en chiffres</div></div><span class="row-end">${ic('next', 'sm')}</span></button></div>
       ${aDessiner}
       ${segCtl('admFiltre', [['toutes', 'Toutes'], ['essai', 'Essai'], ['abo', 'Abonnées'], ['expiree', 'Expirées'], ['calmes', 'Calmes']], f, 'scroll')}
       <div class="list">${rows || '<div class="row"><div class="row-s">Aucune écurie ici.</div></div>'}</div>
