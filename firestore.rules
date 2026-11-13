@@ -22,7 +22,7 @@ service cloud.firestore {
     function texte(m, champ, n) { return !(champ in m) || (m[champ] is string && m[champ].size() <= n); }
     // une date notée maintenant (à un jour près, pour les horloges de téléphone décalées)
     function dateMaintenant(v) { return v is int && v > maintenant() - 86400000 && v < maintenant() + 86400000; }
-    function donnees() { return ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches', 'stocks', 'config']; }
+    function donnees() { return ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches', 'stocks', 'consignes', 'config']; }
 
     // Dans une écurie : membre (sa fiche existe), éditrice (gérante ou « Peut modifier »), gérante (celle de la structure)
     function membre(sid) { return connecte() && exists(fiche(sid, moi())); }
@@ -182,6 +182,30 @@ service cloud.firestore {
         allow read: if equipier(sid);
         allow get, list: if membre(sid) && resource.data.proprio == moi();
         allow write: if gerante(sid);
+        allow read, write: if admin();
+      }
+
+      // ---------- Consignes et messages (76-messages.js) ----------
+      // une consigne s'écrit comme le reste du carnet ; chacun de l'équipe, lecture seule comprise, coche « vu » pour lui seul
+      match /consignes/{id} {
+        allow update: if equipier(sid) && seulement(['lus', 'maj'])
+          && request.resource.data.lus.diff(resource.data.get('lus', {})).affectedKeys().hasOnly([moi()]);
+      }
+      // le fil d'un cheval de propriétaire : l'équipe et ce propriétaire, et personne d'autre
+      match /messages/{id} {
+        allow read: if equipier(sid);
+        allow get, list: if membre(sid) && resource.data.proprio == moi();
+        allow create: if (editeur(sid) || (membre(sid) && request.resource.data.proprio == moi() && request.resource.data.de.uid == moi()
+              && exists(/databases/$(database)/documents/structures/$(sid)/partages/$(request.resource.data.hid))
+              && get(/databases/$(database)/documents/structures/$(sid)/partages/$(request.resource.data.hid)).data.proprio == moi()))
+          && request.resource.data.keys().hasOnly(['id', 'hid', 'proprio', 'de', 'texte', 'le', 'luEcurie', 'luProprio', 'creePar', 'maj'])
+          && request.resource.data.hid is string && request.resource.data.proprio is string
+          && request.resource.data.texte is string && request.resource.data.texte.size() >= 1 && request.resource.data.texte.size() <= 1000
+          && dateMaintenant(request.resource.data.le);
+        // « lu » : l'équipe pour elle, le propriétaire pour lui
+        allow update: if equipier(sid) && seulement(['luEcurie', 'maj']);
+        allow update: if membre(sid) && resource.data.proprio == moi() && seulement(['luProprio', 'maj']);
+        allow delete: if gerante(sid) || (membre(sid) && resource.data.de.uid == moi());
         allow read, write: if admin();
       }
 

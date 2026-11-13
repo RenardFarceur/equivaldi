@@ -143,6 +143,17 @@ Une carte lue dans la base est remise au propre avant d'être dessinée (identif
 | champ en trop, profil inconnu | `keys().hasOnly`, `profil in [...]` | refusé |
 | lire, effacer | `admin()` seulement | refusé à tous les autres, comptes compris |
 
+## 13. Consignes et messages (13 novembre 2026)
+
+| Demande | Règle | Résultat |
+|---|---|---|
+| écrire une consigne | `consignes` dans `donnees()` : comme le reste du carnet | gérante et « Peut modifier » ; refusé à la lecture seule et au propriétaire |
+| cocher « J'ai vu » | `consignes` : `update` par tout équipier, seulement `lus` et `maj`, et seulement sa propre clé dans `lus` | accepté, lecture seule comprise ; cocher pour un autre est refusé |
+| lire le fil d'un cheval | `messages` : équipier, ou le propriétaire du message (`proprio == moi()`, requête filtrée) | un autre propriétaire ne voit rien |
+| écrire dans le fil | équipe qui peut modifier, ou le propriétaire pour un cheval dont la fiche partagée est à lui ; champs listés, texte de 1 à 1 000 caractères, date du jour | accepté ; propriétaire d'un autre cheval refusé |
+| marquer lu | l'équipe : `luEcurie` seulement ; le propriétaire : `luProprio` seulement | modifier le texte est refusé |
+| effacer | la gérante, ou l'auteur du message | refusé aux autres |
+
 ## Migration
 
 - Recopie de l'équipe (cas c) : seulement par l'ancienne gérante, pour un uid qui existe dans l'ancien `membres`, avec exactement le même rôle (`equipe` ou `lecture`).

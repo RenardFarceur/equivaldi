@@ -121,6 +121,12 @@ Le tracé s'enregistre au fil de l'eau : on peut s'arrêter et reprendre plus ta
 - `questionnaire.html` : 3 minutes, sans compte, pour l'étude de marché (profil, nombre de chevaux, soucis, outils, temps passé, intérêt, prix jugés justes, remarque, e-mail facultatif pour l'essai avec accord). `?s=facebook` au bout du lien note d'où vient la réponse.
 - Les réponses vont dans la collection `sondage` : n'importe qui peut en créer une, seule l'administration les lit (**règles Firestore à recoller**). Administration › *Questionnaire* : chiffres, médianes de prix par profil, remarques, e-mails pour l'essai, export CSV.
 
+## Consignes et messages
+
+- **Consignes** (accueil, et fiche du cheval) : une info courte pour toute l'équipe, pour un cheval ou pour l'écurie, jusqu'à une date (aujourd'hui, 3 jours, une semaine, un mois ou sans fin). Chacun touche « J'ai vu » ; la consigne affiche qui l'a vue. Les consignes pas encore vues ont une pastille. Le propriétaire en pension ne les voit pas.
+- **Messages avec le propriétaire** (formule Pro) : un fil par cheval entre l'écurie et son propriétaire inscrit, dans la fiche du cheval. Les messages non lus apparaissent sur l'accueil, des deux côtés.
+- Pas de notification sur le téléphone tant qu'il n'y a pas de serveur : on voit les nouveautés en ouvrant l'appli. Collections `consignes` et `messages` : **règles Firestore à recoller**.
+
 ## Points crottins
 
 Chaque coup de main rapporte des crottins (compteur en haut de l'écran, qui ouvre la boutique) : tâches cochées (une tâche rare rapporte plus qu'une quotidienne), rendez-vous gérés, concours et podiums, séances, entretien des prés, foin. Annuler une action retire ses crottins. Les récompenses s'échangent dans la boutique ; la gérante marque le bon *offert* une fois la récompense donnée.

@@ -49,7 +49,7 @@ const DEMO = (() => { const l = lis(K.ecurie); return !!(l && l.demo && l.sid ==
 const CONDITIONS = '2026-11';
 const CGU_LOCAL = 'equivaldi:conditions';
 const ecris = (k, v) => { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); return true; } catch (x) { return false; } };
-const COLS = ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches', 'stocks'];
+const COLS = ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches', 'stocks', 'consignes', 'messages'];
 const JOUR = 86400000;
 const ROLES = { gerante: 'Gérante', equipe: 'Peut modifier', lecture: 'Lecture seule', proprio: 'Propriétaire' };
 const ROLES_INVITES = ['equipe', 'lecture', 'proprio'];
@@ -170,6 +170,12 @@ function adaptateurProprio(sid, gerante) {
         const emet = () => { const l = ids.map(i => vus[i]).filter(x => x && x.exists); next({ docs: l, size: l.length, empty: !l.length, metadata: { fromCache: false, hasPendingWrites: false } }); };
         const stops = ids.map(i => A.doc('membres/' + i).onSnapshot(s => { vus[i] = s; emet(); }, e => { vus[i] = null; emet(); }));
         return () => stops.forEach(f => f && f());
+      }
+      if (c === 'messages') {
+        // le fil de ses chevaux avec l'écurie : seulement les messages qui le concernent
+        return onSnapshot(query(collection(fs, base + '/messages'), where('proprio', '==', U.uid)), { includeMetadataChanges: true },
+          q => next({ docs: q.docs.map(snapDoc), size: q.size, empty: q.empty, metadata: { fromCache: q.metadata.fromCache, hasPendingWrites: q.metadata.hasPendingWrites } }),
+          e => { if (err) err({ code: code(e), message: e.message }); });
       }
       return ecoute((q, e) => { if (e) { if (err) err({ code: code(e), message: e.message }); return; } const l = docs(q, c); next({ docs: l, size: l.length, empty: !l.length, metadata: meta(q) }); });
     }
@@ -951,20 +957,23 @@ async function reglesAnciennes(u, err) {
     lierSortie(root);
   });
 }
-// Lecture complète de l'ancien carnet, depuis le serveur
+// Lecture complète de l'ancien carnet, depuis le serveur. Seulement les collections qu'il avait : les règles
+// d'avant refusent toutes les autres (stocks, consignes, messages…), et une seule lecture refusée ferait tout échouer.
+const COLS_ANCIENS = ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches'];
 async function lireAncien(avecInvitations) {
   const src = { cols: {}, cfg: null, membres: {}, invitations: [] };
   const lots = await Promise.all([
-    ...COLS.map(c => getDocsFromServer(collection(fs, c))),
+    ...COLS_ANCIENS.map(c => getDocsFromServer(collection(fs, c))),
     getDocFromServer(doc(fs, 'config', 'reglages')),
     getDocsFromServer(collection(fs, 'membres')),
     avecInvitations ? getDocsFromServer(query(collection(fs, 'invitations'), where('par', '==', U.uid))) : null
   ]);
-  COLS.forEach((c, i) => { src.cols[c] = {}; lots[i].docs.forEach(d => { src.cols[c][d.id] = d.data(); }); });
-  const r = lots[COLS.length];
+  COLS.forEach(c => { src.cols[c] = {}; });
+  COLS_ANCIENS.forEach((c, i) => { lots[i].docs.forEach(d => { src.cols[c][d.id] = d.data(); }); });
+  const n = COLS_ANCIENS.length, r = lots[n];
   src.cfg = r.exists() ? r.data() : null;
-  lots[COLS.length + 1].docs.forEach(d => { src.membres[d.id] = d.data(); });
-  if (lots[COLS.length + 2]) src.invitations = lots[COLS.length + 2].docs.map(d => Object.assign({ email: String(d.id).toLowerCase() }, d.data()));
+  lots[n + 1].docs.forEach(d => { src.membres[d.id] = d.data(); });
+  if (lots[n + 2]) src.invitations = lots[n + 2].docs.map(d => Object.assign({ email: String(d.id).toLowerCase() }, d.data()));
   return src;
 }
 const fusionner = (a, b) => {

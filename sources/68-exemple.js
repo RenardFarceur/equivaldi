@@ -12,7 +12,7 @@ function donneesExemple() {
   const jourSem = iso => new Date(iso + 'T12:00:00').getDay();
   const M = { camille: { uid: 'ex-camille', nom: 'Camille' }, lea: { uid: 'ex-lea', nom: 'Léa' }, hugo: { uid: 'ex-hugo', nom: 'Hugo' }, ines: { uid: 'ex-ines', nom: 'Inès' } };
   const par = (q, iso, h = 9) => Object.assign({}, M[q], { t: ts(iso, h) });
-  const out = { cfg: null, carte: null, chevaux: {}, soins: {}, pres: {}, places: {}, entretiens: {}, foin: {}, concours: {}, seances: {}, taches: {}, stocks: {}, membres: {} };
+  const out = { cfg: null, carte: null, chevaux: {}, soins: {}, pres: {}, places: {}, entretiens: {}, foin: {}, concours: {}, seances: {}, taches: {}, stocks: {}, consignes: {}, messages: {}, membres: {} };
   let n = 0;
   const add = (coll, o) => { const id = o.id || `ex-${coll}-${++n}`; out[coll][id] = Object.assign({ id, maj: Date.now() }, o); return id; };
 
@@ -176,6 +176,16 @@ function donneesExemple() {
   const cop = art({ id: 'ex-st-cop', nom: 'Copeaux', cat: 'litiere', unite: 'ballot', contenance: 20, cu: 'kg', seuil: 3 });
   mvt(cop, -50, 'in', 14, { prix: 9.8, origine: 'Coopérative de Chauvigny', payePar: paye('camille') });
   jours(-48, -3, 5).forEach(a => mvt(cop, a, 'out', 1));
+
+  /* Consignes et fil avec Inès (76-messages.js) */
+  const H = 3600000, maintenant = Date.now();
+  const exQui = id => ({ uid: 'ex-' + id, nom: { camille: 'Camille', lea: 'Léa', hugo: 'Hugo', ines: 'Inès' }[id] });
+  add('consignes', { id: 'ex-cons1', texte: "Tornade boite un peu de l'antérieur gauche : au pas seulement, et on la garde au paddock.", hid: 'ex-tornade', jusqua: d(3), le: maintenant - 20 * H, par: exQui('camille'), lus: { 'ex-lea': { t: maintenant - 18 * H, nom: 'Léa' } } });
+  add('consignes', { id: 'ex-cons2', texte: 'Livraison de foin jeudi matin : laisser le portail du hangar ouvert.', hid: '', jusqua: d(5), le: maintenant - 3 * H, par: exQui('hugo'), lus: {} });
+  const msg = (n, de, texte, h, lu) => add('messages', { id: 'ex-msg' + n, hid: 'ex-pistache', proprio: 'ex-ines', de: Object.assign(exQui(de), { role: de === 'ines' ? 'proprio' : de === 'camille' ? 'gerante' : 'equipe' }), texte, le: maintenant - h * H, luEcurie: de !== 'ines' || lu, luProprio: de === 'ines' || lu });
+  msg(1, 'ines', 'Bonjour ! Pistache a bien mangé ce matin ? Elle boudait sa ration hier soir.', 26, true);
+  msg(2, 'lea', "Oui, tout fini ! On lui a mis un peu de luzerne en plus, elle a l'air en forme.", 25, true);
+  msg(3, 'ines', 'Merci Léa ! Je passe samedi vers 10 h : je pourrai la sortir au grand pré ?', 2, false);
   return out;
 }
 

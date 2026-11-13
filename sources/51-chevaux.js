@@ -92,7 +92,7 @@ function ficheHtml(h) {
   const dl = items.length ? `<dl class="dl">${items.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`
     : empty('Fiche à compléter', 'Date de naissance, race, robe, n° SIRE, transpondeur…');
   const notes = h.notes ? `<div class="card"><div class="eyebrow">Notes</div><div style="white-space:pre-wrap">${esc(h.notes)}</div></div>` : '';
-  return loc + tks + rap + proprieteHtml(h) + depensesChevalHtml(h) + section('Identité', dl + notes, `<button type="button" class="link" data-act="edit-cheval" data-id="${h.id}">${ic('edit', 'sm')}Modifier</button>`) + documentsHtml(h)
+  return loc + consignesCheval(h) + filRow(h) + tks + rap + proprieteHtml(h) + depensesChevalHtml(h) + section('Identité', dl + notes, `<button type="button" class="link" data-act="edit-cheval" data-id="${h.id}">${ic('edit', 'sm')}Modifier</button>`) + documentsHtml(h)
     // fiche de box à imprimer, avec ration et QR code (73-etiquettes.js)
     + `<div class="list"><button type="button" class="row" data-act="etiquettes" data-genre="box" data-id="${h.id}">${lead('qr')}<div class="row-main"><div class="row-t">Fiche de box</div><div class="row-s">Ration, à savoir et QR code, à imprimer pour la porte du box</div></div><span class="row-end">${ic('next', 'sm')}</span></button></div>`;
 }

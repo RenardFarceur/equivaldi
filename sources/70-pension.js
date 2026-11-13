@@ -228,6 +228,7 @@ function accueilProprio() {
     return { title: "Aujourd'hui", html: html.join('') };
   }
   const t = todayISO();
+  html.push(messagesProprioSection());   // réponses de l'écurie pas encore lues (76-messages.js)
   html.push(section(hs.length > 1 ? 'Tes chevaux' : 'Ton cheval', `<div class="list">${hs.map(h => {
     const pl = openPlace(h.id), p = pl && get('pres', pl.preId);
     const ou = p ? `${p.nom} depuis ${diffDays(pl.debut, t) <= 0 ? "aujourd'hui" : nJ(diffDays(pl.debut, t))}` : 'Au box';

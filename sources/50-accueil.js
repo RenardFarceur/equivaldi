@@ -128,6 +128,8 @@ VIEWS.accueil = () => {
   if (sync.readOnly) { if (!ecurieFigee()) html.push(`<div class="banner ro">${ic('lock')}<div class="row-main"><b>Lecture seule</b><span class="small">${esc(roMsg())}</span></div></div>`); }
   else html.push(quickHtml());
   html.push(demarrageHtml());
+  html.push(messagesSection());   // messages de propriétaires non lus (76-messages.js)
+  html.push(consignesSection());  // consignes de l'écurie
   html.push(presentsHtml());
   html.push(tachesSection());
   const al = alerts();

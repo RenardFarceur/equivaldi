@@ -1,6 +1,6 @@
 
 /* ---------- Données : copie locale + base de l'artifact ---------- */
-const COLS = ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches', 'stocks'];
+const COLS = ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches', 'stocks', 'consignes', 'messages'];
 const S = { chevaux: {}, soins: {}, pres: {}, places: {}, entretiens: {}, foin: {}, concours: {}, seances: {}, taches: {}, cfg: null, carte: null };
 /* Fiches des membres (version installable) : lues avec le carnet, jamais exportées ni effacées avec lui */
 const EXTRA = window.EQ_MODE ? ['membres'] : [];
