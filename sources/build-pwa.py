@@ -52,6 +52,8 @@ open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(html)
 open(os.path.join(OUT, 'sw.js'), 'w', encoding='utf-8').write(src('pwa/sw.js').replace('__VERSION__', VERSION))
 shutil.copy(os.path.join(SRC, 'pwa/firestore.rules'), os.path.join(OUT, 'firestore.rules'))
 open(os.path.join(OUT, '.nojekyll'), 'w').write('')
+# domaine personnalisé pour GitHub Pages (le fichier reste à la racine du dépôt)
+open(os.path.join(OUT, 'CNAME'), 'w').write('equivaldi.fr\n')
 # polices (licence SIL OFL jointe)
 os.makedirs(os.path.join(OUT, 'fonts'), exist_ok=True)
 for f in glob.glob(os.path.join(SRC, 'fonts', '*')):

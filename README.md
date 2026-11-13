@@ -5,8 +5,8 @@ Elle s'installe depuis le navigateur, fonctionne sans réseau et se partage entr
 
 ## Mise en route (une seule fois)
 
-1. **Publier le site** : dans ce dépôt, ouvrir *Settings* › *Pages*. Sous *Build and deployment*, choisir *Deploy from a branch*, la branche `main` et le dossier `/ (root)`, puis *Save*. Après une à deux minutes, l'adresse du carnet s'affiche, du type `https://renardfarceur.github.io/equivaldi/`.
-2. **Autoriser cette adresse dans Firebase** : console Firebase › *Authentication* › *Paramètres* › *Domaines autorisés* › *Ajouter un domaine* : `renardfarceur.github.io`.
+1. **Publier le site** : dans ce dépôt, ouvrir *Settings* › *Pages*. Sous *Build and deployment*, choisir *Deploy from a branch*, la branche `main` et le dossier `/ (root)`, puis *Save*. Après une à deux minutes, l'adresse du carnet s'affiche. Le domaine personnalisé `equivaldi.fr` est dans le fichier `CNAME` (généré par `build-pwa.py`) : vérifié dans *Settings* › *Pages*, puis cocher *Enforce HTTPS*.
+2. **Autoriser cette adresse dans Firebase** : console Firebase › *Authentication* › *Paramètres* › *Domaines autorisés* › *Ajouter un domaine* : `equivaldi.fr` et `www.equivaldi.fr`.
 3. **Coller les règles d'accès** : console Firebase › *Firestore Database* › *Règles*. Remplacer tout le contenu par celui du fichier [`firestore.rules`](firestore.rules), puis *Publier*. Ce sont elles qui empêchent quiconque de lire ou d'écrire dans une écurie dont il n'est pas membre (vérification cas par cas : [`sources/pwa/regles-verification.md`](sources/pwa/regles-verification.md)).
 4. **Créer son compte** : ouvrir l'adresse du carnet, *Créer un compte* (prénom, adresse e-mail, mot de passe), puis cliquer sur le lien de confirmation reçu par e-mail. Aucune gérante n'est inscrite d'avance : la personne qui crée une écurie en devient la gérante.
 5. **Créer son écurie** : à la première connexion, *Créer mon écurie* (nom, commune facultative). Pour reprendre un carnet sauvegardé : *Réglages* › *Restaurer* et choisir le fichier.
@@ -69,7 +69,7 @@ Le tracé s'enregistre au fil de l'eau : on peut s'arrêter et reprendre plus ta
 ## Démarrer, exemple, rubriques (11 novembre 2026)
 
 - **Bien démarrer** : sur l'accueil d'une écurie de moins de 2 mois, une liste de premiers pas qui se cochent toute seule (rubriques, chevaux, prés, tâches, soins, équipe). *Masquer* la range sur ce téléphone.
-- **Écurie d'exemple** : *Visiter l'écurie d'exemple* sur l'écran de connexion (sans compte), dans *Bien démarrer*, ou par le lien `https://renardfarceur.github.io/equivaldi/?exemple` (site, QR code). Cinq chevaux, la carte des prés, une rotation, des soins, des concours et une équipe inventés. On visite en tant que Camille, la gérante ; tout se touche, rien ne part en ligne, tout repart à zéro en sortant (*Créer mon compte*, *Quitter l'exemple* ou *Revenir à mon écurie*). Le contenu est fabriqué par `sources/68-exemple.js`.
+- **Écurie d'exemple** : *Visiter l'écurie d'exemple* sur l'écran de connexion (sans compte), dans *Bien démarrer*, ou par le lien `https://equivaldi.fr/?exemple` (site, QR code). Cinq chevaux, la carte des prés, une rotation, des soins, des concours et une équipe inventés. On visite en tant que Camille, la gérante ; tout se touche, rien ne part en ligne, tout repart à zéro en sortant (*Créer mon compte*, *Quitter l'exemple* ou *Revenir à mon écurie*). Le contenu est fabriqué par `sources/68-exemple.js`.
 - **Rubriques** : la gérante masque Prés, Foin, Concours ou Entraînement pour toute l'écurie (*Réglages* › *Rubriques*). Onglets, actions rapides, alertes, agenda, fiches et barème des crottins suivent. Rien n'est effacé.
 
 ## Messages, conditions et compte
