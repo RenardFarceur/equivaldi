@@ -25,7 +25,7 @@ const ED = {
 /* Vue aérienne de l'IGN (Géoplateforme, photographies aériennes, licence ouverte) : une adresse ou la position
    du téléphone, puis un carré de 4 × 4 tuiles (≈ 420 m de côté au niveau 18), nord en haut, échelle connue. Le plan
    enregistré ne garde que les coordonnées des tuiles : les images sont relues chez l'IGN. */
-const IGN = { n: 4, zMin: 16, zMax: 19, z: 18, tuile: 256 };
+const IGN = { n: 4, zMin: 15, zMax: 19, z: 18, tuile: 256, marge: 2 };   // marge : tuiles en plus autour du carré pendant le cadrage
 const ignUrl = (z, x, y) => `https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&TILEMATRIXSET=PM&TILEMATRIX=${z | 0}&TILEROW=${y | 0}&TILECOL=${x | 0}&FORMAT=image/jpeg`;
 const lonX = (lon, z) => (lon + 180) / 360 * 2 ** z;
 const latY = (lat, z) => { const r = lat * Math.PI / 180; return (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * 2 ** z; };
@@ -416,7 +416,7 @@ function edPanneau(et) {
   }
   if (et === 'cadrage') {
     const z = ED.img.ign.z;
-    return `<p class="ed-aide"><b>Cadre tes prés.</b> Fais glisser la vue ; les flèches décalent le carré si les prés débordent. Tout doit tenir dedans.</p>
+    return `<p class="ed-aide"><b>Cadre tes prés dans le carré clair.</b> Fais glisser la photo, écarte ou rapproche deux doigts pour zoomer : le carré suit. Tout doit tenir dedans.</p>
       <div class="ed-fleches">${[['n', '↑', 'Vers le nord'], ['o', '←', "Vers l'ouest"], ['e', '→', "Vers l'est"], ['s', '↓', 'Vers le sud']].map(([d, t, a]) => `<button type="button" class="btn small" data-act="ed-decale" data-d="${d}" aria-label="${a}">${t}</button>`).join('')}
       <button type="button" class="btn small" data-act="ed-ignz" data-z="-1"${z <= IGN.zMin ? ' disabled' : ''}>Plus large</button><button type="button" class="btn small" data-act="ed-ignz" data-z="1"${z >= IGN.zMax ? ' disabled' : ''}>Plus près</button></div>
       ${ED.avant && ED.avant.t.els.length ? `<p class="small muted">Les espaces déjà tracés suivront la nouvelle vue.</p>` : ''}
@@ -483,24 +483,35 @@ function majEditeur() {
   if (ED.imgEtat === 'attente' && DB) edEnvoyerPlan();
   const host = ed.querySelector('.ed-zone');
   if (!host || !ED.img) { ED.host = null; ED.svg = null; return; }
-  if (host !== ED.host || !host.querySelector('svg')) { edMonte(host); return; }
+  if (host !== ED.host || !host.querySelector('svg') || ED.monte !== ED.img || ED.monteCad !== !!ED.cadrage) { edMonte(host); return; }
   edDessine();
 }
 function edMonte(host) {
-  ED.host = host;
+  ED.host = host; ED.monte = ED.img; ED.monteCad = !!ED.cadrage;
   host.innerHTML = `<svg class="ed-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Ton plan"><image class="ed-img" x="0" y="0" width="${Number(ED.img.w)}" height="${Number(ED.img.h)}" preserveAspectRatio="none"/><g class="ed-els"></g><g class="ed-curg"></g><g class="ed-ech"></g><g class="ed-hs"></g></svg>
     <div class="ed-outils c-zoom"><button type="button" data-edzoom="1" aria-label="Rapprocher">${ic('plus', 'sm')}</button><button type="button" data-edzoom="-1" aria-label="Éloigner">${ic('minus', 'sm')}</button><button type="button" data-edzoom="0" aria-label="Tout voir">${ic('cible', 'sm')}</button></div>`;
   ED.svg = host.querySelector('svg');
   if (ED.img.ign) {
     // les tuiles de l'IGN, posées côte à côte (adresses construites avec des nombres seulement)
-    const g = ED.img.ign, T = IGN.tuile, im = ED.svg.querySelector('.ed-img'), NS = 'http://www.w3.org/2000/svg';
-    for (let j = 0; j < g.n; j++) for (let i = 0; i < g.n; i++) {
+    // pendant le cadrage, une marge de tuiles autour du carré : on voit ce qu'il y a à côté en faisant glisser
+    const g = ED.img.ign, T = IGN.tuile, im = ED.svg.querySelector('.ed-img'), NS = 'http://www.w3.org/2000/svg', M = ED.cadrage ? IGN.marge : 0, max = 2 ** g.z;
+    for (let j = -M; j < g.n + M; j++) for (let i = -M; i < g.n + M; i++) {
+      if (g.x0 + i < 0 || g.y0 + j < 0 || g.x0 + i >= max || g.y0 + j >= max) continue;
       const t = document.createElementNS(NS, 'image');
       ['x', i * T, 'y', j * T, 'width', T + .5, 'height', T + .5].reduce((a, v, k, l) => { if (k % 2 === 0) t.setAttribute(v, l[k + 1]); return a; }, 0);
       t.setAttribute('preserveAspectRatio', 'none');
       t.setAttribute('class', 'ed-tuile');
       t.setAttribute('href', ignUrl(g.z, g.x0 + i, g.y0 + j));
       im.parentNode.insertBefore(t, im);
+    }
+    if (M) {
+      // le carré qui sera gardé, et l'extérieur assombri
+      const voile = document.createElementNS(NS, 'path'), cadre = document.createElementNS(NS, 'rect'), L = -M * T, R = (g.n + M) * T;
+      voile.setAttribute('d', `M${L} ${L}H${R}V${R}H${L}Z M0 0V${g.n * T}H${g.n * T}V0Z`);
+      voile.setAttribute('class', 'ed-voile'); voile.setAttribute('fill-rule', 'evenodd');
+      ['x', 0, 'y', 0, 'width', g.n * T, 'height', g.n * T].reduce((a, v, k, l) => { if (k % 2 === 0) cadre.setAttribute(v, l[k + 1]); return a; }, 0);
+      cadre.setAttribute('class', 'ed-cadre');
+      im.parentNode.insertBefore(voile, im); im.parentNode.insertBefore(cadre, im);
     }
     im.remove();
     host.insertAdjacentHTML('beforeend', '<span class="ed-credit">© IGN</span>');
@@ -509,6 +520,7 @@ function edMonte(host) {
     const z = Number(b.dataset.edzoom);
     if (!z) ED.vue = null; else edZoomA(ED.W / 2, ED.H / 2, z > 0 ? 1.6 : 1 / 1.6);
     edApplique(true);
+    edSuivre();
   }));
   edGestes(ED.svg);
   if (ED.ro) ED.ro.disconnect();
@@ -526,7 +538,12 @@ function edTaille() {
 const edFit = () => Math.min(ED.W / ED.img.w, ED.H / ED.img.h) || 1;
 function edVue() { if (!ED.vue) ED.vue = { k: 1, cx: ED.img.w / 2, cy: ED.img.h / 2 }; return ED.vue; }
 function edVB() { const v = edVue(), k = edFit() * v.k, w = ED.W / k, h = ED.H / k; return { x: v.cx - w / 2, y: v.cy - h / 2, w, h, k }; }
-function edBorne() { const v = edVue(); v.k = Math.min(14, Math.max(1, v.k)); v.cx = Math.min(ED.img.w, Math.max(0, v.cx)); v.cy = Math.min(ED.img.h, Math.max(0, v.cy)); }
+const edKBornes = () => ED.cadrage && ED.img && ED.img.ign ? [0.4, 4] : [1, 14];
+function edBorne() {
+  const v = edVue(), [k0, k1] = edKBornes(), m = ED.cadrage && ED.img.ign ? IGN.marge * IGN.tuile : 0;
+  v.k = Math.min(k1, Math.max(k0, v.k));
+  v.cx = Math.min(ED.img.w + m, Math.max(-m, v.cx)); v.cy = Math.min(ED.img.h + m, Math.max(-m, v.cy));
+}
 function edApplique(redessine) {
   if (!ED.svg || !ED.W) return;
   edBorne();
@@ -536,7 +553,8 @@ function edApplique(redessine) {
 }
 function edZoomA(sx, sy, f) {
   const v = edVue(), vb = edVB(), ux = vb.x + sx / vb.k, uy = vb.y + sy / vb.k;
-  v.k = Math.min(14, Math.max(1, v.k * f));
+  const [k0, k1] = edKBornes();
+  v.k = Math.min(k1, Math.max(k0, v.k * f));
   const k2 = edFit() * v.k;
   v.cx = ux - sx / k2 + ED.W / k2 / 2;
   v.cy = uy - sy / k2 + ED.H / k2 / 2;
@@ -667,14 +685,15 @@ function edGestes(svg) {
     if (!pts.has(e.pointerId)) return;
     pts.delete(e.pointerId);
     if (!g) return;
-    if (g.type === 'pince') { if (!pts.size) g = null; return; }
+    if (g.type === 'pince') { if (!pts.size) { g = null; edSuivre(); } return; }
     if (g.type === 'poignee') { edFinBouge(); g = null; return; }
     if (g.type === 'attente' && e.type === 'pointerup') edTape(versImage(loc(e)), g.po, g.cible);
+    if (g.type === 'pan') edSuivre();
     g = null;
   };
   svg.addEventListener('pointerup', fin);
   svg.addEventListener('pointercancel', fin);
-  svg.addEventListener('wheel', e => { e.preventDefault(); const p = loc(e); edZoomA(p[0], p[1], Math.exp(-e.deltaY * .0022)); edApplique(true); }, { passive: false });
+  svg.addEventListener('wheel', e => { e.preventDefault(); const p = loc(e); edZoomA(p[0], p[1], Math.exp(-e.deltaY * .0022)); edApplique(true); clearTimeout(ED.suivreT); ED.suivreT = setTimeout(edSuivre, 350); }, { passive: false });
 }
 function edTape(p, po, cible) {
   const et = edEtape(), t = ED.t;
@@ -786,9 +805,9 @@ ACT['ed-nouveau-plan'] = () => {
 };
 ACT['ed-renvoyer'] = () => { edEnvoyerPlan(); render(); };
 /* ----- Vue aérienne de l'IGN ----- */
-function edCadrer(lat, lon, z = IGN.z) {
+function edCadrer(lat, lon, z = IGN.z, k = 1) {
   const c = ignCadre(lat, lon, z);
-  Object.assign(ED, { img: c.img, imgEtat: '', cadrage: true, geo: null, etape: null, cur: null, sel: null, som: null, apercu: null, vue: { k: 1.4, cx: c.cx, cy: c.cy }, t: { w: c.img.w, h: c.img.h, ech: null, rot: 0, els: [] } });
+  Object.assign(ED, { img: c.img, imgEtat: '', cadrage: true, geo: null, etape: null, cur: null, sel: null, som: null, apercu: null, vue: { k, cx: c.cx, cy: c.cy }, t: { w: c.img.w, h: c.img.h, ech: null, rot: 0, els: [] } });
   render();
 }
 ACT['ed-chercher'] = async () => {
@@ -821,17 +840,27 @@ function edCentre() {
   const g = ED.img.ign, v = edVue();
   return { lon: xLon(g.x0 + v.cx / IGN.tuile, g.z), lat: yLat(g.y0 + v.cy / IGN.tuile, g.z) };
 }
+// après un glisser ou un pincer pendant le cadrage : le carré se recentre sur ce qu'on regarde,
+// et passe au niveau d'image suivant quand on s'est beaucoup éloigné ou rapproché
+function edSuivre() {
+  if (!ED.cadrage || !ED.img || !ED.img.ign) return;
+  const g = ED.img.ign, v = edVue(), T = IGN.tuile;
+  let z = g.z, k = v.k;
+  if (k < 0.7 && z > IGN.zMin) { z--; k *= 2; } else if (k > 2.4 && z < IGN.zMax) { z++; k /= 2; }
+  if (z === g.z && Math.abs(v.cx - ED.img.w / 2) < T / 2 && Math.abs(v.cy - ED.img.h / 2) < T / 2) return;
+  const c = edCentre();
+  edCadrer(c.lat, c.lon, z, k);
+}
 ACT['ed-decale'] = d => {
   if (!ED.img || !ED.img.ign) return;
   const g = ED.img.ign, k = { n: [0, -1], s: [0, 1], o: [-1, 0], e: [1, 0] }[d.d] || [0, 0], c = edCentre();
   const T = IGN.tuile, x = lonX(c.lon, g.z) + k[0], y = latY(c.lat, g.z) + k[1];
-  edCadrer(yLat(y, g.z), xLon(x, g.z), g.z);
-  ED.vue.k = edVue().k;
+  edCadrer(yLat(y, g.z), xLon(x, g.z), g.z, edVue().k);
 };
 ACT['ed-ignz'] = d => {
   if (!ED.img || !ED.img.ign) return;
   const z = Math.min(IGN.zMax, Math.max(IGN.zMin, ED.img.ign.z + Number(d.z))), c = edCentre();
-  edCadrer(c.lat, c.lon, z);
+  edCadrer(c.lat, c.lon, z, edVue().k);
 };
 // revenir à la vue aérienne depuis le tracé, autour de ce qu'on regarde ; le tracé est gardé de côté
 ACT['ed-recadrer'] = () => {
