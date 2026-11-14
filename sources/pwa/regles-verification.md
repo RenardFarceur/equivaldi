@@ -82,7 +82,7 @@ Une écurie est **active** si son essai court encore, si son abonnement est pay�
 
 ## 7. Administration EquiValdi
 
-Le compte `bennizdu03@gmail.com` (adresse confirmée) lit et écrit toutes les écuries : leur fiche (dont l'abonnement), leur équipe, leur carnet, leurs invitations, et la liste de toutes les écuries. Il n'a de fiche de membre dans aucune écurie : personne ne le voit dans son équipe. Un autre compte qui lit la liste de toutes les écuries est refusé.
+Les comptes d'administration `bennizdu03@gmail.com` et `celiacourtois8@gmail.com` (adresse confirmée) lisent et écrivent toutes les écuries : leur fiche (dont l'abonnement), leur équipe, leur carnet, leurs invitations, et la liste de toutes les écuries. `bennizdu03@gmail.com` n'a de fiche de membre dans aucune écurie : personne ne le voit dans son équipe. `celiacourtois8@gmail.com` reste aussi la gérante de son écurie, comme avant. Un autre compte qui lit la liste de toutes les écuries est refusé.
 
 ## 8. Carte des prés (sans nouvelle règle)
 

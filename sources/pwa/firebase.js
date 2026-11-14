@@ -57,7 +57,7 @@ const roleInvite = r => ROLES_INVITES.includes(r) ? r : 'equipe';
 const ecrit = role => role === 'gerante' || role === 'equipe';
 // Administration EquiValdi : ce compte gère toutes les écuries sans en être membre (les règles d'accès le connaissent aussi).
 // Dans une écurie dont il n'est pas membre, il agit sous le nom « EquiValdi » et n'apparaît dans aucune équipe.
-const ADMIN_MAIL = 'bennizdu03@gmail.com';
+const ADMIN_MAILS = ['bennizdu03@gmail.com', 'celiacourtois8@gmail.com'];   // comptes d'administration (les mêmes que dans firestore.rules)
 const FANTOME = { uid: 'equivaldi', nom: 'EquiValdi' };
 // Abonnement : essai de 2 mois sans carte, puis 10 €/mois ou 100 €/an
 // deux formules (décidé le 12 novembre 2026) : « À la maison » et « Pro » (propriétaires en pension, relevés)
@@ -437,7 +437,7 @@ async function estMembre(sid) {
 
 /* ---------- Parcours à la connexion ---------- */
 async function entrer(u) {
-  U = u; MAIL = adresse(u); ADMIN = MAIL === ADMIN_MAIL;
+  U = u; MAIL = adresse(u); ADMIN = ADMIN_MAILS.includes(MAIL);
   const local = lis(K.ecurie);
   // un autre compte s'est servi de ce téléphone : ses écuries n'ont rien à faire ici
   if (local && local.uid && local.uid !== u.uid) { purgerEcuries(); location.reload(); return; }

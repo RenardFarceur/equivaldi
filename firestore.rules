@@ -33,7 +33,7 @@ service cloud.firestore {
     function gerante(sid) { return connecte() && get(structure(sid)).data.gerante == moi(); }
 
     // Administration EquiValdi : gère toutes les écuries sans en être membre (n'apparaît dans aucune équipe)
-    function admin() { return connecte() && mail() == 'bennizdu03@gmail.com'; }
+    function admin() { return connecte() && mail() in ['bennizdu03@gmail.com', 'celiacourtois8@gmail.com']; }
 
     // Écurie active : essai en cours, abonnement payé, ou à vie (fondatrice, ou créée avant le 6 novembre 2026 à 12 h)
     function actif(sid) {
