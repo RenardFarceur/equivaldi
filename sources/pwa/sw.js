@@ -21,7 +21,8 @@ self.addEventListener('fetch', e => {
   if (!isStatic(u)) return;   // base de données et connexion : jamais mises en cache ici
   if (req.mode === 'navigate') {
     // la page : réseau d'abord pour recevoir les mises à jour, cache sans réseau
-    e.respondWith(fetch(req).then(r => { const c = r.clone(); caches.open(VERSION).then(x => x.put('./index.html', c)); return r; })
+    // « no-cache » : toujours redemander la page au serveur (sinon le cache du navigateur peut garder l'ancienne version plusieurs minutes)
+    e.respondWith(fetch(req.url, { cache: 'no-cache', credentials: 'same-origin' }).then(r => { const c = r.clone(); caches.open(VERSION).then(x => x.put('./index.html', c)); return r; })
       .catch(() => caches.match('./index.html')));
     return;
   }

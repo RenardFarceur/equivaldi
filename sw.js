@@ -1,5 +1,5 @@
 /* EquiValdi : garde l'appli disponible sans réseau. Les données passent par Firebase, qui a son propre cache. */
-const VERSION = 'equivaldi-20261114122304';
+const VERSION = 'equivaldi-20261114122933';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png', './icons/favicon-32.png',
   './fonts/outfit-latin-400-normal.woff2', './fonts/outfit-latin-500-normal.woff2', './fonts/outfit-latin-600-normal.woff2',
   './fonts/barlow-condensed-latin-500-normal.woff2', './fonts/barlow-condensed-latin-600-normal.woff2'];
@@ -21,7 +21,8 @@ self.addEventListener('fetch', e => {
   if (!isStatic(u)) return;   // base de données et connexion : jamais mises en cache ici
   if (req.mode === 'navigate') {
     // la page : réseau d'abord pour recevoir les mises à jour, cache sans réseau
-    e.respondWith(fetch(req).then(r => { const c = r.clone(); caches.open(VERSION).then(x => x.put('./index.html', c)); return r; })
+    // « no-cache » : toujours redemander la page au serveur (sinon le cache du navigateur peut garder l'ancienne version plusieurs minutes)
+    e.respondWith(fetch(req.url, { cache: 'no-cache', credentials: 'same-origin' }).then(r => { const c = r.clone(); caches.open(VERSION).then(x => x.put('./index.html', c)); return r; })
       .catch(() => caches.match('./index.html')));
     return;
   }

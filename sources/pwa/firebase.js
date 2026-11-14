@@ -1639,5 +1639,18 @@ else {
 
 /* ---------- Hors ligne : mise en cache de l'appli ---------- */
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+  const avaitControleur = !!navigator.serviceWorker.controller;
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').then(reg => {
+    // l'appli installée reste souvent ouverte en arrière-plan : on regarde s'il y a du nouveau en revenant dessus
+    let vu = Date.now();
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden || Date.now() - vu < 5 * 60000) return;
+      vu = Date.now(); reg.update().catch(() => {});
+    });
+  }).catch(() => {}));
+  // une nouvelle version vient de s'installer : proposer de recharger (jamais d'office, une saisie peut être en cours)
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!avaitControleur) return;
+    toast('Nouvelle version d\'EquiValdi', { action: { label: 'Recharger', fn: () => location.reload() }, duree: 15000 });
+  });
 }

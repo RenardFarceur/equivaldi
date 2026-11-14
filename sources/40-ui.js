@@ -203,13 +203,14 @@ function toast(msg, o = {}) {
   const el = $('#toast');
   if (!el) return;
   el.className = 'toast' + (o.danger ? ' danger' : '') + (o.fete ? ' fete' : '');
-  el.innerHTML = `${o.fete ? brandMark('toast-cheval') : ''}<span>${esc(msg)}</span>${o.undo ? '<button type="button" id="toastUndo">Annuler</button>' : ''}`;
+  el.innerHTML = `${o.fete ? brandMark('toast-cheval') : ''}<span>${esc(msg)}</span>${o.undo ? '<button type="button" id="toastUndo">Annuler</button>' : o.action ? `<button type="button" id="toastAct">${esc(o.action.label)}</button>` : ''}`;
   el.hidden = false;
   void el.offsetWidth;            // rejoue l'apparition, même si un message était déjà affiché
   el.classList.add('pop');
   if (o.undo) $('#toastUndo').onclick = () => { el.hidden = true; o.undo(); toast('Annulé'); };
+  else if (o.action) $('#toastAct').onclick = () => { el.hidden = true; o.action.fn(); };
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { el.hidden = true; }, o.undo ? 6000 : 3400);
+  toastTimer = setTimeout(() => { el.hidden = true; }, o.duree || (o.undo ? 6000 : 3400));
 }
 
 /* ---------- Petits effets : rebond, confettis en crinière, galop de fête ---------- */
