@@ -18,7 +18,7 @@ const ED_T = {
 const ED_ORDRE = ['pre', 'carriere', 'piste', 'verger', 'abri', 'eau'];
 const ED_SURFACES = ['pre', 'carriere', 'verger'];
 const ED = {
-  sid: null, etape: null, img: null, imgEtat: '', chargement: null, t: null,
+  sid: null, etape: null, img: null, imgEtat: '', chargement: null, t: null, avant: null,
   cur: null, sel: null, som: null, vue: null, host: null, svg: null, ro: null, W: 0, H: 0,
   apercu: null, apercuV: 0, sauveT: null, cadrage: false, geo: null
 };
@@ -250,7 +250,7 @@ function edPrepare() {
   if (ED.sid === sid && ED.t) return;
   clearTimeout(ED.sauveT);
   const tr = S.carte && S.carte.trace;
-  Object.assign(ED, { sid, etape: null, img: null, imgEtat: '', chargement: null, cur: null, sel: null, som: null, vue: null, apercu: null, sauveT: null, cadrage: false, geo: null,
+  Object.assign(ED, { sid, etape: null, img: null, imgEtat: '', chargement: null, cur: null, sel: null, som: null, vue: null, apercu: null, sauveT: null, cadrage: false, geo: null, avant: null,
     t: nettoieTrace(tr) });
 }
 ACT['carte-editer'] = () => {
@@ -288,7 +288,7 @@ async function edFichier(f) {
   ED.imgEtat = 'prep'; render();
   try {
     const im = await edReduire(f);
-    Object.assign(ED, { img: im, vue: null, etape: 'echelle', cur: null, sel: null, som: null, apercu: null, cadrage: false, geo: null, t: { w: im.w, h: im.h, ech: null, rot: 0, els: [] } });
+    Object.assign(ED, { img: im, vue: null, etape: 'echelle', cur: null, sel: null, som: null, apercu: null, cadrage: false, geo: null, avant: null, t: { w: im.w, h: im.h, ech: null, rot: 0, els: [] } });
     edEnvoyerPlan();
     edSauve(true);
   } catch (e) {
@@ -333,7 +333,7 @@ function edSauve(now) {
   ED.sauveT = null;
   const go = () => {
     ED.sauveT = null;
-    if (!ED.t || ED.sid !== idEcurie(ecurieOuverte())) return;
+    if (!ED.t || ED.sid !== idEcurie(ecurieOuverte()) || (ED.cadrage && ED.avant)) return;
     putCarte(Object.assign({}, S.carte || {}, { trace: clone(ED.t), tmaj: Date.now() }));
   };
   if (now) go(); else ED.sauveT = setTimeout(go, 1200);
@@ -419,7 +419,8 @@ function edPanneau(et) {
     return `<p class="ed-aide"><b>Cadre tes prés.</b> Fais glisser la vue ; les flèches décalent le carré si les prés débordent. Tout doit tenir dedans.</p>
       <div class="ed-fleches">${[['n', '↑', 'Vers le nord'], ['o', '←', "Vers l'ouest"], ['e', '→', "Vers l'est"], ['s', '↓', 'Vers le sud']].map(([d, t, a]) => `<button type="button" class="btn small" data-act="ed-decale" data-d="${d}" aria-label="${a}">${t}</button>`).join('')}
       <button type="button" class="btn small" data-act="ed-ignz" data-z="-1"${z <= IGN.zMin ? ' disabled' : ''}>Plus large</button><button type="button" class="btn small" data-act="ed-ignz" data-z="1"${z >= IGN.zMax ? ' disabled' : ''}>Plus près</button></div>
-      <div class="btnrow"><button type="button" class="btn primary" data-act="ed-ign-ok">${ic('check', 'sm')}Utiliser cette vue</button><button type="button" class="btn small" data-act="ed-nouveau-plan">Autre adresse</button></div>
+      ${ED.avant && ED.avant.t.els.length ? `<p class="small muted">Les espaces déjà tracés suivront la nouvelle vue.</p>` : ''}
+      <div class="btnrow"><button type="button" class="btn primary" data-act="ed-ign-ok">${ic('check', 'sm')}Utiliser cette vue</button>${ED.avant ? `<button type="button" class="btn small" data-act="ed-recadrer-annuler">Annuler</button>` : ''}${ED.avant && ED.avant.t.els.length ? '' : `<button type="button" class="btn small" data-act="ed-nouveau-plan">Autre adresse</button>`}</div>
       <p class="small muted">≈ ${num(ignMpp(ED.img.lat, z) * ED.img.w, 0)} m de côté · Photographies aériennes © IGN</p>`;
   }
   if (et === 'echelle') {
@@ -457,7 +458,7 @@ function edPanneau(et) {
     return `${note}<p class="ed-aide"><b>Ajoute chaque espace</b> en touchant ses coins sur le plan, puis regarde la maquette. ${esc(edResume(t.els))}</p>
       <div class="ed-ajout">${ED_ORDRE.map(ty => `<button type="button" class="chip" data-act="ed-ajout" data-type="${ty}"><i class="ed-pastille et-${ty}"></i>${ED_T[ty].l}</button>`).join('')}</div>
       <div class="btnrow"><button type="button" class="btn primary" data-act="ed-apercu"${zonesOk ? '' : ' disabled'}>Voir la maquette</button>
-      <button type="button" class="btn small" data-act="ed-reechelle">${ic('regle', 'sm')}Échelle</button>
+      ${ED.img && ED.img.ign ? `<button type="button" class="btn small" data-act="ed-recadrer">${ic('cible', 'sm')}Recadrer la vue</button>` : `<button type="button" class="btn small" data-act="ed-reechelle">${ic('regle', 'sm')}Échelle</button>`}
       ${edDemandable() ? `<button type="button" class="btn small" data-act="ed-demander">EquiValdi la dessine pour moi</button>` : ''}
       ${t.els.length ? `<button type="button" class="btn small" data-act="ed-nouveau-plan" data-confirm="Effacer le tracé ?">Changer de plan</button>` : ''}</div>`;
   }
@@ -780,7 +781,7 @@ ACT['ed-echelle-ok'] = () => {
 };
 ACT['ed-reechelle'] = () => { ED.cur = null; ED.sel = null; ED.etape = 'echelle'; render(); };
 ACT['ed-nouveau-plan'] = () => {
-  Object.assign(ED, { img: null, imgEtat: 'absent', vue: null, etape: null, cur: null, sel: null, som: null, apercu: null, cadrage: false, geo: null, t: { w: 0, h: 0, ech: null, rot: 0, els: [] } });
+  Object.assign(ED, { img: null, imgEtat: 'absent', vue: null, etape: null, cur: null, sel: null, som: null, apercu: null, cadrage: false, geo: null, avant: null, t: { w: 0, h: 0, ech: null, rot: 0, els: [] } });
   edSauve(true); render();
 };
 ACT['ed-renvoyer'] = () => { edEnvoyerPlan(); render(); };
@@ -832,16 +833,42 @@ ACT['ed-ignz'] = d => {
   const z = Math.min(IGN.zMax, Math.max(IGN.zMin, ED.img.ign.z + Number(d.z))), c = edCentre();
   edCadrer(c.lat, c.lon, z);
 };
+// revenir à la vue aérienne depuis le tracé, autour de ce qu'on regarde ; le tracé est gardé de côté
+ACT['ed-recadrer'] = () => {
+  if (!ED.img || !ED.img.ign || ED.cur) return;
+  const c = edCentre();
+  ED.avant = { img: ED.img, t: clone(ED.t), vue: ED.vue ? Object.assign({}, ED.vue) : null };
+  edCadrer(c.lat, c.lon, ED.img.ign.z);
+};
+ACT['ed-recadrer-annuler'] = () => {
+  const a = ED.avant;
+  if (!a) return;
+  Object.assign(ED, { img: a.img, t: a.t, vue: a.vue, cadrage: false, avant: null, etape: null, cur: null, sel: null, som: null, apercu: null });
+  render();
+};
+// un point de l'ancienne vue dans la nouvelle (coordonnées des tuiles, d'un niveau de zoom à l'autre)
+function edReporter(p, de, vers) {
+  const f = 2 ** (vers.z - de.z), T = IGN.tuile;
+  return [r1((de.x0 * T + p[0]) * f - vers.x0 * T), r1((de.y0 * T + p[1]) * f - vers.y0 * T)];
+}
 ACT['ed-ign-ok'] = () => {
   if (!ED.img || !ED.img.ign) return;
   const im = ED.img, mpp = ignMpp(im.lat, im.ign.z), L = 50 / mpp, a = [r1(im.w * .06), r1(im.h * .94)];
   // l'échelle est connue : une barre de 50 m posée en bas à gauche, déjà validée
   ED.t = { w: im.w, h: im.h, ech: { a, b: [r1(a[0] + L), a[1]], m: 50, ok: true }, rot: 0, els: [] };
-  Object.assign(ED, { cadrage: false, etape: null, cur: null, sel: null, som: null, apercu: null });
+  const av = ED.avant;
+  let hors = 0;
+  if (av && av.img && av.img.ign && av.t.els.length) {
+    ED.t.rot = av.t.rot || 0;
+    ED.t.els = av.t.els.map(e => Object.assign({}, e, { pts: e.pts.map(p => edReporter(p, av.img.ign, im.ign)) }));
+    hors = ED.t.els.filter(e => e.pts.some(([x, y]) => x < 0 || y < 0 || x > im.w || y > im.h)).length;
+  }
+  Object.assign(ED, { cadrage: false, avant: null, etape: null, cur: null, sel: null, som: null, apercu: null });
   edEnvoyerPlan();
   edSauve(true);
   render();
-  toast("Vue enregistrée, avec son échelle. Ajoute maintenant tes prés.");
+  toast(hors ? `Vue changée. ${hors} ${pl(hors, 'espace')} dépasse${hors > 1 ? 'nt' : ''} du carré : décale la vue ou ajuste ${hors > 1 ? 'leurs' : 'ses'} points.`
+    : av && av.t.els.length ? 'Vue changée : tes espaces ont suivi.' : "Vue enregistrée, avec son échelle. Ajoute maintenant tes prés.", hors ? { danger: true } : undefined);
 };
 ACT['ed-apercu'] = () => {
   const p = planDepuisTrace(ED.t);
