@@ -35,15 +35,8 @@ service cloud.firestore {
     // Administration EquiValdi : gère toutes les écuries sans en être membre (n'apparaît dans aucune équipe)
     function admin() { return connecte() && mail() in ['bennizdu03@gmail.com', 'celiacourtois8@gmail.com']; }
 
-    // Écurie active : essai en cours, abonnement payé, ou à vie (fondatrice, ou créée avant le 6 novembre 2026 à 12 h)
-    function actif(sid) {
-      let s = get(structure(sid)).data;
-      let a = s.get('abonnement', {});
-      return a.get('statut', '') in ['fondatrice', 'a_vie']
-        || s.get('creeLe', 9999999999999) < 1793962800000
-        || (a.get('statut', '') == 'abonnee' && a.get('fin', 0) > maintenant())
-        || a.get('finEssai', 0) > maintenant();
-    }
+    // Depuis le 15 novembre 2026, la version gratuite dure toujours : écrire ne demande plus d'abonnement.
+    // La limite de 2 chevaux de la version gratuite est tenue par l'appli.
     // Une écurie se crée maintenant (pas d'ancienne date pour passer « à vie »)
     function creeeMaintenant() {
       return request.resource.data.creeLe is int
@@ -55,7 +48,7 @@ service cloud.firestore {
     function paiementFictif(avant, a) {
       return a.get('statut', '') == 'abonnee'
         && a.get('formule', '') in ['mois', 'an']
-        && a.get('offre', 'maison') in ['maison', 'pro']
+        && a.get('offre', 'maison') in ['sanspub', 'maison', 'pro']
         && a.get('paiement', {}).get('fournisseur', '') == 'fictif'
         && a.get('fin', 0) is int && a.get('fin', 0) <= maintenant() + 800 * 86400000
         && a.get('finEssai', 0) == avant.get('finEssai', 0)
@@ -210,11 +203,10 @@ service cloud.firestore {
       }
 
       // ---------- Le carnet de l'écurie ----------
-      // écrire demande une écurie active : après l'essai sans abonnement, elle reste lisible
       match /{coll}/{id} {
         allow read: if coll in donnees() && equipier(sid);
-        allow write: if coll in donnees() && editeur(sid) && actif(sid);
-        // la gérante vide le carnet avant de supprimer l'écurie, même après l'essai
+        allow write: if coll in donnees() && editeur(sid);
+        // la gérante vide le carnet avant de supprimer l'écurie
         allow delete: if coll in donnees() && gerante(sid);
         allow read, write: if coll in donnees() && admin();
       }

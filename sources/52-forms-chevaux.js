@@ -3,7 +3,7 @@
 function formCheval(id) {
   const ex = id ? cheval(id) : null;
   if (id && !ex) return;
-  // pendant l'essai : 2 chevaux au plus (l'abonnement lève la limite)
+  // version gratuite : 2 chevaux au plus (« À la maison » et « Pro » lèvent la limite)
   if (!id && !chevalPossible()) { ACT.abonner({ raison: 'chevaux' }); return; }
   const h = ex ? clone(ex) : { nom: '', couleur: nextColor() };
   let ph = null;
@@ -41,7 +41,7 @@ function formCheval(id) {
       });
       if (ex) {
         const sortArchive = ex.archive && !$('#f_arch').checked;
-        if (sortArchive && !chevalPossible()) return "Pendant l'essai, l'écurie compte 2 chevaux au plus : abonne-la pour ressortir ce cheval de l'archive.";
+        if (sortArchive && !chevalPossible()) return "La version gratuite compte 2 chevaux au plus : abonne l'écurie pour ressortir ce cheval de l'archive.";
         h.archive = $('#f_arch').checked;
       }
       const saved = put('chevaux', h);

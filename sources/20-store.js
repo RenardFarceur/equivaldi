@@ -22,7 +22,7 @@ let outbox = [];
 let DB = null;
 let dataV = 0;              // change à chaque modification des données (calculs mis en cache)
 const sync = { mode: 'loading', error: null, loaded: new Set() };
-/* Lecture seule : rôle « Lecture seule », ou écurie dont l'essai est fini sans abonnement (61-abonnement.js) */
+/* Lecture seule : rôle « Lecture seule », ou écurie gratuite avec plus de 2 chevaux (61-abonnement.js) */
 let roRole = false;
 Object.defineProperty(sync, 'readOnly', { enumerable: true, get: () => roRole || ecurieFigee(), set: v => { roRole = !!v; } });
 
@@ -45,7 +45,7 @@ const RO_MSG = window.EQ_MODE
   ? "Tu as un accès en lecture seule. Demande à la gérante du carnet de te passer en « Peut modifier »."
   : "Tu as un accès en lecture seule. Demande à la personne qui gère le carnet de te donner le droit « Peut modifier ».";
 function setReadOnly() { if (roRole) return; sync.readOnly = true; rerenderSoon(); }
-/* Le message qui va avec : essai terminé, ou droit « Lecture seule » */
+/* Le message qui va avec : version gratuite dépassée, ou droit « Lecture seule » */
 function roMsg() { return ecurieFigee() ? figeeMsg() : RO_MSG; }
 async function connectUser() {
   let u = null;

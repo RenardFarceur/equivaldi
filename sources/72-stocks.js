@@ -67,7 +67,7 @@ function rowArticle(a) {
     <button type="button" class="stepbtn" data-act="stock-in" data-id="${esc(a.id)}" aria-label="Entrée : ${esc(a.nom)}">${ic('plus')}</button></div>`;
 }
 
-/* La vue « Autres stocks », dans l'onglet Foin */
+/* La vue « Autres stocks », dans l'onglet Stock */
 function stocksHtml() {
   const as = articles();
   const ajout = sync.readOnly ? '' : `<button type="button" class="link" data-act="new-article">${ic('plus', 'sm')}Article</button>`;

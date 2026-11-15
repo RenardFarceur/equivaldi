@@ -1,11 +1,11 @@
 
 /* ---------- Rubriques de l'écurie : la gérante garde seulement ce qui sert ----------
-   Prés, Foin, Concours et Entraînement se masquent pour toute l'écurie : onglets, actions rapides, alertes,
+   Prés, Stock, Concours et Entraînement se masquent pour toute l'écurie : onglets, actions rapides, alertes,
    agenda, fiches des chevaux, barème des crottins. Rien n'est effacé : une rubrique rallumée revient telle quelle.
    Le choix est rangé dans les réglages communs (config/reglages › rubriques). */
 const RUBRIQUES = [
   { id: 'pres', label: 'Prés et rotation', court: 'Les prés', icon: 'fence', s: 'Onglet Prés, carte, déplacements, pâture et repos' },
-  { id: 'foin', label: 'Foin et stocks', court: 'Le foin et les stocks', icon: 'bale', s: 'Balles de foin, aliments, litière, autonomie' },
+  { id: 'foin', label: 'Stock', court: 'Le stock', icon: 'bale', s: 'Onglet Stock : foin, aliments, litière, autonomie' },
   { id: 'concours', label: 'Concours', court: 'Les concours', icon: 'rosette', s: 'Sorties, engagements, résultats, vaccins exigés' },
   { id: 'seances', label: 'Entraînement', court: "L'entraînement", icon: 'timer', s: 'Séances de travail, cours et coachs' }
 ];

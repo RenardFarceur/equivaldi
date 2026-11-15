@@ -23,10 +23,12 @@ function rowCheval(h) {
   </div><span class="row-end">${ic('next', 'sm')}</span></button>`;
 }
 VIEWS.chevaux = () => {
-  const seg = ui.chevSeg === 'rations' ? 'rations' : 'fiches';
-  let html = segCtl('chevSeg', [['fiches', 'Fiches'], ['rations', 'Rations du jour']], seg);
+  // « Couvertures » apparaît dès qu'un cheval a une couverture dans sa fiche (77-materiel.js)
+  const couv = couvSuivies(), seg = ui.chevSeg === 'rations' ? 'rations' : ui.chevSeg === 'couv' && couv ? 'couv' : 'fiches';
+  let html = segCtl('chevSeg', [['fiches', 'Fiches'], ['rations', couv ? 'Rations' : 'Rations du jour']].concat(couv ? [['couv', 'Couvertures']] : []), seg);
   const hs = chevaux();
   if (seg === 'rations') return { title: 'Chevaux', eyebrow: 'Rations du jour', html: html + rationsDuJour(), fab: null };
+  if (seg === 'couv') return { title: 'Chevaux', eyebrow: 'Couvertures du moment', html: html + couverturesDuJour(), fab: null };
   html += hs.length ? `<div class="list">${hs.map(rowCheval).join('')}</div>`
     : emptyH('Aucun cheval', 'Ajoute ta première fiche avec le bouton +. Âge, ration, soins et concours seront regroupés ici.');
   const arch = list('chevaux').filter(h => h.archive).sort(byName);
@@ -92,7 +94,7 @@ function ficheHtml(h) {
   const dl = items.length ? `<dl class="dl">${items.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`
     : empty('Fiche à compléter', 'Date de naissance, race, robe, n° SIRE, transpondeur…');
   const notes = h.notes ? `<div class="card"><div class="eyebrow">Notes</div><div style="white-space:pre-wrap">${esc(h.notes)}</div></div>` : '';
-  return loc + consignesCheval(h) + filRow(h) + tks + rap + proprieteHtml(h) + depensesChevalHtml(h) + section('Identité', dl + notes, `<button type="button" class="link" data-act="edit-cheval" data-id="${h.id}">${ic('edit', 'sm')}Modifier</button>`) + documentsHtml(h)
+  return loc + couvRow(h) + consignesCheval(h) + filRow(h) + tks + rap + proprieteHtml(h) + depensesChevalHtml(h) + section('Identité', dl + notes, `<button type="button" class="link" data-act="edit-cheval" data-id="${h.id}">${ic('edit', 'sm')}Modifier</button>`) + materielHtml(h) + documentsHtml(h)
     // fiche de box à imprimer, avec ration et QR code (73-etiquettes.js)
     + `<div class="list"><button type="button" class="row" data-act="etiquettes" data-genre="box" data-id="${h.id}">${lead('qr')}<div class="row-main"><div class="row-t">Fiche de box</div><div class="row-s">Ration, à savoir et QR code, à imprimer pour la porte du box</div></div><span class="row-end">${ic('next', 'sm')}</span></button></div>`;
 }

@@ -59,11 +59,11 @@ const ecrit = role => role === 'gerante' || role === 'equipe';
 // Dans une écurie dont il n'est pas membre, il agit sous le nom « EquiValdi » et n'apparaît dans aucune équipe.
 const ADMIN_MAILS = ['bennizdu03@gmail.com', 'celiacourtois8@gmail.com'];   // comptes d'administration (les mêmes que dans firestore.rules)
 const FANTOME = { uid: 'equivaldi', nom: 'EquiValdi' };
-// Abonnement : essai de 2 mois sans carte, puis 10 €/mois ou 100 €/an
-// deux formules (décidé le 12 novembre 2026) : « À la maison » et « Pro » (propriétaires en pension, relevés)
-const TARIF = { maison: { mois: 5, an: 50 }, pro: { mois: 20, an: 200 } };
-const OFFRES = ['maison', 'pro'];
-const offreDe = a => a && a.offre === 'pro' ? 'pro' : 'maison';
+// Abonnement (décidé le 15 novembre 2026) : version gratuite pour toujours (2 chevaux, bandeau maison), avec les fonctions Pro
+// en découverte les 2 premiers mois ; « Sans pub », « À la maison », « Pro » (les mêmes prix que dans 61-abonnement.js)
+const TARIF = { sanspub: { mois: 0.99, an: 9.9 }, maison: { mois: 4.99, an: 49.9 }, pro: { mois: 19.99, an: 199.9 } };
+const OFFRES = ['sanspub', 'maison', 'pro'];
+const offreDe = a => a && TARIF[a.offre] ? a.offre : 'maison';
 // fin de la période payée : à la suite de l'essai ou de la période en cours ; en changeant de formule, tout de suite,
 // avec les jours restants convertis au prix de la nouvelle (790 jours au plus, sous la limite des règles)
 function periodeAbo(a, now, formule, offre) {
@@ -853,7 +853,7 @@ async function creer({ nom, commune }) {
   commune = String(commune || '').replace(/\s+/g, ' ').trim().slice(0, 60);
   if (!nomValide(nom)) throw erreur("Le nom de l'écurie doit faire de 2 à 40 caractères.");
   const ref = doc(collection(fs, 'structures')), sid = ref.id, now = Date.now(), qui = { uid: U.uid, nom: nomDe(U) };
-  const abonnement = { statut: 'essai', debut: now, finEssai: ajouterMois(now, 2) };   // essai de 2 mois, sans carte
+  const abonnement = { statut: 'essai', debut: now, finEssai: ajouterMois(now, 2) };   // gratuite ; fonctions Pro en découverte pendant 2 mois
   const e = { id: sid, nom, commune, role: 'gerante', crottinsDepuis: isoJour(now), creeLe: now, abonnement, gerante: U.uid };
   const b = writeBatch(fs);
   b.set(ref, { nom, commune, creeLe: now, creePar: qui, gerante: U.uid, crottinsDepuis: e.crottinsDepuis, abonnement });

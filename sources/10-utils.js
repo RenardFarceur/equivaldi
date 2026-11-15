@@ -122,6 +122,8 @@ const ICONS = {
   sac: '<path d="M7 6.5h10l2 14H5Z"/><path d="M7.5 6.5 6.5 3.5h11l-1 3"/><path d="M9.5 12.5h5"/>',
   qr: '<path d="M4 4h6v6H4ZM14 4h6v6h-6ZM4 14h6v6H4Z"/><path d="M14 14h2v2h-2ZM18 18h2v2h-2ZM14 18h2M18 14h2"/>',
   chat: '<path d="M4 5h16v11H9l-5 4Z"/><path d="M8 9.5h8M8 12.5h5"/>',
+  couv: '<path d="M3.5 10.5C5 7.5 8 6 12 6s7 1.5 8.5 4.5V18h-17Z"/><path d="M3.5 14h17M9.5 6.2V18M14.5 6.2V18"/>',
+  cloche: '<path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15Z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
   send: '<path d="M4 12 20 4l-5 16-3.5-6.5Z"/><path d="m11.5 13.5 3.5-3.5"/>',
   card: '<rect x="3.5" y="5" width="17" height="14" rx="2.5"/><circle cx="9" cy="11" r="2.3"/><path d="M5.8 16.3c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4M14.5 10h3.5M14.5 13.5h3.5"/>'
 };

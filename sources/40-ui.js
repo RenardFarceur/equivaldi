@@ -4,7 +4,7 @@ const TABS = [
   { id: 'accueil', label: 'Accueil', icon: 'home' },
   { id: 'chevaux', label: 'Chevaux', icon: 'horse' },
   { id: 'pres', label: 'Prés', icon: 'fence' },
-  { id: 'foin', label: 'Foin', icon: 'bale' },
+  { id: 'foin', label: 'Stock', icon: 'bale' },
   { id: 'concours', label: 'Concours', icon: 'rosette' },
   { id: 'equipe', label: 'Équipe', icon: 'users' },
   { id: 'releves', label: 'Relevés', icon: 'euro' }   // propriétaires en pension seulement (70-pension.js)
@@ -91,6 +91,8 @@ function render() {
     console.error(e);
     v = { title: 'Carnet', html: empty("Cet écran n'a pas pu s'afficher", esc(e.message)) };
   }
+  // version gratuite : le bandeau maison en bas des onglets (l'accueil le place lui-même)
+  if (!top && nav.tab !== 'accueil' && !/^<div class="loading"/.test(v.html)) v.html += pubHtml().replace('class="pub"', 'class="pub bas"');
   $('#topTitle').textContent = v.title;
   const avecEcu = majEcurieBtn();
   $('#topEyebrow').textContent = v.eyebrow || (avecEcu ? fmt(todayISO(), { weekday: 'short', day: 'numeric', month: 'short' }) : dTete(todayISO()));

@@ -70,7 +70,7 @@ Le tracé s'enregistre au fil de l'eau : on peut s'arrêter et reprendre plus ta
 
 - **Bien démarrer** : sur l'accueil d'une écurie de moins de 2 mois, une liste de premiers pas qui se cochent toute seule (rubriques, chevaux, prés, tâches, soins, équipe). *Masquer* la range sur ce téléphone.
 - **Écurie d'exemple** : *Visiter l'écurie d'exemple* sur l'écran de connexion (sans compte), dans *Bien démarrer*, ou par le lien `https://equivaldi.fr/?exemple` (site, QR code). Cinq chevaux, la carte des prés, une rotation, des soins, des concours et une équipe inventés. On visite en tant que Camille, la gérante ; tout se touche, rien ne part en ligne, tout repart à zéro en sortant (*Créer mon compte*, *Quitter l'exemple* ou *Revenir à mon écurie*). Le contenu est fabriqué par `sources/68-exemple.js`.
-- **Rubriques** : la gérante masque Prés, Foin, Concours ou Entraînement pour toute l'écurie (*Réglages* › *Rubriques*). Onglets, actions rapides, alertes, agenda, fiches et barème des crottins suivent. Rien n'est effacé.
+- **Rubriques** : la gérante masque Prés, Stock, Concours ou Entraînement pour toute l'écurie (*Réglages* › *Rubriques*). Onglets, actions rapides, alertes, agenda, fiches et barème des crottins suivent. Rien n'est effacé.
 
 ## Messages, conditions et compte
 
@@ -97,9 +97,9 @@ Le tracé s'enregistre au fil de l'eau : on peut s'arrêter et reprendre plus ta
 
 ## Autres stocks et relevé en PDF
 
-- **Autres stocks** (onglet Foin › *Autres stocks*) : granulés, CMV, luzerne, copeaux, paille, produits de soin… Chaque article a son conditionnement (sac de 25 kg, seau de 10 kg…). Touche − à chaque sac ouvert, + à chaque livraison (prix et fournisseur facultatifs), *Recompter* pour corriger le stock.
+- **Autres stocks** (onglet Stock › *Autres stocks*) : granulés, CMV, luzerne, copeaux, paille, produits de soin… Chaque article a son conditionnement (sac de 25 kg, seau de 10 kg…). Touche − à chaque sac ouvert, + à chaque livraison (prix et fournisseur facultatifs), *Recompter* pour corriger le stock.
 - **Durée du stock** : un aliment lié aux rations (en kg, g ou litres) calcule tout seul combien de jours il reste ; sinon, les sacs ouverts sur deux semaines donnent le rythme. L'accueil prévient quand le stock tient moins de 14 jours, passe sous le seuil choisi ou est épuisé.
-- Les livraisons avec un prix comptent dans les dépenses de l'onglet Équipe. La rubrique s'appelle désormais « Foin et stocks » ; la masquer masque aussi les autres stocks.
+- Les livraisons avec un prix comptent dans les dépenses de l'onglet Équipe. L'onglet et la rubrique s'appellent « Stock » (foin et autres stocks) ; masquer la rubrique masque les deux.
 - **Relevé de pension en PDF** : bouton *PDF* sur chaque relevé (gérante), et *Imprimer ou enregistrer en PDF* côté propriétaire. Le relevé rappelle qu'il ne tient pas lieu de facture.
 - Base : nouvelle collection `structures/{id}/stocks` (articles et mouvements) : **les règles Firestore sont à recoller**.
 
