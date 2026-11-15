@@ -64,21 +64,21 @@ Entrer avec un code = un seul lot : sa fiche de membre (`via` = code), l'invitat
 | lire l'ancien carnet | anciens membres seulement (`membres/{moi}` racine existe), pendant le mois de transition | autorisé |
 | écrire `config/migration` | l'ancienne gérante seulement, et vers une écurie dont elle est gérante | seule exception |
 
-## 6. Abonnement : essai, paiement, lecture seule après l'essai
+## 6. Abonnement : version gratuite, paiement (15 novembre 2026)
 
-Une écurie est **active** si son essai court encore, si son abonnement est payé (fin à venir), ou si elle est à vie (fondatrice, ou créée avant la mise en ligne de l'abonnement, le 6 novembre 2026 à 12 h). Écrire dans le carnet demande une écurie active.
+Depuis le 15 novembre 2026, la version gratuite dure toujours : **écrire dans le carnet ne demande plus d'abonnement** (la fonction `actif(sid)` a disparu). La limite de 2 chevaux de la version gratuite, la lecture seule au-delà, le bandeau et les fonctions réservées sont tenus par l'appli, pas par les règles.
 
 | Tentative | Règle | Résultat |
 |---|---|---|
-| écrire dans le carnet après l'essai, sans abonnement | `editeur(sid) && actif(sid)` | refusé (tout reste lisible) |
-| créer une écurie avec un essai trop long | `finEssai <= maintenant + 63 jours`, et rien d'autre dans `abonnement` | refusé |
+| écrire dans le carnet d'une écurie gratuite | `editeur(sid)` | autorisé |
+| créer une écurie avec une découverte trop longue | `finEssai <= maintenant + 63 jours`, et rien d'autre dans `abonnement` | refusé |
 | créer une écurie avec une ancienne date pour passer « à vie » | `creeLe` à un jour près de maintenant | refusé |
 | la gérante se met « à vie » | paiement : seulement `statut: 'abonnee'` | refusé |
-| la gérante allonge son essai en payant | `finEssai` et `debut` inchangés | refusé |
-| la gérante paie (démonstration) | `abonnee`, formule `mois` ou `an`, `paiement.fournisseur == 'fictif'`, fin à moins de 800 jours, rien d'autre ne change dans l'écurie | autorisé |
+| la gérante allonge sa découverte en payant | `finEssai` et `debut` inchangés | refusé |
+| la gérante paie (démonstration) | `abonnee`, formule `mois` ou `an`, offre `sanspub`, `maison` ou `pro`, `paiement.fournisseur == 'fictif'`, fin à moins de 800 jours, rien d'autre ne change dans l'écurie | autorisé |
 | un membre ou un inconnu abonne l'écurie | `gerante(sid)` faux | refusé |
 
-**Paiement de démonstration** : tant qu'il est autorisé (fonction `paiementFictif`), une gérante peut abonner son écurie sans payer. Quand Shine ou Tebex sera branché, retirer cette ligne `allow update` : l'abonnement ne sera plus écrit que par le serveur du paiement ou par l'administration.
+**Paiement de démonstration** : tant qu'il est autorisé (fonction `paiementFictif`), une gérante peut abonner son écurie sans payer. Quand Shine sera branché, retirer cette ligne `allow update` : l'abonnement ne sera plus écrit que par le serveur du paiement ou par l'administration.
 
 ## 7. Administration EquiValdi
 
@@ -92,7 +92,7 @@ La carte d'une écurie est une donnée de l'écurie : `config/carte` (la carte p
 |---|---|---|
 | lire la carte ou le plan | `coll in donnees() && membre(sid)` | les membres de l'écurie (et l'administration) |
 | lire le plan d'une autre écurie | `membre(B)` faux | refusé |
-| enregistrer le tracé, publier la carte, envoyer le plan | `editeur(sid) && actif(sid)`, comme les réglages ; l'appli ne propose l'outil qu'à la gérante | refusé en lecture seule, après l'essai, depuis une autre écurie |
+| enregistrer le tracé, publier la carte, envoyer le plan | `editeur(sid)`, comme les réglages ; l'appli ne propose l'outil qu'à la gérante | refusé en lecture seule, depuis une autre écurie |
 | demander la carte à EquiValdi (`carteDemande` sur l'écurie) | mise à jour de l'écurie par la gérante, sans toucher à l'abonnement | seule la gérante ; l'administration la passe à « faite » |
 | un membre touche à la demande | `gerante(sid)` faux | refusé |
 | un plan trop lourd | 1 Mio au plus par document dans Firestore ; l'appli réduit l'image à 880 000 caractères au plus | jamais atteint |
@@ -154,6 +154,24 @@ Une carte lue dans la base est remise au propre avant d'être dessinée (identif
 | marquer lu | l'équipe : `luEcurie` seulement ; le propriétaire : `luProprio` seulement | modifier le texte est refusé |
 | effacer | la gérante, ou l'auteur du message | refusé aux autres |
 
+## 14. Cours et concours proposés, inscriptions, rôle « cavalier » (15 novembre 2026)
+
+Un « Cavalier » est membre de l'écurie sans être de l'équipe : `equipier(sid)` est faux pour lui, donc rien du carnet ne lui est lisible.
+
+| Demande | Règle | Résultat |
+|---|---|---|
+| inviter un cavalier, le rejoindre | `invitations` et `membres` : rôle `cavalier` parmi les rôles invités | comme les autres invitations |
+| un cavalier lit les chevaux, les soins, l'équipe | `equipier(sid)` | refusé |
+| lire les cours et concours proposés | `activites` : `membre(sid)` | tous les membres de l'écurie |
+| proposer, modifier, annuler, supprimer | `activites` : `editeur(sid)` | gérante et « Peut modifier » |
+| lire les inscriptions | `inscriptions` : toute l'équipe ; les autres seulement les leurs (`uid == moi()`, requête filtrée) | un cavalier ne voit pas qui d'autre est inscrit |
+| s'inscrire | `create` : `uid == moi()`, identifiant `{activité}_{moi}`, champs listés, statut `inscrit` ou `attente`, `vuEcurie == false`, date du jour, activité existante et pas annulée | une seule inscription par personne et par activité ; pas pour quelqu'un d'autre |
+| modifier sa demande, se désinscrire | `update` : seulement statut, cheval, épreuve, mot, date, `vuEcurie` ; pas de `attente` vers `inscrit` | il ne sort pas seul de la liste d'attente |
+| se noter présent, s'attribuer un cheval, écrire son bilan | champs hors de la liste | refusé (c'est l'équipe) |
+| l'équipe inscrit, attribue, pointe, note | `inscriptions` : `write` si `editeur(sid)` | autorisé |
+
+Le nombre de places prises (`activites.pris`) est recalculé par l'appli de l'équipe : les règles ne peuvent pas compter les inscriptions, donc un cours peut dépasser sa limite si deux personnes s'inscrivent au même moment. L'équipe le voit et passe quelqu'un en liste d'attente. Les préférences de notification sont dans la fiche de membre de chacun (`notifs`), qu'il modifie lui-même sans toucher à son rôle.
+
 ## Migration
 
 - Recopie de l'équipe (cas c) : seulement par l'ancienne gérante, pour un uid qui existe dans l'ancien `membres`, avec exactement le même rôle (`equipe` ou `lecture`).
@@ -165,7 +183,7 @@ Une demande peut lire au plus 10 documents dans les règles, un lot d'écritures
 
 | Lot | Lectures par écriture | Taille du lot | Total |
 |---|---|---|---|
-| carnet (migration) | 2 (`editeur`, `actif`) | 9 fiches au plus, et 5 Mo au plus | 18 |
+| carnet (migration) | 1 (`editeur`) | 9 fiches au plus, et 5 Mo au plus | 18 |
 | équipe (migration) | 4 (`gerante`, `ancienneGerante`, ancienne fiche) | 4 fiches | 16 |
 | invitations (migration) | 1 (`gerante`) | 18 | 18 |
 | création d'une écurie | 2 | 3 écritures | 2 |

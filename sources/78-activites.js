@@ -15,7 +15,7 @@ const KINDS = { cours: { l: 'Cours', un: 'le cours', icon: 'timer' }, concours: 
 const COURS_IDEES = ['Plat', 'Obstacle', 'Dressage', 'Cross', 'Longe', 'Balade', 'Pony-games', 'Voltige', 'Baby poney', 'Stage', 'Théorie'];
 const PRESENCES = [{ v: 'present', l: 'Présent' }, { v: 'absent', l: 'Absent' }, { v: 'excuse', l: 'Excusé' }];
 const peutGererActivites = () => !!window.EQ_MODE && !sync.readOnly && !estInvite() && offrePro();
-const activitesOuvertes = () => !!window.EQ_MODE && (offrePro() || estInvite());
+const activitesOuvertes = () => !!window.EQ_MODE && offrePro();
 const kindVisible = k => estInvite() || rub(k === 'cours' ? 'seances' : 'concours');
 const activites = kind => list('activites').filter(a => a && validISO(a.date) && KINDS[a.kind] && (!kind || a.kind === kind) && kindVisible(a.kind));
 const actFin = a => (validISO(a.dateFin) && a.dateFin > a.date ? a.dateFin : a.date);
@@ -128,6 +128,7 @@ function activitesListe(kind) {
 /* Sans la formule Pro : ce que ça apporte (gérante), rien pour les autres */
 const activitesVerrou = () => (window.EQ_MODE && !offrePro() && !estInvite() && estGerante() ? `<div class="verrou-ligne">${verrouHtml('cours')}</div>` : '');
 
+const activitesPause = () => `<p class="note">Les cours et les inscriptions sont en pause : l'écurie n'a plus la formule qui les comprend. Rien n'est effacé ; ils reviendront si elle la reprend.</p>`;
 /* ----- L'onglet « Entraînements » : Cours | Concours ----- */
 function seancesPrevuesHtml() {
   if (estInvite() || !rub('seances')) return '';
@@ -145,11 +146,11 @@ function vueEntrainements() {
   const tete = C && K ? segCtl('entSeg', [['cours', `Cours${n('cours')}`], ['concours', `Concours${n('concours')}`]], seg) : '';
   marquerActVues();
   if (seg === 'cours') {
-    const html = tete + activitesListe('cours') + activitesVerrou() + seancesPrevuesHtml();
+    const html = tete + (activitesListe('cours') || (estInvite() ? activitesPause() : '')) + activitesVerrou() + seancesPrevuesHtml();
     return { title: 'Entraînements', eyebrow: estInvite() ? "Les cours de l'écurie" : 'Cours et séances', html,
       fab: peutGererActivites() ? () => formActivite(null, { kind: 'cours' }) : estInvite() || sync.readOnly ? null : () => formSeance(null, {}), fabLabel: peutGererActivites() ? 'Proposer un cours' : 'Nouvelle séance' };
   }
-  if (estInvite()) return { title: 'Entraînements', eyebrow: 'Sorties en concours', html: tete + activitesListe('concours'), fab: null };
+  if (estInvite()) return { title: 'Entraînements', eyebrow: 'Sorties en concours', html: tete + (activitesListe('concours') || activitesPause()), fab: null };
   // l'équipe : les sorties proposées, puis le carnet des concours comme avant
   const v = vueConcoursCarnet();
   const prop = activitesListe('concours') + (seg === 'concours' && !C ? activitesVerrou() : '');
@@ -329,7 +330,7 @@ function formMonInscription(aid) {
   if (!a) return;
   const ex = monInscription(aid), ouv = inscriptionOuverte(a);
   if (!ouv.ok && !(ex && ex.statut !== 'annule')) { toast(ouv.pourquoi, { danger: true }); return; }
-  const hs = estCavalier() ? [] : chevaux().filter(h => estProprio() || !h.propUid || h.propUid === moiUid() || true);
+  const hs = estCavalier() ? [] : chevaux();   // un propriétaire ne reçoit que ses chevaux
   const attente = complet(a) && !(ex && ex.statut === 'inscrit');
   const body = `
     <p class="note" style="color:var(--ink)">${esc(actTitre(a))} · ${esc(actQuand(a))}</p>
@@ -457,8 +458,8 @@ function accueilCavalier() {
   if (cg) html.push(cg);
   html.push(`<div class="card proprio-bonjour"><div class="row-main"><b>Bonjour ${esc(moiNom() || '')}</b><span class="small muted">Les cours et les sorties de ${esc(e.nom || "l'écurie")} : inscris-toi d'ici, l'écurie est prévenue.</span></div></div>`);
   if (sync.mode === 'loading') { html.push(`<div class="loading">${brandLogo()}<p class="note">Ouverture…</p></div>`); return { title: "Aujourd'hui", html: html.join('') }; }
-  html.push(activitesAccueil());
-  const t = todayISO(), dispo = activites().filter(a => a.statut !== 'annule' && a.date >= t && !jeViens(a.id) && !actNouvelles().includes(a) && inscriptionOuverte(a).ok).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 6);
+  html.push(activitesAccueil() || activitesPause());
+  const t = todayISO(), dispo = !activitesOuvertes() ? [] : activites().filter(a => a.statut !== 'annule' && a.date >= t && !jeViens(a.id) && !actNouvelles().includes(a) && inscriptionOuverte(a).ok).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 6);
   if (dispo.length) html.push(section('À venir', `<div class="list">${dispo.map(actCard).join('')}</div>`));
   return { title: "Aujourd'hui", html: html.join('') };
 }
