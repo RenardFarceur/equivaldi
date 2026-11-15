@@ -17,7 +17,7 @@ let currentFab = null;
 function renderTabs() {
   // les onglets des rubriques masquées par la gérante disparaissent (66-rubriques.js)
   // « Entraînements » est plus long que les autres : sa colonne est un peu plus large quand la barre est pleine
-  const vus = TABS.filter(t => ongletVisible(t.id)), el = $('#tabs'), cols = vus.map(t => `minmax(0,${t.id === 'concours' && vus.length > 4 ? 1.4 : 1}fr)`).join(' ');
+  const vus = TABS.filter(t => ongletVisible(t.id)), el = $('#tabs'), cols = vus.map(t => `minmax(0,${t.id === 'concours' && vus.length > 4 ? 1.5 : 1}fr)`).join(' ');
   if (el.style.gridTemplateColumns !== cols) el.style.gridTemplateColumns = cols;
   setHTML(el, vus.map(t =>
     `<button type="button" data-act="tab" data-tab="${t.id}"${nav.tab === t.id ? ' aria-current="page"' : ''}${t.id === 'concours' ? ' class="tab-long"' : ''}><span class="tab-ic">${ic(t.icon)}${t.id === 'concours' && badgeActivites() ? '<i class="tab-dot" aria-label="Nouveautés"></i>' : ''}</span><span>${t.label}</span></button>`
@@ -109,6 +109,7 @@ function render() {
     const segA = $('#view .seg.scroll [aria-pressed="true"]');
     if (segA) { const p = segA.parentElement; p.scrollLeft = Math.max(0, segA.offsetLeft - (p.clientWidth - segA.offsetWidth) / 2); }
   } else glisse(view, () => setHTML(view, v.html));
+  segBords();
   if (anim && mouvementOk()) {
     view.classList.remove('in-tab', 'in-push', 'in-back', 'in-seg');
     void view.offsetWidth;
@@ -201,8 +202,37 @@ function closeSheet() {
   if (lastFocus && lastFocus.isConnected && lastFocus !== document.body) lastFocus.focus({ preventScroll: true });
 }
 
+/* La feuille se referme aussi en la tirant vers le bas par sa poignée ou son titre : elle suit le doigt,
+   se ferme au-delà d'un tiers de course ou d'un geste vif, et revient en place sinon. Le contenu défile normalement. */
+(function () {
+  const sheet = document.querySelector('#sheet .sheet');
+  if (!sheet) return;
+  let g = null;
+  sheet.addEventListener('pointerdown', e => {
+    if ((e.pointerType === 'mouse' && e.button !== 0) || e.target.closest('button,input,select,textarea,a,.sheet-b,.sheet-f')) return;
+    g = { y: e.clientY, t: performance.now(), dy: 0, id: e.pointerId, pris: false };
+  });
+  sheet.addEventListener('pointermove', e => {
+    if (!g || e.pointerId !== g.id) return;
+    g.dy = Math.max(0, e.clientY - g.y);
+    if (!g.pris && g.dy > 8) { g.pris = true; try { sheet.setPointerCapture(e.pointerId); } catch (x) { /* pointeur déjà relâché */ } sheet.style.transition = 'none'; }
+    if (g.pris) sheet.style.transform = `translateY(${g.dy}px)`;
+  });
+  const fin = e => {
+    if (!g || e.pointerId !== g.id) return;
+    const { dy, t, pris } = g;
+    g = null;
+    if (!pris) return;
+    sheet.style.transition = ''; sheet.style.transform = '';
+    const vif = dy / Math.max(1, performance.now() - t) > 0.6;   // pixels par milliseconde
+    if (e.type === 'pointerup' && (dy > Math.min(160, sheet.offsetHeight / 3) || (dy > 40 && vif))) closeSheet();
+  };
+  sheet.addEventListener('pointerup', fin);
+  sheet.addEventListener('pointercancel', fin);
+})();
+
 /* ---------- Message bref (avec annulation) ---------- */
-let toastTimer = null;
+let toastTimer = null, toastSort = null;
 function toast(msg, o = {}) {
   const el = $('#toast');
   if (!el) return;
@@ -213,8 +243,9 @@ function toast(msg, o = {}) {
   el.classList.add('pop');
   if (o.undo) $('#toastUndo').onclick = () => { el.hidden = true; o.undo(); toast('Annulé'); };
   else if (o.action) $('#toastAct').onclick = () => { el.hidden = true; o.action.fn(); };
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { el.hidden = true; }, o.duree || (o.undo ? 6000 : 3400));
+  clearTimeout(toastTimer); clearTimeout(toastSort);
+  // il s'en va en glissant (plus vite qu'il n'est arrivé)
+  toastTimer = setTimeout(() => { el.classList.remove('pop'); el.classList.add('part'); toastSort = setTimeout(() => { el.hidden = true; el.classList.remove('part'); }, 190); }, o.duree || (o.undo ? 6000 : 3400));
 }
 
 /* ---------- Petits effets : rebond, confettis en crinière, galop de fête ---------- */
@@ -359,6 +390,15 @@ const section = (title, inner, action = '') => `<section class="sec"><div class=
 const empty = (t, s) => `<div class="empty"><b>${t}</b>${s}</div>`;
 /* État vide illustré : le cheval du logo, qui balance la queue */
 const emptyH = (t, s, extra = '') => `<div class="empty illu">${brandMark()}<b>${t}</b>${s}${extra}</div>`;
+/* Onglets qui défilent (fiche du cheval) : un fondu sur le bord tant qu'il en reste à voir de ce côté.
+   Refait après chaque rendu, qui remet les classes à zéro. */
+function segBords() {
+  document.querySelectorAll('#view .seg.scroll').forEach(p => {
+    const bords = () => { p.classList.toggle('suite-g', p.scrollLeft > 6); p.classList.toggle('suite-d', p.scrollLeft < p.scrollWidth - p.clientWidth - 6); };
+    bords();
+    if (!p._bords) { p._bords = true; p.addEventListener('scroll', bords, { passive: true }); }
+  });
+}
 const segCtl = (key, opts, cur, cls = '') => `<div class="seg${cls ? ' ' + cls : ''}" role="group">${opts.map(([v, l]) =>
   `<button type="button" data-act="seg" data-k="${key}" data-v="${v}" aria-pressed="${v === cur}">${l}</button>`).join('')}</div>`;
 const lead = (icon, sev = '') => `<span class="lead">${ic(icon)}</span>`;

@@ -136,8 +136,8 @@ function seancesPrevuesHtml() {
   const up = list('seances').filter(s => s.statut === 'prevu' && validISO(s.date) && s.date >= t && s.date <= lim && cheval(s.horseId))
     .sort((a, b) => a.date.localeCompare(b.date) || String(a.heure || '').localeCompare(String(b.heure || '')));
   const add = sync.readOnly ? '' : `<button type="button" class="link" data-act="new" data-what="seance">${ic('plus', 'sm')}Séance</button>`;
-  return section('Séances des chevaux · 14 jours', up.length ? `<div class="list">${up.map(s => seanceRow(s, true)).join('')}</div>`
-    : `<p class="note">Les séances de travail prévues pour chaque cheval (plat, obstacle, longe, cours avec un coach) s'affichent ici. L'historique est dans la fiche du cheval, onglet Entraînement.</p>`, add);
+  return section('Séances des chevaux', up.length ? `<div class="list">${up.map(s => seanceRow(s, true)).join('')}</div>`
+    : `<p class="note">Les séances de travail prévues dans les 14 jours pour chaque cheval (plat, obstacle, longe, cours avec un coach) s'affichent ici. L'historique est dans la fiche du cheval, onglet Entraînement.</p>`, add);
 }
 function vueEntrainements() {
   const C = kindVisible('cours'), K = kindVisible('concours');
@@ -350,6 +350,7 @@ function formMonInscription(aid) {
         statut: nouv ? (attente ? 'attente' : 'inscrit') : ex.statut, le: nouv ? Date.now() : ex.le, vuEcurie: false });
       put('inscriptions', o);
       toast(nouv ? (attente ? "Tu es sur la liste d'attente" : `Tu es inscrit·e : ${actTitre(a)}`) : 'Inscription modifiée', nouv && !attente ? { fete: true } : undefined);
+      if (nouv) vibre(12);
     }
   });
 }

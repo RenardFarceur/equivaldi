@@ -13,7 +13,7 @@ function rowFoin(m) {
 VIEWS.foin = () => {
   // deux vues : les balles de foin, et les autres stocks (aliments, litière, produits : 72-stocks.js)
   const seg = segCtl('foinVue', [['foin', 'Foin'], ['stocks', 'Autres stocks']], ui.foinVue === 'stocks' ? 'stocks' : 'foin');
-  if (ui.foinVue === 'stocks') return { title: 'Stocks', eyebrow: 'Hors foin', html: seg + stocksHtml(),
+  if (ui.foinVue === 'stocks') return { title: 'Stock', eyebrow: 'Aliments, litière, produits', html: seg + stocksHtml(),
     fab: sync.readOnly ? null : () => (articles().length ? formMvt(null, { sens: 'in' }) : formArticle(null)), fabLabel: 'Entrée de stock' };
   const A = autonomie(), st = A.st, t = todayISO();
   const types = Object.values(st.by).filter(x => !x.orphan || x.n !== 0);
@@ -51,7 +51,7 @@ VIEWS.foin = () => {
   const mv = list('foin').sort((a, b) => b.date.localeCompare(a.date) || (b.maj || 0) - (a.maj || 0)).slice(0, 40);
   html += section('Mouvements', mv.length ? `<div class="list">${mv.map(rowFoin).join('')}</div>` : emptyH('Aucun mouvement', 'Ajoute ta première livraison ou récolte avec le bouton +.'),
     `<button type="button" class="link" data-act="new" data-what="foin" data-sens="in">${ic('plus', 'sm')}Entrée</button>`);
-  return { title: 'Foin', eyebrow: 'Stock et autonomie', html, fab: () => formFoin(null, { sens: 'in' }), fabLabel: 'Entrée de foin' };
+  return { title: 'Stock', eyebrow: 'Foin et autonomie', html, fab: () => formFoin(null, { sens: 'in' }), fabLabel: 'Entrée de foin' };
 };
 
 function quickOut(balle) {

@@ -41,7 +41,7 @@ function majEcurieBtn() {
   b.classList.toggle('demo', voir && demo);
   if (!voir) return false;
   const t = (fantome ? 'Admin · ' : demo ? 'Exemple · ' : '') + nomCourtEcurie(e.nom);
-  if (b.textContent !== t) b.textContent = t;
+  if (b.textContent !== t) b.innerHTML = `<span>${esc(t)}</span>`;   // le texte se coupe dans le span : la zone d'appui du bouton peut dépasser
   b.setAttribute('aria-label', `${fantome ? 'Mode administrateur, écurie' : demo ? "Écurie d'exemple" : 'Écurie ouverte'} : ${e.nom}. Ouvrir « Mon écurie »`);
   return true;
 }
