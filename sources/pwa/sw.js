@@ -32,3 +32,12 @@ self.addEventListener('fetch', e => {
     return hit || net;
   }));
 });
+
+// une notification touchée (78-activites.js) : on revient sur l'appli, ou on l'ouvre
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(l => {
+    const c = l.find(x => 'focus' in x);
+    return c ? c.focus() : self.clients.openWindow('./');
+  }));
+});

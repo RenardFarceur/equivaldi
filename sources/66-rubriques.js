@@ -11,7 +11,10 @@ const RUBRIQUES = [
 ];
 const rub = id => cfg().rubriques[id] !== false;
 // un propriétaire en pension ne voit que ses chevaux et ses relevés (70-pension.js)
-const ongletVisible = id => estProprio() ? ['accueil', 'chevaux', 'releves'].includes(id) : id !== 'releves' && (!['pres', 'foin', 'concours'].includes(id) || rub(id));
+// un cavalier : l'accueil et les cours et concours proposés (78-activites.js). L'onglet « Entraînements » réunit
+// les rubriques Entraînement et Concours : il reste tant qu'une des deux est gardée.
+const ongletVisible = id => estCavalier() ? ['accueil', 'concours'].includes(id) : estProprio() ? ['accueil', 'chevaux', 'concours', 'releves'].includes(id)
+  : id !== 'releves' && (id === 'concours' ? rub('concours') || rub('seances') : !['pres', 'foin'].includes(id) || rub(id));
 WRITE_ACTS.add('rub-onoff');
 
 /* La gérante choisit (version installable) ; dans le carnet partagé sur claude.ai, la personne qui l'a créé */

@@ -12,7 +12,7 @@ function donneesExemple() {
   const jourSem = iso => new Date(iso + 'T12:00:00').getDay();
   const M = { camille: { uid: 'ex-camille', nom: 'Camille' }, lea: { uid: 'ex-lea', nom: 'Léa' }, hugo: { uid: 'ex-hugo', nom: 'Hugo' }, ines: { uid: 'ex-ines', nom: 'Inès' } };
   const par = (q, iso, h = 9) => Object.assign({}, M[q], { t: ts(iso, h) });
-  const out = { cfg: null, carte: null, chevaux: {}, soins: {}, pres: {}, places: {}, entretiens: {}, foin: {}, concours: {}, seances: {}, taches: {}, stocks: {}, consignes: {}, messages: {}, membres: {} };
+  const out = { cfg: null, carte: null, chevaux: {}, soins: {}, pres: {}, places: {}, entretiens: {}, foin: {}, concours: {}, seances: {}, taches: {}, stocks: {}, consignes: {}, messages: {}, activites: {}, inscriptions: {}, membres: {} };
   let n = 0;
   const add = (coll, o) => { const id = o.id || `ex-${coll}-${++n}`; out[coll][id] = Object.assign({ id, maj: Date.now() }, o); return id; };
 
@@ -186,6 +186,18 @@ function donneesExemple() {
   msg(1, 'ines', 'Bonjour ! Pistache a bien mangé ce matin ? Elle boudait sa ration hier soir.', 26, true);
   msg(2, 'lea', "Oui, tout fini ! On lui a mis un peu de luzerne en plus, elle a l'air en forme.", 25, true);
   msg(3, 'ines', 'Merci Léa ! Je passe samedi vers 10 h : je pourrai la sortir au grand pré ?', 2, false);
+  /* Cours et concours proposés par l'écurie, avec leurs inscriptions (78-activites.js) */
+  const act = (id, o) => add('activites', Object.assign({ id, statut: 'ouvert', le: maintenant - 30 * H, par: exQui('camille') }, o));
+  const insc = (aid, qui, o) => add('inscriptions', Object.assign({ id: `${aid}_ex-${qui}`, aid, uid: 'ex-' + qui, nom: exQui(qui).nom, de: Object.assign(exQui(qui), { role: qui === 'ines' ? 'proprio' : 'equipe' }), statut: 'inscrit', le: maintenant - 5 * H, vuEcurie: true }, o));
+  act('ex-act1', { kind: 'cours', titre: 'Obstacle · Galop 4-5', date: d(3), heure: '14:30', duree: 60, lieu: 'Carrière', coach: 'Julie', places: 4, prix: '25 €', pris: 2, note: 'Barres au sol puis petit parcours. Protections conseillées.' });
+  insc('ex-act1', 'lea', { horseId: 'ex-pistache', horseNom: 'Pistache' });
+  insc('ex-act1', 'ines', { horseId: 'ex-pistache', horseNom: 'Pistache', note: "J'arrive 10 minutes avant.", le: maintenant - 1 * H, vuEcurie: false });
+  act('ex-act2', { kind: 'cours', titre: 'Dressage · tous niveaux', date: d(6), heure: '10:00', duree: 45, lieu: 'Manège', coach: 'Julie', places: 3, pris: 1 });
+  insc('ex-act2', 'hugo', { horseId: 'ex-ulysse', horseNom: 'Ulysse' });
+  act('ex-act3', { kind: 'cours', titre: 'Plat · Galop 2-3', date: d(-4), heure: '14:30', duree: 60, lieu: 'Carrière', coach: 'Julie', places: 4, pris: 1, cr: 'Travail des transitions pas-trot et du cercle. À revoir : garder le rythme dans les coins. La prochaine fois, on commence les barres au sol.', crLe: maintenant - 90 * H, crPar: exQui('camille') });
+  insc('ex-act3', 'lea', { horseId: 'ex-pistache', horseNom: 'Pistache', monte: 'ex-pistache', monteNom: 'Pistache', presence: 'present', bilan: 'Belles transitions. Regarder plus loin sur le cercle.', le: maintenant - 150 * H });
+  act('ex-act4', { kind: 'concours', titre: 'Poitiers · CSO Club', lieu: 'Poitiers', date: d(20), discipline: 'CSO', epreuves: 'Club 3, Club 2', cloture: d(10), places: 3, pris: 1, prix: 'Transport 30 € + engagement', note: 'Départ du camion à 7 h. Coaching sur place.' });
+  insc('ex-act4', 'hugo', { horseId: 'ex-ulysse', horseNom: 'Ulysse', epreuve: 'Club 2' });
   return out;
 }
 

@@ -12,13 +12,13 @@ const balleRow = b => `<div class="row" data-bid="${esc(b.id)}"><input class="ri
 
 VIEWS.reglages = () => {
   // propriétaire en pension : son écurie, son compte, les messages, rien des réglages du carnet
-  if (estProprio()) return { title: 'Réglages', eyebrow: 'EquiValdi', html: monEcurieHtml() + equipeHtml() + retoursHtml() + aProposHtml(), fab: null };
+  if (estProprio() || estCavalier()) return { title: 'Réglages', eyebrow: 'EquiValdi', html: monEcurieHtml() + (estCavalier() ? '' : equipeHtml()) + notifsHtml() + retoursHtml() + aProposHtml(), fab: null };
   const C = cfg(), t = todayISO();
   let fin = `${t.slice(0, 4)}-${C.finSaison}`;
   if (!validISO(fin) || fin <= t) fin = `${+t.slice(0, 4) + 1}-${C.finSaison}`;
   const rap = SOINS.filter(T => T.id !== 'autre').map(T =>
     `<div class="row"><div class="row-main"><div class="row-t">${T.label}</div><div class="row-s">${dureeTxt(C.rappels[T.id])}</div></div>${rinp('r_' + T.id, C.rappels[T.id] || '', 'Intervalle en jours : ' + T.label)}</div>`).join('');
-  let html = monEcurieHtml() + adminSection() + rubriquesHtml() + equipeHtml() + crotSection() + section('Rappels de soins', `<div class="list">${rap}</div><p class="note">Nombre de jours entre deux soins. 0 ou vide : pas de rappel. Un soin peut aussi porter sa propre date de rappel. Ces réglages sont communs à toutes les personnes du carnet.</p>`);
+  let html = monEcurieHtml() + adminSection() + rubriquesHtml() + equipeHtml() + notifsHtml() + crotSection() + section('Rappels de soins', `<div class="list">${rap}</div><p class="note">Nombre de jours entre deux soins. 0 ou vide : pas de rappel. Un soin peut aussi porter sa propre date de rappel. Ces réglages sont communs à toutes les personnes du carnet.</p>`);
   // rubriques masquées : leurs réglages restent dans la page (cachés) pour être enregistrés tels quels
   const P = rub('pres'), cache = on => on ? '' : ' hidden';
   html += section(P ? 'Alertes et prés' : 'Alertes', `<div class="list">

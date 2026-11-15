@@ -55,7 +55,7 @@ const actVuKey = () => `equivaldi:act-vu:${idEcurie(ecurieOuverte()) || 'local'}
 let actVuSession = null;
 const actVu = () => { const v = Number(lsGet(actVuKey())); return Number.isFinite(v) ? v : 0; };
 function actNouvelles(depuis = actVu()) {
-  if (!activitesOuvertes() || !notifPref('activites')) return [];
+  if (!activitesOuvertes() || !notifPref('activites') || estExemple()) return [];
   const t = todayISO();
   return activites().filter(a => a.statut !== 'annule' && a.date >= t && (a.le || 0) > depuis && !(a.par && a.par.uid === moiUid()) && !jeViens(a.id))
     .sort((a, b) => a.date.localeCompare(b.date));
@@ -117,11 +117,11 @@ function activitesListe(kind) {
   const past = all.filter(a => actFin(a) < t).sort((a, b) => b.date.localeCompare(a.date)).slice(0, estInvite() ? 12 : 20)
     .filter(a => !estInvite() || monInscription(a.id));   // un cavalier ne garde que les siens
   const K = KINDS[kind], gere = peutGererActivites();
-  const add = gere ? `<button type="button" class="link" data-act="new-activite" data-kind="${kind}">${ic('plus', 'sm')}${kind === 'cours' ? 'Proposer un cours' : 'Proposer une sortie'}</button>` : '';
+  const add = gere ? `<button type="button" class="link" data-act="new-activite" data-kind="${kind}">${ic('plus', 'sm')}${kind === 'cours' ? 'Proposer un cours' : 'Proposer'}</button>` : '';
   const vide = gere ? (kind === 'cours' ? "Propose un cours : date, heure, enseignant, nombre de places. Les cavaliers de l'écurie s'inscrivent depuis leur téléphone, et tu vois qui vient."
       : "Propose une sortie en concours : les propriétaires et les cavaliers s'inscrivent avec leur cheval et leur épreuve, avant la clôture.")
     : (kind === 'cours' ? "Les cours proposés par l'écurie s'afficheront ici : tu pourras t'y inscrire." : "Les sorties en concours proposées par l'écurie s'afficheront ici.");
-  let html = section(kind === 'cours' ? 'Cours proposés' : "Sorties proposées par l'écurie", up.length ? `<div class="list">${up.map(actCard).join('')}</div>` : `<p class="note">${vide}</p>`, add);
+  let html = section(kind === 'cours' ? 'Cours proposés' : 'Sorties proposées', up.length ? `<div class="list">${up.map(actCard).join('')}</div>` : `<p class="note">${vide}</p>`, add);
   if (past.length) html += section(estInvite() ? (kind === 'cours' ? 'Tes derniers cours' : 'Tes dernières sorties') : (kind === 'cours' ? 'Cours passés' : 'Sorties passées'), `<div class="list">${past.map(actCard).join('')}</div>`);
   return html;
 }
@@ -489,3 +489,7 @@ ACT['notif-tel'] = async () => {
   if (p !== 'granted') { toast("Le téléphone a refusé les notifications : autorise-les pour EquiValdi dans ses réglages.", { danger: true }); return; }
   lsSet(NOTIF_KEY, true); render(); toast('Notifications du téléphone activées');
 };
+/* Après chaque rendu (regroupé) : notification du téléphone s'il y a du nouveau, compte des places prises */
+let actHookT = null;
+function activitesApresRendu() { if (!window.EQ_MODE) return; clearTimeout(actHookT); actHookT = setTimeout(() => { try { notifierNouveautes(); majPrisBientot(); } catch (e) { console.error(e); } }, 900); }
+NEW.activite = d => formActivite(null, { kind: d.kind });

@@ -34,10 +34,17 @@ Quand tu as au moins deux écuries, le nom court de celle qui est ouverte s'affi
 
 ## Abonnement
 
-- **Essai gratuit de 2 mois, sans carte bancaire**, dès la création d'une écurie. Pendant l'essai : tout le carnet, avec 2 chevaux au plus ; la carte des prés et les points crottins sont réservés aux écuries abonnées (aperçu et bouton *S'abonner*).
-- **Après l'essai sans abonnement** : lecture seule. Tout reste consultable et exportable ; la gérante voit *S'abonner*, les autres membres un message.
-- **Formules** (depuis le 12 novembre 2026) : « À la maison » 5 € par mois ou 50 € par an ; « Pro » 20 € par mois ou 200 € par an, avec les propriétaires en pension et leurs relevés (2 mois offerts à l'année). Changer de formule prend effet tout de suite, les jours restants convertis au prix de la nouvelle. L'essai comprend la pension. Payées par la gérante dans *Réglages* › *Mon écurie* › *S'abonner*. Payer pendant l'essai ne fait rien perdre : tout se débloque tout de suite, et la période payée commence à la fin de l'essai (de même, un nouveau paiement s'ajoute à la suite de l'abonnement en cours).
-- **Paiement fictif pour l'instant** (« Payer 5 € (démo) », rien n'est débité). Pour brancher Shine ou Tebex : remplacer l'étape *Paiement* (`feuillePaiement` dans `sources/61-abonnement.js`) par le lien de paiement du prestataire ; faire enregistrer l'abonnement par un serveur qui reçoit la confirmation du paiement, ou par l'administration (*Paiement reçu*) ; puis retirer des règles la ligne du paiement de démonstration (`paiementFictif`).
+Décidé le 15 novembre 2026 (avant : essai de 2 mois puis lecture seule, 5 € et 20 €).
+
+- **Version gratuite, sans limite de durée et sans carte bancaire** : tout le carnet, avec 2 chevaux au plus, et un **bandeau maison** (des messages EquiValdi, sans régie publicitaire ni traceur ; la liste est `PUBS` dans `sources/61-abonnement.js`, et une entrée `{ t, s, lien }` y met un partenaire). La carte des prés et les points crottins viennent avec « À la maison ».
+- **Découverte des fonctions Pro** : les 2 premiers mois d'une nouvelle écurie, les fonctions Pro sont ouvertes (toujours 2 chevaux). Ensuite l'écurie reste gratuite.
+- **Formules**, payées par la gérante dans *Réglages* › *Mon écurie* › *Voir les formules* (à l'année : dix mois payés pour douze) :
+  - « Sans pub » 0,99 € par mois (9,90 € par an) : la version gratuite sans le bandeau ;
+  - « À la maison » 4,99 € par mois (49,90 € par an) : chevaux sans limite, carte des prés, points crottins ;
+  - « Pro » 19,99 € par mois (199,90 € par an) : en plus, propriétaires en pension et relevés, messages avec les propriétaires, cours et concours proposés avec inscriptions, rôle « Cavalier ».
+- Changer de formule prend effet tout de suite, les jours restants convertis au prix de la nouvelle. Payer pendant la découverte ne fait rien perdre : la période payée commence à sa fin. À la fin d'une période payée, l'écurie repasse en version gratuite.
+- **Plus de 2 chevaux sans « À la maison » ni « Pro »** : lecture seule. La gérante s'abonne, ou touche *Garder 2 chevaux* (les autres passent en archive).
+- **Paiement fictif pour l'instant** (« Payer 4,99 € (démo) », rien n'est débité). Pour brancher Shine : remplacer l'étape *Paiement* (`feuillePaiement` dans `sources/61-abonnement.js`) par le lien de paiement du prestataire ; faire enregistrer l'abonnement par un serveur qui reçoit la confirmation du paiement, ou par l'administration (*Reçu*) ; puis retirer des règles la ligne du paiement de démonstration (`paiementFictif`).
 - **À vie** (formule Pro) : l'écurie fondatrice et toutes celles créées avant le 6 novembre 2026 à 12 h.
 
 ## Administration
@@ -125,7 +132,24 @@ Le tracé s'enregistre au fil de l'eau : on peut s'arrêter et reprendre plus ta
 
 - **Consignes** (accueil, et fiche du cheval) : une info courte pour toute l'équipe, pour un cheval ou pour l'écurie, jusqu'à une date (aujourd'hui, 3 jours, une semaine, un mois ou sans fin). Chacun touche « J'ai vu » ; la consigne affiche qui l'a vue. Les consignes pas encore vues ont une pastille. Le propriétaire en pension ne les voit pas.
 - **Messages avec le propriétaire** (formule Pro) : un fil par cheval entre l'écurie et son propriétaire inscrit, dans la fiche du cheval. Les messages non lus apparaissent sur l'accueil, des deux côtés.
-- Pas de notification sur le téléphone tant qu'il n'y a pas de serveur : on voit les nouveautés en ouvrant l'appli. Collections `consignes` et `messages` : **règles Firestore à recoller**.
+- Pas de notification sur le téléphone tant qu'il n'y a pas de serveur : on voit les nouveautés en ouvrant l'appli. Collections `consignes` et `messages`.
+
+## Couvertures et matériel (15 novembre 2026)
+
+- **Fiche du cheval › Matériel** : couvertures et chemises avec leur grammage et leur taille, selle, filet, tapis, protections, licol… (`chevaux.materiel`).
+- **Couverture portée** : en haut de la fiche, ce que le cheval porte et depuis quand. *Changer* coche une ou plusieurs épaisseurs (le total des grammages s'affiche), ou rien : « Sans couverture ». Les poses précédentes restent dans l'historique (`chevaux.couv`, `chevaux.couvHist`).
+- **Onglet Chevaux › Couvertures** : qui porte quoi, pour toute l'écurie ; toucher un cheval change sa couverture. La vue apparaît dès qu'un cheval a une couverture dans sa fiche.
+- La propriétaire en pension voit le matériel de son cheval. Aucune règle Firestore nouvelle.
+
+## Cours, concours proposés et cavaliers (formule Pro, 15 novembre 2026)
+
+- **L'onglet « Entraînements »** remplace « Concours » : en haut, *Cours* (les cours proposés, puis les séances de travail des chevaux sur 14 jours) et *Concours* (les sorties proposées, puis le carnet des concours comme avant). Il reste affiché tant qu'une des deux rubriques (Entraînement, Concours) est gardée.
+- **Proposer un cours** (bouton +) : intitulé, date, heure, durée, lieu, enseignant, niveau, places, prix, fin des inscriptions ; *Répéter* le crée chaque semaine pendant 4, 8 ou 12 semaines. **Proposer une sortie en concours** : lieu, dates, discipline, épreuves, clôture des engagements, places, frais.
+- **S'inscrire** : chaque membre de l'écurie (équipe, propriétaire, cavalier) s'inscrit depuis la fiche du cours ou de la sortie, avec son cheval s'il en a un, son épreuve pour un concours, et un mot pour l'écurie. Complet : liste d'attente. Il peut modifier ou se désinscrire.
+- **L'équipe** voit qui vient, inscrit quelqu'un elle-même (même sans compte), attribue le cheval monté, pointe les présents (*Tous présents*), note ce que chacun a fait, écrit un compte rendu lu par les inscrits, annule ou repropose. Un cours suivi avec un cheval devient une séance dans la fiche de ce cheval ; *Ajouter ces sorties au carnet* crée les concours « à engager » des chevaux inscrits.
+- **Rôle « Cavalier »** (invitation, *L'équipe*) : pour un élève. Il ne voit rien du carnet : seulement les cours et concours proposés, et ses inscriptions (accueil et onglet Entraînements).
+- **Notifications dans l'appli** : sur l'accueil et par une pastille sur l'onglet. L'équipe est prévenue des inscriptions et désinscriptions, tout le monde des nouveaux cours et concours. Chacun règle les siennes dans *Réglages* › *Notifications* ; « Aussi sur ce téléphone » affiche une vraie notification tant que l'appli est ouverte (même en arrière-plan). Appli fermée, rien n'arrive : il faudra un serveur (Firebase Blaze).
+- Collections `activites` et `inscriptions` : **règles Firestore à recoller**. Les cavaliers ne lisent que leurs inscriptions ; le nombre de places prises qu'ils voient est tenu à jour par l'appli de l'équipe.
 
 ## Points crottins
 

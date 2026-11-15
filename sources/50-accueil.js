@@ -59,6 +59,7 @@ function agenda() {
     items.push({ d: s.date, h: s.heure || '', icon: 'timer', t: `${s.type || 'Séance'}${s.coach ? ' avec ' + s.coach : ''} · ${hNom(s.horseId)}`, s: [heureTxt(s.heure), s.lieu, nomDe({ uid: s.cavalierUid, nom: s.cavalier })].filter(Boolean).join(' · ') || 'Séance prévue', act: `data-act="edit-seance" data-id="${s.id}"` }));
   rappels().filter(r => !r.planned && r.days > C.alerte && r.due <= lim).forEach(r =>
     items.push({ d: r.due, icon: r.type.icon, t: `Rappel ${r.type.short} · ${r.h.nom}`, s: `Dernier le ${dShort(r.last.date)}`, act: `data-act="new" data-what="soin" data-hid="${r.h.id}" data-type="${r.type.id}"` }));
+  agendaActivites(items, t, lim);   // cours et concours proposés par l'écurie (78-activites.js)
   return items.sort((a, b) => a.d.localeCompare(b.d) || String(a.h || '').localeCompare(String(b.h || '')));
 }
 function agendaHtml(items) {
@@ -113,6 +114,7 @@ function quickHtml() {
 }
 VIEWS.accueil = () => {
   if (estProprio()) return accueilProprio();
+  if (estCavalier()) return accueilCavalier();
   const html = [];
   const vide = !chevaux(true).length && !pres(true).length && !list('foin').length && !list('taches').length;
   if (exCount()) html.push(`<div class="banner">${ic('info')}<div class="row-main"><b>Ce sont des exemples</b><span class="small">Trois chevaux fictifs pour découvrir le carnet. Efface-les pour commencer avec les tiens.</span></div><button type="button" class="btn small" data-act="clear-ex" data-confirm="Confirmer">Effacer</button></div>`);
@@ -130,6 +132,7 @@ VIEWS.accueil = () => {
   html.push(demarrageHtml());
   html.push(messagesSection());   // messages de propriétaires non lus (76-messages.js)
   html.push(consignesSection());  // consignes de l'écurie
+  html.push(activitesAccueil());  // inscriptions reçues, nouveaux cours et concours, mes inscriptions (78-activites.js)
   html.push(presentsHtml());
   html.push(tachesSection());
   const al = alerts();

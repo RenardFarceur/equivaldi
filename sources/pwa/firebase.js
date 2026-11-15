@@ -49,10 +49,10 @@ const DEMO = (() => { const l = lis(K.ecurie); return !!(l && l.demo && l.sid ==
 const CONDITIONS = '2026-11';
 const CGU_LOCAL = 'equivaldi:conditions';
 const ecris = (k, v) => { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); return true; } catch (x) { return false; } };
-const COLS = ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches', 'stocks', 'consignes', 'messages'];
+const COLS = ['chevaux', 'soins', 'pres', 'places', 'entretiens', 'foin', 'concours', 'seances', 'taches', 'stocks', 'consignes', 'messages', 'activites', 'inscriptions'];
 const JOUR = 86400000;
-const ROLES = { gerante: 'Gérante', equipe: 'Peut modifier', lecture: 'Lecture seule', proprio: 'Propriétaire' };
-const ROLES_INVITES = ['equipe', 'lecture', 'proprio'];
+const ROLES = { gerante: 'Gérante', equipe: 'Peut modifier', lecture: 'Lecture seule', proprio: 'Propriétaire', cavalier: 'Cavalier' };
+const ROLES_INVITES = ['equipe', 'lecture', 'proprio', 'cavalier'];
 const roleInvite = r => ROLES_INVITES.includes(r) ? r : 'equipe';
 const ecrit = role => role === 'gerante' || role === 'equipe';
 // Administration EquiValdi : ce compte gère toutes les écuries sans en être membre (les règles d'accès le connaissent aussi).
@@ -177,6 +177,8 @@ function adaptateurProprio(sid, gerante) {
           q => next({ docs: q.docs.map(snapDoc), size: q.size, empty: q.empty, metadata: { fromCache: q.metadata.fromCache, hasPendingWrites: q.metadata.hasPendingWrites } }),
           e => { if (err) err({ code: code(e), message: e.message }); });
       }
+      // cours et concours proposés par l'écurie ; ses propres inscriptions
+      if (c === 'activites' || c === 'inscriptions') return ecouteActivites(base, c, next, err);
       return ecoute((q, e) => { if (e) { if (err) err({ code: code(e), message: e.message }); return; } const l = docs(q, c); next({ docs: l, size: l.length, empty: !l.length, metadata: meta(q) }); });
     }
   });
@@ -196,6 +198,43 @@ function adaptateurProprio(sid, gerante) {
       return A.doc(path);
     },
     collection: coll
+  };
+}
+/* Activités proposées par l'écurie (lisibles par tous ses membres) et inscriptions (les siennes seulement) */
+function ecouteActivites(base, c, next, err) {
+  const q0 = c === 'activites' ? collection(fs, base + '/activites') : query(collection(fs, base + '/inscriptions'), where('uid', '==', U.uid));
+  return onSnapshot(q0, { includeMetadataChanges: true },
+    q => next({ docs: q.docs.map(snapDoc), size: q.size, empty: q.empty, metadata: { fromCache: q.metadata.fromCache, hasPendingWrites: q.metadata.hasPendingWrites } }),
+    e => { if (err) err({ code: code(e), message: e.message }); });
+}
+/* Cavalier (élève de l'écurie) : rien du carnet. Les activités, ses inscriptions, sa fiche et celle de la gérante. */
+function adaptateurCavalier(sid, gerante) {
+  const A = adaptateur(sid), base = 'structures/' + sid;
+  const vide = { fromCache: false, hasPendingWrites: false };
+  return {
+    sid, cavalier: true,
+    doc: path => {
+      if (path.startsWith('config/')) {
+        const r = A.doc(path);
+        return Object.assign({}, r, { onSnapshot: next => { setTimeout(() => next({ id: path.split('/')[1], exists: false, data: () => null, metadata: vide }), 0); return () => {}; } });
+      }
+      return A.doc(path);
+    },
+    collection: c => ({
+      path: c,
+      doc: id => A.collection(c).doc(id),
+      onSnapshot: (next, err) => {
+        if (c === 'membres') {
+          const ids = [...new Set([U.uid, gerante].filter(Boolean))], vus = {};
+          const emet = () => { const l = ids.map(i => vus[i]).filter(x => x && x.exists); next({ docs: l, size: l.length, empty: !l.length, metadata: vide }); };
+          const stops = ids.map(i => A.doc('membres/' + i).onSnapshot(s => { vus[i] = s; emet(); }, e => { vus[i] = null; emet(); }));
+          return () => stops.forEach(f => f && f());
+        }
+        if (c === 'activites' || c === 'inscriptions') return ecouteActivites(base, c, next, err);
+        setTimeout(() => next({ docs: [], size: 0, empty: true, metadata: vide }), 0);
+        return () => {};
+      }
+    })
   };
 }
 // L'équipe tient les fiches partagées (une par cheval de propriétaire) et la gérante les relevés
@@ -561,7 +600,7 @@ function demarrer(u, e, o = {}) {
     can: async n => n === 'data.write' ? ecrit(role) : false,
     profiles: async ids => Object.fromEntries([].concat(ids).map(i => [i, { id: i, name: '' }]))
   });
-  window.claude._resolve('db', role === 'proprio' && !fantome ? adaptateurProprio(e.id, e.gerante) : adaptateur(e.id));
+  window.claude._resolve('db', role === 'proprio' && !fantome ? adaptateurProprio(e.id, e.gerante) : role === 'cavalier' && !fantome ? adaptateurCavalier(e.id, e.gerante) : adaptateur(e.id));
   notifier();
   suivreEcurie(e.id);
   if (!o.horsLigne) setTimeout(() => { verifierIndex().catch(() => {}); }, 1500);
@@ -616,7 +655,10 @@ async function ouvrir(sid) {
 }
 // Une écurie perdue ou quittée : sa copie locale et ses envois en attente n'ont plus lieu d'être
 function oublierEcurie(sid) {
-  try { [K.cache(sid), K.file(sid), K.role(sid), 'equivaldi:vu:' + sid, 'equivaldi:ics:' + sid].forEach(k => localStorage.removeItem(k)); } catch (x) { /* rien */ }
+  try {
+    [K.cache(sid), K.file(sid), K.role(sid), 'equivaldi:vu:' + sid, 'equivaldi:ics:' + sid].forEach(k => localStorage.removeItem(k));
+    Object.keys(localStorage).filter(k => k.startsWith('equivaldi:act-vu:' + sid + ':')).forEach(k => localStorage.removeItem(k));
+  } catch (x) { /* rien */ }
   const l = lis(K.ecurie);
   if (l && l.sid === sid) ecris(K.ecurie, null);
 }
@@ -780,7 +822,8 @@ function ecranCode(u, retour) {
 function proposer(u, inv, o = {}) {
   const role = ROLES[inv.role] || inv.role;
   const qui = inv.par && inv.par.nom ? escH(inv.par.nom) : 'La gérante';
-  const quoi = inv.role === 'proprio' ? 'Tu verras ton cheval : ses soins, ses séances, ses concours, où il est au pré, et tes relevés de pension.' : inv.role === 'lecture' ? 'Tu pourras tout consulter, sans rien modifier.' : 'Tu pourras tout noter : chevaux, soins, prés, foin, concours et tâches.';
+  const quoi = inv.role === 'proprio' ? 'Tu verras ton cheval : ses soins, ses séances, ses concours, où il est au pré, et tes relevés de pension.'
+    : inv.role === 'cavalier' ? "Tu verras les cours et les concours proposés par l'écurie, et tu pourras t'y inscrire." : inv.role === 'lecture' ? 'Tu pourras tout consulter, sans rien modifier.' : 'Tu pourras tout noter : chevaux, soins, prés, foin, concours et tâches.';
   return new Promise(fin => show(`<div class="form">
       <h2 class="auth-t">Rejoindre ${escH(inv.structureNom || "l'écurie")}</h2>
       <p>${qui} t'invite à rejoindre <b>${escH(inv.structureNom || "l'écurie")}</b>.</p>
@@ -1492,8 +1535,11 @@ async function mesDonnees() {
   const out = { app: 'equivaldi', type: 'donnees-personnelles', exporte: new Date().toISOString(), compte: { uid: U.uid, email: MAIL, prenom: nomDe(U) }, index: null, ecuries: [], messages: [] };
   try { const s = await getDoc(indexRef()); out.index = s.exists() ? s.data() : null; } catch (e) { /* hors ligne */ }
   for (const x of listeEcuries()) {
-    try { const f = await getDoc(doc(fs, 'structures', x.id, 'membres', U.uid)); out.ecuries.push({ id: x.id, nom: x.nom, role: x.role, fiche: f.exists() ? f.data() : null }); }
-    catch (e) { out.ecuries.push({ id: x.id, nom: x.nom, role: x.role, fiche: null }); }
+    const o = { id: x.id, nom: x.nom, role: x.role, fiche: null, inscriptions: [] };
+    try { const f = await getDoc(doc(fs, 'structures', x.id, 'membres', U.uid)); o.fiche = f.exists() ? f.data() : null; } catch (e) { /* fiche illisible */ }
+    // mes inscriptions aux cours et aux concours de cette écurie
+    try { o.inscriptions = (await getDocs(query(collection(fs, 'structures', x.id, 'inscriptions'), where('uid', '==', U.uid)))).docs.map(d => d.data()); } catch (e) { /* aucune */ }
+    out.ecuries.push(o);
   }
   try { out.messages = (await mesRetours()).map(r => { const o = Object.assign({}, r); delete o.uid; return o; }); } catch (e) { /* rien */ }
   return out;
@@ -1502,7 +1548,9 @@ const lots = async (refs, fn) => { for (let i = 0; i < refs.length; i += 400) { 
 // une écurie dont je suis la seule personne : son carnet, ses invitations, puis l'écurie et ma fiche (même lot)
 async function effacerEcurie(sid) {
   for (const c of [...COLS, 'config', 'partages', 'releves']) {
-    const q = await getDocs(collection(fs, 'structures', sid, c));
+    let q;
+    // une collection récente que les règles en place ne connaissent pas encore est forcément vide
+    try { q = await getDocs(collection(fs, 'structures', sid, c)); } catch (e) { if (estRefus(e) && ['activites', 'inscriptions'].includes(c)) continue; throw e; }
     await lots(q.docs.map(d => d.ref), (b, r) => b.delete(r));
   }
   const inv = await getDocs(query(collection(fs, 'invitations'), where('structure', '==', sid)));
@@ -1523,6 +1571,8 @@ async function supprimerCompte(motDePasse) {
   if (a.bloquees.length) throw erreur(`Passe d'abord la gérance ${a.bloquees.map(x => deNom(x.nom)).join(' et ')} à quelqu'un de l'équipe.`);
   for (const x of a.supprimees) await effacerEcurie(x.id);
   for (const x of a.quittees) {
+    // mes inscriptions aux cours et aux concours de l'écurie partent avec moi
+    try { const q = await getDocs(query(collection(fs, 'structures', x.id, 'inscriptions'), where('uid', '==', U.uid))); await lots(q.docs.map(d => d.ref), (b, r) => b.delete(r)); } catch (e) { /* aucune, ou règles pas encore à jour */ }
     try { await deleteDoc(doc(fs, 'structures', x.id, 'membres', U.uid)); } catch (e) { if (!estRefus(e)) throw e; }
     oublierEcurie(x.id);
   }

@@ -19,7 +19,8 @@ function ccard(c, showHorse = true) {
     <span class="row-main"><span class="row-t">${esc(c.lieu || 'Lieu à préciser')} ${exTag(c)}</span>${meta ? `<span class="row-s">${esc(meta)}</span>` : ''}${past && c.score ? `<span class="row-s">${esc(c.score)}</span>` : ''}${hc || pills ? `<span class="wrap" style="margin-top:4px">${hc}${pills}</span>` : ''}</span>
     ${res ? `<span class="row-end">${res}</span>` : ''}</button>`;
 }
-VIEWS.concours = () => {
+VIEWS.concours = () => vueEntrainements();   // l'onglet « Entraînements » : Cours | Concours (78-activites.js)
+function vueConcoursCarnet() {
   const t = todayISO(), seg = ui.concSeg === 'resultats' ? 'resultats' : 'avenir';
   const all = list('concours');
   const up = all.filter(c => c.date >= t).sort((a, b) => a.date.localeCompare(b.date) || hNom(a.horseId).localeCompare(hNom(b.horseId)));

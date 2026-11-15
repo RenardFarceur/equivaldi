@@ -5,7 +5,7 @@ const TABS = [
   { id: 'chevaux', label: 'Chevaux', icon: 'horse' },
   { id: 'pres', label: 'Prés', icon: 'fence' },
   { id: 'foin', label: 'Stock', icon: 'bale' },
-  { id: 'concours', label: 'Concours', icon: 'rosette' },
+  { id: 'concours', label: 'Entraînements', icon: 'rosette' },   // cours, séances et concours (78-activites.js)
   { id: 'equipe', label: 'Équipe', icon: 'users' },
   { id: 'releves', label: 'Relevés', icon: 'euro' }   // propriétaires en pension seulement (70-pension.js)
 ];
@@ -16,10 +16,11 @@ let currentFab = null;
 
 function renderTabs() {
   // les onglets des rubriques masquées par la gérante disparaissent (66-rubriques.js)
-  const vus = TABS.filter(t => ongletVisible(t.id)), el = $('#tabs'), cols = `repeat(${vus.length},minmax(0,1fr))`;
+  // « Entraînements » est plus long que les autres : sa colonne est un peu plus large quand la barre est pleine
+  const vus = TABS.filter(t => ongletVisible(t.id)), el = $('#tabs'), cols = vus.map(t => `minmax(0,${t.id === 'concours' && vus.length > 4 ? 1.4 : 1}fr)`).join(' ');
   if (el.style.gridTemplateColumns !== cols) el.style.gridTemplateColumns = cols;
   setHTML(el, vus.map(t =>
-    `<button type="button" data-act="tab" data-tab="${t.id}"${nav.tab === t.id ? ' aria-current="page"' : ''}><span class="tab-ic">${ic(t.icon)}</span><span>${t.label}</span></button>`
+    `<button type="button" data-act="tab" data-tab="${t.id}"${nav.tab === t.id ? ' aria-current="page"' : ''}${t.id === 'concours' ? ' class="tab-long"' : ''}><span class="tab-ic">${ic(t.icon)}${t.id === 'concours' && badgeActivites() ? '<i class="tab-dot" aria-label="Nouveautés"></i>' : ''}</span><span>${t.label}</span></button>`
   ).join(''));
 }
 
@@ -116,6 +117,7 @@ function render() {
     entreeTimer = setTimeout(() => view.classList.remove('in-tab', 'in-push', 'in-back', 'in-seg'), 900);
   }
   currentFab = v.fab || null;
+  activitesApresRendu();   // notifications et places prises (78-activites.js)
   const fab = $('#fab');
   fab.hidden = !currentFab || sync.readOnly;
   fab.setAttribute('aria-label', v.fabLabel || 'Ajouter');
