@@ -288,9 +288,11 @@ service cloud.firestore {
     function prix(m, champ) { return !(champ in m) || m[champ] == null || (m[champ] is number && m[champ] >= 0 && m[champ] <= 1000); }
     match /sondage/{id} {
       allow read, delete: if admin();
-      allow create: if request.resource.data.keys().hasOnly(['v', 'le', 'profil', 'nb', 'dep', 'soucis', 'outils', 'appli', 'temps', 'interet', 'prio', 'prixBon', 'prixCher', 'remarque', 'email', 'beta', 'source'])
+      allow create: if request.resource.data.keys().hasOnly(['v', 'le', 'profil', 'profils', 'nb', 'dep', 'soucis', 'outils', 'appli', 'temps', 'interet', 'prio', 'prixBon', 'prixCher', 'remarque', 'email', 'beta', 'source'])
         && request.resource.data.v == 1
         && request.resource.data.profil in ['maison', 'pension', 'gerant', 'club', 'aucun']
+        // plusieurs profils cochés (depuis le 17/11/2026) : la liste complète, 4 au plus
+        && (!('profils' in request.resource.data) || (liste(request.resource.data, 'profils', 4) && request.resource.data.profils.hasOnly(['maison', 'pension', 'gerant', 'club'])))
         && dateMaintenant(request.resource.data.le)
         && liste(request.resource.data, 'soucis', 12) && liste(request.resource.data, 'outils', 10)
         && texte(request.resource.data, 'nb', 10) && texte(request.resource.data, 'dep', 40) && texte(request.resource.data, 'appli', 80)

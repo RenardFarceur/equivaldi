@@ -126,6 +126,7 @@ Le tracé s'enregistre au fil de l'eau : on peut s'arrêter et reprendre plus ta
 ## Questionnaire public
 
 - `questionnaire.html` : 3 minutes, sans compte, pour l'étude de marché (profil, nombre de chevaux, soucis, outils, temps passé, intérêt, prix jugés justes, remarque, e-mail facultatif pour l'essai avec accord). `?s=facebook` au bout du lien note d'où vient la réponse.
+- Depuis le 17/11 : plusieurs profils peuvent être cochés (« mes chevaux et des chevaux en pension »), et « 2 » et « 3 » chevaux sont deux réponses. Le champ `profils` demande les règles du 17/11 ; sans elles, la réponse part quand même, avec le premier profil seulement.
 - Les réponses vont dans la collection `sondage` : n'importe qui peut en créer une, seule l'administration les lit (**règles Firestore à recoller**). Administration › *Questionnaire* : chiffres, médianes de prix par profil, remarques, e-mails pour l'essai, export CSV.
 
 ## Consignes et messages
@@ -150,6 +151,14 @@ Le tracé s'enregistre au fil de l'eau : on peut s'arrêter et reprendre plus ta
 - **Rôle « Cavalier »** (invitation, *L'équipe*) : pour un élève. Il ne voit rien du carnet : seulement les cours et concours proposés, et ses inscriptions (accueil et onglet Entraînements).
 - **Notifications dans l'appli** : sur l'accueil et par une pastille sur l'onglet. L'équipe est prévenue des inscriptions et désinscriptions, tout le monde des nouveaux cours et concours. Chacun règle les siennes dans *Réglages* › *Notifications* ; « Aussi sur ce téléphone » affiche une vraie notification tant que l'appli est ouverte (même en arrière-plan). Appli fermée, rien n'arrive : il faudra un serveur (Firebase Blaze).
 - Collections `activites` et `inscriptions` : **règles Firestore à recoller**. Les cavaliers ne lisent que leurs inscriptions ; le nombre de places prises qu'ils voient est tenu à jour par l'appli de l'équipe.
+
+## Eau et foin des prés (17 novembre 2026)
+
+- **Sur chaque pré occupé** (liste des prés et fiche du pré) : deux boutons, *Eau* et *Foin*, avec la dernière fois (« à 8 h 12 », « hier », « il y a 3 j »). Vert : fait aujourd'hui. Orange : en retard.
+- **Eau** : un toucher, avec *Annuler*. **Foin** : un toucher s'il n'y a pas de stock de foin suivi ; sinon une petite feuille demande quelle balle sort du stock et combien (la même que la dernière fois est proposée), ou *Sans toucher au stock*. La sortie apparaît dans l'onglet Stock (« Mis au pré : … »).
+- **Fiche du pré › Eau et foin** : qui l'a fait, quand, les balles, les derniers passages. *Régler* : abreuvoir automatique (le bouton Eau disparaît), rappel pour l'eau et pour le foin (chaque jour, tous les 2 ou 3 jours, chaque semaine).
+- **Accueil** : une alerte quand le rappel d'un pré occupé est dépassé.
+- Gérante et « Peut modifier » notent ; la lecture seule voit sans noter. Rangé dans la fiche du pré (`pres.suivi`, `pres.suiviHist`, `pres.eauJours`, `pres.foinJours`, `pres.eauAuto`) : aucune règle Firestore nouvelle.
 
 ## Points crottins
 

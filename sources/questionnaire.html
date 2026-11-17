@@ -90,13 +90,13 @@ footer a{color:inherit}
 <form id="f" novalidate>
   <fieldset>
     <legend>Où vivent les chevaux dont tu t'occupes ?</legend>
-    <p class="aide">Choisis ce qui te ressemble le plus.</p>
+    <p class="aide">Plusieurs choix possibles : par exemple tes chevaux à la maison, et des chevaux en pension chez toi.</p>
     <div class="choix colonne" data-nom="profil">
-      <label><input type="radio" name="profil" value="maison"><span>Chez moi, ou sur un terrain à moi ou que je loue</span></label>
-      <label><input type="radio" name="profil" value="pension"><span>En pension chez quelqu'un (je suis propriétaire)</span></label>
-      <label><input type="radio" name="profil" value="gerant"><span>Je tiens une pension ou une écurie de propriétaires</span></label>
-      <label><input type="radio" name="profil" value="club"><span>Je travaille dans un centre équestre ou un poney-club</span></label>
-      <label><input type="radio" name="profil" value="aucun"><span>Je n'ai pas de cheval à m'occuper</span></label>
+      <label><input type="checkbox" name="profil" value="maison"><span>Chez moi, ou sur un terrain à moi ou que je loue</span></label>
+      <label><input type="checkbox" name="profil" value="pension"><span>En pension chez quelqu'un (je suis propriétaire)</span></label>
+      <label><input type="checkbox" name="profil" value="gerant"><span>Je tiens une pension ou une écurie de propriétaires</span></label>
+      <label><input type="checkbox" name="profil" value="club"><span>Je travaille dans un centre équestre ou un poney-club</span></label>
+      <label><input type="checkbox" name="profil" value="aucun"><span>Je n'ai pas de cheval à m'occuper</span></label>
     </div>
   </fieldset>
 
@@ -106,7 +106,8 @@ footer a{color:inherit}
     <legend id="qNb">Combien de chevaux ?</legend>
     <div class="choix" data-nom="nb">
       <label><input type="radio" name="nb" value="1"><span>1</span></label>
-      <label><input type="radio" name="nb" value="2-3"><span>2 ou 3</span></label>
+      <label><input type="radio" name="nb" value="2"><span>2</span></label>
+      <label><input type="radio" name="nb" value="3"><span>3</span></label>
       <label><input type="radio" name="nb" value="4-10"><span>4 à 10</span></label>
       <label><input type="radio" name="nb" value="11-30"><span>11 à 30</span></label>
       <label><input type="radio" name="nb" value="30+"><span>Plus de 30</span></label>
@@ -242,9 +243,15 @@ const vals = n => [...f.querySelectorAll(`input[name="${n}"]:checked`)].map(i =>
 const MOTS_NB = { maison: 'Combien de chevaux chez toi ?', pension: 'Combien de chevaux as-tu en pension ?', gerant: 'Combien de chevaux dans ton écurie ?', club: 'Combien de chevaux et poneys au club ?' };
 
 f.addEventListener('change', e => {
-  const p = val('profil');
-  $('#suite').hidden = !p || p === 'aucun';
-  if (MOTS_NB[p]) $('#qNb').textContent = MOTS_NB[p];
+  // « Je n'ai pas de cheval » exclut les autres profils, et inversement
+  if (e.target.name === 'profil') {
+    const aucun = f.querySelector('input[name="profil"][value="aucun"]');
+    if (e.target === aucun && aucun.checked) f.querySelectorAll('input[name="profil"]').forEach(i => { if (i !== aucun) i.checked = false; });
+    else if (e.target !== aucun && e.target.checked) aucun.checked = false;
+  }
+  const ps = vals('profil');
+  $('#suite').hidden = !ps.length || ps.includes('aucun');
+  $('#qNb').textContent = ps.length > 1 ? 'Combien de chevaux en tout ?' : MOTS_NB[ps[0]] || 'Combien de chevaux ?';
   $('#wAppli').hidden = !vals('outils').includes('appli');
   // « Rien de tout ça » exclut le reste
   if (e.target.name === 'soucis') {
@@ -261,9 +268,11 @@ function erreur(t, el) { const e = $('#err'); e.textContent = t; e.hidden = fals
 f.addEventListener('submit', async ev => {
   ev.preventDefault();
   $('#err').hidden = true;   // l'erreur reste affichée jusqu'au prochain envoi : pas de saut de page sous le doigt
-  const profil = val('profil');
+  const profils = vals('profil'), profil = profils[0] || '';
   if (!profil) return erreur("Dis d'abord où vivent les chevaux dont tu t'occupes (première question).", f.querySelector('fieldset'));
+  // « profil » : le premier coché (comme avant) ; « profils » : tous, quand il y en a plusieurs
   const d = { v: 1, le: Date.now(), profil };
+  if (profils.length > 1) d.profils = profils;
   const src = new URLSearchParams(location.search).get('s');
   if (src) d.source = src.slice(0, 40);
   if (profil !== 'aucun') {
@@ -272,6 +281,7 @@ f.addEventListener('submit', async ev => {
     const email = $('#email').value.trim();
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return erreur("L'adresse e-mail ne semble pas complète : vérifie-la, ou laisse le champ vide.", $('#email'));
     if (email && !$('#beta').checked) return erreur("Pour être prévenu·e de l'essai, coche la case sous ton e-mail, ou laisse le champ vide.", $('#beta'));
+    if ($('#dep').value.includes('@')) return erreur("Dans « département », mets juste le numéro ou le nom (ex. 86 ou Vienne). Ton e-mail va plus bas.", $('#dep'));
     Object.assign(d, { nb: val('nb'), dep: $('#dep').value.trim().slice(0, 40), soucis: vals('soucis'), outils: vals('outils'),
       appli: vals('outils').includes('appli') ? $('#appli').value.trim().slice(0, 80) : '', temps: val('temps'), interet: val('interet'),
       prio: val('prio'), prixBon: pb, prixCher: pc, remarque: $('#remarque').value.trim().slice(0, 1000) });
@@ -279,8 +289,13 @@ f.addEventListener('submit', async ev => {
   }
   const b = $('#go');
   b.disabled = true; b.textContent = 'Envoi…';
+  const envoyer = x => Promise.race([setDoc(doc(collection(fs, 'sondage')), x), new Promise((_, ko) => setTimeout(() => ko(new Error('délai')), 15000))]);
   try {
-    await Promise.race([setDoc(doc(collection(fs, 'sondage')), d), new Promise((_, ko) => setTimeout(() => ko(new Error('délai')), 15000))]);
+    // si les règles en place ne connaissent pas encore « profils », on envoie la réponse sans (le premier profil reste)
+    try { await envoyer(d); } catch (e) {
+      if (!d.profils || !/permission/i.test(String((e && e.code) || e))) throw e;
+      const sans = Object.assign({}, d); delete sans.profils; await envoyer(sans);
+    }
     try { localStorage.setItem(FAIT, String(Date.now())); } catch (e) { /* rien */ }
     montrerMerci(profil === 'aucun' ? "Merci d'avoir pris le temps ! Ce questionnaire vise surtout les personnes qui s'occupent de chevaux. " : '');
   } catch (e) {

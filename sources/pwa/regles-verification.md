@@ -141,6 +141,8 @@ Une carte lue dans la base est remise au propre avant d'être dessinée (identif
 |---|---|---|
 | répondre sans compte | `sondage` : `create` pour tous, champs listés, `v == 1`, profil connu, date du jour, textes et listes bornés, prix de 0 à 1 000 | accepté |
 | champ en trop, profil inconnu | `keys().hasOnly`, `profil in [...]` | refusé |
+| plusieurs profils (17/11) | `profils` : liste de 4 au plus, parmi maison, pension, gerant, club ; `profil` = le premier | accepté ; profil inconnu dans la liste refusé |
+| règles d'avant le 17/11 (sans `profils`) | le questionnaire renvoie la réponse sans `profils` | accepté (seul le premier profil est gardé) |
 | lire, effacer | `admin()` seulement | refusé à tous les autres, comptes compris |
 
 ## 13. Consignes et messages (13 novembre 2026)
@@ -171,6 +173,13 @@ Un « Cavalier » est membre de l'écurie sans être de l'équipe : `equipier(si
 | l'équipe inscrit, attribue, pointe, note | `inscriptions` : `write` si `editeur(sid)` | autorisé |
 
 Le nombre de places prises (`activites.pris`) est recalculé par l'appli de l'équipe : les règles ne peuvent pas compter les inscriptions, donc un cours peut dépasser sa limite si deux personnes s'inscrivent au même moment. L'équipe le voit et passe quelqu'un en liste d'attente. Les préférences de notification sont dans la fiche de membre de chacun (`notifs`), qu'il modifie lui-même sans toucher à son rôle.
+
+## 15. Eau et foin des prés (17 novembre 2026)
+
+| Demande | Règle | Résultat |
+|---|---|---|
+| noter l'eau ou le foin, régler le rappel | dans la fiche du pré (`pres` : `suivi`, `suiviHist`, `eauJours`, `foinJours`, `eauAuto`), comme le reste du carnet | gérante et « Peut modifier » ; refusé à la lecture seule ; aucune règle nouvelle |
+| la balle sort du stock | une sortie dans `foin` (avec `preId`), comme une sortie notée dans l'onglet Stock | mêmes droits ; aucune règle nouvelle |
 
 ## Migration
 

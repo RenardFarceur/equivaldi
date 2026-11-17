@@ -67,6 +67,15 @@ function donneesExemple() {
   ['ex-tornade', 'ex-bergamote'].forEach(h => { sejour(h, 'p7', -55, -30); sejour(h, 'p1', -30, -12); sejour(h, 'p4', -12, null); });
   ['ex-ulysse', 'ex-pistache'].forEach(h => { sejour(h, 'p5', -40, -20, 'hugo'); sejour(h, 'p3', -20, -4, 'hugo'); sejour(h, 'p6', -4, null, 'hugo'); });
   sejour('ex-joker', 'p12', -80, -45); sejour('ex-joker', 'p15', -45, -22); sejour('ex-joker', 'p14', -22, -8, 'hugo'); sejour('ex-joker', 'p13', -8, null, 'hugo');
+  /* Eau et foin des prés occupés (79-eau-foin.js) : le pré 4 a un abreuvoir automatique, l'eau du pré 13 est en retard */
+  const quand = (iso, h, m = 0) => { const [y, mo, j] = iso.split('-').map(Number); return new Date(y, mo - 1, j, h, m).getTime(); };
+  const passe = (q, iso, h, m, o = {}) => Object.assign({ le: quand(iso, h, m), d: iso, par: { uid: M[q].uid, nom: M[q].nom } }, o);
+  const suivre = (z, o) => Object.assign(out.pres[P[z]], o);
+  suivre('p4', { eauAuto: true, foinJours: 2, suivi: { foin: passe('camille', d(-1), 17, 40, { balle: 'round', nb: 1 }) },
+    suiviHist: [passe('camille', d(-1), 17, 40, { k: 'foin', balle: 'round', nb: 1 }), passe('hugo', d(-3), 18, 5, { k: 'foin', balle: 'round', nb: 1 })] });
+  suivre('p6', { eauJours: 1, foinJours: 2, suivi: { eau: passe('lea', d(0), 8, 12), foin: passe('lea', d(0), 8, 15, { balle: 'botte', nb: 2 }) },
+    suiviHist: [passe('lea', d(0), 8, 15, { k: 'foin', balle: 'botte', nb: 2 }), passe('lea', d(0), 8, 12, { k: 'eau' }), passe('hugo', d(-1), 18, 30, { k: 'eau' })] });
+  suivre('p13', { eauJours: 1, suivi: { eau: passe('hugo', d(-2), 9, 0) }, suiviHist: [passe('hugo', d(-2), 9, 0, { k: 'eau' })] });
   add('entretiens', { preId: P.p1, type: 'Hersage', date: d(-10), notes: 'Crottins étalés', creePar: par('hugo', d(-10), 17) });
   add('entretiens', { preId: P.p3, type: 'Fauche des refus', date: d(-3), notes: '', creePar: par('camille', d(-3), 16) });
   add('entretiens', { preId: P.p7, type: 'Clôtures', date: d(-15), notes: 'Isolateurs changés côté route', creePar: par('lea', d(-15), 15) });

@@ -20,6 +20,7 @@ function pcard({ p, s }, detail = false) {
     if (s.occupe) return `<article class="pcard">${head}
       <div class="pnums"><span class="big">${s.days}</span><span class="unit">${pl(s.days, 'jour')} ${p.type === 'piste' ? 'sur la piste' : 'en carrière'}</span></div>
       <div class="wrap">${s.horses.map(id => hchip(cheval(id))).join('')}</div>
+      ${suiviBoutons(p, s)}
       <button type="button" class="btn small" data-act="move-from" data-id="${p.id}">${ic('move', 'sm')}Déplacer</button></article>`;
     return `<article class="pcard">${head}<p class="note">Pas de temps de repos ni de pâture à suivre ici.</p>
       <button type="button" class="btn small" data-act="move-to" data-id="${p.id}">${ic('plus', 'sm')}Y mettre des chevaux</button></article>`;
@@ -30,6 +31,7 @@ function pcard({ p, s }, detail = false) {
       <div class="pnums"><span class="big">${s.days}</span><span class="unit">${pl(s.days, 'jour')} de pâture · max ${s.max}</span></div>
       <div class="gauge graze${s.over ? ' over' : ''}" role="img" aria-label="${s.days} jours de pâture sur ${s.max}"><i style="width:${pct}%"></i></div>
       <div class="wrap">${s.horses.map(id => hchip(cheval(id))).join('')}</div>
+      ${suiviBoutons(p, s)}
       <button type="button" class="btn small" data-act="move-from" data-id="${p.id}">${ic('move', 'sm')}Déplacer</button></article>`;
   }
   const add = `<button type="button" class="btn small" data-act="move-to" data-id="${p.id}">${ic('plus', 'sm')}Y mettre des chevaux</button>`;
@@ -90,8 +92,9 @@ VIEWS.pre = p => {
     <div class="stat"><b>${joursPatures(pre.id, yr + '-01-01')}</b><span>jours pâturés en ${yr}</span></div>
     <div class="stat"><b>${s.cible}</b><span>jours de repos visés</span></div>
     <div class="stat"><b>${s.max}</b><span>jours de pâture max</span></div></div>`;
+  html += suiviSection(pre);   // eau et foin (79-eau-foin.js)
   const tks = tachesTriees(tk => tk.preId === pre.id);
-  html += section('Tâches', tks.length ? tachesListe(tks) : "<p class=\"note\">Foin, eau, crottins… Ajoute les tâches de ce pré : chacun les coche quand c'est fait.</p>",
+  html += section('Tâches', tks.length ? tachesListe(tks) : "<p class=\"note\">Crottins, clôture, abri… Ajoute les tâches de ce pré : chacun les coche quand c'est fait.</p>",
     sync.readOnly ? '' : `<button type="button" class="link" data-act="new" data-what="tache" data-pid="${pre.id}">${ic('plus', 'sm')}Ajouter</button>`);
   const ents = list('entretiens').filter(e => e.preId === pre.id).sort((a, b) => b.date.localeCompare(a.date));
   html += section('Entretien', ents.length ? `<div class="list">${ents.map(e =>
